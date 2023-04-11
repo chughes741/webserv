@@ -8,10 +8,15 @@ TEST(webserv, trying) {
 
 TEST(WebServerTest, TestNginxConfig) {
   // Define the path to your Nginx configuration file
-  std::string config_file_path = "../webserv.conf";
+  char buf[PATH_MAX];
+  if (getcwd(buf, sizeof(buf)) == NULL) {
+	std::cerr << "Error retrieving current working directory" << std::endl;
+	exit(EXIT_FAILURE);
+  }
+  std::string config_file_path = std::string(buf) + "/webserv.conf";
 
   // Run the `nginx -T` command to print the parsed configuration file to stdout
-  std::string nginx_cmd = "nginx -T" + config_file_path;
+  std::string nginx_cmd = "nginx -T -c " + config_file_path;
   FILE* pipe = popen(nginx_cmd.c_str(), "r");
   if (!pipe) {
     std::cerr << "Error running command: " << nginx_cmd << std::endl;

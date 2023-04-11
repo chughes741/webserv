@@ -25,7 +25,7 @@ I = include/
 
 # Dir and file names
 NAME	=	webserv
-SRCS	=	webserv.cpp
+SRCS	=	webserv.cpp main.cpp
 INC		=	webserv.hpp
 OBJS	=	$(SRCS:%=$O%.o)
 
@@ -58,3 +58,6 @@ fclean: clean
 
 # Removes objects and executables and remakes
 re: fclean all
+
+exe:
+	./$(NAME) webserv.conf

@@ -39,6 +39,13 @@ set_target_properties(
 	PROPERTIES LINKER_LANGUAGE CXX
 )
 
+file(GLOB all_SRCS
+  ${PROJECT_SOURCE_DIR}/include/*.hpp
+  ${PROJECT_SOURCE_DIR}/src/*.cpp
+)
+
+add_executable(webserv ${all_SRCS})
+
 # Test executables
 enable_testing()
 add_executable(webserv_test test/webserv_test.cpp)
