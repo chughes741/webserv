@@ -10,22 +10,24 @@ DEFAULT_GOAL: all
 # Hide calls
 HIDE = @
 
-
 #------------------------------------------------------------------------------#
 #                                VARIABLES                                     #
 #------------------------------------------------------------------------------#
 
 # Compiler and flags
 CC		=	c++
-CFLAGS	=	-Wall -Werror -Wextra -std=c++98 -I.
+CFLAGS	=	-Wall -Werror -Wextra -Wc++11-extensions -std=c++98 -I$I
 RM		=	rm -rf
+
+S = src/
+O = obj/
+I = include/
 
 # Dir and file names
 NAME	=	webserv
-SRCS	=	$(wildcard $(SRCDIR)*.c)
-OBJS	=	$(patsubst $(SRCDIR)%.c,$(OBJDIR)%.o,$(SRCS))
-INC		=	$(wildcard $(INCDIR)*.hpp)
-
+SRCS	=	webserv.cpp
+INC		=	webserv.hpp
+OBJS	=	$(SRCS:%=$O%.o)
 
 #------------------------------------------------------------------------------#
 #                                 TARGETS                                      #
@@ -37,12 +39,17 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(HIDE)$(CC) $(CFLAGS) $(OBJS) -o $@
 
+#Create objects directory
+$O:
+	@mkdir $@
+$(OBJS): | $O
 # Compiles sources into objects
-.cpp.o: $(SRCS) $(INC)
-	$(HIDE)$(CC) $(CFLAGS) -c $< -o $@
+$(OBJS): $O%.o: $S%
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 # Removes objects
 clean:
+	$(HIDE)$(RM) $O
 	$(HIDE)$(RM) $(OBJS)
 
 # Removes objects and executables
