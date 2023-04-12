@@ -10,11 +10,11 @@ int main(int argc, char *argv[]) {
 		/* Create class from conf file*/
 		Webserv webserv( (std::string(argv[1])) );
 		if (!webserv.getValid()) {
-			std::cout << "Bad configuration" << std::endl;
+			// std::cout << "Bad configuration" << std::endl;
 			return (EXIT_FAILURE);
 		}
 		else {
-			std::cout << "Configuration done!" << std::endl;
+			webserv.printConfig();
 		}
 	}
 }

@@ -3,7 +3,11 @@
  #define WEBSERV_HPP
 
 # include <iostream>
+# include <cstdlib>
+# include <unistd.h>
+# include <string>
 # include <fstream>
+# include <vector>
 
 class Webserv {
 public:
@@ -23,11 +27,16 @@ public:
 //Setters & Getters
 	bool getValid() {return (valid);}
 //Other functions
-	bool parseConfiguration(const std::string &);
+	bool parseConfiguration(std::string);
+	void printConfig() const;
+//Functions tools
+	std::string &retrieveFilePath(std::string &);
+	bool parseConfigLine(std::string);
 protected:
 
 private:
 	bool valid;
+	std::vector<std::string> configFile;
 };
 
 #endif

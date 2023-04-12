@@ -31,7 +31,7 @@ TEST(WebServerTest, TestNginxConfig) {
 
   // Load the same configuration file in your web server program
   // and capture the output to a string
-  std::string server_cmd = "./webserv " + config_file_path;
+  std::string server_cmd = "./build/webserv " + config_file_path;
   pipe = popen(server_cmd.c_str(), "r");
   if (!pipe) {
     std::cerr << "Error running command: " << server_cmd << std::endl;
