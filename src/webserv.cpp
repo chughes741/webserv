@@ -76,17 +76,25 @@ Webserv::~Webserv(void){
 
 //TODO Make it recursive to recall the function if the line content is http{server{listen 80...*/
 bool Webserv::parseConfigLine(std::string line) {
-	size_t pos = line.find_first_not_of(" \t");
-	if (pos == line.npos) {
-		pos = 0;}
+	size_t pos = line.find_first_not_of(" \t\n");
+	if (pos == line.npos){
+		return (true);}
 	std::string trim = line.substr(pos);
-	if (*trim.begin() == '#')
-		return (true);
-	size_t npos = trim.find_first_of(' ');
-	if (npos != trim.npos) {
-		std::string setting = trim.substr(0, npos);
-		//std::cout << setting << std::endl;
-	}
+	if (trim.empty() || *trim.begin() == '#' || *trim.begin() == '{') {
+		return (true);}
+	size_t npos = trim.find_first_of(" #{");
+	if (npos == trim.npos) {
+	// One charactere management
+		npos = 1;
+		std::cout << trim << std::endl;
+		return true;}
+	std::string setting = trim.substr(0, npos);
+	std::cout << setting << std::endl;
+	// Recurse until end of line
+	if (trim[npos] == '#') {
+		return (true);}
+	trim = trim.substr(npos + 1);
+	parseConfigLine(trim);
 	return (true);
 }
 
@@ -95,4 +103,5 @@ std::string &Webserv::retrieveFilePath(std::string &conf) {
 
 	realpath(conf.c_str(), buf);
 	conf = std::string(buf);
-	return (conf);}
+	return (conf);
+}
