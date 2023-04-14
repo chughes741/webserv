@@ -27,7 +27,7 @@ protected:
 private:
 	//Enum blockType? Events;http;server;location
 	std::string blockType;
-	std::vector<ConfigBlock>
+	std::vector<ConfigBlock> asda
 
 	//All configurations available
 	//server_name ...;

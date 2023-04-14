@@ -59,5 +59,5 @@ fclean: clean
 # Removes objects and executables and remakes
 re: fclean all
 
-exe:
+exe: $(NAME)
 	./$(NAME) webserv.conf
