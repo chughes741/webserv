@@ -1,15 +1,19 @@
-#include "server.hpp"
+#include "events.hpp"
 
 //**************************************************************************//
 //                              Constructors                                //
 //**************************************************************************//
 
-Server::Server(void) : bracketClose(false) {
-	if (bracketClose == false) {;}
-	}
+Events::Events(void) : settings() {
+	settings.push_back("worker_connections");
+	settings.push_back("use");
+	settings.push_back("multi_accept");
+	settings.push_back("accept_mutex_delay");
+	settings.push_back("debug_connection");
+	settings.push_back("use_poll");
+	settings.push_back("deferred_accept");}
 
-Server::Server(const Server &copy) {
-	std::cout << "Server copy construction" << std::endl;
+Events::Events(const Events &copy) {
 	*this = copy;}
 
 //**************************************************************************//
@@ -24,18 +28,26 @@ Server::Server(const Server &copy) {
 //                             Member functions                             //
 //**************************************************************************//
 
+bool Events::isSetting(std::string setting) {
+	std::vector<std::string>::const_iterator it_end = settings.end();
+	for (std::vector<std::string>::const_iterator it = settings.begin(); it != it_end; ++it) {
+		if (setting.compare(*it)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 //**************************************************************************//
 //                           Operators overload                             //
 //**************************************************************************//
 
-Server &Server::operator=(const Server &copy){
+Events &Events::operator=(const Events &copy){
 	if (this != &copy){}
-	std::cout << "Server copy assignment operator" << std::endl;
 	return (*this);}
 
 //**************************************************************************//
 //                               Destructors                                //
 //**************************************************************************//
 
-Server::~Server(void){
-	std::cout << "Server destruction" << std::endl;}
+Events::~Events(void){}

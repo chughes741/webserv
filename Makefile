@@ -25,9 +25,8 @@ I = include/
 
 # Dir and file names
 NAME	=	webserv
-SRCS	=	webserv.cpp main.cpp \
-			Exception.cpp
-INC		=	webserv.hpp
+SRCS	=	Exception.cpp server.cpp events.cpp webserv.cpp main.cpp
+INC		=	Exception.hpp server.hpp events.hpp webserv.hpp
 OBJS	=	$(SRCS:%=$O%.o)
 
 #------------------------------------------------------------------------------#

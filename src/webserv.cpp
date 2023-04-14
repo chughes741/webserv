@@ -4,11 +4,21 @@
 //                              Constructors                                //
 //**************************************************************************//
 
-Webserv::Webserv(void) : valid(false), configFile() {
-}
+Webserv::Webserv(void) : valid(false),
+	configFile() {
+		block.push_back(std::string("out"));
+		block.push_back(std::string("events"));
+		block.push_back(std::string("http"));
+		block.push_back(std::string("server"));
+		block.push_back(std::string("location"));}
 
 Webserv::Webserv(const std::string &conf) : valid(false), configFile() {
 	/* Print parsing error in the parsing */
+	block.push_back(std::string("out"));
+	block.push_back(std::string("events"));
+	block.push_back(std::string("http"));
+	block.push_back(std::string("server"));
+	block.push_back(std::string("location"));
 	valid = parseConfiguration(conf);
 }
 
@@ -95,21 +105,52 @@ bool isSetting(std::string line) {
 	return true;
 }
 
+bool Webserv::isBlock(std::string setting) {
+	for (size_t i = 1; i < block.size();i++) {
+		if (setting == block.at(i)) {
+			return (true);}
+	}
+	return (false);
+}
+
+int Webserv::checkBlock(std::string setting) {
+	for (size_t i = 1; i < block.size();i++) {
+		if (setting == block.at(i)) {
+			switch (i) {
+				case EVENTS:
+					if (events.size() > 1){
+						std::cerr << "Error: cannot more than 1 events block" << std::endl;
+						return -1;}
+					events.push_back(Events());
+					break;
+				default:;
+			}
+			return (i);}
+	}
+	return (OUT);
+}
+
+
 //TODO Make it recursive to recall the function if the line content is http{server{listen 80...*/
 bool Webserv::parseConfigLine(std::string line) {
-	static int config = 0;
+	static int bracket = OUT;
+
 	if (isComment(line) || !isSetting(line)) {
 		return true;}
 	std::string setting = line.substr(0, line.find_first_of("{ \t"));
-	if (setting == "events"){
-		//...
-
-		parseConfigLine(line.substr(6));
+	if (isBlock(setting)) {
+		bracket = checkBlock(setting);}
+	switch (bracket) {
+		case EVENTS:
+			if (events.begin()->isSetting(setting) == false) {
+				return true;}
+			break;
+		default:;
 	}
 	// if closing bracket
 	// { update current class bracket, and switch the static config should be an enum;
 	//
-	if (config != 0) {return true;}
+	if (bracket != 0) {;}
 	std::cout << line << " - " << setting << std::endl;
 	return true;
 }
