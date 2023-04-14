@@ -16,18 +16,21 @@ public:
 	~Events();
 //Destructors
 //Copy assignment operator (Required)
-	Events & operator = (const Events &copy);
+	Events & operator = (const Events &);
 //Operators
 //Swap function
 //Setters & Getters
-	bool isSetting(std::string);
+	int getWorkerConnections() const {return worker_connections;}
 //Other functions
+	bool isSetting(std::string);
+	bool setSetting(std::string, std::string);
+	bool setWorkerConnections(std::string value);
 protected:
 
 private:
 	std::vector<std::string> settings;
 	/*  Specifies the maximum number of connections that each worker process can handle simultaneously. */
-	// int worker_connections;
+	int worker_connections;
 	// /* Specifies the event module to be used. The available options are "epoll", "kqueue", "devpoll", "poll", and "select". */
 	// std::string use; // epoll, kqueue, devpoll, poll, select
 	// /* Enables or disables the ability of a worker process to accept multiple connections at once. */

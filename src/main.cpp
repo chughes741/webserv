@@ -14,7 +14,8 @@ int main(int argc, char *argv[]) {
 			return (EXIT_FAILURE);
 		}
 		else {
-			//webserv.printConfig();
+			// webserv.printConfig();
+			webserv.printSettings();
 		}
 	}
 }

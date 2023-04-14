@@ -10,13 +10,18 @@ DEFAULT_GOAL: all
 # Hide calls
 HIDE = @
 
+# Argument test
+ARG = webserv.conf
+
 #------------------------------------------------------------------------------#
 #                                VARIABLES                                     #
 #------------------------------------------------------------------------------#
 
 # Compiler and flags
 CC		=	c++
-CFLAGS	=	-Wall -Werror -Wextra -Wc++11-extensions -std=c++98 -I$I
+CFLAGS	=	-Wall -Werror -Wextra -g -Wc++11-extensions -std=c++98 -I$I
+SFLAGS = -fsanitize=address
+LFLAGS = --leak-check=full --show-leak-kinds=all
 RM		=	rm -rf
 
 S = src/
@@ -60,4 +65,11 @@ fclean: clean
 re: fclean all
 
 exe: $(NAME)
-	./$(NAME) webserv.conf
+	./$(NAME) $(ARG)
+
+leak: $(NAME)
+	valgrind $(LFLAGS) ./$(NAME) $(ARG)
+
+segfault: $(OBJ)
+	$(HIDE) $(CC) $(CFLAGS) $(SFLAGS) $(OBJS) -o $(NAME)
+.PHONY: segfault
