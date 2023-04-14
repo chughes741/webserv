@@ -5,8 +5,7 @@
 //**************************************************************************//
 
 Webserv::Webserv(void) : valid(false),
-	configFile(),
-	events() {
+	configFile() {
 		block.push_back(std::string("out"));
 		block.push_back(std::string("events"));
 		block.push_back(std::string("http"));
@@ -129,11 +128,10 @@ int Webserv::checkBlock(std::string setting) {
 		if (setting == block.at(i)) {
 			switch (i) {
 				case EVENTS:
-					if (events.size() > 0){
+					if (events.size() > 1){
 						std::cerr << "Error: cannot more than 1 events block" << std::endl;
 						return -1;}
-					events.push_back(new Events());
-					std::cout << events.size(); 
+					events.push_back(Events());
 					break;
 				default:;
 			}
@@ -151,17 +149,19 @@ bool Webserv::parseConfigLine(std::string line) {
 		return true;}
 	std::string setting = line.substr(0, line.find_first_of("{ \t"));
 	if (isBlock(setting)) {
-		bracket = checkBlock(setting);
-		/* add parsing if other content on same line */
-		return (true);}
+		bracket = checkBlock(setting);}
 	switch (bracket) {
 		case EVENTS:
-			if (events.front()->isSetting(setting)) {
-				std::cout << setting << std::endl;
-				events.front()->setSetting(setting, line.substr(setting.length()));}
+			if (events.begin()->isSetting(setting) == false) {
+				return true;}
 			break;
 		default:;
 	}
+	// if closing bracket
+	// { update current class bracket, and switch the static config should be an enum;
+	//
+	if (bracket != 0) {;}
+	std::cout << line << " - " << setting << std::endl;
 	return true;
 }
 //Verify every element is well close after

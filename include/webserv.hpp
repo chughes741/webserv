@@ -40,14 +40,14 @@ public:
 	std::string &retrieveFilePath(std::string &);
 	bool parseConfigLine(std::string);
 	bool isBlock(std::string setting);
-	int checkBlock(std::string setting);
+	int isBlock(std::string setting);
 protected:
 
 private:
 	bool valid;
 	std::vector<std::string> configFile;
 	std::vector<std::string> block;
-	std::vector<Events *> events;
+	std::vector<Events> events;
 };
 
 #endif
