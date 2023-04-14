@@ -3,3 +3,4 @@ Language: Cpp
 BasedOnStyle: Google
 AlignConsecutiveDeclarations: Consecutive
 AlignConsecutiveAssignments: Consecutive
+IndentWidth: 4
