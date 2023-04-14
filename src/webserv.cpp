@@ -74,29 +74,46 @@ Webserv::~Webserv(void){
 //                        Member functions Tools                            //
 //**************************************************************************//
 
+bool isComment(std::string &line) {
+	try {
+		if (line.at(line.find_first_not_of(" \t")) == '#') {
+			return true;}
+	}
+	catch (std::exception &e) {
+		return true;}
+	line = line.substr(line.find_first_not_of(" \t"));
+	return false;
+}
+
+bool isSetting(std::string line) {
+	std::string trim;
+	try {
+		trim = line.substr(0, line.find_first_of(" \t"));
+	}
+	catch (std::exception &e) {
+		return false;}
+	return true;
+}
+
 //TODO Make it recursive to recall the function if the line content is http{server{listen 80...*/
 bool Webserv::parseConfigLine(std::string line) {
-	size_t pos = line.find_first_not_of(" \t\n");
-	if (pos == line.npos){
-		return (true);}
-	std::string trim = line.substr(pos);
-	if (trim.empty() || *trim.begin() == '#' || *trim.begin() == '{') {
-		return (true);}
-	size_t npos = trim.find_first_of(" #{");
-	if (npos == trim.npos) {
-	// One charactere management
-		npos = 1;
-		std::cout << trim << std::endl;
+	static int config = 0;
+	if (isComment(line) || !isSetting(line)) {
 		return true;}
-	std::string setting = trim.substr(0, npos);
-	std::cout << setting << std::endl;
-	// Recurse until end of line
-	if (trim[npos] == '#') {
-		return (true);}
-	trim = trim.substr(npos + 1);
-	parseConfigLine(trim);
-	return (true);
+	std::string setting = line.substr(0, line.find_first_of("{ \t"));
+	if (setting == "events"){
+		//...
+
+		parseConfigLine(line.substr(6));
+	}
+	// if closing bracket
+	// { update current class bracket, and switch the static config should be an enum;
+	//
+	if (config != 0) {return true;}
+	std::cout << line << " - " << setting << std::endl;
+	return true;
 }
+//Verify every element is well close after
 
 std::string &Webserv::retrieveFilePath(std::string &conf) {
 	char buf[PATH_MAX];
