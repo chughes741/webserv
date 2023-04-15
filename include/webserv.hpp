@@ -14,6 +14,7 @@
 # define EVENTS 1
 # define HTTP 	2
 # define SERVER 3
+# define LOCATION 4
 
 class Webserv {
 public:

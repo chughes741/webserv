@@ -5,6 +5,14 @@
 # include <vector>
 # include <algorithm>
 
+# define WORKER_CONNECTIONS	0
+# define USE                 1
+# define MULTI_ACCEPT        2
+# define ACCEPT_MUTEX_DELAY  3
+# define DEBUG_CONNECTION    4
+# define USE_POLL            5
+# define DEFERRED_ACCEPT     6
+
 class Events {
 public:
 //Default constructor (Required)
@@ -23,8 +31,8 @@ public:
 	int getWorkerConnections() const {return worker_connections;}
 //Other functions
 	bool isSetting(std::string);
-	bool setSetting(std::string, std::string);
-	bool setWorkerConnections(std::string value);
+	bool setSetting(std::string, std::string &);
+	bool setWorkerConnections(std::string &);
 protected:
 
 private:

@@ -122,22 +122,21 @@ bool Webserv::isBlock(std::string setting) {
 			return (true);}
 	}
 	return (false);
-}
+} 
 
 int Webserv::checkBlock(std::string setting) {
-	for (size_t i = 1; i < block.size();i++) {
-		if (setting == block.at(i)) {
-			switch (i) {
-				case EVENTS:
-					if (events.size() > 0){
-						std::cerr << "Error: cannot more than 1 events block" << std::endl;
-						return -1;}
-					events.push_back(new Events());
-					std::cout << events.size(); 
-					break;
-				default:;
-			}
-			return (i);}
+	size_t pos = 1;
+	for (; pos < block.size(); ++pos) {
+		if (setting == block.at(pos)) {
+			break;}}
+	switch (pos) {
+		case EVENTS:
+			if (events.size() > 0){
+				throw (std::exception());}
+			events.push_back(new Events());
+			return (pos);
+		default:
+			throw (std::exception());
 	}
 	return (OUT);
 }
@@ -151,15 +150,23 @@ bool Webserv::parseConfigLine(std::string line) {
 		return true;}
 	std::string setting = line.substr(0, line.find_first_of("{ \t"));
 	if (isBlock(setting)) {
-		bracket = checkBlock(setting);
-		/* add parsing if other content on same line */
+		try {
+			bracket = checkBlock(setting);}
+		catch (std::exception &e) {
+			return (false);}
 		return (true);}
 	switch (bracket) {
 		case EVENTS:
 			if (events.front()->isSetting(setting)) {
-				std::cout << setting << std::endl;
-				events.front()->setSetting(setting, line.substr(setting.length()));}
+				line = line.substr(setting.length());
+				return (events.front()->setSetting(setting, line));}
 			break;
+		case HTTP:
+			return true;
+		case SERVER:
+			return true;
+		case LOCATION:
+			return true;
 		default:;
 	}
 	return true;
