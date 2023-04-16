@@ -30,6 +30,7 @@ Events::Events(const Events &copy) {
 
 bool Events::isSetting(std::string setting) {
 	size_t pos = 0;
+	std::cout << "setting: " << setting << ";" << std::endl;
 	for (; pos < settings.size(); ++pos) {
 		if (setting.compare(settings.at(pos)) == 0) {
 			return true;}}
@@ -37,48 +38,55 @@ bool Events::isSetting(std::string setting) {
 }
 
 // Determine if the string following the setting is a valid one, which is an integer that ends with ";" 
-bool Events::setWorkerConnections(std::string &value) {
-	try {
-		worker_connections = std::stoi(value);
-		size_t i = 0;
-		while (i < value.length() && std::isspace(value[i])) {
-			++i;}
-		while (i < value.length() && std::isdigit(value[i])) {
-			++i;}
-		while (i < value.length() && std::isspace(value[i])) {
-			++i;}
-		value = value.substr(i, value.length());
-		if (value[i] != ';' || worker_connections < 1) {
+void Events::setWorkerConnections(std::vector<std::string>::iterator &it) {
+	std::string num = *it;
+	for (size_t i = 0; i < num.length(); ++i) {
+		if (!std::isdigit(num[i])) {
 			throw std::exception();}
 	}
-	catch (std::exception &e) {
-		std::cerr << "Error: Invalid setting (events->worker_connections)" << std::endl;
-		return (false);}
-	return (true);
+	worker_connections = std::stoi(num);
+	if (*(++it) != ";" || worker_connections < 1) {
+		throw std::exception();}
 }
 
-bool Events::setSetting(std::string setting, std::string &value) {
+void Events::setUse(std::vector<std::string>::iterator &it) {
+	std::string options[5] = {"epoll", "kqueue", "devpoll", "poll", "select"};
+	std::string setting = *it;
+	for (size_t pos = 0; pos < 5; ++pos) {
+		if (setting.compare(options[pos]) == 0) {
+			if (*(++it) != ";") {
+				throw std::exception();}
+			use = setting;
+			++it;
+			return;}
+	}
+	throw std::exception();
+}
+
+void Events::setSetting(std::string &setting, std::vector<std::string>::iterator &it) {
 	size_t pos = 0;
 	for (; pos < settings.size(); ++pos) {
 		if (setting.compare(settings.at(pos)) == 0) {
 			break;}}
 	switch (pos) {
 		case WORKER_CONNECTIONS:
-			return (setWorkerConnections(value));
+			setWorkerConnections(it);
+			break;
 		case USE:
-			return false;
+			setUse(it);
+			break;
 		case MULTI_ACCEPT:
-			return false;
+			break;
 		case ACCEPT_MUTEX_DELAY:
-			return false;
+			break;
 		case DEBUG_CONNECTION:
-			return false;
+			break;
 		case USE_POLL:
-			return false;
+			break;
 		case DEFERRED_ACCEPT:
-			return false;
+			break;
 		default:
-			return false; 
+			; 
 	}
 }
 

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HTTP.cpp                                           :+:      :+:    :+:   */
+/*   Http.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malord <malord@student.42.fr>              +#+  +:+       +#+        */
+/*   By: flahoud <flahoud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:43:38 by malord            #+#    #+#             */
-/*   Updated: 2023/04/14 15:18:38 by malord           ###   ########.fr       */
+/*   Updated: 2023/04/15 13:50:10 by flahoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Http.hpp"
 
-HTTP::HTTP(void) : settings() {
+HTTP::HTTP(void) : _settings() {
     //std::cout << "Default HTTP constructor called" << std::endl;
     //THIS will need to be reviewed
     _settings.push_back("include");

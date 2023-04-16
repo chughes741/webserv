@@ -9,6 +9,7 @@
 # include <vector>
 
 # include "events.hpp"
+# include "Exception.hpp"
 
 # define OUT	0
 # define EVENTS 1
@@ -38,15 +39,21 @@ public:
 	void printConfig() const;
 	void printSettings() const;
 //Functions tools
-	std::string &retrieveFilePath(std::string &);
+	std::string retrieveFilePath(const std::string &);
 	bool parseConfigLine(std::string);
-	bool isBlock(std::string setting);
 	int checkBlock(std::string setting);
+
+/* trying new parsing */
+	int isBlock(std::string &setting, bool create);
+	void parseConfig(const std::string &);
+	void readConfig(const std::string &);
+	void parseItem(std::vector<std::string>::iterator &, int &);
 protected:
 
 private:
 	bool valid;
 	std::vector<std::string> configFile;
+	std::vector<std::string> configItems;
 	std::vector<std::string> block;
 	std::vector<Events *> events;
 };

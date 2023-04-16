@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Exception.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malord <malord@student.42.fr>              +#+  +:+       +#+        */
+/*   By: flahoud <flahoud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 13:52:13 by malord            #+#    #+#             */
-/*   Updated: 2023/04/14 14:02:53 by malord           ###   ########.fr       */
+/*   Updated: 2023/04/15 14:39:02 by flahoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,24 @@
 #include <stdexcept>
 #include <string>
 
-class WebExcep : public std::exception {
+class WebExcep {
    public:
     class WrongParameter : public std::exception {
        public:
-        virtual const char *what() const throw();
+        virtual const char *what() const _NOEXCEPT;
+		virtual ~WrongParameter() _NOEXCEPT {}
     };
+	class FileError : public std::exception {
+	public:
+		FileError(const std::string& filename) :
+			message("Error: cannot open file " + filename) {}
+		virtual const char *what() const _NOEXCEPT {
+			return message.c_str();
+		}
+		virtual ~FileError() _NOEXCEPT  {}
+		
+	private:
+		std::string message;
+	};
 };
 #endif

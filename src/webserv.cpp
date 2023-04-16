@@ -7,6 +7,7 @@
 Webserv::Webserv(void) : valid(false),
 	configFile(),
 	events() {
+		events.clear();
 		block.push_back(std::string("out"));
 		block.push_back(std::string("events"));
 		block.push_back(std::string("http"));
@@ -15,13 +16,13 @@ Webserv::Webserv(void) : valid(false),
 
 Webserv::Webserv(const std::string &conf) : valid(false), configFile(),
 	events() {
-	/* Print parsing error in the parsing */
+	events.clear();
 	block.push_back(std::string("out"));
 	block.push_back(std::string("events"));
 	block.push_back(std::string("http"));
 	block.push_back(std::string("server"));
 	block.push_back(std::string("location"));
-	valid = parseConfiguration(conf);
+	parseConfig(conf);
 }
 
 Webserv::Webserv(const Webserv &copy) {*this = copy;}
@@ -38,23 +39,102 @@ Webserv::Webserv(const Webserv &copy) {*this = copy;}
 //                             Member functions                             //
 //**************************************************************************//
 
-bool Webserv::parseConfiguration(std::string conf) {
+//Verify if file empty or directory (which is empty) then store file in configFile
+void	Webserv::readConfig(const std::string &conf) {
 	std::string line;
 	std::ifstream infile(conf);
 
-	//TODO Verify if file ./ should return error
-	if (!infile.is_open()) {
-		return (false);}
+	if (!infile.is_open() || infile.peek() == std::ifstream::traits_type::eof()) {
+		throw WebExcep::FileError(conf);}
 	std::string filePath = retrieveFilePath(conf);
 	configFile.push_back("# configuration file " + filePath + ":");
 	while(getline(infile, line)) {
-		if (parseConfigLine(line) == false) {
-			infile.close();
-			return (false);}
-		configFile.push_back(line);}
+		configFile.push_back(line.substr(0, line.find_first_of("\n")));
+		while (line.size() > 0) {
+			size_t pos = line.find_first_not_of(" \t");
+			if (pos == line.npos || line[pos] == '#') {break;}
+			line = line.substr(pos);
+			pos = line.find_first_of("\\#{}; \t\n\0");
+			pos == 0 ? pos = 1: pos ;
+			std::string tmp = line.substr(0, pos);
+			configItems.push_back(tmp);
+			line = line.substr(tmp.size());
+		}
+	}
 	infile.close();
-	return (true);
 }
+
+/* Determine if line is a comment */
+bool isComment(std::string &line) {
+	if (line.length() > 0 && line[0] == '#') {
+		return true;}
+	return false;
+}
+
+/* Determine if we are entering a new block settings */
+int Webserv::isBlock(std::string &setting, bool create) {
+	for (size_t i = 1; i < block.size();i++) {
+		if (setting == block.at(i)) {
+			if (!create) {
+				return (i);}
+			switch (i) {
+				case EVENTS:
+					if (!events.empty()) {
+						// TODO define exception, can only be 1 events block
+						throw std::exception();
+					}
+					events.push_back(new Events());
+					break;
+				default:
+					;
+			}
+			return (i);}
+	}
+	return (0);
+} 
+
+void Webserv::parseItem(std::vector<std::string>::iterator &it, int &block) {
+	std::string item = *it;
+	std::string next = *(++it);
+	if (isBlock(item, false) && it != configItems.end() && next.compare("{") == 0) {
+		block = isBlock(item, true);}
+	else {
+		switch (block) {
+		case OUT:
+			break;
+		case EVENTS:
+			events[events.size() - 1]->setSetting(item, it);
+			break;
+		case HTTP:
+			break;
+		case SERVER:
+			break;
+		case LOCATION:
+			break;
+		default:
+			// TODO Find why we could end up here and define the exception
+			throw std::exception();}
+	}
+	if ((*it).compare("}") == 0) {
+		--block;}
+}
+
+void Webserv::parseConfig(const std::string &conf) {
+	static int block = OUT;
+	readConfig(conf);
+	std::vector<std::string>::iterator it = configItems.begin();
+	std::vector<std::string>::iterator it_end = configItems.end();
+	for (; it != it_end; ++it) {
+		parseItem(it, block);
+	}
+	if (block != OUT)
+	// Means all brackets are not properly closed
+		throw std::exception();
+}
+
+//**************************************************************************//
+//                             Print tools                                  //
+//**************************************************************************//
 
 void	Webserv::printConfig() const {
 	std::vector<std::string>::const_iterator it = configFile.begin();
@@ -64,8 +144,11 @@ void	Webserv::printConfig() const {
 }
 
 void	Webserv::printSettings() const {
-	std::cout << "--EVENTS--" << std::endl;
-	std::cout << "Worker_Connections:" << events[0]->getWorkerConnections() << std::endl;
+	if (events.size() > 0)  {
+		std::cout << "--EVENTS--" << std::endl;
+		std::cout << "Worker_Connections:" << events[0]->getWorkerConnections() << std::endl;
+		std::cout << "Use:" << events[0]->getUse() << std::endl;
+	}
 }
 
 //**************************************************************************//
@@ -95,88 +178,9 @@ Webserv::~Webserv(void){
 //                        Member functions Tools                            //
 //**************************************************************************//
 
-bool isComment(std::string &line) {
-	try {
-		if (line.at(line.find_first_not_of(" \t")) == '#') {
-			return true;}
-	}
-	catch (std::exception &e) {
-		return true;}
-	line = line.substr(line.find_first_not_of(" \t"));
-	return false;
-}
-
-bool isSetting(std::string line) {
-	std::string trim;
-	try {
-		trim = line.substr(0, line.find_first_of(" \t"));
-	}
-	catch (std::exception &e) {
-		return false;}
-	return true;
-}
-
-bool Webserv::isBlock(std::string setting) {
-	for (size_t i = 1; i < block.size();i++) {
-		if (setting == block.at(i)) {
-			return (true);}
-	}
-	return (false);
-} 
-
-int Webserv::checkBlock(std::string setting) {
-	size_t pos = 1;
-	for (; pos < block.size(); ++pos) {
-		if (setting == block.at(pos)) {
-			break;}}
-	switch (pos) {
-		case EVENTS:
-			if (events.size() > 0){
-				throw (std::exception());}
-			events.push_back(new Events());
-			return (pos);
-		default:
-			throw (std::exception());
-	}
-	return (OUT);
-}
-
-
-//TODO Make it recursive to recall the function if the line content is http{server{listen 80...*/
-bool Webserv::parseConfigLine(std::string line) {
-	static int bracket = OUT;
-
-	if (isComment(line) || !isSetting(line)) {
-		return true;}
-	std::string setting = line.substr(0, line.find_first_of("{ \t"));
-	if (isBlock(setting)) {
-		try {
-			bracket = checkBlock(setting);}
-		catch (std::exception &e) {
-			return (false);}
-		return (true);}
-	switch (bracket) {
-		case EVENTS:
-			if (events.front()->isSetting(setting)) {
-				line = line.substr(setting.length());
-				return (events.front()->setSetting(setting, line));}
-			break;
-		case HTTP:
-			return true;
-		case SERVER:
-			return true;
-		case LOCATION:
-			return true;
-		default:;
-	}
-	return true;
-}
-//Verify every element is well close after
-
-std::string &Webserv::retrieveFilePath(std::string &conf) {
+std::string Webserv::retrieveFilePath(const std::string &conf) {
 	char buf[PATH_MAX];
 
 	realpath(conf.c_str(), buf);
-	conf = std::string(buf);
-	return (conf);
+	return(std::string(buf));
 }

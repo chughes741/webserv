@@ -27,12 +27,16 @@ public:
 	Events & operator = (const Events &);
 //Operators
 //Swap function
-//Setters & Getters
+//Setters
+	void setWorkerConnections(std::vector<std::string>::iterator &);
+	void setUse(std::vector<std::string>::iterator &);
+//Getters
 	int getWorkerConnections() const {return worker_connections;}
+	std::string getUse() const {return use;}
 //Other functions
 	bool isSetting(std::string);
-	bool setSetting(std::string, std::string &);
-	bool setWorkerConnections(std::string &);
+	void setSetting(std::string &, std::vector<std::string>::iterator &);
+
 protected:
 
 private:
@@ -40,7 +44,7 @@ private:
 	/*  Specifies the maximum number of connections that each worker process can handle simultaneously. */
 	int worker_connections;
 	// /* Specifies the event module to be used. The available options are "epoll", "kqueue", "devpoll", "poll", and "select". */
-	// std::string use; // epoll, kqueue, devpoll, poll, select
+	std::string use; // epoll, kqueue, devpoll, poll, select
 	// /* Enables or disables the ability of a worker process to accept multiple connections at once. */
 	// bool multi_accept; // On or off
 	// /* Enables or disables the accept mutex, which prevents multiple worker processes from trying to accept connections at the same time. */
