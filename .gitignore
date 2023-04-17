@@ -40,3 +40,6 @@ webserv
 # CMake build
 build/*
 webserv
+
+# VSCode
+.vscode/
