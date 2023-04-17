@@ -58,20 +58,20 @@ struct ServerConfig {
 struct EventsConfig {
     int worker_connections; /**< Maximum number of connections per worker */
     std::string use;        /**< I/O multiplexing method */
-    bool multi_accept;      /**< Whether to accept multiple connections at once */
-    int accept_mutex_delay; /**< Delay before accepting new connections */
-    bool debug_connection;  /**< Whether to print debug information */
-    bool use_poll;          /**< Whether to use poll() instead of select() */
-    bool deferred_accept;   /**< Whether to defer accepting new connections */
+    bool multi_accept; /**< Whether to accept multiple connections at once */
+    int  accept_mutex_delay; /**< Delay before accepting new connections */
+    bool debug_connection;   /**< Whether to print debug information */
+    bool use_poll;           /**< Whether to use poll() instead of select() */
+    bool deferred_accept;    /**< Whether to defer accepting new connections */
 };
 
 /**
  * @brief Configuration for an HTTP server
  */
 struct HttpConfig {
-    int worker_processes;   /**< Number of worker processes to spawn */
-    std::string error_log;  /**< Path to the error log file */
-    std::string pid_file;   /**< Path to the PID file */
-    EventsConfig events;    /**< Events block */
+    int          worker_processes; /**< Number of worker processes to spawn */
+    std::string  error_log;        /**< Path to the error log file */
+    std::string  pid_file;         /**< Path to the PID file */
+    EventsConfig events;           /**< Events block */
     std::vector<ServerConfig> servers; /**< List of server blocks */
 };
