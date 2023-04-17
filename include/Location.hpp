@@ -6,7 +6,7 @@
 /*   By: malord <malord@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:31:19 by malord            #+#    #+#             */
-/*   Updated: 2023/04/14 14:41:26 by malord           ###   ########.fr       */
+/*   Updated: 2023/04/17 09:12:38 by malord           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ class Location {
 
    protected:
    private:
+      std::vector<std::string> _settings;
 };
 #endif

@@ -6,15 +6,31 @@
 /*   By: malord <malord@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 14:49:03 by malord            #+#    #+#             */
-/*   Updated: 2023/04/14 15:27:24 by malord           ###   ########.fr       */
+/*   Updated: 2023/04/17 09:14:43 by malord           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Location.hpp"
 
-Location::Location(void)
-{
+Location::Location(void) : _settings() {
     //std::cout << "Location default constructor called" << std::endl;
+    // THIS will need to be reviewed
+    _settings.push_back("proxy_pass");
+    _settings.push_back("root");
+    _settings.push_back("alias");
+    _settings.push_back("try_files");
+    _settings.push_back("rewrite");
+    _settings.push_back("proxy_set_header");
+    _settings.push_back("proxy_pass_header");
+    _settings.push_back("proxy_redirect");
+    _settings.push_back("expires");
+    _settings.push_back("auth_basic");
+    _settings.push_back("allow and deny");
+    _settings.push_back("fastcgi_pass");
+    _settings.push_back("uwsgi_pass");
+    _settings.push_back("scgi_pass");
+    _settings.push_back("grpc_pass");
+    
 }
 
 Location::Location(const Location &copy) // : To update for the initializer list
