@@ -5,6 +5,8 @@
 # include <vector>
 # include <algorithm>
 
+# include "Exception.hpp"
+
 # define WORKER_CONNECTIONS	0
 # define USE                 1
 # define MULTI_ACCEPT        2

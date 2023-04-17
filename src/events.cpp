@@ -55,9 +55,8 @@ void Events::setUse(std::vector<std::string>::iterator &it) {
 	for (size_t pos = 0; pos < 5; ++pos) {
 		if (setting.compare(options[pos]) == 0) {
 			if (*(++it) != ";") {
-				throw std::exception();}
+				throw WebExcep::WrongSettingValue("use");}
 			use = setting;
-			++it;
 			return;}
 	}
 	throw std::exception();
@@ -86,7 +85,7 @@ void Events::setSetting(std::string &setting, std::vector<std::string>::iterator
 		case DEFERRED_ACCEPT:
 			break;
 		default:
-			; 
+			throw WebExcep::UnknownDirective(setting); // unknown directive
 	}
 }
 

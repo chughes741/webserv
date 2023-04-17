@@ -57,7 +57,6 @@ void	Webserv::readConfig(const std::string &conf) {
 			pos = line.find_first_of("\\#{}; \t\n\0");
 			pos == 0 ? pos = 1: pos ;
 			std::string tmp = line.substr(0, pos);
-			std::cout << tmp << std::endl;
 			configItems.push_back(tmp);
 			line = line.substr(tmp.size());
 		}
@@ -74,6 +73,7 @@ bool isComment(std::string &line) {
 
 /* Determine if we are entering a new block settings */
 int Webserv::isBlock(std::string &setting, bool create) {
+	std::cout << setting << std::endl;
 	for (size_t i = 1; i < block.size();i++) {
 		if (setting == block.at(i)) {
 			if (!create) {
@@ -86,18 +86,17 @@ int Webserv::isBlock(std::string &setting, bool create) {
 					}
 					events.push_back(new Events());
 					break;
-				default:
-					;
+				default:;
 			}
 			return (i);}
 	}
-	return (0);
+	throw WebExcep::WrongContext(setting);
 } 
 
 void Webserv::parseItem(std::vector<std::string>::iterator &it, int &block, int &level) {
 	std::string item = *it;
 	std::string next = *(++it);
-	if (isBlock(item, false) && it != configItems.end() && next.compare("{") == 0) {
+	if (it != configItems.end() && next.compare("{") == 0 && isBlock(item, false)) {
 		block = isBlock(item, true);
 		++level;}
 	else {
@@ -117,12 +116,14 @@ void Webserv::parseItem(std::vector<std::string>::iterator &it, int &block, int 
 			// TODO Find why we could end up here and define the exception
 			throw std::exception();}
 	}
-	if ((*it).compare("}") == 0) {
+	if ((*(++it)).compare("}") == 0) {
 		--block;
 		--level;
 		if (level == 0) {
 			block = 0;}
 	}
+	else {
+		--it;}
 }
 
 void Webserv::parseConfig(const std::string &conf) {
