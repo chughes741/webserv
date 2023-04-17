@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #define CONFIG_FILE "../config/server.conf"
 

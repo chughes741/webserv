@@ -10,12 +10,12 @@
 
 # include "events.hpp"
 # include "Exception.hpp"
+# include "config.hpp"
 
 # define OUT	0
 # define EVENTS 1
 # define HTTP 	2
 # define SERVER 3
-# define LOCATION 4
 
 class Webserv {
 public:
@@ -56,6 +56,7 @@ private:
 	std::vector<std::string> configItems;
 	std::vector<std::string> block;
 	std::vector<Events *> events;
+	HttpConfig httpConfig;
 };
 
 #endif

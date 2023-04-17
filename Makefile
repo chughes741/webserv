@@ -30,9 +30,9 @@ I = include/
 
 # Dir and file names
 NAME	=	webserv
-SRCS	=	$(wildcard $(SRCDIR)*.c)
-INC		=	$(wildcard $(INCDIR)*.hpp)
-OBJS	=	$(SRCS:%=$O%.o)
+SRCS	=	$(wildcard $S*.cpp)
+INC		=	$(wildcard $I*.hpp)
+OBJS	=	$(SRCS:$S%.cpp=$O%.o)
 
 #------------------------------------------------------------------------------#
 #                                 TARGETS                                      #
@@ -49,7 +49,7 @@ $O:
 	@mkdir $@
 $(OBJS): | $O
 # Compiles sources into objects
-$(OBJS): $O%.o: $S%
+$(OBJS): $O%.o: $S%.cpp
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 # Removes objects

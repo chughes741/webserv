@@ -73,7 +73,6 @@ bool isComment(std::string &line) {
 
 /* Determine if we are entering a new block settings */
 int Webserv::isBlock(std::string &setting, bool create) {
-	std::cout << setting << std::endl;
 	for (size_t i = 1; i < block.size();i++) {
 		if (setting == block.at(i)) {
 			if (!create) {
@@ -109,8 +108,6 @@ void Webserv::parseItem(std::vector<std::string>::iterator &it, int &block, int 
 		case HTTP:
 			break;
 		case SERVER:
-			break;
-		case LOCATION:
 			break;
 		default:
 			// TODO Find why we could end up here and define the exception
