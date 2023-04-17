@@ -5,7 +5,7 @@
 # Special variables
 DEFAULT_GOAL: all
 .DELETE_ON_ERROR: $(NAME)
-.PHONY: all bonus clean fclean re
+.PHONY: all bonus clean fclean re segfault leak exe vcpkg
 
 # Hide calls
 HIDE = @
@@ -20,8 +20,8 @@ ARG = webserv.conf
 # Compiler and flags
 CC		=	c++
 CFLAGS	=	-Wall -Werror -Wextra -g -Wc++11-extensions -std=c++98 -I$I
-SFLAGS = -fsanitize=address
-LFLAGS = --leak-check=full --show-leak-kinds=all
+SFLAGS	=	-fsanitize=address
+LFLAGS	=	--leak-check=full --show-leak-kinds=all
 RM		=	rm -rf
 
 S = src/
@@ -30,8 +30,8 @@ I = include/
 
 # Dir and file names
 NAME	=	webserv
-SRCS	=	Exception.cpp server.cpp events.cpp webserv.cpp main.cpp
-INC		=	Exception.hpp server.hpp events.hpp webserv.hpp
+SRCS	=	$(wildcard $(SRCDIR)*.c)
+INC		=	$(wildcard $(INCDIR)*.hpp)
 OBJS	=	$(SRCS:%=$O%.o)
 
 #------------------------------------------------------------------------------#
@@ -72,4 +72,8 @@ leak: $(NAME)
 
 segfault: $(OBJ)
 	$(HIDE) $(CC) $(CFLAGS) $(SFLAGS) $(OBJS) -o $(NAME)
-.PHONY: segfault
+
+# Installs vcpkg and gtest, doesn't actually work, run it manually
+vcpkg:
+	./vcpkg/bootstrap-vcpkg.sh
+	./vcpkg/vcpkg install gtest
