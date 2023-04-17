@@ -47,7 +47,7 @@ public:
 	int isBlock(std::string &setting, bool create);
 	void parseConfig(const std::string &);
 	void readConfig(const std::string &);
-	void parseItem(std::vector<std::string>::iterator &, int &);
+	void parseItem(std::vector<std::string>::iterator &, int &, int &);
 protected:
 
 private:

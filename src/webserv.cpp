@@ -57,6 +57,7 @@ void	Webserv::readConfig(const std::string &conf) {
 			pos = line.find_first_of("\\#{}; \t\n\0");
 			pos == 0 ? pos = 1: pos ;
 			std::string tmp = line.substr(0, pos);
+			std::cout << tmp << std::endl;
 			configItems.push_back(tmp);
 			line = line.substr(tmp.size());
 		}
@@ -93,11 +94,12 @@ int Webserv::isBlock(std::string &setting, bool create) {
 	return (0);
 } 
 
-void Webserv::parseItem(std::vector<std::string>::iterator &it, int &block) {
+void Webserv::parseItem(std::vector<std::string>::iterator &it, int &block, int &level) {
 	std::string item = *it;
 	std::string next = *(++it);
 	if (isBlock(item, false) && it != configItems.end() && next.compare("{") == 0) {
-		block = isBlock(item, true);}
+		block = isBlock(item, true);
+		++level;}
 	else {
 		switch (block) {
 		case OUT:
@@ -116,18 +118,23 @@ void Webserv::parseItem(std::vector<std::string>::iterator &it, int &block) {
 			throw std::exception();}
 	}
 	if ((*it).compare("}") == 0) {
-		--block;}
+		--block;
+		--level;
+		if (level == 0) {
+			block = 0;}
+	}
 }
 
 void Webserv::parseConfig(const std::string &conf) {
 	static int block = OUT;
+	static int level = 0;
 	readConfig(conf);
 	std::vector<std::string>::iterator it = configItems.begin();
 	std::vector<std::string>::iterator it_end = configItems.end();
 	for (; it != it_end; ++it) {
-		parseItem(it, block);
+		parseItem(it, block, level);
 	}
-	if (block != OUT)
+	if (level != OUT)
 	// Means all brackets are not properly closed
 		throw std::exception();
 }
