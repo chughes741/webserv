@@ -34,6 +34,9 @@ webserv
 *.out
 *.app
 
-// CMake build
+# Debug files
+*.dSYM/
+
+# CMake build
 build/*
 webserv
