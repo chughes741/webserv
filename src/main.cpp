@@ -1,20 +1,47 @@
+// C++ headers
+#include <thread>
+
+// C headers
+#include <sys/socket.h>
+
+// Project headers
+#include "config.hpp"
 #include "webserv.hpp"
 
-/* If no arguments, default configurations? */
-int main(int argc, char *argv[]) {
-	if (argc != 2) {
-		std::cerr << "Error: Incorrect number of arguments." << std::endl;
-		std::cerr << "Usage: ./webserv \"filename\".conf" << std::endl;
-		return (EXIT_FAILURE);}
-	try {
+/** Maximum pending connections in queue */
+#define SO_MAX_QUEUE 10
 
-		/* Create class from conf file*/
-		Webserv webserv( (std::string(argv[1])) );
-		//webserv.printConfig();
-		webserv.printSettings();
-	}
-	catch (std::exception &e) {
-		std::cout <<  e.what() << std::endl;
-		return (EXIT_FAILURE);}
-	return (0);
+/** Global config object */
+HttpConfig httpConfig = HttpConfig();
+
+/**
+ * @brief Main function
+ *
+ * @param argc Number of arguments
+ * @param argv config file name
+ */
+int main(int argc, char *argv[]) {
+    /** Parse the config file x*/
+    if (argc == 1) {
+        parseConfig(CONFIG_FILE);
+    } else if (argc == 2) {
+        parseConfig(argv[1]);
+    } else {
+        std::cerr << "Usage: ./webserv [config_file]" << std::endl;
+        return (EXIT_FAILURE);
+    }
+
+    /** Create listeners for each server block */
+    for (std::vector<ServerConfig>::iterator it = httpConfig.servers.begin();
+         it != httpConfig.servers.end(); it++) {
+        if (listen(it->port, SO_MAX_QUEUE) == -1) {
+            std::cerr << "Error: Failed to listen on port " << it->port
+                      << std::endl;
+            return (EXIT_FAILURE);
+        } else {
+            std::cout << "Listening on port " << it->port << std::endl;
+        }
+    }
+
+    return (EXIT_SUCCESS);
 }
