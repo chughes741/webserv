@@ -1,26 +1,40 @@
-#include "webserv.hpp"
+#include "config.hpp"
+
+void tokenizeConfig(std::vector<std::string> &tokens, std::string line) {
+	while (line.size() > 0) {
+		size_t pos = line.find_first_not_of(" \t");
+		if (pos == line.npos || line[pos] == '#') {break;}
+		line = line.substr(pos);
+		pos = line.find_first_of("\\#{}; \t\n\0");
+		pos == 0 ? pos = 1: pos;
+		std::string tmp = line.substr(0, pos);
+		tokens.push_back(tmp);;
+		line = line.substr(tmp.size());
+	}
+}
 
 /**
- * @brief Parse a config file
+ * @brief Parse a config file. Read the file line by line and split into tokens.
  *
  * @param config_file Path to the config file
  *
- * @return true if the config file was parsed successfully
- * @return false if the config file was not parsed successfully
  */
-bool parseConfig(std::string config_file) {
-    std::ifstream file(config_file.c_str());
-    std::string   line;
+void parseConfig(std::string config_file) {
+	std::string line;
+	std::ifstream file(config_file);
+	std::vector<std::string> tokens;
 
-    if (!file.is_open()) {
-        std::cerr << "Error: Failed to open config file " << config_file
-                  << std::endl;
-        return (false);
-    }
-    while (std::getline(file, line)) {
-        std::cout << line << std::endl;
-    }
-    return (true);
+	if (!file.is_open() || file.peek() == std::ifstream::traits_type::eof()) {
+ 		throw FileError(config_file);}
+	std::string filePath = std::string(realpath(config_file.c_str(), nullptr));
+ 	if (PRINT) {
+		std::cout << "# configuration file " << filePath << ":" << std::endl;}
+ 	while(getline(file, line)) {
+		if (PRINT) {
+			std::cout << line.substr(0, line.find_first_of("\n")) << std::endl;}
+		tokenizeConfig(tokens, line);
+	}
+	file.close();
 }
 
 //**************************************************************************//

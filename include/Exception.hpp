@@ -6,7 +6,7 @@
 /*   By: flahoud <flahoud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 13:52:13 by malord            #+#    #+#             */
-/*   Updated: 2023/04/17 11:01:52 by flahoud          ###   ########.fr       */
+/*   Updated: 2023/04/18 12:09:34 by flahoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,20 @@
 #include <stdexcept>
 #include <string>
 
+class FileError : public std::exception {
+public:
+	FileError(const std::string& config_file) : 
+		message("Error: cannot open file " + config_file) {}
+	virtual const char *what() const throw() {
+		return message.c_str();}
+	virtual ~FileError() throw() {}
+		
+private:
+	std::string message;
+};
+
+
+/* Old Exceptions */
 class WebExcep : public std::exception {
    public:
     class WrongParameter : public std::exception{

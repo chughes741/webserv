@@ -1,6 +1,6 @@
 #pragma once
 
-#include "webserv.hpp"
+#include "config.hpp"
 
 #define WORKER_CONNECTIONS 0
 #define USE 1
@@ -34,6 +34,7 @@
 #define HTTP_VERSION "HTTP/1.1"
 
 using std::string;
+using std::map;
 
 /**
  * @brief Represents an HTTP request

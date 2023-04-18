@@ -4,7 +4,12 @@
 #include <string>
 #include <vector>
 
-#define CONFIG_FILE "../config/server.conf"
+#include "webserv.hpp"
+#include "Exception.hpp"
+
+#define CONFIG_FILE "./config/server.conf"
+
+#define PRINT 0
 
 using std::map;
 using std::string;
@@ -51,4 +56,4 @@ struct HttpConfig {
     vector<ServerConfig> servers;   /**< List of server blocks */
 };
 
-bool parseConfig(string);
+void parseConfig(string);
