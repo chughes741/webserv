@@ -16,7 +16,7 @@ add_compile_options(-Wall -Werror -Wextra -ffast-math -ftree-vectorize)
 add_executable(webserv
   src/main.cpp
   src/config.cpp
-  src/events.cpp
+  src/socket.cpp
 )
 target_include_directories(webserv PUBLIC
   ${PROJECT_SOURCE_DIR}/include/
@@ -43,16 +43,16 @@ add_test(
   COMMAND $<TARGET_FILE:webserv_test>
 )
 
-# events_test
-add_executable(events_test test/events_test.cpp src/events.cpp)
+# socket_test
+add_executable(socket_test test/socket_test.cpp)
 target_link_libraries(
-  events_test
+  socket_test
   PUBLIC gtest_main gmock_main
 )
-target_include_directories(events_test PUBLIC
+target_include_directories(socket_test PUBLIC
   ${PROJECT_SOURCE_DIR}/include/
 )
 add_test(
-  NAME events_test
-  COMMAND $<TARGET_FILE:events_test>
+  NAME socket_test
+  COMMAND $<TARGET_FILE:socket_test>
 )
