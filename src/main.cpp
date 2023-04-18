@@ -1,5 +1,6 @@
 
 #include "config.hpp"
+#include "socket.hpp"
 #include "webserv.hpp"
 
 /** Maximum pending connections in queue */
@@ -14,7 +15,7 @@ HttpConfig httpConfig = HttpConfig();
  * @param argc Number of arguments
  * @param argv config file name
  */
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     /** Parse the config file x*/
 	try {
 		if (argc == 1) {
@@ -31,15 +32,33 @@ int main(int argc, char *argv[]) {
 		return (EXIT_FAILURE);
 	}
 
-    /** Create listeners for each server block */
-    for (std::vector<ServerConfig>::iterator it = httpConfig.servers.begin();
-         it != httpConfig.servers.end(); it++) {
-        if (listen(it->port, SO_MAX_QUEUE) == -1) {
-            std::cerr << "Error: Failed to listen on port " << it->port
-                      << std::endl;
-            return (EXIT_FAILURE);
-        } else {
-            std::cout << "Listening on port " << it->port << std::endl;
+    vector<int>    ports;
+    vector<Socket> sockets;
+
+    /** @todo get ports from config */
+    ports.push_back(3000);
+
+    /** Create a socket for each port */
+    for (vector<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
+        try {
+            sockets.push_back(Socket(*it, INADDR_ANY));
+        } catch (std::runtime_error& e) {
+            std::cerr << e.what() << std::endl;
+        }
+    }
+
+    while (true) {
+        /** @todo accept connections */
+        break;
+    }
+
+    /** Close sockets */
+    for (vector<Socket>::iterator it = sockets.begin(); it != sockets.end();
+         ++it) {
+        try {
+            it->close();
+        } catch (std::runtime_error& e) {
+            std::cerr << e.what() << std::endl;
         }
     }
 
