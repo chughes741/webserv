@@ -12,9 +12,8 @@ Socket::Socket(in_port_t port, in_addr_t addr) throw(runtime_error) {
     }
 
     /** Set socket options */
-    // if (setsockopt(sockfd_, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)) <
-        // 0) {
-        // throw std::runtime_error("Error: Failed to set socket options");
+    // if (setsockopt(sockfd_, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int))
+    // < 0) { throw std::runtime_error("Error: Failed to set socket options");
     // }
 
     addr_in_.sin_family      = AF_INET;     /**< IPv4 */
@@ -48,8 +47,10 @@ Socket& Socket::operator=(const Socket& other) throw() {
     return *this;
 }
 
-Socket::~Socket() throw(runtime_error) {
-    if (close(sockfd_) == -1) {
+Socket::~Socket() throw() {}
+
+void Socket::close() throw(runtime_error) {
+    if (::close(sockfd_) == -1) {
         throw std::runtime_error("Error: Failed to close socket");
     }
 }

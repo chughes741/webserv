@@ -26,13 +26,34 @@ int main(int argc, char* argv[]) {
         return (EXIT_FAILURE);
     }
 
-    /** Create a socket for each server block */
-    /** @todo create a for-loop to generate each socket */
-    try {
-        // Socket socket = Socket(httpConfig.servers[0].port, INADDR_ANY);
-        Socket socket = Socket(3000, INADDR_ANY);
-    } catch (std::runtime_error& e) {
-        std::cerr << e.what() << std::endl;
+    vector<int>    ports;
+    vector<Socket> sockets;
+
+    /** @todo get ports from config */
+    ports.push_back(3000);
+
+    /** Create a socket for each port */
+    for (vector<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
+        try {
+            sockets.push_back(Socket(*it, INADDR_ANY));
+        } catch (std::runtime_error& e) {
+            std::cerr << e.what() << std::endl;
+        }
+    }
+
+    while (true) {
+        /** @todo accept connections */
+        break;
+    }
+
+    /** Close sockets */
+    for (vector<Socket>::iterator it = sockets.begin(); it != sockets.end();
+         ++it) {
+        try {
+            it->close();
+        } catch (std::runtime_error& e) {
+            std::cerr << e.what() << std::endl;
+        }
     }
 
     return (EXIT_SUCCESS);

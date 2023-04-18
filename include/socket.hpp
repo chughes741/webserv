@@ -47,10 +47,15 @@ class Socket {
 
     /**
      * @brief Destroy the Socket object
+     */
+    ~Socket() throw();
+
+    /**
+     * @brief Close the socket
      *
      * @throw std::runtime_error
      */
-    ~Socket() throw(runtime_error);
+    void close() throw(runtime_error);
 
     /**
      * @brief Accept a connection and connects to it
@@ -75,7 +80,7 @@ class Socket {
      */
     string recv() const throw(runtime_error);
 
-   private:
+   public:
     int                     sockfd_;         /**< Socket file descriptor */
     struct sockaddr_in      addr_in_;        /**< Socket address */
     map<int, socket_addr_t> client_sockets_; /**< Map of client sockets */
