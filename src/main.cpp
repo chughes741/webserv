@@ -1,10 +1,4 @@
-// C++ headers
-#include <thread>
 
-// C headers
-#include <sys/socket.h>
-
-// Project headers
 #include "config.hpp"
 #include "webserv.hpp"
 
