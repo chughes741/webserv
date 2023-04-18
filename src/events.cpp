@@ -1,104 +1,76 @@
 #include "events.hpp"
 
-//**************************************************************************//
-//                              Constructors                                //
-//**************************************************************************//
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::string;
 
-Events::Events(void) {
-	settings.push_back("worker_connections");
-	settings.push_back("use");
-	settings.push_back("multi_accept");
-	settings.push_back("accept_mutex_delay");
-	settings.push_back("debug_connection");
-	settings.push_back("use_poll");
-	settings.push_back("deferred_accept");}
+/** @todo check if this buffersize should be larger */
+#define READ_BUFFER_SIZE 1024
+#define CRLF "\r\n"
 
-Events::Events(const Events &copy) {
-	*this = copy;}
+/**
+ * @brief Read a request from a socket
+ *
+ * @param socket socket to read from
+ * @return Request the request that was read
+ */
+Request readRequest(int socket) {
+    Request request;
 
-//**************************************************************************//
-//                                 Setters                                  //
-//**************************************************************************//
+    char   buffer[READ_BUFFER_SIZE];
+    string buffer_string;
+    int    bytes_read = recv(socket, buffer, READ_BUFFER_SIZE, 0);
 
-//**************************************************************************//
-//                                 Getters                                  //
-//**************************************************************************//
+    while (bytes_read > 0) {
+        buffer_string.append(buffer, bytes_read);
+        bytes_read = recv(socket, buffer, READ_BUFFER_SIZE, 0);
+    }
 
-//**************************************************************************//
-//                             Member functions                             //
-//**************************************************************************//
+    if (bytes_read == -1) {
+        cerr << "Error reading from socket" << endl;
+    }
 
-bool Events::isSetting(std::string setting) {
-	size_t pos = 0;
-	std::cout << "setting: " << setting << ";" << std::endl;
-	for (; pos < settings.size(); ++pos) {
-		if (setting.compare(settings.at(pos)) == 0) {
-			return true;}}
-	return false;
-}
+    /** start-line */
+    request.method = buffer_string.substr(0, buffer_string.find(' '));
+    buffer_string.erase(0, buffer_string.find(' ') + 1);
+    request.uri = buffer_string.substr(0, buffer_string.find(' '));
+    buffer_string.erase(0, buffer_string.find(' ') + 1);
+    request.version = buffer_string.substr(0, buffer_string.find(CRLF));
+    buffer_string.erase(0, buffer_string.find(CRLF) + 2);
 
-// Determine if the string following the setting is a valid one, which is an integer that ends with ";" 
-void Events::setWorkerConnections(std::vector<std::string>::iterator &it) {
-	std::string num = *it;
-	for (size_t i = 0; i < num.length(); ++i) {
-		if (!std::isdigit(num[i])) {
-			throw std::exception();}
+    /** body */
+    request.body = buffer_string.substr(buffer_string.find("\r\n\r\n") + 4);
+    buffer_string.erase(buffer_string.find("\r\n\r\n") + 2);
+
+    /** headers */
+	while (buffer_string.find(CRLF) != string::npos) {
+		string key = buffer_string.substr(0, buffer_string.find(':'));
+		buffer_string.erase(0, buffer_string.find(':') + 2);
+		string value = buffer_string.substr(0, buffer_string.find(CRLF));
+		buffer_string.erase(0, buffer_string.find(CRLF) + 2);
+		request.headers[key] = value;
 	}
-	worker_connections = std::stoi(num);
-	if (*(++it) != ";" || worker_connections < 1) {
-		throw std::exception();}
+
+    return request;
 }
 
-void Events::setUse(std::vector<std::string>::iterator &it) {
-	std::string options[5] = {"epoll", "kqueue", "devpoll", "poll", "select"};
-	std::string setting = *it;
-	for (size_t pos = 0; pos < 5; ++pos) {
-		if (setting.compare(options[pos]) == 0) {
-			if (*(++it) != ";") {
-				throw WebExcep::WrongSettingValue("use");}
-			use = setting;
-			return;}
+void writeResponse(int socket, Response response) {
+    string buffer;
+
+    /** status-line */
+    buffer.append(response.version + " ");
+    buffer.append(response.status + " ");
+    buffer.append(response.server + CRLF);
+
+    /** headers */
+	for (map<string, string>::iterator it = response.headers.begin();
+		 it != response.headers.end(); ++it) {
+		buffer.append(it->first + ": " + it->second + CRLF);
 	}
-	throw std::exception();
+
+    /** body */
+    buffer.append(CRLF + response.body);
+
+    send(socket, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
 }
-
-void Events::setSetting(std::string &setting, std::vector<std::string>::iterator &it) {
-	size_t pos = 0;
-	for (; pos < settings.size(); ++pos) {
-		if (setting.compare(settings.at(pos)) == 0) {
-			break;}}
-	switch (pos) {
-		case WORKER_CONNECTIONS:
-			setWorkerConnections(it);
-			break;
-		case USE:
-			setUse(it);
-			break;
-		case MULTI_ACCEPT:
-			break;
-		case ACCEPT_MUTEX_DELAY:
-			break;
-		case DEBUG_CONNECTION:
-			break;
-		case USE_POLL:
-			break;
-		case DEFERRED_ACCEPT:
-			break;
-		default:
-			throw WebExcep::UnknownDirective(setting); // unknown directive
-	}
-}
-
-//**************************************************************************//
-//                           Operators overload                             //
-//**************************************************************************//
-
-Events &Events::operator=(const Events &copy){
-	if (this != &copy){}
-	return (*this);}
-
-//**************************************************************************//
-//                               Destructors                                //
-//**************************************************************************//
-
-Events::~Events(void){}
