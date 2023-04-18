@@ -67,18 +67,20 @@ class Socket {
     /**
      * @brief Calls send() on the socket
      *
+     * @param port port to send to
      * @param buffer message to send
      * @throw std::runtime_error
      */
-    void send(string buffer) const throw(runtime_error);
+    void send(int port, string buffer) const throw(runtime_error);
 
     /**
      * @brief Calls recv() on the socket
      *
+     * @param port port to receive from
      * @return string - message received
      * @throw std::runtime_error
      */
-    string recv() const throw(runtime_error);
+    string recv(int port) const throw(runtime_error);
 
    public:
     int                     sockfd_;         /**< Socket file descriptor */

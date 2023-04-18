@@ -72,22 +72,22 @@ void Socket::accept() throw(runtime_error) {
     client_sockets_.insert(make_pair(socket_fd, socket_addr));
 }
 
-void Socket::send(string buffer) const throw(runtime_error) {
+void Socket::send(int port, string buffer) const throw(runtime_error) {
     ssize_t bytes_sent =
-        ::send(sockfd_, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
+        ::send(port, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
     if (bytes_sent == -1) {
         throw std::runtime_error("Error: Failed to send to socket");
     }
 }
 
-string Socket::recv() const throw(runtime_error) {
+string Socket::recv(int port) const throw(runtime_error) {
     string buffer_str;
     char   buffer[READ_BUFFER_SIZE];
-    int    bytes_received = ::recv(sockfd_, buffer, READ_BUFFER_SIZE, 0);
+    int    bytes_received = ::recv(port, buffer, READ_BUFFER_SIZE, 0);
 
     while (bytes_received > 0) {
         buffer_str.append(buffer, bytes_received);
-        bytes_received = ::recv(sockfd_, buffer, READ_BUFFER_SIZE, 0);
+        bytes_received = ::recv(port, buffer, READ_BUFFER_SIZE, 0);
     }
 
     if (bytes_received == -1) {
@@ -102,10 +102,10 @@ string Socket::recv() const throw(runtime_error) {
  *
  * @return Request
  */
-Request readRequest(Socket socket) {
+Request readRequest(Socket socket, int port) {
     Request request;
 
-    string buffer = socket.recv();
+    string buffer = socket.recv(port);
 
     /** start-line */
     request.method = buffer.substr(0, buffer.find(' '));
@@ -136,7 +136,7 @@ Request readRequest(Socket socket) {
  *
  * @param response Response to write
  */
-void writeResponse(Socket socket, Response response) {
+void writeResponse(int port, Socket socket, Response response) {
     string buffer;
 
     /** status-line */
@@ -153,5 +153,5 @@ void writeResponse(Socket socket, Response response) {
     /** body */
     buffer.append(CRLF + response.body);
 
-    socket.send(buffer);
+    socket.send(port, buffer);
 }
