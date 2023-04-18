@@ -1,5 +1,6 @@
 
 #include "config.hpp"
+#include "socket.hpp"
 #include "webserv.hpp"
 
 /** Maximum pending connections in queue */
@@ -14,7 +15,7 @@ HttpConfig httpConfig = HttpConfig();
  * @param argc Number of arguments
  * @param argv config file name
  */
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     /** Parse the config file x*/
     if (argc == 1) {
         parseConfig(CONFIG_FILE);
@@ -25,16 +26,13 @@ int main(int argc, char *argv[]) {
         return (EXIT_FAILURE);
     }
 
-    /** Create listeners for each server block */
-    for (std::vector<ServerConfig>::iterator it = httpConfig.servers.begin();
-         it != httpConfig.servers.end(); it++) {
-        if (listen(it->port, SO_MAX_QUEUE) == -1) {
-            std::cerr << "Error: Failed to listen on port " << it->port
-                      << std::endl;
-            return (EXIT_FAILURE);
-        } else {
-            std::cout << "Listening on port " << it->port << std::endl;
-        }
+    /** Create a socket for each server block */
+    /** @todo create a for-loop to generate each socket */
+    try {
+        // Socket socket = Socket(httpConfig.servers[0].port, INADDR_ANY);
+        Socket socket = Socket(3000, INADDR_ANY);
+    } catch (std::runtime_error& e) {
+        std::cerr << e.what() << std::endl;
     }
 
     return (EXIT_SUCCESS);

@@ -8,10 +8,7 @@
 #include "events.hpp"
 #include "webserv.hpp"
 
-using std::cerr;
-using std::cout;
-using std::endl;
-using std::string;
+using namespace std;
 
 #define SO_MAX_QUEUE 10
 #define READ_BUFFER_SIZE 1024
@@ -36,7 +33,7 @@ class Socket {
      * @param addr Address to bind to
      * @throw std::runtime_error
      */
-    Socket(in_port_t port, in_addr_t addr) throw(std::runtime_error);
+    Socket(in_port_t port, in_addr_t addr) throw(runtime_error);
 
     /**
      * @brief Copy constructor
@@ -53,14 +50,14 @@ class Socket {
      *
      * @throw std::runtime_error
      */
-    ~Socket() throw(std::runtime_error);
+    ~Socket() throw(runtime_error);
 
     /**
      * @brief Accept a connection and connects to it
      *
      * @throw std::runtime_error
      */
-    void accept() throw(std::runtime_error);
+    void accept() throw(runtime_error);
 
     /**
      * @brief Calls send() on the socket
@@ -68,7 +65,7 @@ class Socket {
      * @param buffer message to send
      * @throw std::runtime_error
      */
-    void send(string buffer) const throw(std::runtime_error);
+    void send(string buffer) const throw(runtime_error);
 
     /**
      * @brief Calls recv() on the socket
@@ -76,7 +73,7 @@ class Socket {
      * @return string - message received
      * @throw std::runtime_error
      */
-    string recv() const throw(std::runtime_error);
+    string recv() const throw(runtime_error);
 
    private:
     int                     sockfd_;         /**< Socket file descriptor */
