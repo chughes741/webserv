@@ -11,7 +11,7 @@ DEFAULT_GOAL: all
 HIDE = @
 
 # Argument test
-ARG = webserv.conf
+ARG = 
 
 #------------------------------------------------------------------------------#
 #                                VARIABLES                                     #
@@ -49,7 +49,7 @@ $O:
 	@mkdir $@
 $(OBJS): | $O
 # Compiles sources into objects
-$(OBJS): $O%.o: $S%.cpp
+$(OBJS): $O%.o: $S%.cpp $(INC)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 # Removes objects
