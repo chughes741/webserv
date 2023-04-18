@@ -6,7 +6,7 @@
 /*   By: flahoud <flahoud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 13:52:13 by malord            #+#    #+#             */
-/*   Updated: 2023/04/18 12:09:34 by flahoud          ###   ########.fr       */
+/*   Updated: 2023/04/18 16:37:41 by flahoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,18 @@ class FileError : public std::exception {
 public:
 	FileError(const std::string& config_file) : 
 		message("Error: cannot open file " + config_file) {}
+	virtual const char *what() const throw() {
+		return message.c_str();}
+	virtual ~FileError() throw() {}
+		
+private:
+	std::string message;
+};
+
+class ConfigError : public std::exception {
+public:
+	Configrror(const std::string& tokenError) : 
+		message("Error: bad paramenter in config file: \"" + tokenError + "\"") {}
 	virtual const char *what() const throw() {
 		return message.c_str();}
 	virtual ~FileError() throw() {}

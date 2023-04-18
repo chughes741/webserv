@@ -14,7 +14,3 @@
 #include "config.hpp"
 #include "events.hpp"
 
-#define OUT 0
-#define EVENTS 1
-#define HTTP 2
-#define SERVER 3

@@ -17,14 +17,15 @@ HttpConfig httpConfig = HttpConfig();
  */
 int main(int argc, char* argv[]) {
     /** Parse the config file x*/
+	if (argc > 2) {
+		std::cerr << "Usage: ./webserv [config_file]" << std::endl;
+		return (EXIT_FAILURE);
+	}
 	try {
-		if (argc == 1) {
-			parseConfig(CONFIG_FILE);
-		} else if (argc == 2) {
+		if (argc == 2) {
 			parseConfig(argv[1]);
 		} else {
-			std::cerr << "Usage: ./webserv [config_file]" << std::endl;
-			return (EXIT_FAILURE);
+			parseConfig(CONFIG_FILE);
 		}
 	}
 	catch (std::exception &e) {

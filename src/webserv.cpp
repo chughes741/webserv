@@ -1,8 +1,3 @@
-// #include "webserv.hpp"
-
-// //**************************************************************************//
-// //                              Constructors                                //
-// //**************************************************************************//
 
 // Webserv::Webserv(const std::string &conf) : valid(false), configFile() {
 // 	block.push_back(std::string("out"));
@@ -10,52 +5,6 @@
 // 	block.push_back(std::string("http"));
 // 	block.push_back(std::string("server"));
 // 	parseConfig(conf);
-// }
-
-// Webserv::Webserv(const Webserv &copy) {*this = copy;}
-
-// //**************************************************************************//
-// //                                 Setters                                  //
-// //**************************************************************************//
-
-// //**************************************************************************//
-// //                                 Getters                                  //
-// //**************************************************************************//
-
-// //**************************************************************************//
-// //                             Member functions                             //
-// //**************************************************************************//
-
-// //Verify if file empty or directory (which is empty) then store file in configFile
-// void	Webserv::readConfig(const std::string &conf) {
-// 	std::string line;
-// 	std::ifstream infile(conf);
-
-// 	if (!infile.is_open() || infile.peek() == std::ifstream::traits_type::eof()) {
-// 		throw WebExcep::FileError(conf);}
-// 	std::string filePath = retrieveFilePath(conf);
-// 	configFile.push_back("# configuration file " + filePath + ":");
-// 	while(getline(infile, line)) {
-// 		configFile.push_back(line.substr(0, line.find_first_of("\n")));
-// 		while (line.size() > 0) {
-// 			size_t pos = line.find_first_not_of(" \t");
-// 			if (pos == line.npos || line[pos] == '#') {break;}
-// 			line = line.substr(pos);
-// 			pos = line.find_first_of("\\#{}; \t\n\0");
-// 			pos == 0 ? pos = 1: pos ;
-// 			std::string tmp = line.substr(0, pos);
-// 			configItems.push_back(tmp);
-// 			line = line.substr(tmp.size());
-// 		}
-// 	}
-// 	infile.close();
-// }
-
-// /* Determine if line is a comment */
-// bool isComment(std::string &line) {
-// 	if (line.length() > 0 && line[0] == '#') {
-// 		return true;}
-// 	return false;
 // }
 
 // /* Determine if we are entering a new block settings */

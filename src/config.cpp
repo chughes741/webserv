@@ -1,23 +1,76 @@
 #include "config.hpp"
 
-void tokenizeConfig(std::vector<std::string> &tokens, std::string line) {
+/**
+ * @brief Tokenize a line of a config file.
+ * 
+ * @param tokens	[in,out] Vector of tokens
+ * @param line		[in] Line to tokenize
+ */
+void tokenizeConfig(vector<string> &tokens, string line) {
 	while (line.size() > 0) {
 		size_t pos = line.find_first_not_of(" \t");
 		if (pos == line.npos || line[pos] == '#') {break;}
 		line = line.substr(pos);
 		pos = line.find_first_of("\\#{}; \t\n\0");
 		pos == 0 ? pos = 1: pos;
-		std::string tmp = line.substr(0, pos);
+		string tmp = line.substr(0, pos);
 		tokens.push_back(tmp);;
 		line = line.substr(tmp.size());
 	}
 }
 
+// setContext function
+/**
+ * @brief 
+ * 
+ */
+int setContext(vector<string>::iterator &it, int &context) {
+	string item = *it;
+	string next = *(++it);
+	string contexts[] = {"global", "events", "http", "server"};
+	int numContexts = sizeof(contexts)/sizeof(contexts[0]);
+	for (int i = 0; i < numContexts; ++i) {
+		if (item == contexts[i] && next == "{") {
+			return (i);}
+	}
+	return (context);
+}
+
+/**
+ * @brief  Initialize settings from token vector
+ * @param tokens	[in] Vector of tokens
+ */
+void initSettings(vector<string> &tokens) {
+	static int context = GLOBAL;
+	static int level = 0;
+
+	vector<string>::iterator it = tokens.begin();
+	vector<string>::iterator it_end = tokens.end();
+	for (; it != it_end; ++it) {
+		context = setContext(it, context);
+		switch (context) {
+			case GLOBAL:
+				setGlobalSetting();
+			case EVENTS:
+				setEventsSetting();
+			case HTTP:
+				setHttpSetting();
+			case SERVER:
+				setServerSetting();
+			case LOCATION:
+				setLocationSetting();
+			default:
+				throw ConfigError(string(*it));
+		}
+	}
+	if (level != 0) {
+		throw std::exception();}
+}
+
 /**
  * @brief Parse a config file. Read the file line by line and split into tokens.
  *
- * @param config_file Path to the config file
- *
+ * @param config_file	[in] Path to the config file
  */
 void parseConfig(std::string config_file) {
 	std::string line;
@@ -26,7 +79,7 @@ void parseConfig(std::string config_file) {
 
 	if (!file.is_open() || file.peek() == std::ifstream::traits_type::eof()) {
  		throw FileError(config_file);}
-	std::string filePath = std::string(realpath(config_file.c_str(), nullptr));
+	std::string filePath = std::string(realpath(config_file.c_str(), NULL));
  	if (PRINT) {
 		std::cout << "# configuration file " << filePath << ":" << std::endl;}
  	while(getline(file, line)) {
