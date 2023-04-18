@@ -3,7 +3,7 @@
 using namespace std;
 
 Socket::Socket(in_port_t port, in_addr_t addr) {
-    client_sockets_ = vector<int>();
+    client_sockets_ = map<int, socket_addr_t>();
 
     /** Creates a socket */
     sockfd_ = socket(AF_INET, SOCK_STREAM, O_NONBLOCK);
