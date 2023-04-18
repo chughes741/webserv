@@ -3,3 +3,5 @@ Language: Cpp
 BasedOnStyle: Google
 AlignConsecutiveDeclarations: Consecutive
 AlignConsecutiveAssignments: Consecutive
+AllowShortEnumsOnASingleLine: false
+IndentWidth: 4
