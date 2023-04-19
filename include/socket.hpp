@@ -22,6 +22,7 @@ class Session {
     Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
         : sockfd_(sockfd), addr_(addr), addrlen_(addrlen) {}
 
+   public:
     int                    sockfd() const { return sockfd_; }
     const struct sockaddr* addr() const { return addr_; }
     socklen_t              addrlen() const { return addrlen_; }
@@ -62,6 +63,11 @@ class TcpSocket : public Socket {
      */
     TcpSocket();
 
+   private:
+    TcpSocket(const TcpSocket& other);
+    TcpSocket& operator=(const TcpSocket& other);
+
+   public:
     /**
      * @brief Destroy the TcpSocket object
      */
