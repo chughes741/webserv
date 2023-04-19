@@ -85,8 +85,8 @@ class TcpSocket : public Socket {
     /**
      * @brief Bind the socket to a port and address
      *
-     * @param port
-     * @param addr
+     * @param port port to bind to
+     * @param addr address to bind to
      */
     void bind(in_port_t port, in_addr_t addr);
 
@@ -97,15 +97,11 @@ class TcpSocket : public Socket {
 
     /**
      * @brief Accept a connection and connects to it
-     *
-     * @throw std::runtime_error
      */
     void accept();
 
     /**
      * @brief Close the socket
-     *
-     * @throw std::runtime_error
      */
     void close();
 
@@ -114,16 +110,14 @@ class TcpSocket : public Socket {
      *
      * @param port port to send to
      * @param buffer message to send
-     * @throw std::runtime_error
      */
     void send(int client, string message) const;
 
     /**
      * @brief Calls recv() on the socket
      *
-     * @param port port to receive from
+     * @param client client to receive from
      * @return string - message received
-     * @throw std::runtime_error
      */
     string recv(int client) const;
 };
