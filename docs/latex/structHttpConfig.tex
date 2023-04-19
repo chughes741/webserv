@@ -1,0 +1,61 @@
+\hypertarget{structHttpConfig}{}\doxysection{Http\+Config Struct Reference}
+\label{structHttpConfig}\index{HttpConfig@{HttpConfig}}
+
+
+Configuration for an \mbox{\hyperlink{classHTTP}{HTTP}} server.  
+
+
+
+
+{\ttfamily \#include $<$config.\+hpp$>$}
+
+
+
+Collaboration diagram for Http\+Config\+:
+% FIG 0
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{structHttpConfig_ac12ca219699e31e7b7acb25fcb0d4d25}{error\+\_\+log}}
+\item 
+string \mbox{\hyperlink{structHttpConfig_ac8758af23712f52be49980ef418f9329}{pid\+\_\+file}}
+\item 
+\mbox{\hyperlink{structEventsConfig}{Events\+Config}} \mbox{\hyperlink{structHttpConfig_a11c4e900e5e73dcdb6dbc3ec5867ccfd}{events}}
+\item 
+vector$<$ \mbox{\hyperlink{structServerConfig}{Server\+Config}} $>$ \mbox{\hyperlink{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}{servers}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration for an \mbox{\hyperlink{classHTTP}{HTTP}} server. 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structHttpConfig_ac12ca219699e31e7b7acb25fcb0d4d25}\label{structHttpConfig_ac12ca219699e31e7b7acb25fcb0d4d25}} 
+\index{HttpConfig@{HttpConfig}!error\_log@{error\_log}}
+\index{error\_log@{error\_log}!HttpConfig@{HttpConfig}}
+\doxysubsubsection{\texorpdfstring{error\_log}{error\_log}}
+{\footnotesize\ttfamily string Http\+Config\+::error\+\_\+log}
+
+Path to the error log file \mbox{\Hypertarget{structHttpConfig_a11c4e900e5e73dcdb6dbc3ec5867ccfd}\label{structHttpConfig_a11c4e900e5e73dcdb6dbc3ec5867ccfd}} 
+\index{HttpConfig@{HttpConfig}!events@{events}}
+\index{events@{events}!HttpConfig@{HttpConfig}}
+\doxysubsubsection{\texorpdfstring{events}{events}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structEventsConfig}{Events\+Config}} Http\+Config\+::events}
+
+Events block \mbox{\Hypertarget{structHttpConfig_ac8758af23712f52be49980ef418f9329}\label{structHttpConfig_ac8758af23712f52be49980ef418f9329}} 
+\index{HttpConfig@{HttpConfig}!pid\_file@{pid\_file}}
+\index{pid\_file@{pid\_file}!HttpConfig@{HttpConfig}}
+\doxysubsubsection{\texorpdfstring{pid\_file}{pid\_file}}
+{\footnotesize\ttfamily string Http\+Config\+::pid\+\_\+file}
+
+Path to the PID file \mbox{\Hypertarget{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}\label{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}} 
+\index{HttpConfig@{HttpConfig}!servers@{servers}}
+\index{servers@{servers}!HttpConfig@{HttpConfig}}
+\doxysubsubsection{\texorpdfstring{servers}{servers}}
+{\footnotesize\ttfamily vector$<$\mbox{\hyperlink{structServerConfig}{Server\+Config}}$>$ Http\+Config\+::servers}
+
+List of server blocks 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/config.\+hpp\end{DoxyCompactItemize}

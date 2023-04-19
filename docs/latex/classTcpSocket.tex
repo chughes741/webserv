@@ -1,0 +1,155 @@
+\hypertarget{classTcpSocket}{}\doxysection{Tcp\+Socket Class Reference}
+\label{classTcpSocket}\index{TcpSocket@{TcpSocket}}
+
+
+Represents a TCP socket.  
+
+
+
+
+{\ttfamily \#include $<$socket.\+hpp$>$}
+
+
+
+Inheritance diagram for Tcp\+Socket\+:
+% FIG 0
+
+
+Collaboration diagram for Tcp\+Socket\+:
+% FIG 1
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classTcpSocket_a132aa72af141d611f8bad96ba585a79f}{Tcp\+Socket}} ()
+\begin{DoxyCompactList}\small\item\em Construct a new \mbox{\hyperlink{classTcpSocket}{Tcp\+Socket}} object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classTcpSocket_a4c6d246451c51ac4226a9301f6711086}\label{classTcpSocket_a4c6d246451c51ac4226a9301f6711086}} 
+\mbox{\hyperlink{classTcpSocket_a4c6d246451c51ac4226a9301f6711086}{$\sim$\+Tcp\+Socket}} ()  throw ()
+\begin{DoxyCompactList}\small\item\em Destroy the \mbox{\hyperlink{classTcpSocket}{Tcp\+Socket}} object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classTcpSocket_a8ca978acb9512ef1564a907197f6a407}{bind}} (in\+\_\+port\+\_\+t port, in\+\_\+addr\+\_\+t addr)
+\begin{DoxyCompactList}\small\item\em Bind the socket to a port and address. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classTcpSocket_aecb504049c6d1981223fafa46f2ef40a}{listen}} ()
+\begin{DoxyCompactList}\small\item\em Listen for connections. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classTcpSocket_ad496c5121ff3b27307a8960733deddb1}\label{classTcpSocket_ad496c5121ff3b27307a8960733deddb1}} 
+void \mbox{\hyperlink{classTcpSocket_ad496c5121ff3b27307a8960733deddb1}{accept}} ()
+\begin{DoxyCompactList}\small\item\em Accept a connection and connects to it. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classTcpSocket_a68f30d391495a328074eb28f5defdd7d}\label{classTcpSocket_a68f30d391495a328074eb28f5defdd7d}} 
+void \mbox{\hyperlink{classTcpSocket_a68f30d391495a328074eb28f5defdd7d}{close}} ()
+\begin{DoxyCompactList}\small\item\em Close the socket. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classTcpSocket_af0ee9da645f2f047e5f8cbd09dfe6936}{send}} (int client, string message) const
+\begin{DoxyCompactList}\small\item\em Calls \mbox{\hyperlink{classTcpSocket_af0ee9da645f2f047e5f8cbd09dfe6936}{send()}} on the socket. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}{recv}} (int client) const
+\begin{DoxyCompactList}\small\item\em Calls \mbox{\hyperlink{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}{recv()}} on the socket. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Represents a TCP socket. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classTcpSocket_a132aa72af141d611f8bad96ba585a79f}\label{classTcpSocket_a132aa72af141d611f8bad96ba585a79f}} 
+\index{TcpSocket@{TcpSocket}!TcpSocket@{TcpSocket}}
+\index{TcpSocket@{TcpSocket}!TcpSocket@{TcpSocket}}
+\doxysubsubsection{\texorpdfstring{TcpSocket()}{TcpSocket()}}
+{\footnotesize\ttfamily Tcp\+Socket\+::\+Tcp\+Socket (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Construct a new \mbox{\hyperlink{classTcpSocket}{Tcp\+Socket}} object. 
+
+Creates a socket
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000003}{Todo}}]flags (isntead of 0) -\/ these should be in setsockopt() SOCK\+\_\+\+NONBLOCK? There\textquotesingle{}s no define for it, O\+\_\+\+NONBLOCK is a flag for open() SO\+\_\+\+DEBUG might be useful SO\+\_\+\+REUSEADDR might be useful SO\+\_\+\+KEEPALIVE might be useful \end{DoxyRefDesc}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classTcpSocket_a8ca978acb9512ef1564a907197f6a407}\label{classTcpSocket_a8ca978acb9512ef1564a907197f6a407}} 
+\index{TcpSocket@{TcpSocket}!bind@{bind}}
+\index{bind@{bind}!TcpSocket@{TcpSocket}}
+\doxysubsubsection{\texorpdfstring{bind()}{bind()}}
+{\footnotesize\ttfamily void Tcp\+Socket\+::bind (\begin{DoxyParamCaption}\item[{in\+\_\+port\+\_\+t}]{port,  }\item[{in\+\_\+addr\+\_\+t}]{addr }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Bind the socket to a port and address. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & port to bind to \\
+\hline
+{\em addr} & address to bind to \\
+\hline
+\end{DoxyParams}
+$<$ IPv4
+
+$<$ Port
+
+$<$ Address
+
+Binds socket to an address and port
+
+Implements \mbox{\hyperlink{classSocket}{Socket}}.
+
+\mbox{\Hypertarget{classTcpSocket_aecb504049c6d1981223fafa46f2ef40a}\label{classTcpSocket_aecb504049c6d1981223fafa46f2ef40a}} 
+\index{TcpSocket@{TcpSocket}!listen@{listen}}
+\index{listen@{listen}!TcpSocket@{TcpSocket}}
+\doxysubsubsection{\texorpdfstring{listen()}{listen()}}
+{\footnotesize\ttfamily void Tcp\+Socket\+::listen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Listen for connections. 
+
+Sets server to listen passively
+
+Implements \mbox{\hyperlink{classSocket}{Socket}}.
+
+\mbox{\Hypertarget{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}\label{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}} 
+\index{TcpSocket@{TcpSocket}!recv@{recv}}
+\index{recv@{recv}!TcpSocket@{TcpSocket}}
+\doxysubsubsection{\texorpdfstring{recv()}{recv()}}
+{\footnotesize\ttfamily string Tcp\+Socket\+::recv (\begin{DoxyParamCaption}\item[{int}]{client }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Calls \mbox{\hyperlink{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}{recv()}} on the socket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em client} & client to receive from \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string -\/ message received 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classSocket}{Socket}}.
+
+\mbox{\Hypertarget{classTcpSocket_af0ee9da645f2f047e5f8cbd09dfe6936}\label{classTcpSocket_af0ee9da645f2f047e5f8cbd09dfe6936}} 
+\index{TcpSocket@{TcpSocket}!send@{send}}
+\index{send@{send}!TcpSocket@{TcpSocket}}
+\doxysubsubsection{\texorpdfstring{send()}{send()}}
+{\footnotesize\ttfamily void Tcp\+Socket\+::send (\begin{DoxyParamCaption}\item[{int}]{client,  }\item[{string}]{message }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Calls \mbox{\hyperlink{classTcpSocket_af0ee9da645f2f047e5f8cbd09dfe6936}{send()}} on the socket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em port} & port to send to \\
+\hline
+{\em buffer} & message to send \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classSocket}{Socket}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/socket.\+hpp\item 
+src/socket.\+cpp\end{DoxyCompactItemize}

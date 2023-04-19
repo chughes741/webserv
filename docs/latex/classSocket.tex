@@ -1,0 +1,90 @@
+\hypertarget{classSocket}{}\doxysection{Socket Class Reference}
+\label{classSocket}\index{Socket@{Socket}}
+
+
+\mbox{\hyperlink{classSocket}{Socket}} abstract class.  
+
+
+
+
+{\ttfamily \#include $<$socket.\+hpp$>$}
+
+
+
+Inheritance diagram for Socket\+:
+% FIG 0
+
+
+Collaboration diagram for Socket\+:
+% FIG 1
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{classSocket_a7b36181d6700fa5c4a51a56114f0942d}{$\sim$\+Socket}} ()=0
+\item 
+\mbox{\Hypertarget{classSocket_a4d202dd3b2473ea8684c061e7c1e2239}\label{classSocket_a4d202dd3b2473ea8684c061e7c1e2239}} 
+virtual void {\bfseries bind} (in\+\_\+port\+\_\+t port, in\+\_\+addr\+\_\+t addr)=0
+\item 
+\mbox{\Hypertarget{classSocket_a1fd6dc593be6cb4bd907083a685b11e2}\label{classSocket_a1fd6dc593be6cb4bd907083a685b11e2}} 
+virtual void {\bfseries listen} ()=0
+\item 
+\mbox{\Hypertarget{classSocket_a0e394c68fab8b848ac86c0d07a5c4b8b}\label{classSocket_a0e394c68fab8b848ac86c0d07a5c4b8b}} 
+virtual void {\bfseries accept} ()=0
+\item 
+\mbox{\Hypertarget{classSocket_a95b80f1181dc2b18bdc896ee7f926430}\label{classSocket_a95b80f1181dc2b18bdc896ee7f926430}} 
+virtual void {\bfseries close} ()=0
+\item 
+\mbox{\Hypertarget{classSocket_aff69d0269a78ed12dffb27df0a248684}\label{classSocket_aff69d0269a78ed12dffb27df0a248684}} 
+virtual void {\bfseries send} (int client, string message) const =0
+\item 
+\mbox{\Hypertarget{classSocket_aef4d1134901589dadae96129b63c4229}\label{classSocket_aef4d1134901589dadae96129b63c4229}} 
+virtual string {\bfseries recv} (int client) const =0
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}{sockfd\+\_\+}}
+\item 
+struct sockaddr\+\_\+in \mbox{\hyperlink{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}{addr\+\_\+in\+\_\+}}
+\item 
+map$<$ int, \mbox{\hyperlink{classSession}{Session}} $>$ \mbox{\hyperlink{classSocket_a256125f9e9cb562c1093f61f3dd86750}{sessions\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{classSocket}{Socket}} abstract class. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classSocket_a7b36181d6700fa5c4a51a56114f0942d}\label{classSocket_a7b36181d6700fa5c4a51a56114f0942d}} 
+\index{Socket@{Socket}!````~Socket@{$\sim$Socket}}
+\index{````~Socket@{$\sim$Socket}!Socket@{Socket}}
+\doxysubsubsection{\texorpdfstring{$\sim$Socket()}{~Socket()}}
+{\footnotesize\ttfamily Socket\+::$\sim$\+Socket (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+C++ is a silly language 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}\label{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}} 
+\index{Socket@{Socket}!addr\_in\_@{addr\_in\_}}
+\index{addr\_in\_@{addr\_in\_}!Socket@{Socket}}
+\doxysubsubsection{\texorpdfstring{addr\_in\_}{addr\_in\_}}
+{\footnotesize\ttfamily struct sockaddr\+\_\+in Socket\+::addr\+\_\+in\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\hyperlink{classServer}{Server}} address \mbox{\Hypertarget{classSocket_a256125f9e9cb562c1093f61f3dd86750}\label{classSocket_a256125f9e9cb562c1093f61f3dd86750}} 
+\index{Socket@{Socket}!sessions\_@{sessions\_}}
+\index{sessions\_@{sessions\_}!Socket@{Socket}}
+\doxysubsubsection{\texorpdfstring{sessions\_}{sessions\_}}
+{\footnotesize\ttfamily map$<$int, \mbox{\hyperlink{classSession}{Session}}$>$ Socket\+::sessions\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+Map of client sockets \mbox{\Hypertarget{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}\label{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}} 
+\index{Socket@{Socket}!sockfd\_@{sockfd\_}}
+\index{sockfd\_@{sockfd\_}!Socket@{Socket}}
+\doxysubsubsection{\texorpdfstring{sockfd\_}{sockfd\_}}
+{\footnotesize\ttfamily int Socket\+::sockfd\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+virtual void setsockopt() = 0; \mbox{\hyperlink{classServer}{Server}} socket file descriptor 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/socket.\+hpp\item 
+src/socket.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,69 @@
+\hypertarget{structResponse}{}\doxysection{Response Struct Reference}
+\label{structResponse}\index{Response@{Response}}
+
+
+Represents an \mbox{\hyperlink{classHTTP}{HTTP}} response.  
+
+
+
+
+{\ttfamily \#include $<$events.\+hpp$>$}
+
+
+
+Collaboration diagram for Response\+:
+% FIG 0
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{structResponse_a4f136e7654bc74c626e03b27635c9470}{version}}
+\item 
+string \mbox{\hyperlink{structResponse_aed441175ee65383ca6c0ad0962c4a7dd}{status}}
+\item 
+string \mbox{\hyperlink{structResponse_ae3393f7b594595cdef88d865e9194bc0}{server}}
+\item 
+map$<$ string, string $>$ \mbox{\hyperlink{structResponse_ad122055b36cfdbf238c43e49cb41959c}{headers}}
+\item 
+string \mbox{\hyperlink{structResponse_aa293e45642cf064511ff6c4c37b46557}{body}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an \mbox{\hyperlink{classHTTP}{HTTP}} response. 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structResponse_aa293e45642cf064511ff6c4c37b46557}\label{structResponse_aa293e45642cf064511ff6c4c37b46557}} 
+\index{Response@{Response}!body@{body}}
+\index{body@{body}!Response@{Response}}
+\doxysubsubsection{\texorpdfstring{body}{body}}
+{\footnotesize\ttfamily string Response\+::body}
+
+\mbox{\hyperlink{structResponse}{Response}} body (if any) \mbox{\Hypertarget{structResponse_ad122055b36cfdbf238c43e49cb41959c}\label{structResponse_ad122055b36cfdbf238c43e49cb41959c}} 
+\index{Response@{Response}!headers@{headers}}
+\index{headers@{headers}!Response@{Response}}
+\doxysubsubsection{\texorpdfstring{headers}{headers}}
+{\footnotesize\ttfamily map$<$string, string$>$ Response\+::headers}
+
+Other headers \mbox{\Hypertarget{structResponse_ae3393f7b594595cdef88d865e9194bc0}\label{structResponse_ae3393f7b594595cdef88d865e9194bc0}} 
+\index{Response@{Response}!server@{server}}
+\index{server@{server}!Response@{Response}}
+\doxysubsubsection{\texorpdfstring{server}{server}}
+{\footnotesize\ttfamily string Response\+::server}
+
+Value of the \mbox{\hyperlink{classServer}{Server}} header \mbox{\Hypertarget{structResponse_aed441175ee65383ca6c0ad0962c4a7dd}\label{structResponse_aed441175ee65383ca6c0ad0962c4a7dd}} 
+\index{Response@{Response}!status@{status}}
+\index{status@{status}!Response@{Response}}
+\doxysubsubsection{\texorpdfstring{status}{status}}
+{\footnotesize\ttfamily string Response\+::status}
+
+\mbox{\hyperlink{classHTTP}{HTTP}} status code and message \mbox{\Hypertarget{structResponse_a4f136e7654bc74c626e03b27635c9470}\label{structResponse_a4f136e7654bc74c626e03b27635c9470}} 
+\index{Response@{Response}!version@{version}}
+\index{version@{version}!Response@{Response}}
+\doxysubsubsection{\texorpdfstring{version}{version}}
+{\footnotesize\ttfamily string Response\+::version}
+
+\mbox{\hyperlink{classHTTP}{HTTP}} version 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/events.\+hpp\end{DoxyCompactItemize}

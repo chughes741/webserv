@@ -1,0 +1,61 @@
+\hypertarget{structServerConfig}{}\doxysection{Server\+Config Struct Reference}
+\label{structServerConfig}\index{ServerConfig@{ServerConfig}}
+
+
+Configuration for a single server block.  
+
+
+
+
+{\ttfamily \#include $<$config.\+hpp$>$}
+
+
+
+Collaboration diagram for Server\+Config\+:
+% FIG 0
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{structServerConfig_ae459946703124ef5a1d98dba38a8b493}{port}}
+\item 
+string \mbox{\hyperlink{structServerConfig_af137c82df3d09fb2418d21f35bba5302}{server\+\_\+name}}
+\item 
+string \mbox{\hyperlink{structServerConfig_a98d36c4218c9974f3d31a0d4cba3674e}{error\+\_\+pages}} \mbox{[}5\mbox{]}
+\item 
+map$<$ string, \mbox{\hyperlink{structLocation}{Location}} $>$ \mbox{\hyperlink{structServerConfig_a5b3fa51e71eeef6b7ee89d842592b91d}{locations}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration for a single server block. 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structServerConfig_a98d36c4218c9974f3d31a0d4cba3674e}\label{structServerConfig_a98d36c4218c9974f3d31a0d4cba3674e}} 
+\index{ServerConfig@{ServerConfig}!error\_pages@{error\_pages}}
+\index{error\_pages@{error\_pages}!ServerConfig@{ServerConfig}}
+\doxysubsubsection{\texorpdfstring{error\_pages}{error\_pages}}
+{\footnotesize\ttfamily string Server\+Config\+::error\+\_\+pages\mbox{[}5\mbox{]}}
+
+Error pages \mbox{\Hypertarget{structServerConfig_a5b3fa51e71eeef6b7ee89d842592b91d}\label{structServerConfig_a5b3fa51e71eeef6b7ee89d842592b91d}} 
+\index{ServerConfig@{ServerConfig}!locations@{locations}}
+\index{locations@{locations}!ServerConfig@{ServerConfig}}
+\doxysubsubsection{\texorpdfstring{locations}{locations}}
+{\footnotesize\ttfamily map$<$string, \mbox{\hyperlink{structLocation}{Location}}$>$ Server\+Config\+::locations}
+
+List of locations (path, location) \mbox{\Hypertarget{structServerConfig_ae459946703124ef5a1d98dba38a8b493}\label{structServerConfig_ae459946703124ef5a1d98dba38a8b493}} 
+\index{ServerConfig@{ServerConfig}!port@{port}}
+\index{port@{port}!ServerConfig@{ServerConfig}}
+\doxysubsubsection{\texorpdfstring{port}{port}}
+{\footnotesize\ttfamily int Server\+Config\+::port}
+
+Port number \mbox{\Hypertarget{structServerConfig_af137c82df3d09fb2418d21f35bba5302}\label{structServerConfig_af137c82df3d09fb2418d21f35bba5302}} 
+\index{ServerConfig@{ServerConfig}!server\_name@{server\_name}}
+\index{server\_name@{server\_name}!ServerConfig@{ServerConfig}}
+\doxysubsubsection{\texorpdfstring{server\_name}{server\_name}}
+{\footnotesize\ttfamily string Server\+Config\+::server\+\_\+name}
+
+\mbox{\hyperlink{classServer}{Server}} name 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/config.\+hpp\end{DoxyCompactItemize}

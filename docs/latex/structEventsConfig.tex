@@ -1,0 +1,77 @@
+\hypertarget{structEventsConfig}{}\doxysection{Events\+Config Struct Reference}
+\label{structEventsConfig}\index{EventsConfig@{EventsConfig}}
+
+
+Configuration for an events block.  
+
+
+
+
+{\ttfamily \#include $<$config.\+hpp$>$}
+
+
+
+Collaboration diagram for Events\+Config\+:
+% FIG 0
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{structEventsConfig_ab27090310e6c22a9ece3b4943db5b2f1}{use}}
+\item 
+bool \mbox{\hyperlink{structEventsConfig_aeaf265d49c6c63525891ced01130f041}{multi\+\_\+accept}}
+\item 
+int \mbox{\hyperlink{structEventsConfig_a21c7af7eea1e10ce9654e5d47cf4960e}{accept\+\_\+mutex\+\_\+delay}}
+\item 
+bool \mbox{\hyperlink{structEventsConfig_ae203f356393e1e39a5a7268127e664ff}{debug\+\_\+connection}}
+\item 
+bool \mbox{\hyperlink{structEventsConfig_a82e45599525b8ee75a1bb2d79208fa9b}{use\+\_\+poll}}
+\item 
+bool \mbox{\hyperlink{structEventsConfig_a5bb1aa7f1697239c0ac0d084d8547e8c}{deferred\+\_\+accept}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration for an events block. 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structEventsConfig_a21c7af7eea1e10ce9654e5d47cf4960e}\label{structEventsConfig_a21c7af7eea1e10ce9654e5d47cf4960e}} 
+\index{EventsConfig@{EventsConfig}!accept\_mutex\_delay@{accept\_mutex\_delay}}
+\index{accept\_mutex\_delay@{accept\_mutex\_delay}!EventsConfig@{EventsConfig}}
+\doxysubsubsection{\texorpdfstring{accept\_mutex\_delay}{accept\_mutex\_delay}}
+{\footnotesize\ttfamily int Events\+Config\+::accept\+\_\+mutex\+\_\+delay}
+
+Delay before accepting new connections \mbox{\Hypertarget{structEventsConfig_ae203f356393e1e39a5a7268127e664ff}\label{structEventsConfig_ae203f356393e1e39a5a7268127e664ff}} 
+\index{EventsConfig@{EventsConfig}!debug\_connection@{debug\_connection}}
+\index{debug\_connection@{debug\_connection}!EventsConfig@{EventsConfig}}
+\doxysubsubsection{\texorpdfstring{debug\_connection}{debug\_connection}}
+{\footnotesize\ttfamily bool Events\+Config\+::debug\+\_\+connection}
+
+Whether to print debug information \mbox{\Hypertarget{structEventsConfig_a5bb1aa7f1697239c0ac0d084d8547e8c}\label{structEventsConfig_a5bb1aa7f1697239c0ac0d084d8547e8c}} 
+\index{EventsConfig@{EventsConfig}!deferred\_accept@{deferred\_accept}}
+\index{deferred\_accept@{deferred\_accept}!EventsConfig@{EventsConfig}}
+\doxysubsubsection{\texorpdfstring{deferred\_accept}{deferred\_accept}}
+{\footnotesize\ttfamily bool Events\+Config\+::deferred\+\_\+accept}
+
+Whether to defer accepting new connections \mbox{\Hypertarget{structEventsConfig_aeaf265d49c6c63525891ced01130f041}\label{structEventsConfig_aeaf265d49c6c63525891ced01130f041}} 
+\index{EventsConfig@{EventsConfig}!multi\_accept@{multi\_accept}}
+\index{multi\_accept@{multi\_accept}!EventsConfig@{EventsConfig}}
+\doxysubsubsection{\texorpdfstring{multi\_accept}{multi\_accept}}
+{\footnotesize\ttfamily bool Events\+Config\+::multi\+\_\+accept}
+
+Whether to accept multiple connections at once \mbox{\Hypertarget{structEventsConfig_ab27090310e6c22a9ece3b4943db5b2f1}\label{structEventsConfig_ab27090310e6c22a9ece3b4943db5b2f1}} 
+\index{EventsConfig@{EventsConfig}!use@{use}}
+\index{use@{use}!EventsConfig@{EventsConfig}}
+\doxysubsubsection{\texorpdfstring{use}{use}}
+{\footnotesize\ttfamily string Events\+Config\+::use}
+
+I/O multiplexing method \mbox{\Hypertarget{structEventsConfig_a82e45599525b8ee75a1bb2d79208fa9b}\label{structEventsConfig_a82e45599525b8ee75a1bb2d79208fa9b}} 
+\index{EventsConfig@{EventsConfig}!use\_poll@{use\_poll}}
+\index{use\_poll@{use\_poll}!EventsConfig@{EventsConfig}}
+\doxysubsubsection{\texorpdfstring{use\_poll}{use\_poll}}
+{\footnotesize\ttfamily bool Events\+Config\+::use\+\_\+poll}
+
+Whether to use poll() instead of select() 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/config.\+hpp\end{DoxyCompactItemize}
