@@ -2,14 +2,13 @@
 
 using namespace std;
 
-/** C++ is a silly language */
+/** Used to make it a pure abstract class */
 Socket::~Socket() {}
 
 TcpSocket::TcpSocket() {
     sessions_ = map<int, Session>();
 
-    /** Creates a socket
-     *
+    /**
      * @todo flags (isntead of 0) - these should be in setsockopt()
      *  SOCK_NONBLOCK? There's no define for it, O_NONBLOCK is a flag for open()
      *  SO_DEBUG might be useful
@@ -25,18 +24,18 @@ TcpSocket::TcpSocket() {
 TcpSocket::~TcpSocket() throw() {}
 
 void TcpSocket::bind(in_port_t port, in_addr_t addr) {
-    addr_in_.sin_family      = AF_INET;     /**< IPv4 */
-    addr_in_.sin_port        = htons(port); /**< Port */
-    addr_in_.sin_addr.s_addr = htonl(addr); /**< Address */
+    addr_in_.sin_family      = AF_INET;     // IPv4
+    addr_in_.sin_port        = htons(port); // Port
+    addr_in_.sin_addr.s_addr = htonl(addr); // Address
 
-    /** Binds socket to an address and port */
+    // Binds socket to an address and port
     if (::bind(sockfd_, (struct sockaddr*)&addr_in_, sizeof(addr_in_)) == -1) {
         throw std::runtime_error("Error: Failed to bind socket");
     }
 }
 
 void TcpSocket::listen() {
-    /** Sets server to listen passively */
+    // Sets server to listen passively
     if (::listen(sockfd_, SO_MAX_QUEUE) == -1) {
         throw std::runtime_error("Error: Failed to listen on socket");
     }
@@ -99,7 +98,7 @@ Request readRequest(TcpSocket socket, int port) {
 
     string buffer = socket.recv(port);
 
-    /** start-line */
+    // start-line
     request.method = buffer.substr(0, buffer.find(' '));
     buffer.erase(0, buffer.find(' ') + 1);
     request.uri = buffer.substr(0, buffer.find(' '));
@@ -107,11 +106,11 @@ Request readRequest(TcpSocket socket, int port) {
     request.version = buffer.substr(0, buffer.find(CRLF));
     buffer.erase(0, buffer.find(CRLF) + 2);
 
-    /** body */
+    // body
     request.body = buffer.substr(buffer.find("\r\n\r\n") + 4);
     buffer.erase(buffer.find("\r\n\r\n") + 2);
 
-    /** headers */
+    // headers
     while (buffer.find(CRLF) != string::npos) {
         string key = buffer.substr(0, buffer.find(':'));
         buffer.erase(0, buffer.find(':') + 2);
@@ -133,18 +132,18 @@ Request readRequest(TcpSocket socket, int port) {
 void writeResponse(int port, TcpSocket socket, Response response) {
     string buffer;
 
-    /** status-line */
+    // status-line
     buffer.append(response.version + " ");
     buffer.append(response.status + " ");
     buffer.append(response.server + CRLF);
 
-    /** headers */
+    // headers
     for (map<string, string>::iterator it = response.headers.begin();
          it != response.headers.end(); ++it) {
         buffer.append(it->first + ": " + it->second + CRLF);
     }
 
-    /** body */
+    // body
     buffer.append(CRLF + response.body);
 
     socket.send(port, buffer);

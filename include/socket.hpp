@@ -45,7 +45,7 @@ class Socket {
     virtual void   close()                                = 0;
     virtual void   send(int client, string message) const = 0;
     virtual string recv(int client) const                 = 0;
-    /** virtual void setsockopt() = 0; */
+    // virtual void setsockopt() = 0;
 
    protected:
     int                sockfd_;   /**< Server socket file descriptor */
