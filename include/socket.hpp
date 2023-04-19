@@ -2,8 +2,8 @@
 
 #include <arpa/inet.h>
 #include <fcntl.h>
-#include <netinet/in.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 
 #include "events.hpp"
 #include "webserv.hpp"
@@ -33,7 +33,7 @@ class Session {
 };
 
 /**
- * @brief Socket class
+ * @brief Socket abstract class
  */
 class Socket {
    public:
@@ -44,6 +44,7 @@ class Socket {
     virtual void   close()                                = 0;
     virtual void   send(int client, string message) const = 0;
     virtual string recv(int client) const                 = 0;
+    /** virtual void setsockopt() = 0; */
 
    protected:
     int                sockfd_;   /**< Server socket file descriptor */

@@ -8,7 +8,14 @@ Socket::~Socket() {}
 TcpSocket::TcpSocket() {
     sessions_ = map<int, Session>();
 
-    /** Creates a socket */
+    /** Creates a socket
+     *
+     * @todo flags (isntead of 0) - these should be in setsockopt()
+     *  SOCK_NONBLOCK? There's no define for it, O_NONBLOCK is a flag for open()
+     *  SO_DEBUG might be useful
+     *  SO_REUSEADDR might be useful
+     *  SO_KEEPALIVE might be useful
+     */
     sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd_ == -1) {
         throw std::runtime_error("Error: Failed to create socket");
@@ -84,7 +91,7 @@ string TcpSocket::recv(int port) const {
  * @brief Read a request from the socket
  *
  * @return Request
- * 
+ *
  * @todo put into an HttpServer class
  */
 Request readRequest(TcpSocket socket, int port) {
@@ -120,7 +127,7 @@ Request readRequest(TcpSocket socket, int port) {
  * @brief Write a response to the socket
  *
  * @param response Response to write
- * 
+ *
  * @todo put into an HttpServer class
  */
 void writeResponse(int port, TcpSocket socket, Response response) {
