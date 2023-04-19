@@ -7,6 +7,6 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "Location.cpp", "Location_8cpp_source.html", null ],
     [ "main.cpp", "main_8cpp_source.html", null ],
     [ "server.cpp", "server_8cpp_source.html", null ],
-    [ "socket.cpp", "socket_8cpp_source.html", null ],
+    [ "socket.cpp", "socket_8cpp.html", "socket_8cpp" ],
     [ "webserv.cpp", "webserv_8cpp_source.html", null ]
 ];

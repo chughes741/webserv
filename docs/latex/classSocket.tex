@@ -11,8 +11,7 @@
 
 
 
-Inheritance diagram for Socket\+:
-\nopagebreak
+Inheritance diagram for Socket\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -21,8 +20,7 @@ Inheritance diagram for Socket\+:
 \end{figure}
 
 
-Collaboration diagram for Socket\+:
-\nopagebreak
+Collaboration diagram for Socket\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -66,7 +64,7 @@ map$<$ int, \mbox{\hyperlink{classSession}{Session}} $>$ \mbox{\hyperlink{classS
 \doxysubsection{Detailed Description}
 \mbox{\hyperlink{classSocket}{Socket}} abstract class. 
 
-Definition at line 39 of file socket.\+hpp.
+Definition at line 49 of file socket.\+hpp.
 
 
 
@@ -77,13 +75,13 @@ Definition at line 39 of file socket.\+hpp.
 \doxysubsubsection{\texorpdfstring{$\sim$Socket()}{~Socket()}}
 {\footnotesize\ttfamily Socket\+::$\sim$\+Socket (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
-C++ is a silly language 
+Used to make it a pure abstract class 
 
-Definition at line 6 of file socket.\+cpp.
+Definition at line 16 of file socket.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{6 \{\}}
+\DoxyCodeLine{16 \{\}}
 
 \end{DoxyCode}
 
@@ -97,7 +95,7 @@ Definition at line 6 of file socket.\+cpp.
 
 \mbox{\hyperlink{classServer}{Server}} address 
 
-Definition at line 51 of file socket.\+hpp.
+Definition at line 61 of file socket.\+hpp.
 
 \mbox{\Hypertarget{classSocket_a256125f9e9cb562c1093f61f3dd86750}\label{classSocket_a256125f9e9cb562c1093f61f3dd86750}} 
 \index{Socket@{Socket}!sessions\_@{sessions\_}}
@@ -107,7 +105,7 @@ Definition at line 51 of file socket.\+hpp.
 
 Map of client sockets 
 
-Definition at line 53 of file socket.\+hpp.
+Definition at line 63 of file socket.\+hpp.
 
 \mbox{\Hypertarget{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}\label{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}} 
 \index{Socket@{Socket}!sockfd\_@{sockfd\_}}
@@ -115,13 +113,13 @@ Definition at line 53 of file socket.\+hpp.
 \doxysubsubsection{\texorpdfstring{sockfd\_}{sockfd\_}}
 {\footnotesize\ttfamily int Socket\+::sockfd\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
 
-virtual void setsockopt() = 0; \mbox{\hyperlink{classServer}{Server}} socket file descriptor 
+\mbox{\hyperlink{classServer}{Server}} socket file descriptor 
 
-Definition at line 51 of file socket.\+hpp.
+Definition at line 61 of file socket.\+hpp.
 
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/socket.\+hpp\item 
-src/socket.\+cpp\end{DoxyCompactItemize}
+include/\mbox{\hyperlink{socket_8hpp}{socket.\+hpp}}\item 
+src/\mbox{\hyperlink{socket_8cpp}{socket.\+cpp}}\end{DoxyCompactItemize}

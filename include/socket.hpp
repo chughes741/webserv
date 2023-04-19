@@ -1,3 +1,13 @@
+/**
+ * @file socket.hpp
+ * @author Francis L.
+ * @author Marc-André L.
+ * @author Cole H.
+ * @version 0.1
+ * @date 2023-04-19
+ * @brief Classes for using sockets as defined in RFC 793
+ */
+
 #pragma once
 
 #include <arpa/inet.h>

@@ -11,8 +11,7 @@ Represents a TCP socket.
 
 
 
-Inheritance diagram for Tcp\+Socket\+:
-\nopagebreak
+Inheritance diagram for Tcp\+Socket\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -21,8 +20,7 @@ Inheritance diagram for Tcp\+Socket\+:
 \end{figure}
 
 
-Collaboration diagram for Tcp\+Socket\+:
-\nopagebreak
+Collaboration diagram for Tcp\+Socket\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -39,6 +37,7 @@ Collaboration diagram for Tcp\+Socket\+:
 \begin{DoxyCompactList}\small\item\em Destroy the \mbox{\hyperlink{classTcpSocket}{Tcp\+Socket}} object. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classTcpSocket_a8ca978acb9512ef1564a907197f6a407}{bind}} (in\+\_\+port\+\_\+t port, in\+\_\+addr\+\_\+t addr)
 \begin{DoxyCompactList}\small\item\em Bind the socket to a port and address. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classTcpSocket_aecb504049c6d1981223fafa46f2ef40a}\label{classTcpSocket_aecb504049c6d1981223fafa46f2ef40a}} 
 void \mbox{\hyperlink{classTcpSocket_aecb504049c6d1981223fafa46f2ef40a}{listen}} ()
 \begin{DoxyCompactList}\small\item\em Listen for connections. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classTcpSocket_ad496c5121ff3b27307a8960733deddb1}\label{classTcpSocket_ad496c5121ff3b27307a8960733deddb1}} 
@@ -57,7 +56,7 @@ string \mbox{\hyperlink{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}{recv}}
 \doxysubsection{Detailed Description}
 Represents a TCP socket. 
 
-Definition at line 59 of file socket.\+hpp.
+Definition at line 69 of file socket.\+hpp.
 
 
 
@@ -72,24 +71,22 @@ Definition at line 59 of file socket.\+hpp.
 
 Construct a new \mbox{\hyperlink{classTcpSocket}{Tcp\+Socket}} object. 
 
-Creates a socket
-
 \begin{DoxyRefDesc}{Todo}
 \item[\mbox{\hyperlink{todo__todo000003}{Todo}}]flags (isntead of 0) -\/ these should be in setsockopt() SOCK\+\_\+\+NONBLOCK? There\textquotesingle{}s no define for it, O\+\_\+\+NONBLOCK is a flag for open() SO\+\_\+\+DEBUG might be useful SO\+\_\+\+REUSEADDR might be useful SO\+\_\+\+KEEPALIVE might be useful \end{DoxyRefDesc}
 
 
-Definition at line 8 of file socket.\+cpp.
+Definition at line 18 of file socket.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{8                      \{}
-\DoxyCodeLine{9     \mbox{\hyperlink{classSocket_a256125f9e9cb562c1093f61f3dd86750}{sessions\_}} = map<int, Session>();}
-\DoxyCodeLine{10 }
-\DoxyCodeLine{19     \mbox{\hyperlink{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}{sockfd\_}} = socket(AF\_INET, SOCK\_STREAM, 0);}
-\DoxyCodeLine{20     \textcolor{keywordflow}{if} (\mbox{\hyperlink{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}{sockfd\_}} == -\/1) \{}
-\DoxyCodeLine{21         \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Error: Failed to create socket"{}});}
-\DoxyCodeLine{22     \}}
-\DoxyCodeLine{23 \}}
+\DoxyCodeLine{18                      \{}
+\DoxyCodeLine{19     \mbox{\hyperlink{classSocket_a256125f9e9cb562c1093f61f3dd86750}{sessions\_}} = map<int, Session>();}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{28     \mbox{\hyperlink{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}{sockfd\_}} = socket(AF\_INET, SOCK\_STREAM, 0);}
+\DoxyCodeLine{29     \textcolor{keywordflow}{if} (\mbox{\hyperlink{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}{sockfd\_}} == -\/1) \{}
+\DoxyCodeLine{30         \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Error: Failed to create socket"{}});}
+\DoxyCodeLine{31     \}}
+\DoxyCodeLine{32 \}}
 
 \end{DoxyCode}
 
@@ -112,57 +109,26 @@ Bind the socket to a port and address.
 {\em addr} & address to bind to \\
 \hline
 \end{DoxyParams}
-$<$ IPv4
 
-$<$ Port
-
-$<$ Address
-
-Binds socket to an address and port
 
 Implements \mbox{\hyperlink{classSocket}{Socket}}.
 
 
 
-Definition at line 27 of file socket.\+cpp.
+Definition at line 36 of file socket.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{27                                                    \{}
-\DoxyCodeLine{28     \mbox{\hyperlink{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}{addr\_in\_}}.sin\_family      = AF\_INET;     }
-\DoxyCodeLine{29     \mbox{\hyperlink{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}{addr\_in\_}}.sin\_port        = htons(port); }
-\DoxyCodeLine{30     \mbox{\hyperlink{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}{addr\_in\_}}.sin\_addr.s\_addr = htonl(addr); }
-\DoxyCodeLine{33     \textcolor{keywordflow}{if} (::\mbox{\hyperlink{classTcpSocket_a8ca978acb9512ef1564a907197f6a407}{bind}}(\mbox{\hyperlink{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}{sockfd\_}}, (\textcolor{keyword}{struct} sockaddr*)\&\mbox{\hyperlink{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}{addr\_in\_}}, \textcolor{keyword}{sizeof}(\mbox{\hyperlink{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}{addr\_in\_}})) == -\/1) \{}
-\DoxyCodeLine{34         \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Error: Failed to bind socket"{}});}
-\DoxyCodeLine{35     \}}
-\DoxyCodeLine{36 \}}
-
-\end{DoxyCode}
-\mbox{\Hypertarget{classTcpSocket_aecb504049c6d1981223fafa46f2ef40a}\label{classTcpSocket_aecb504049c6d1981223fafa46f2ef40a}} 
-\index{TcpSocket@{TcpSocket}!listen@{listen}}
-\index{listen@{listen}!TcpSocket@{TcpSocket}}
-\doxysubsubsection{\texorpdfstring{listen()}{listen()}}
-{\footnotesize\ttfamily void Tcp\+Socket\+::listen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
-
-
-
-Listen for connections. 
-
-Sets server to listen passively
-
-Implements \mbox{\hyperlink{classSocket}{Socket}}.
-
-
-
-Definition at line 38 of file socket.\+cpp.
-
-
-\begin{DoxyCode}{0}
-\DoxyCodeLine{38                        \{}
-\DoxyCodeLine{40     \textcolor{keywordflow}{if} (::\mbox{\hyperlink{classTcpSocket_aecb504049c6d1981223fafa46f2ef40a}{listen}}(\mbox{\hyperlink{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}{sockfd\_}}, SO\_MAX\_QUEUE) == -\/1) \{}
-\DoxyCodeLine{41         \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Error: Failed to listen on socket"{}});}
-\DoxyCodeLine{42     \}}
-\DoxyCodeLine{43 \}}
+\DoxyCodeLine{36                                                    \{}
+\DoxyCodeLine{37     \mbox{\hyperlink{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}{addr\_in\_}}.sin\_family      = AF\_INET;     \textcolor{comment}{// IPv4}}
+\DoxyCodeLine{38     \mbox{\hyperlink{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}{addr\_in\_}}.sin\_port        = htons(port); \textcolor{comment}{// Port}}
+\DoxyCodeLine{39     \mbox{\hyperlink{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}{addr\_in\_}}.sin\_addr.s\_addr = htonl(addr); \textcolor{comment}{// Address}}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{comment}{// Binds socket to an address and port}}
+\DoxyCodeLine{42     \textcolor{keywordflow}{if} (::\mbox{\hyperlink{classTcpSocket_a8ca978acb9512ef1564a907197f6a407}{bind}}(\mbox{\hyperlink{classSocket_a7cf176290950fc3ddda59fc43e49f2ed}{sockfd\_}}, (\textcolor{keyword}{struct} sockaddr*)\&\mbox{\hyperlink{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}{addr\_in\_}}, \textcolor{keyword}{sizeof}(\mbox{\hyperlink{classSocket_a44059c2711bad07f9ff76ecdd3517dd4}{addr\_in\_}})) == -\/1) \{}
+\DoxyCodeLine{43         \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Error: Failed to bind socket"{}});}
+\DoxyCodeLine{44     \}}
+\DoxyCodeLine{45 \}}
 
 \end{DoxyCode}
 \mbox{\Hypertarget{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}\label{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}} 
@@ -189,26 +155,26 @@ Implements \mbox{\hyperlink{classSocket}{Socket}}.
 
 
 
-Definition at line 73 of file socket.\+cpp.
+Definition at line 82 of file socket.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{73                                      \{}
-\DoxyCodeLine{74     \textcolor{keywordtype}{string} buffer\_str;}
-\DoxyCodeLine{75     \textcolor{keywordtype}{char}   buffer[READ\_BUFFER\_SIZE];}
-\DoxyCodeLine{76     \textcolor{keywordtype}{int}    bytes\_received = \mbox{\hyperlink{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}{::recv}}(port, buffer, READ\_BUFFER\_SIZE, 0);}
-\DoxyCodeLine{77 }
-\DoxyCodeLine{78     \textcolor{keywordflow}{while} (bytes\_received > 0) \{}
-\DoxyCodeLine{79         buffer\_str.append(buffer, bytes\_received);}
-\DoxyCodeLine{80         bytes\_received = \mbox{\hyperlink{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}{::recv}}(port, buffer, READ\_BUFFER\_SIZE, 0);}
-\DoxyCodeLine{81     \}}
-\DoxyCodeLine{82 }
-\DoxyCodeLine{83     \textcolor{keywordflow}{if} (bytes\_received == -\/1) \{}
-\DoxyCodeLine{84         \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Error: Failed to receive from socket"{}});}
-\DoxyCodeLine{85     \}}
+\DoxyCodeLine{82                                      \{}
+\DoxyCodeLine{83     \textcolor{keywordtype}{string} buffer\_str;}
+\DoxyCodeLine{84     \textcolor{keywordtype}{char}   buffer[READ\_BUFFER\_SIZE];}
+\DoxyCodeLine{85     \textcolor{keywordtype}{int}    bytes\_received = \mbox{\hyperlink{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}{::recv}}(port, buffer, READ\_BUFFER\_SIZE, 0);}
 \DoxyCodeLine{86 }
-\DoxyCodeLine{87     \textcolor{keywordflow}{return} buffer\_str;}
-\DoxyCodeLine{88 \}}
+\DoxyCodeLine{87     \textcolor{keywordflow}{while} (bytes\_received > 0) \{}
+\DoxyCodeLine{88         buffer\_str.append(buffer, bytes\_received);}
+\DoxyCodeLine{89         bytes\_received = \mbox{\hyperlink{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}{::recv}}(port, buffer, READ\_BUFFER\_SIZE, 0);}
+\DoxyCodeLine{90     \}}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{92     \textcolor{keywordflow}{if} (bytes\_received == -\/1) \{}
+\DoxyCodeLine{93         \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Error: Failed to receive from socket"{}});}
+\DoxyCodeLine{94     \}}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96     \textcolor{keywordflow}{return} buffer\_str;}
+\DoxyCodeLine{97 \}}
 
 \end{DoxyCode}
 \mbox{\Hypertarget{classTcpSocket_af0ee9da645f2f047e5f8cbd09dfe6936}\label{classTcpSocket_af0ee9da645f2f047e5f8cbd09dfe6936}} 
@@ -234,22 +200,22 @@ Implements \mbox{\hyperlink{classSocket}{Socket}}.
 
 
 
-Definition at line 65 of file socket.\+cpp.
+Definition at line 74 of file socket.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{65                                                   \{}
-\DoxyCodeLine{66     ssize\_t bytes\_sent =}
-\DoxyCodeLine{67         \mbox{\hyperlink{classTcpSocket_af0ee9da645f2f047e5f8cbd09dfe6936}{::send}}(port, buffer.c\_str(), buffer.length(), MSG\_DONTWAIT);}
-\DoxyCodeLine{68     \textcolor{keywordflow}{if} (bytes\_sent == -\/1) \{}
-\DoxyCodeLine{69         \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Error: Failed to send to socket"{}});}
-\DoxyCodeLine{70     \}}
-\DoxyCodeLine{71 \}}
+\DoxyCodeLine{74                                                   \{}
+\DoxyCodeLine{75     ssize\_t bytes\_sent =}
+\DoxyCodeLine{76         \mbox{\hyperlink{classTcpSocket_af0ee9da645f2f047e5f8cbd09dfe6936}{::send}}(port, buffer.c\_str(), buffer.length(), MSG\_DONTWAIT);}
+\DoxyCodeLine{77     \textcolor{keywordflow}{if} (bytes\_sent == -\/1) \{}
+\DoxyCodeLine{78         \textcolor{keywordflow}{throw} std::runtime\_error(\textcolor{stringliteral}{"{}Error: Failed to send to socket"{}});}
+\DoxyCodeLine{79     \}}
+\DoxyCodeLine{80 \}}
 
 \end{DoxyCode}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/socket.\+hpp\item 
-src/socket.\+cpp\end{DoxyCompactItemize}
+include/\mbox{\hyperlink{socket_8hpp}{socket.\+hpp}}\item 
+src/\mbox{\hyperlink{socket_8cpp}{socket.\+cpp}}\end{DoxyCompactItemize}

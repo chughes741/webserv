@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['eventsconfig_53',['EventsConfig',['../structEventsConfig.html',1,'']]]
+  ['eventsconfig_57',['EventsConfig',['../structEventsConfig.html',1,'']]]
 ];

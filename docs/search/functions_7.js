@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['_7esocket_77',['~Socket',['../classSocket.html#a7b36181d6700fa5c4a51a56114f0942d',1,'Socket']]],
-  ['_7etcpsocket_78',['~TcpSocket',['../classTcpSocket.html#a4c6d246451c51ac4226a9301f6711086',1,'TcpSocket']]]
+  ['writeresponse_84',['writeResponse',['../socket_8cpp.html#a1a8714346b2d11ab73e94d6e551aab18',1,'socket.cpp']]]
 ];

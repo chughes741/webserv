@@ -1,0 +1,139 @@
+\hypertarget{socket_8cpp}{}\doxysection{src/socket.cpp File Reference}
+\label{socket_8cpp}\index{src/socket.cpp@{src/socket.cpp}}
+
+
+Class implementations for using sockets as defined in RFC 793.  
+
+
+{\ttfamily \#include \char`\"{}socket.\+hpp\char`\"{}}\newline
+Include dependency graph for socket.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{socket_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structRequest}{Request}} \mbox{\hyperlink{socket_8cpp_ae12384871780d23a8e31371d53372090}{read\+Request}} (\mbox{\hyperlink{classTcpSocket}{Tcp\+Socket}} socket, int port)
+\begin{DoxyCompactList}\small\item\em Read a request from the socket. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{socket_8cpp_a1a8714346b2d11ab73e94d6e551aab18}{write\+Response}} (int port, \mbox{\hyperlink{classTcpSocket}{Tcp\+Socket}} socket, \mbox{\hyperlink{structResponse}{Response}} response)
+\begin{DoxyCompactList}\small\item\em Write a response to the socket. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class implementations for using sockets as defined in RFC 793. 
+
+\begin{DoxyAuthor}{Author}
+Francis L. 
+
+Marc-\/\+André L. 
+
+Cole H. 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2023-\/04-\/19 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{socket_8cpp_ae12384871780d23a8e31371d53372090}\label{socket_8cpp_ae12384871780d23a8e31371d53372090}} 
+\index{socket.cpp@{socket.cpp}!readRequest@{readRequest}}
+\index{readRequest@{readRequest}!socket.cpp@{socket.cpp}}
+\doxysubsubsection{\texorpdfstring{readRequest()}{readRequest()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structRequest}{Request}} read\+Request (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classTcpSocket}{Tcp\+Socket}}}]{socket,  }\item[{int}]{port }\end{DoxyParamCaption})}
+
+
+
+Read a request from the socket. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structRequest}{Request}}
+\end{DoxyReturn}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000004}{Todo}}]put into an Http\+Server class \end{DoxyRefDesc}
+
+
+Definition at line 106 of file socket.\+cpp.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{106                                                 \{}
+\DoxyCodeLine{107     \mbox{\hyperlink{structRequest}{Request}} request;}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109     \textcolor{keywordtype}{string} buffer = socket.\mbox{\hyperlink{classTcpSocket_a88e31f9feb0b1f873fc6f4b5e6181afc}{recv}}(port);}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111     \textcolor{comment}{// start-\/line}}
+\DoxyCodeLine{112     request.\mbox{\hyperlink{structRequest_a39b989ccc181b152b7c8cd3131f4cbfa}{method}} = buffer.substr(0, buffer.find(\textcolor{charliteral}{' '}));}
+\DoxyCodeLine{113     buffer.erase(0, buffer.find(\textcolor{charliteral}{' '}) + 1);}
+\DoxyCodeLine{114     request.\mbox{\hyperlink{structRequest_a1c2e4f1e54a9ea1ea455d513a18c5fd1}{uri}} = buffer.substr(0, buffer.find(\textcolor{charliteral}{' '}));}
+\DoxyCodeLine{115     buffer.erase(0, buffer.find(\textcolor{charliteral}{' '}) + 1);}
+\DoxyCodeLine{116     request.\mbox{\hyperlink{structRequest_ad8e430bf47e923f2cb2d24baf06af1f8}{version}} = buffer.substr(0, buffer.find(CRLF));}
+\DoxyCodeLine{117     buffer.erase(0, buffer.find(CRLF) + 2);}
+\DoxyCodeLine{118 }
+\DoxyCodeLine{119     \textcolor{comment}{// body}}
+\DoxyCodeLine{120     request.\mbox{\hyperlink{structRequest_a487187609e0bf58b795f2521d745da3b}{body}} = buffer.substr(buffer.find(\textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)n\(\backslash\)r\(\backslash\)n"{}}) + 4);}
+\DoxyCodeLine{121     buffer.erase(buffer.find(\textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)n\(\backslash\)r\(\backslash\)n"{}}) + 2);}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{123     \textcolor{comment}{// headers}}
+\DoxyCodeLine{124     \textcolor{keywordflow}{while} (buffer.find(CRLF) != string::npos) \{}
+\DoxyCodeLine{125         \textcolor{keywordtype}{string} key = buffer.substr(0, buffer.find(\textcolor{charliteral}{':'}));}
+\DoxyCodeLine{126         buffer.erase(0, buffer.find(\textcolor{charliteral}{':'}) + 2);}
+\DoxyCodeLine{127         \textcolor{keywordtype}{string} value = buffer.substr(0, buffer.find(CRLF));}
+\DoxyCodeLine{128         buffer.erase(0, buffer.find(CRLF) + 2);}
+\DoxyCodeLine{129         request.\mbox{\hyperlink{structRequest_ac78776d74d0d48e31c06a750d6dee6b6}{headers}}[key] = value;}
+\DoxyCodeLine{130     \}}
+\DoxyCodeLine{131 }
+\DoxyCodeLine{132     \textcolor{keywordflow}{return} request;}
+\DoxyCodeLine{133 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{socket_8cpp_a1a8714346b2d11ab73e94d6e551aab18}\label{socket_8cpp_a1a8714346b2d11ab73e94d6e551aab18}} 
+\index{socket.cpp@{socket.cpp}!writeResponse@{writeResponse}}
+\index{writeResponse@{writeResponse}!socket.cpp@{socket.cpp}}
+\doxysubsubsection{\texorpdfstring{writeResponse()}{writeResponse()}}
+{\footnotesize\ttfamily void write\+Response (\begin{DoxyParamCaption}\item[{int}]{port,  }\item[{\mbox{\hyperlink{classTcpSocket}{Tcp\+Socket}}}]{socket,  }\item[{\mbox{\hyperlink{structResponse}{Response}}}]{response }\end{DoxyParamCaption})}
+
+
+
+Write a response to the socket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em response} & \mbox{\hyperlink{structResponse}{Response}} to write\\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000005}{Todo}}]put into an Http\+Server class \end{DoxyRefDesc}
+
+
+Definition at line 142 of file socket.\+cpp.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{142                                                                   \{}
+\DoxyCodeLine{143     \textcolor{keywordtype}{string} buffer;}
+\DoxyCodeLine{144 }
+\DoxyCodeLine{145     \textcolor{comment}{// status-\/line}}
+\DoxyCodeLine{146     buffer.append(response.\mbox{\hyperlink{structResponse_a4f136e7654bc74c626e03b27635c9470}{version}} + \textcolor{stringliteral}{"{} "{}});}
+\DoxyCodeLine{147     buffer.append(response.\mbox{\hyperlink{structResponse_aed441175ee65383ca6c0ad0962c4a7dd}{status}} + \textcolor{stringliteral}{"{} "{}});}
+\DoxyCodeLine{148     buffer.append(response.\mbox{\hyperlink{structResponse_ae3393f7b594595cdef88d865e9194bc0}{server}} + CRLF);}
+\DoxyCodeLine{149 }
+\DoxyCodeLine{150     \textcolor{comment}{// headers}}
+\DoxyCodeLine{151     \textcolor{keywordflow}{for} (map<string, string>::iterator it = response.\mbox{\hyperlink{structResponse_ad122055b36cfdbf238c43e49cb41959c}{headers}}.begin();}
+\DoxyCodeLine{152          it != response.\mbox{\hyperlink{structResponse_ad122055b36cfdbf238c43e49cb41959c}{headers}}.end(); ++it) \{}
+\DoxyCodeLine{153         buffer.append(it-\/>first + \textcolor{stringliteral}{"{}: "{}} + it-\/>second + CRLF);}
+\DoxyCodeLine{154     \}}
+\DoxyCodeLine{155 }
+\DoxyCodeLine{156     \textcolor{comment}{// body}}
+\DoxyCodeLine{157     buffer.append(CRLF + response.\mbox{\hyperlink{structResponse_aa293e45642cf064511ff6c4c37b46557}{body}});}
+\DoxyCodeLine{158 }
+\DoxyCodeLine{159     socket.\mbox{\hyperlink{classTcpSocket_af0ee9da645f2f047e5f8cbd09dfe6936}{send}}(port, buffer);}
+\DoxyCodeLine{160 \}}
+
+\end{DoxyCode}
