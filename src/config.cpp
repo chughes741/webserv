@@ -21,12 +21,12 @@ void tokenizeConfig(std::vector<std::string> &tokens, std::string line) {
  */
 void parseConfig(std::string config_file) {
 	std::string line;
-	std::ifstream file(config_file);
+	std::ifstream file(config_file.c_str());
 	std::vector<std::string> tokens;
 
 	if (!file.is_open() || file.peek() == std::ifstream::traits_type::eof()) {
  		throw FileError(config_file);}
-	std::string filePath = std::string(realpath(config_file.c_str(), nullptr));
+	std::string filePath = std::string(realpath(config_file.c_str(), NULL));
  	if (PRINT) {
 		std::cout << "# configuration file " << filePath << ":" << std::endl;}
  	while(getline(file, line)) {

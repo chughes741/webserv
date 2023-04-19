@@ -4,10 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "webserv.hpp"
 #include "Exception.hpp"
-
-#define CONFIG_FILE "./config/server.conf"
+#include "webserv.hpp"
 
 #define PRINT 0
 
