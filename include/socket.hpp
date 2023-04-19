@@ -37,23 +37,7 @@ class Session {
  */
 class Socket {
    public:
-    Socket() {
-        sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
-        if (sockfd_ == -1) {
-            throw std::runtime_error("Error: Failed to create socket");
-        }
-    }
-    virtual ~Socket() throw() {}
-
-   private:
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-parameter"
-#pragma clang diagnostic ignored "-Wreturn-type"
-    Socket(const Socket& other) {}
-    Socket& operator=(const Socket& other) {}
-#pragma clang diagnostic pop
-
-   public:
+    virtual ~Socket()                                     = 0;
     virtual void   bind(in_port_t port, in_addr_t addr)   = 0;
     virtual void   listen()                               = 0;
     virtual void   accept()                               = 0;
