@@ -2,77 +2,57 @@
 
 using namespace std;
 
-Socket::Socket(in_port_t port, in_addr_t addr) throw(runtime_error) {
-    client_sockets_ = map<int, socket_addr_t>();
+TcpSocket::TcpSocket() {
+    sessions_ = map<int, Session>();
 
     /** Creates a socket */
     sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd_ == -1) {
         throw std::runtime_error("Error: Failed to create socket");
     }
+}
 
-    /** Set socket options */
-    // if (setsockopt(sockfd_, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int))
-    // < 0) { throw std::runtime_error("Error: Failed to set socket options");
-    // }
+TcpSocket::~TcpSocket() throw() {}
 
+void TcpSocket::bind(in_port_t port, in_addr_t addr) {
     addr_in_.sin_family      = AF_INET;     /**< IPv4 */
     addr_in_.sin_port        = htons(port); /**< Port */
     addr_in_.sin_addr.s_addr = htonl(addr); /**< Address */
 
     /** Binds socket to an address and port */
-    if (bind(sockfd_, (struct sockaddr*)&addr_in_, sizeof(addr_in_)) == -1) {
+    if (::bind(sockfd_, (struct sockaddr*)&addr_in_, sizeof(addr_in_)) == -1) {
         throw std::runtime_error("Error: Failed to bind socket");
     }
+}
 
+void TcpSocket::listen() {
     /** Sets server to listen passively */
-    if (listen(sockfd_, SO_MAX_QUEUE) == -1) {
+    if (::listen(sockfd_, SO_MAX_QUEUE) == -1) {
         throw std::runtime_error("Error: Failed to listen on socket");
     }
 }
 
-Socket::Socket(const Socket& other) throw() {
-    sockfd_  = other.sockfd_;
-    addr_in_ = other.addr_in_;
-}
+void TcpSocket::accept() {
+    struct sockaddr* client_addr     = new struct sockaddr;
+    socklen_t        client_addr_len = sizeof(sockaddr);
 
-Socket& Socket::operator=(const Socket& other) throw() {
-    if (this == &other) {
-        return *this;
+    int client_sockfd = ::accept(sockfd_, client_addr, &client_addr_len);
+    if (client_sockfd == -1) {
+        delete client_addr;
+        throw std::runtime_error("Error: Failed to accept connection");
     }
 
-    sockfd_  = other.sockfd_;
-    addr_in_ = other.addr_in_;
-
-    return *this;
+    Session session(client_sockfd, client_addr, client_addr_len);
+    sessions_.insert(make_pair(client_sockfd, session));
 }
 
-Socket::~Socket() throw() {}
-
-void Socket::close() throw(runtime_error) {
+void TcpSocket::close() {
     if (::close(sockfd_) == -1) {
         throw std::runtime_error("Error: Failed to close socket");
     }
 }
 
-void Socket::accept() throw(runtime_error) {
-    socket_addr_t socket_addr;
-    socket_addr.addr_len = sizeof(socket_addr.addr);
-
-    int socket_fd = ::accept(sockfd_, &socket_addr.addr, &socket_addr.addr_len);
-    if (socket_fd == -1) {
-        throw std::runtime_error("Error: Failed to accept connection");
-    }
-
-    /** Blocking */
-    if (connect(socket_fd, &socket_addr.addr, socket_addr.addr_len) == -1) {
-        throw std::runtime_error("Error: Failed to connect to client");
-    }
-
-    client_sockets_.insert(make_pair(socket_fd, socket_addr));
-}
-
-void Socket::send(int port, string buffer) const throw(runtime_error) {
+void TcpSocket::send(int port, string buffer) const {
     ssize_t bytes_sent =
         ::send(port, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
     if (bytes_sent == -1) {
@@ -80,7 +60,7 @@ void Socket::send(int port, string buffer) const throw(runtime_error) {
     }
 }
 
-string Socket::recv(int port) const throw(runtime_error) {
+string TcpSocket::recv(int port) const {
     string buffer_str;
     char   buffer[READ_BUFFER_SIZE];
     int    bytes_received = ::recv(port, buffer, READ_BUFFER_SIZE, 0);
@@ -101,8 +81,10 @@ string Socket::recv(int port) const throw(runtime_error) {
  * @brief Read a request from the socket
  *
  * @return Request
+ * 
+ * @todo put into an HttpServer class
  */
-Request readRequest(Socket socket, int port) {
+Request readRequest(TcpSocket socket, int port) {
     Request request;
 
     string buffer = socket.recv(port);
@@ -135,8 +117,10 @@ Request readRequest(Socket socket, int port) {
  * @brief Write a response to the socket
  *
  * @param response Response to write
+ * 
+ * @todo put into an HttpServer class
  */
-void writeResponse(int port, Socket socket, Response response) {
+void writeResponse(int port, TcpSocket socket, Response response) {
     string buffer;
 
     /** status-line */
