@@ -33,9 +33,9 @@ class Session {
         : sockfd_(sockfd), addr_(addr), addrlen_(addrlen) {}
 
    public:
-    int                    sockfd() const { return sockfd_; }
-    const struct sockaddr* addr() const { return addr_; }
-    socklen_t              addrlen() const { return addrlen_; }
+    int sockfd() const { return sockfd_; }                /**< sockfd_ getter */
+    const struct sockaddr* addr() const { return addr_; } /**< addr_ getter */
+    socklen_t addrlen() const { return addrlen_; }        /** addrlen_ getter*/
 
    private:
     int                    sockfd_;  /**< Session socket file descriptor */
@@ -44,7 +44,8 @@ class Session {
 };
 
 /**
- * @brief Socket abstract class
+ * @brief Socket base class
+ * @pure
  */
 class Socket {
    public:
