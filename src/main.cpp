@@ -33,15 +33,17 @@ int main(int argc, char* argv[]) {
 	}
 
     vector<int>    ports;
-    vector<Socket> sockets;
+    vector<TcpSocket> sockets(ports.size());
 
     /** @todo get ports from config */
     ports.push_back(3000);
 
     /** Create a socket for each port */
-    for (vector<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
+    for (vector<TcpSocket>::iterator it = sockets.begin(); it != sockets.end(); ++it) {
         try {
-            sockets.push_back(Socket(*it, INADDR_ANY));
+            *it = TcpSocket();
+            (*it).bind(ports[it - sockets.begin()], INADDR_ANY);
+            (*it).listen();
         } catch (std::runtime_error& e) {
             std::cerr << e.what() << std::endl;
         }
@@ -53,7 +55,7 @@ int main(int argc, char* argv[]) {
     }
 
     /** Close sockets */
-    for (vector<Socket>::iterator it = sockets.begin(); it != sockets.end();
+    for (vector<TcpSocket>::iterator it = sockets.begin(); it != sockets.end();
          ++it) {
         try {
             it->close();

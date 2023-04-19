@@ -2,6 +2,9 @@
 
 using namespace std;
 
+/** C++ is a silly language */
+Socket::~Socket() {}
+
 TcpSocket::TcpSocket() {
     sessions_ = map<int, Session>();
 
