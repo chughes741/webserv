@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['debug_5fconnection_9',['debug_connection',['../structEventsConfig.html#ae203f356393e1e39a5a7268127e664ff',1,'EventsConfig']]],
-  ['deferred_5faccept_10',['deferred_accept',['../structEventsConfig.html#a5bb1aa7f1697239c0ac0d084d8547e8c',1,'EventsConfig']]]
+  ['error_5flog_12',['error_log',['../structHttpConfig.html#ac12ca219699e31e7b7acb25fcb0d4d25',1,'HttpConfig']]],
+  ['error_5fpage_13',['error_page',['../structLocationConfig.html#a38cac2d5c54e473702acae6cd4955c27',1,'LocationConfig::error_page()'],['../structServerConfig.html#a5e22f760ccdea55fda2086fcee5d0ee8',1,'ServerConfig::error_page()'],['../structHttpConfig.html#a529e773b73277aed1d2bad3fd584bc37',1,'HttpConfig::error_page()']]]
 ];

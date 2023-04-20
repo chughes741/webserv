@@ -1,11 +1,11 @@
 <map id="include/config.hpp" name="include/config.hpp">
-<area shape="rect" id="node1" title="Configuration options for the HTTP server:" alt="" coords="265,5,405,32"/>
+<area shape="rect" id="node1" title="Configuration options for the HTTP server:" alt="" coords="191,5,331,32"/>
 <area shape="rect" id="node2" href="$config_8cpp_source.html" title=" " alt="" coords="5,80,116,107"/>
-<area shape="rect" id="node3" href="$main_8cpp_source.html" title=" " alt="" coords="355,304,460,331"/>
-<area shape="rect" id="node4" href="$webserv_8hpp_source.html" title=" " alt="" coords="209,155,363,181"/>
-<area shape="rect" id="node9" href="$events_8hpp_source.html" title=" " alt="" coords="140,80,285,107"/>
-<area shape="rect" id="node5" href="$httpServer_8hpp.html" title="Class for handling HTTP requests." alt="" coords="22,229,190,256"/>
-<area shape="rect" id="node7" href="$socket_8hpp.html" title="Classes for using sockets as defined in RFC 793." alt="" coords="215,229,357,256"/>
-<area shape="rect" id="node6" href="$httpServer_8cpp.html" title=" " alt="" coords="37,304,175,331"/>
-<area shape="rect" id="node8" href="$socket_8cpp.html" title="Class implementations for using sockets as defined in RFC 793." alt="" coords="215,304,330,331"/>
+<area shape="rect" id="node3" href="$main_8cpp_source.html" title=" " alt="" coords="309,229,415,256"/>
+<area shape="rect" id="node4" href="$webserv_8hpp_source.html" title=" " alt="" coords="298,80,453,107"/>
+<area shape="rect" id="node5" href="$events_8hpp_source.html" title=" " alt="" coords="192,155,337,181"/>
+<area shape="rect" id="node6" href="$socket_8hpp.html" title="Classes for using sockets as defined in RFC 793." alt="" coords="413,155,556,181"/>
+<area shape="rect" id="node8" href="$server_8hpp.html" title="Declares classes for creating web servers that can handle HTTP requests." alt="" coords="581,155,722,181"/>
+<area shape="rect" id="node7" href="$socket_8cpp.html" title="Class implementations for using sockets as defined in RFC 793." alt="" coords="439,229,554,256"/>
+<area shape="rect" id="node9" href="$server_8cpp.html" title="Defines classes for creating web servers that can handle HTTP requests." alt="" coords="595,229,707,256"/>
 </map>

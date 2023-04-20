@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['unknowndirective_51',['UnknownDirective',['../classWebExcep_1_1UnknownDirective.html',1,'WebExcep']]],
-  ['uri_52',['uri',['../structRequest.html#a1c2e4f1e54a9ea1ea455d513a18c5fd1',1,'Request']]],
-  ['use_53',['use',['../structEventsConfig.html#ab27090310e6c22a9ece3b4943db5b2f1',1,'EventsConfig']]],
-  ['use_5fpoll_54',['use_poll',['../structEventsConfig.html#a82e45599525b8ee75a1bb2d79208fa9b',1,'EventsConfig']]]
+  ['webexcep_53',['WebExcep',['../classWebExcep.html',1,'']]],
+  ['wrongcontext_54',['WrongContext',['../classWebExcep_1_1WrongContext.html',1,'WebExcep']]],
+  ['wrongparameter_55',['WrongParameter',['../classWebExcep_1_1WrongParameter.html',1,'WebExcep']]],
+  ['wrongsettingvalue_56',['WrongSettingValue',['../classWebExcep_1_1WrongSettingValue.html',1,'WebExcep']]]
 ];

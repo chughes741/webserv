@@ -1,24 +1,98 @@
 \hypertarget{classServer}{}\doxysection{Server Class Reference}
 \label{classServer}\index{Server@{Server}}
+
+
+Base class for servers.  
+
+
+
+
+{\ttfamily \#include $<$server.\+hpp$>$}
+
+
+
+Inheritance diagram for Server\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=149pt]{classServer__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Server\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classServer__coll__graph}
+\end{center}
+\end{figure}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classServer_a7586b567b7e0db0368e89a264b5bce1a}\label{classServer_a7586b567b7e0db0368e89a264b5bce1a}} 
-{\bfseries Server} (const \mbox{\hyperlink{classServer}{Server}} \&copy)
+\mbox{\Hypertarget{classServer_aa49a1de2493972fef47c9fbfd04a3b97}\label{classServer_aa49a1de2493972fef47c9fbfd04a3b97}} 
+virtual void {\bfseries start} ()=0
 \item 
-\mbox{\Hypertarget{classServer_a886283964aabf6df6cfee267b58aae94}\label{classServer_a886283964aabf6df6cfee267b58aae94}} 
-\mbox{\hyperlink{classServer}{Server}} \& {\bfseries operator=} (const \mbox{\hyperlink{classServer}{Server}} \&copy)
+\mbox{\Hypertarget{classServer_a4d30c699c5d1f119cbdd5b7e3bf624e6}\label{classServer_a4d30c699c5d1f119cbdd5b7e3bf624e6}} 
+virtual void {\bfseries stop} ()=0
+\item 
+\mbox{\Hypertarget{classServer_a0a146161f39d70e0ad886ba1c0f7d70c}\label{classServer_a0a146161f39d70e0ad886ba1c0f7d70c}} 
+virtual void {\bfseries create\+Socket} ()=0
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classServer_ac8767c8f6f17941588a3ba1a4989297e}\label{classServer_ac8767c8f6f17941588a3ba1a4989297e}} 
+virtual \mbox{\hyperlink{structRequest}{Request}} {\bfseries read\+Request} ()=0
+\item 
+\mbox{\Hypertarget{classServer_a18693651f290ef4dfb9077b592349409}\label{classServer_a18693651f290ef4dfb9077b592349409}} 
+virtual \mbox{\hyperlink{structResponse}{Response}} {\bfseries handle\+Request} (\mbox{\hyperlink{structRequest}{Request}} request)=0
+\item 
+\mbox{\Hypertarget{classServer_ab7c284f187e9a2b53bc56ab1ee55fe66}\label{classServer_ab7c284f187e9a2b53bc56ab1ee55fe66}} 
+virtual void {\bfseries send\+Response} (\mbox{\hyperlink{structResponse}{Response}} response)=0
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classSocket}{Socket}} $\ast$ \mbox{\hyperlink{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}{socket\+\_\+}}
+\item 
+\mbox{\hyperlink{structServerConfig}{Server\+Config}} \mbox{\hyperlink{classServer_ad44296a781aa84fbc2cffee3407d9a25}{config\+\_\+}}
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
+Base class for servers. 
+
+Definition at line 48 of file server.\+hpp.
 
 
-Definition at line 6 of file server.\+hpp.
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classServer_ad44296a781aa84fbc2cffee3407d9a25}\label{classServer_ad44296a781aa84fbc2cffee3407d9a25}} 
+\index{Server@{Server}!config\_@{config\_}}
+\index{config\_@{config\_}!Server@{Server}}
+\doxysubsubsection{\texorpdfstring{config\_}{config\_}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structServerConfig}{Server\+Config}} Server\+::config\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+Configuration for the server 
+
+Definition at line 63 of file server.\+hpp.
+
+\mbox{\Hypertarget{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}\label{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}} 
+\index{Server@{Server}!socket\_@{socket\_}}
+\index{socket\_@{socket\_}!Server@{Server}}
+\doxysubsubsection{\texorpdfstring{socket\_}{socket\_}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classSocket}{Socket}}$\ast$ Server\+::socket\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\hyperlink{classSocket}{Socket}} used by the server 
+
+Definition at line 62 of file server.\+hpp.
 
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/server.\+hpp\item 
-src/server.\+cpp\end{DoxyCompactItemize}
+include/\mbox{\hyperlink{server_8hpp}{server.\+hpp}}\item 
+src/\mbox{\hyperlink{server_8cpp}{server.\+cpp}}\end{DoxyCompactItemize}

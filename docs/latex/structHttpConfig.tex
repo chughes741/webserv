@@ -11,34 +11,75 @@ Configuration for an HTTP server.
 
 
 
-Collaboration diagram for Http\+Config\+:\nopagebreak
+Collaboration diagram for Http\+Config\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{structHttpConfig__coll__graph}
 \end{center}
 \end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structHttpConfig_ad9fe0c4fa82845bcc472720d89b2d22f}{Http\+Config}} ()
+\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
+vector$<$ \mbox{\hyperlink{structServerConfig}{Server\+Config}} $>$ \mbox{\hyperlink{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}{servers}}
+\item 
+pair$<$ int, string $>$ \mbox{\hyperlink{structHttpConfig_a529e773b73277aed1d2bad3fd584bc37}{error\+\_\+page}}
+\item 
 string \mbox{\hyperlink{structHttpConfig_ac12ca219699e31e7b7acb25fcb0d4d25}{error\+\_\+log}}
 \item 
-string \mbox{\hyperlink{structHttpConfig_ac8758af23712f52be49980ef418f9329}{pid\+\_\+file}}
+string \mbox{\hyperlink{structHttpConfig_a951bc94c535f7b4d482e3dc3c53bf1f4}{root}}
 \item 
-\mbox{\hyperlink{structEventsConfig}{Events\+Config}} \mbox{\hyperlink{structHttpConfig_a11c4e900e5e73dcdb6dbc3ec5867ccfd}{events}}
-\item 
-vector$<$ \mbox{\hyperlink{structServerConfig}{Server\+Config}} $>$ \mbox{\hyperlink{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}{servers}}
+string \mbox{\hyperlink{structHttpConfig_aef5414f2cb85759ca8026e61268c55aa}{client\+\_\+max\+\_\+body\+\_\+size}}
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Configuration for an HTTP server. 
 
-Definition at line 115 of file config.\+hpp.
+Definition at line 126 of file config.\+hpp.
 
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structHttpConfig_ad9fe0c4fa82845bcc472720d89b2d22f}\label{structHttpConfig_ad9fe0c4fa82845bcc472720d89b2d22f}} 
+\index{HttpConfig@{HttpConfig}!HttpConfig@{HttpConfig}}
+\index{HttpConfig@{HttpConfig}!HttpConfig@{HttpConfig}}
+\doxysubsubsection{\texorpdfstring{HttpConfig()}{HttpConfig()}}
+{\footnotesize\ttfamily Http\+Config\+::\+Http\+Config (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor, initializes to default values 
+
+Definition at line 128 of file config.\+hpp.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{129         : \mbox{\hyperlink{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}{servers}}(),}
+\DoxyCodeLine{130           \mbox{\hyperlink{structHttpConfig_a529e773b73277aed1d2bad3fd584bc37}{error\_page}}(404, \textcolor{stringliteral}{"{}"{}}),}
+\DoxyCodeLine{131           \mbox{\hyperlink{structHttpConfig_ac12ca219699e31e7b7acb25fcb0d4d25}{error\_log}}(\textcolor{stringliteral}{"{}error.log"{}}),}
+\DoxyCodeLine{132           \mbox{\hyperlink{structHttpConfig_a951bc94c535f7b4d482e3dc3c53bf1f4}{root}}(\textcolor{stringliteral}{"{}html"{}}),}
+\DoxyCodeLine{133           \mbox{\hyperlink{structHttpConfig_aef5414f2cb85759ca8026e61268c55aa}{client\_max\_body\_size}}(\textcolor{stringliteral}{"{}1m"{}}) \{}
+\DoxyCodeLine{134     \}}
+
+\end{DoxyCode}
 
 
 \doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structHttpConfig_aef5414f2cb85759ca8026e61268c55aa}\label{structHttpConfig_aef5414f2cb85759ca8026e61268c55aa}} 
+\index{HttpConfig@{HttpConfig}!client\_max\_body\_size@{client\_max\_body\_size}}
+\index{client\_max\_body\_size@{client\_max\_body\_size}!HttpConfig@{HttpConfig}}
+\doxysubsubsection{\texorpdfstring{client\_max\_body\_size}{client\_max\_body\_size}}
+{\footnotesize\ttfamily string Http\+Config\+::client\+\_\+max\+\_\+body\+\_\+size}
+
+Maximum size of a request body 
+
+Definition at line 140 of file config.\+hpp.
+
 \mbox{\Hypertarget{structHttpConfig_ac12ca219699e31e7b7acb25fcb0d4d25}\label{structHttpConfig_ac12ca219699e31e7b7acb25fcb0d4d25}} 
 \index{HttpConfig@{HttpConfig}!error\_log@{error\_log}}
 \index{error\_log@{error\_log}!HttpConfig@{HttpConfig}}
@@ -47,27 +88,27 @@ Definition at line 115 of file config.\+hpp.
 
 Path to the error log file 
 
-Definition at line 116 of file config.\+hpp.
+Definition at line 138 of file config.\+hpp.
 
-\mbox{\Hypertarget{structHttpConfig_a11c4e900e5e73dcdb6dbc3ec5867ccfd}\label{structHttpConfig_a11c4e900e5e73dcdb6dbc3ec5867ccfd}} 
-\index{HttpConfig@{HttpConfig}!events@{events}}
-\index{events@{events}!HttpConfig@{HttpConfig}}
-\doxysubsubsection{\texorpdfstring{events}{events}}
-{\footnotesize\ttfamily \mbox{\hyperlink{structEventsConfig}{Events\+Config}} Http\+Config\+::events}
+\mbox{\Hypertarget{structHttpConfig_a529e773b73277aed1d2bad3fd584bc37}\label{structHttpConfig_a529e773b73277aed1d2bad3fd584bc37}} 
+\index{HttpConfig@{HttpConfig}!error\_page@{error\_page}}
+\index{error\_page@{error\_page}!HttpConfig@{HttpConfig}}
+\doxysubsubsection{\texorpdfstring{error\_page}{error\_page}}
+{\footnotesize\ttfamily pair$<$int, string$>$ Http\+Config\+::error\+\_\+page}
 
-Events block 
+Default error page 
 
-Definition at line 118 of file config.\+hpp.
+Definition at line 137 of file config.\+hpp.
 
-\mbox{\Hypertarget{structHttpConfig_ac8758af23712f52be49980ef418f9329}\label{structHttpConfig_ac8758af23712f52be49980ef418f9329}} 
-\index{HttpConfig@{HttpConfig}!pid\_file@{pid\_file}}
-\index{pid\_file@{pid\_file}!HttpConfig@{HttpConfig}}
-\doxysubsubsection{\texorpdfstring{pid\_file}{pid\_file}}
-{\footnotesize\ttfamily string Http\+Config\+::pid\+\_\+file}
+\mbox{\Hypertarget{structHttpConfig_a951bc94c535f7b4d482e3dc3c53bf1f4}\label{structHttpConfig_a951bc94c535f7b4d482e3dc3c53bf1f4}} 
+\index{HttpConfig@{HttpConfig}!root@{root}}
+\index{root@{root}!HttpConfig@{HttpConfig}}
+\doxysubsubsection{\texorpdfstring{root}{root}}
+{\footnotesize\ttfamily string Http\+Config\+::root}
 
-Path to the PID file 
+Root directory for serving files 
 
-Definition at line 117 of file config.\+hpp.
+Definition at line 139 of file config.\+hpp.
 
 \mbox{\Hypertarget{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}\label{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}} 
 \index{HttpConfig@{HttpConfig}!servers@{servers}}
@@ -77,7 +118,7 @@ Definition at line 117 of file config.\+hpp.
 
 List of server blocks 
 
-Definition at line 119 of file config.\+hpp.
+Definition at line 136 of file config.\+hpp.
 
 
 

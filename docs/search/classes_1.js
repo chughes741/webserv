@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['fileerror_65',['FileError',['../classFileError.html',1,'FileError'],['../classWebExcep_1_1FileError.html',1,'WebExcep::FileError']]]
+  ['httpconfig_60',['HttpConfig',['../structHttpConfig.html',1,'']]],
+  ['httpserver_61',['HttpServer',['../classHttpServer.html',1,'']]]
 ];

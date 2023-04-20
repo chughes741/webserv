@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['error_5flog_108',['error_log',['../structHttpConfig.html#ac12ca219699e31e7b7acb25fcb0d4d25',1,'HttpConfig']]],
-  ['error_5fpages_109',['error_pages',['../structServerConfig.html#a98d36c4218c9974f3d31a0d4cba3674e',1,'ServerConfig']]],
-  ['events_110',['events',['../structHttpConfig.html#a11c4e900e5e73dcdb6dbc3ec5867ccfd',1,'HttpConfig']]]
+  ['headers_107',['headers',['../structRequest.html#ac78776d74d0d48e31c06a750d6dee6b6',1,'Request::headers()'],['../structResponse.html#ad122055b36cfdbf238c43e49cb41959c',1,'Response::headers()']]]
 ];

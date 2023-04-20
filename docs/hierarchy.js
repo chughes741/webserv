@@ -1,6 +1,5 @@
 var hierarchy =
 [
-    [ "EventsConfig", "structEventsConfig.html", null ],
     [ "std::exception", null, [
       [ "FileError", "classFileError.html", null ],
       [ "WebExcep", "classWebExcep.html", null ],
@@ -11,11 +10,13 @@ var hierarchy =
       [ "WebExcep::WrongSettingValue", "classWebExcep_1_1WrongSettingValue.html", null ]
     ] ],
     [ "HttpConfig", "structHttpConfig.html", null ],
-    [ "HttpServer", "classHttpServer.html", null ],
-    [ "Location", "structLocation.html", null ],
+    [ "Location", "classLocation.html", null ],
+    [ "LocationConfig", "structLocationConfig.html", null ],
     [ "Request", "structRequest.html", null ],
     [ "Response", "structResponse.html", null ],
-    [ "Server", "classServer.html", null ],
+    [ "Server", "classServer.html", [
+      [ "HttpServer", "classHttpServer.html", null ]
+    ] ],
     [ "ServerConfig", "structServerConfig.html", null ],
     [ "Session", "classSession.html", null ],
     [ "Socket", "classSocket.html", [

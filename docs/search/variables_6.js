@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['index_5ffile_112',['index_file',['../structLocation.html#a1b6509d4c461ad8cd11f89d420bc8d6f',1,'Location']]]
+  ['limit_5fexcept_109',['limit_except',['../structLocationConfig.html#a5db69f9eb261f6a368a7c8e1acc4abb2',1,'LocationConfig']]],
+  ['listen_110',['listen',['../structServerConfig.html#a3482ecaab23f836b640e61349d648c62',1,'ServerConfig']]],
+  ['locations_111',['locations',['../structServerConfig.html#a630ee3a41691a97e75c74c0a1ef60736',1,'ServerConfig']]]
 ];
