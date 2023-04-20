@@ -54,7 +54,7 @@ class Server {
     virtual void createSocket() = 0;
 
    protected:
-    virtual Request  readRequest()                   = 0;
+    virtual Request  receiveRequest()                = 0;
     virtual Response handleRequest(Request request)  = 0;
     virtual void     sendResponse(Response response) = 0;
 

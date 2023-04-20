@@ -2,6 +2,7 @@
 #include "config.hpp"
 #include "socket.hpp"
 #include "webserv.hpp"
+#include "server.hpp"
 
 /** Maximum pending connections in queue */
 #define SO_MAX_QUEUE 10
@@ -31,37 +32,12 @@ int main(int argc, char* argv[]) {
         return (EXIT_FAILURE);
     }
 
-    vector<int>       ports;
-    vector<TcpSocket> sockets(ports.size());
+    ServerConfig config = ServerConfig();
 
-    /** @todo get ports from config */
-    ports.push_back(3000);
+    Server *server = new HttpServer(config);
 
-    /** Create a socket for each port */
-    for (vector<TcpSocket>::iterator it = sockets.begin(); it != sockets.end();
-         ++it) {
-        try {
-            (*it).bind(ports[it - sockets.begin()], INADDR_ANY);
-            (*it).listen();
-        } catch (std::runtime_error& e) {
-            std::cerr << e.what() << std::endl;
-        }
-    }
+    server->start();
 
-    while (true) {
-        /** @todo accept connections */
-        break;
-    }
-
-    /** Close sockets */
-    for (vector<TcpSocket>::iterator it = sockets.begin(); it != sockets.end();
-         ++it) {
-        try {
-            it->close();
-        } catch (std::runtime_error& e) {
-            std::cerr << e.what() << std::endl;
-        }
-    }
-
+    delete server;
     return (EXIT_SUCCESS);
 }

@@ -37,6 +37,15 @@ HttpServer::~HttpServer() throw() {
 void HttpServer::start() {
 }
 
+void HttpServer::stop() {
+}
+
+void HttpServer::createSocket() {
+    /** @todo send in actual addr */
+    socket_->bind(config_.listen.second, 0);
+    socket_->listen();
+}
+
 Request HttpServer::receiveRequest() {
     Request request;
 
