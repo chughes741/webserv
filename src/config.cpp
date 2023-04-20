@@ -50,10 +50,12 @@ void setGlobalSetting(vector<string>::iterator &it) {
 			std::cout << "worker_processes: " << *(++it) << std::endl;
 			break;
 		case ERROR_LOG:
-			std::cout << "error_log: " << *(++it) << std::endl;
+			httpConfig.error_log = *(++it);
+			std::cout << "error_log: " << *(it) << std::endl;
 			break;
 		case PID:
-			std::cout << "pid: " << *(++it) << std::endl;
+			httpConfig.pid_file = *(++it);
+			std::cout << "pid: " << *(it) << std::endl;
 			break;
 		default:
 			throw ConfigError((*it));
@@ -137,9 +139,16 @@ void setLocation(vector<string>::iterator &it, string path, bool in) {
 void setServerSetting(vector<string>::iterator &it) {
 	std::cout << "Server: ";
 	string List[] = {"listen", "server_name", "access_log", "root", "location"};
+	string num;
 	switch (getSetting(List, *it, sizeof(List)/sizeof(List[0]))) {
 		case LISTEN:
-			std::cout << "Listen: " << *(++it) << std::endl;
+			num = *(++it);
+			for (size_t i = 0; i < num.length(); ++i) {
+				if (!isdigit(num[i])) {
+					throw ConfigError(num);}
+			}
+			(httpConfig.servers.back()).port = stoi(num);
+			std::cout << "Listen: " << *(it) << std::endl;
 			break;
 		case SERVER_NAME:
 			std::cout << "Server_name: ";
@@ -192,6 +201,7 @@ void setContext(vector<string>::iterator &it, vector<int> &context) {
 			case SERVER:
 				if (context.back() != 2) {
 					throw ConfigError(item);}
+				httpConfig.servers.push_back(ServerConfig());
 				break;
 			default:
 				throw ConfigError(item);

@@ -66,4 +66,7 @@ struct HttpConfig {
     vector<ServerConfig> servers;   /**< List of server blocks */
 };
 
+extern HttpConfig httpConfig;
+
+
 void parseConfig(string);

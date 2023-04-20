@@ -21,6 +21,7 @@ int main(int argc, char* argv[]) {
 		std::cerr << "Usage: ./webserv [config_file]" << std::endl;
 		return (EXIT_FAILURE);
 	}
+	httpConfig = HttpConfig();
 	try {
 		if (argc == 2) {
 			parseConfig(argv[1]);
