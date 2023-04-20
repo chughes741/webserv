@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['http_61',['HTTP',['../classHTTP.html',1,'']]],
-  ['httpconfig_62',['HttpConfig',['../structHttpConfig.html',1,'']]]
+  ['httpconfig_66',['HttpConfig',['../structHttpConfig.html',1,'']]],
+  ['httpserver_67',['HttpServer',['../classHttpServer.html',1,'']]]
 ];

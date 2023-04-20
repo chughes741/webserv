@@ -100,25 +100,25 @@ Include dependency graph for socket.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="socket_8cpp__incl.png" border="0" usemap="#asrc_2socket_8cpp" alt=""/></div>
 <map name="asrc_2socket_8cpp" id="asrc_2socket_8cpp">
-<area shape="rect" title="Class implementations for using sockets as defined in RFC 793." alt="" coords="378,5,493,32"/>
-<area shape="rect" href="socket_8hpp.html" title="Classes for using sockets as defined in RFC 793." alt="" coords="389,80,481,107"/>
-<area shape="rect" title=" " alt="" coords="193,155,285,181"/>
-<area shape="rect" title=" " alt="" coords="309,155,372,181"/>
-<area shape="rect" title=" " alt="" coords="5,379,108,405"/>
-<area shape="rect" title=" " alt="" coords="618,155,714,181"/>
-<area shape="rect" href="events_8hpp_source.html" title=" " alt="" coords="499,155,593,181"/>
-<area shape="rect" href="webserv_8hpp_source.html" title=" " alt="" coords="461,304,565,331"/>
-<area shape="rect" href="config_8hpp_source.html" title=" " alt="" coords="579,229,668,256"/>
-<area shape="rect" title=" " alt="" coords="711,304,762,331"/>
-<area shape="rect" title=" " alt="" coords="705,453,763,480"/>
-<area shape="rect" title=" " alt="" coords="771,379,833,405"/>
-<area shape="rect" href="Exception_8hpp_source.html" title=" " alt="" coords="581,379,695,405"/>
-<area shape="rect" title=" " alt="" coords="298,453,378,480"/>
-<area shape="rect" title=" " alt="" coords="593,453,680,480"/>
-<area shape="rect" title=" " alt="" coords="183,379,258,405"/>
-<area shape="rect" title=" " alt="" coords="283,379,348,405"/>
-<area shape="rect" title=" " alt="" coords="372,379,445,405"/>
-<area shape="rect" title=" " alt="" coords="469,379,556,405"/>
+<area shape="rect" title="Class implementations for using sockets as defined in RFC 793." alt="" coords="366,5,481,32"/>
+<area shape="rect" href="socket_8hpp.html" title="Classes for using sockets as defined in RFC 793." alt="" coords="377,80,469,107"/>
+<area shape="rect" title=" " alt="" coords="163,155,255,181"/>
+<area shape="rect" title=" " alt="" coords="279,155,341,181"/>
+<area shape="rect" title=" " alt="" coords="5,229,108,256"/>
+<area shape="rect" title=" " alt="" coords="545,155,641,181"/>
+<area shape="rect" href="webserv_8hpp_source.html" title=" " alt="" coords="417,155,521,181"/>
+<area shape="rect" title=" " alt="" coords="857,229,931,256"/>
+<area shape="rect" title=" " alt="" coords="132,229,197,256"/>
+<area shape="rect" title=" " alt="" coords="221,229,295,256"/>
+<area shape="rect" title=" " alt="" coords="258,453,338,480"/>
+<area shape="rect" title=" " alt="" coords="474,453,533,480"/>
+<area shape="rect" title=" " alt="" coords="607,379,669,405"/>
+<area shape="rect" title=" " alt="" coords="745,229,832,256"/>
+<area shape="rect" href="Exception_8hpp_source.html" title=" " alt="" coords="342,379,457,405"/>
+<area shape="rect" href="config_8hpp.html" title="Configuration options for the HTTP server:" alt="" coords="511,304,600,331"/>
+<area shape="rect" href="events_8hpp_source.html" title=" " alt="" coords="421,229,516,256"/>
+<area shape="rect" title=" " alt="" coords="363,453,449,480"/>
+<area shape="rect" title=" " alt="" coords="531,379,582,405"/>
 </map>
 </div>
 </div>
@@ -173,38 +173,38 @@ Cole H. </dd></dl>
 
 <p>Read a request from the socket. </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="structRequest.html" title="Represents an HTTP request.">Request</a></dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>put into an HttpServer class </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>put into an <a class="el" href="classHttpServer.html" title="Represents an HTTP server.">HttpServer</a> class </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00106">106</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                                                {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="structRequest.html">Request</a> request;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">string</span> buffer = socket.<a class="code" href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc">recv</a>(port);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="comment">// start-line</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    request.<a class="code" href="structRequest.html#a39b989ccc181b152b7c8cd3131f4cbfa">method</a> = buffer.substr(0, buffer.find(<span class="charliteral">&#39; &#39;</span>));</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    buffer.erase(0, buffer.find(<span class="charliteral">&#39; &#39;</span>) + 1);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    request.<a class="code" href="structRequest.html#a1c2e4f1e54a9ea1ea455d513a18c5fd1">uri</a> = buffer.substr(0, buffer.find(<span class="charliteral">&#39; &#39;</span>));</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    buffer.erase(0, buffer.find(<span class="charliteral">&#39; &#39;</span>) + 1);</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    request.<a class="code" href="structRequest.html#ad8e430bf47e923f2cb2d24baf06af1f8">version</a> = buffer.substr(0, buffer.find(CRLF));</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    buffer.erase(0, buffer.find(CRLF) + 2);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="comment">// body</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    request.<a class="code" href="structRequest.html#a487187609e0bf58b795f2521d745da3b">body</a> = buffer.substr(buffer.find(<span class="stringliteral">&quot;\r\n\r\n&quot;</span>) + 4);</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    buffer.erase(buffer.find(<span class="stringliteral">&quot;\r\n\r\n&quot;</span>) + 2);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="comment">// headers</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordflow">while</span> (buffer.find(CRLF) != string::npos) {</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="keywordtype">string</span> key = buffer.substr(0, buffer.find(<span class="charliteral">&#39;:&#39;</span>));</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        buffer.erase(0, buffer.find(<span class="charliteral">&#39;:&#39;</span>) + 2);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="keywordtype">string</span> value = buffer.substr(0, buffer.find(CRLF));</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        buffer.erase(0, buffer.find(CRLF) + 2);</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        request.<a class="code" href="structRequest.html#ac78776d74d0d48e31c06a750d6dee6b6">headers</a>[key] = value;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordflow">return</span> request;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
-<div class="ttc" id="aclassTcpSocket_html_a88e31f9feb0b1f873fc6f4b5e6181afc"><div class="ttname"><a href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc">TcpSocket::recv</a></div><div class="ttdeci">string recv(int client) const</div><div class="ttdoc">Calls recv() on the socket.</div><div class="ttdef"><b>Definition:</b> <a href="socket_8cpp_source.html#l00082">socket.cpp:82</a></div></div>
+<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00107">107</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                                                {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="structRequest.html">Request</a> request;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">string</span> buffer = socket.<a class="code" href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc">recv</a>(port);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="comment">// start-line</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    request.<a class="code" href="structRequest.html#a39b989ccc181b152b7c8cd3131f4cbfa">method</a> = buffer.substr(0, buffer.find(<span class="charliteral">&#39; &#39;</span>));</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    buffer.erase(0, buffer.find(<span class="charliteral">&#39; &#39;</span>) + 1);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    request.<a class="code" href="structRequest.html#a1c2e4f1e54a9ea1ea455d513a18c5fd1">uri</a> = buffer.substr(0, buffer.find(<span class="charliteral">&#39; &#39;</span>));</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    buffer.erase(0, buffer.find(<span class="charliteral">&#39; &#39;</span>) + 1);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    request.<a class="code" href="structRequest.html#ad8e430bf47e923f2cb2d24baf06af1f8">version</a> = buffer.substr(0, buffer.find(CRLF));</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    buffer.erase(0, buffer.find(CRLF) + 2);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="comment">// body</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    request.<a class="code" href="structRequest.html#a487187609e0bf58b795f2521d745da3b">body</a> = buffer.substr(buffer.find(<span class="stringliteral">&quot;\r\n\r\n&quot;</span>) + 4);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    buffer.erase(buffer.find(<span class="stringliteral">&quot;\r\n\r\n&quot;</span>) + 2);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="comment">// headers</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordflow">while</span> (buffer.find(CRLF) != string::npos) {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keywordtype">string</span> key = buffer.substr(0, buffer.find(<span class="charliteral">&#39;:&#39;</span>));</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        buffer.erase(0, buffer.find(<span class="charliteral">&#39;:&#39;</span>) + 2);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="keywordtype">string</span> value = buffer.substr(0, buffer.find(CRLF));</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        buffer.erase(0, buffer.find(CRLF) + 2);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        request.<a class="code" href="structRequest.html#ac78776d74d0d48e31c06a750d6dee6b6">headers</a>[key] = value;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    }</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordflow">return</span> request;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;}</div>
+<div class="ttc" id="aclassTcpSocket_html_a88e31f9feb0b1f873fc6f4b5e6181afc"><div class="ttname"><a href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc">TcpSocket::recv</a></div><div class="ttdeci">string recv(int client) const</div><div class="ttdoc">Calls recv() on the socket.</div><div class="ttdef"><b>Definition:</b> <a href="socket_8cpp_source.html#l00083">socket.cpp:83</a></div></div>
 <div class="ttc" id="astructRequest_html"><div class="ttname"><a href="structRequest.html">Request</a></div><div class="ttdoc">Represents an HTTP request.</div><div class="ttdef"><b>Definition:</b> <a href="events_8hpp_source.html#l00042">events.hpp:42</a></div></div>
 <div class="ttc" id="astructRequest_html_a1c2e4f1e54a9ea1ea455d513a18c5fd1"><div class="ttname"><a href="structRequest.html#a1c2e4f1e54a9ea1ea455d513a18c5fd1">Request::uri</a></div><div class="ttdeci">string uri</div><div class="ttdef"><b>Definition:</b> <a href="events_8hpp_source.html#l00044">events.hpp:44</a></div></div>
 <div class="ttc" id="astructRequest_html_a39b989ccc181b152b7c8cd3131f4cbfa"><div class="ttname"><a href="structRequest.html#a39b989ccc181b152b7c8cd3131f4cbfa">Request::method</a></div><div class="ttdeci">string method</div><div class="ttdef"><b>Definition:</b> <a href="events_8hpp_source.html#l00043">events.hpp:43</a></div></div>
@@ -253,29 +253,29 @@ Cole H. </dd></dl>
   </table>
   </dd>
 </dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>put into an HttpServer class </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>put into an <a class="el" href="classHttpServer.html" title="Represents an HTTP server.">HttpServer</a> class </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00142">142</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                                                                  {</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordtype">string</span> buffer;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="comment">// status-line</span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    buffer.append(response.<a class="code" href="structResponse.html#a4f136e7654bc74c626e03b27635c9470">version</a> + <span class="stringliteral">&quot; &quot;</span>);</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    buffer.append(response.<a class="code" href="structResponse.html#aed441175ee65383ca6c0ad0962c4a7dd">status</a> + <span class="stringliteral">&quot; &quot;</span>);</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    buffer.append(response.<a class="code" href="structResponse.html#ae3393f7b594595cdef88d865e9194bc0">server</a> + CRLF);</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="comment">// headers</span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keywordflow">for</span> (map&lt;string, string&gt;::iterator it = response.<a class="code" href="structResponse.html#ad122055b36cfdbf238c43e49cb41959c">headers</a>.begin();</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;         it != response.<a class="code" href="structResponse.html#ad122055b36cfdbf238c43e49cb41959c">headers</a>.end(); ++it) {</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        buffer.append(it-&gt;first + <span class="stringliteral">&quot;: &quot;</span> + it-&gt;second + CRLF);</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    }</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="comment">// body</span></div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    buffer.append(CRLF + response.<a class="code" href="structResponse.html#aa293e45642cf064511ff6c4c37b46557">body</a>);</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    socket.<a class="code" href="classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936">send</a>(port, buffer);</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;}</div>
-<div class="ttc" id="aclassTcpSocket_html_af0ee9da645f2f047e5f8cbd09dfe6936"><div class="ttname"><a href="classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936">TcpSocket::send</a></div><div class="ttdeci">void send(int client, string message) const</div><div class="ttdoc">Calls send() on the socket.</div><div class="ttdef"><b>Definition:</b> <a href="socket_8cpp_source.html#l00074">socket.cpp:74</a></div></div>
+<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00143">143</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                                                                  {</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keywordtype">string</span> buffer;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="comment">// status-line</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    buffer.append(response.<a class="code" href="structResponse.html#a4f136e7654bc74c626e03b27635c9470">version</a> + <span class="stringliteral">&quot; &quot;</span>);</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    buffer.append(response.<a class="code" href="structResponse.html#aed441175ee65383ca6c0ad0962c4a7dd">status</a> + <span class="stringliteral">&quot; &quot;</span>);</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    buffer.append(response.<a class="code" href="structResponse.html#ae3393f7b594595cdef88d865e9194bc0">server</a> + CRLF);</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="comment">// headers</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordflow">for</span> (map&lt;string, string&gt;::iterator it = response.<a class="code" href="structResponse.html#ad122055b36cfdbf238c43e49cb41959c">headers</a>.begin();</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;         it != response.<a class="code" href="structResponse.html#ad122055b36cfdbf238c43e49cb41959c">headers</a>.end(); ++it) {</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        buffer.append(it-&gt;first + <span class="stringliteral">&quot;: &quot;</span> + it-&gt;second + CRLF);</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    }</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="comment">// body</span></div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    buffer.append(CRLF + response.<a class="code" href="structResponse.html#aa293e45642cf064511ff6c4c37b46557">body</a>);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    socket.<a class="code" href="classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936">send</a>(port, buffer);</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;}</div>
+<div class="ttc" id="aclassTcpSocket_html_af0ee9da645f2f047e5f8cbd09dfe6936"><div class="ttname"><a href="classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936">TcpSocket::send</a></div><div class="ttdeci">void send(int client, string message) const</div><div class="ttdoc">Calls send() on the socket.</div><div class="ttdef"><b>Definition:</b> <a href="socket_8cpp_source.html#l00075">socket.cpp:75</a></div></div>
 <div class="ttc" id="astructResponse_html_a4f136e7654bc74c626e03b27635c9470"><div class="ttname"><a href="structResponse.html#a4f136e7654bc74c626e03b27635c9470">Response::version</a></div><div class="ttdeci">string version</div><div class="ttdef"><b>Definition:</b> <a href="events_8hpp_source.html#l00054">events.hpp:54</a></div></div>
 <div class="ttc" id="astructResponse_html_aa293e45642cf064511ff6c4c37b46557"><div class="ttname"><a href="structResponse.html#aa293e45642cf064511ff6c4c37b46557">Response::body</a></div><div class="ttdeci">string body</div><div class="ttdef"><b>Definition:</b> <a href="events_8hpp_source.html#l00058">events.hpp:58</a></div></div>
 <div class="ttc" id="astructResponse_html_ad122055b36cfdbf238c43e49cb41959c"><div class="ttname"><a href="structResponse.html#ad122055b36cfdbf238c43e49cb41959c">Response::headers</a></div><div class="ttdeci">map&lt; string, string &gt; headers</div><div class="ttdef"><b>Definition:</b> <a href="events_8hpp_source.html#l00057">events.hpp:57</a></div></div>
