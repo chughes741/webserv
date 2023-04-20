@@ -1,11 +1,23 @@
 /**
  * @file server.cpp
- * @author Francis L.
- * @author Marc-André L.
- * @author Cole H.
+ * @brief Defines classes for creating web servers that can handle HTTP
+ * requests.
+ *
+ * This file contains the implementation of the Server and HttpServer classes.
+ * The Server class is an abstract base class that provides an interface for
+ * creating servers. The HttpServer class inherits from the Server class and
+ * implements an HTTP server that can receive and send HTTP requests and
+ * responses.
+ *
+ * @note This code is for educational purposes only and should not be used in
+ * production environments without extensive testing and modification.
+ *
  * @version 0.1
  * @date 2023-04-19
- * @brief Class definitions for creating web servers
+ * @authors
+ *   - Francis L.
+ *   - Marc-André L.
+ *   - Cole H.
  */
 
 #include "server.hpp"
@@ -66,12 +78,12 @@ Response HttpServer::handleRequest(Request request) {
         response.headers["Content-Type"] = "text/html";
         response.body = "<html><body><h1>Hello World!</h1></body></html>";
     } else {
-		response.version                 = "HTTP/1.1";
-		response.status                  = "404 Not Found";
-		response.server                  = "webserv/0.1";
-		response.headers["Content-Type"] = "text/html";
-		response.body = "<html><body><h1>404 Not Found</h1></body></html>";
-	}
+        response.version                 = "HTTP/1.1";
+        response.status                  = "404 Not Found";
+        response.server                  = "webserv/0.1";
+        response.headers["Content-Type"] = "text/html";
+        response.body = "<html><body><h1>404 Not Found</h1></body></html>";
+    }
 
     return response;
 }

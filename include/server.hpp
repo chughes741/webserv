@@ -1,11 +1,38 @@
 /**
  * @file server.hpp
- * @author Francis L.
- * @author Marc-André L.
- * @author Cole H.
+ * @brief Declares classes for creating web servers that can handle HTTP
+ * requests.
+ *
+ * This file contains the declaration of the Server and HttpServer classes.
+ * The Server class is an abstract base class that provides an interface for
+ * creating servers. The HttpServer class inherits from the Server class and
+ * implements an HTTP server that can receive and send HTTP requests and
+ * responses.
+ *
+ * The HttpServer class can be configured with a ServerConfig object that
+ * specifies the IP address and port number on which to listen for incoming
+ * connections.
+ *
+ * The HttpServer class currently supports only the GET method for serving
+ * static files. It can serve a default HTML file if the root URI is requested,
+ * or it can return a 404 Not Found error for any other URI.
+ *
+ * To use the HttpServer class, you must create an instance of it with a
+ * ServerConfig object, call the start() method to begin listening for
+ * connections, and then call the receiveRequest() method in a loop to receive
+ * incoming HTTP requests. Once you have received a request, you can use the
+ * handleRequest() method to generate a response, and then send the response
+ * with the sendResponse() method.
+ *
+ * @note This code is for educational purposes only and should not be used in
+ * production environments without extensive testing and modification.
+ *
  * @version 0.1
  * @date 2023-04-19
- * @brief Classes for creating web servers
+ * @authors
+ *   - Francis L.
+ *   - Marc-André L.
+ *   - Cole H.
  */
 
 #pragma once
