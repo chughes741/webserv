@@ -10,7 +10,8 @@
 
 #include "socket.hpp"
 
-using namespace std;
+using std::runtime_error;
+using std::make_pair;
 
 /** Used to make it a pure abstract class */
 Socket::~Socket() {}
@@ -27,7 +28,7 @@ TcpSocket::TcpSocket() {
      */
     sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd_ == -1) {
-        throw std::runtime_error("Error: Failed to create socket");
+        throw runtime_error("Error: Failed to create socket");
     }
 }
 
@@ -40,14 +41,14 @@ void TcpSocket::bind(in_port_t port, in_addr_t addr) {
 
     // Binds socket to an address and port
     if (::bind(sockfd_, (struct sockaddr*)&addr_in_, sizeof(addr_in_)) == -1) {
-        throw std::runtime_error("Error: Failed to bind socket");
+        throw runtime_error("Error: Failed to bind socket");
     }
 }
 
 void TcpSocket::listen() {
     // Sets server to listen passively
     if (::listen(sockfd_, SO_MAX_QUEUE) == -1) {
-        throw std::runtime_error("Error: Failed to listen on socket");
+        throw runtime_error("Error: Failed to listen on socket");
     }
 }
 
@@ -58,7 +59,7 @@ void TcpSocket::accept() {
     int client_sockfd = ::accept(sockfd_, client_addr, &client_addr_len);
     if (client_sockfd == -1) {
         delete client_addr;
-        throw std::runtime_error("Error: Failed to accept connection");
+        throw runtime_error("Error: Failed to accept connection");
     }
 
     Session session(client_sockfd, client_addr, client_addr_len);
@@ -67,7 +68,7 @@ void TcpSocket::accept() {
 
 void TcpSocket::close() {
     if (::close(sockfd_) == -1) {
-        throw std::runtime_error("Error: Failed to close socket");
+        throw runtime_error("Error: Failed to close socket");
     }
 }
 
@@ -75,7 +76,7 @@ void TcpSocket::send(int port, string buffer) const {
     ssize_t bytes_sent =
         ::send(port, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
     if (bytes_sent == -1) {
-        throw std::runtime_error("Error: Failed to send to socket");
+        throw runtime_error("Error: Failed to send to socket");
     }
 }
 
@@ -90,7 +91,7 @@ string TcpSocket::recv(int port) const {
     }
 
     if (bytes_received == -1) {
-        throw std::runtime_error("Error: Failed to receive from socket");
+        throw runtime_error("Error: Failed to receive from socket");
     }
 
     return buffer_str;

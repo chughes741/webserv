@@ -15,10 +15,10 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
-#include "events.hpp"
 #include "webserv.hpp"
 
-using namespace std;
+using std::map;
+using std::string;
 
 #define SO_MAX_QUEUE 10
 #define READ_BUFFER_SIZE 1024
@@ -110,7 +110,7 @@ class TcpSocket : public Socket {
     /**
      * @brief Calls send() on the socket
      *
-     * @param port port to send to
+     * @param client client to send to
      * @param buffer message to send
      */
     void send(int client, string message) const;

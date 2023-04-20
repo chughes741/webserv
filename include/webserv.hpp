@@ -13,6 +13,7 @@
 #include "Exception.hpp"
 #include "config.hpp"
 #include "events.hpp"
+#include "socket.hpp"
 
 #define OUT 0
 #define EVENTS 1
