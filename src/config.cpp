@@ -19,52 +19,226 @@ void tokenizeConfig(vector<string> &tokens, string line) {
 	}
 }
 
-// setContext function
 /**
- * @brief 
+ * @brief Get the Setting object
+ * 
+ * @param settingsList		Array of settings
+ * @param setting 			Setting to find
+ * @param size 				Size of settings array
+ * @return int				Index of setting in settings array
+ */
+int getSetting(string settingsList[], string &setting, int size) {
+	vector<string> settings(settingsList, settingsList + size);
+	vector<string>::iterator settingIt = find(settings.begin(), settings.end(), setting);
+	if (settingIt == settings.end()) {
+		return (-1);}
+	return (settingIt - settings.begin());
+}
+
+#define WORKER_PROCESSES 0
+#define ERROR_LOG 1
+#define PID 2
+/**
+ * @brief 		Set global context settings
+ * @param it	[in,out] Iterator of tokens
+ */
+void setGlobalSetting(vector<string>::iterator &it) {
+	std::cout << "Global: ";
+	string List[] = {"worker_processes", "error_log", "pid"};
+	switch (getSetting(List, *it, sizeof(List)/sizeof(List[0]))) {
+		case WORKER_PROCESSES:
+			std::cout << "worker_processes: " << *(++it) << std::endl;
+			break;
+		case ERROR_LOG:
+			std::cout << "error_log: " << *(++it) << std::endl;
+			break;
+		case PID:
+			std::cout << "pid: " << *(++it) << std::endl;
+			break;
+		default:
+			throw ConfigError((*it));
+	}
+	++it;
+}
+
+# define WORKER_CONNECTIONS 0
+/**
+ * @brief 		Set global context settings
+ * @param it	[in,out] Iterator of tokens
+ */
+void setEventsSetting(vector<string>::iterator &it) {
+	std::cout << "Events: ";
+	string List[] = {"worker_connections"};
+	switch (getSetting(List, *it, sizeof(List)/sizeof(List[0]))) {
+		case WORKER_CONNECTIONS:
+			std::cout << "worker_connections: " << *(++it) << std::endl;
+			break;
+		default:
+			throw ConfigError((*it));
+	}
+	++it;
+}
+
+#define INDEX 0
+/**
+ * @brief 		Set http setting
+ * @param it	[in,out] Iterator of tokens
+ */
+void setHttpSetting(vector<string>::iterator &it) {
+	std::cout << "Http: ";
+	string List[] = {"index"};
+	switch (getSetting(List, *it, sizeof(List)/sizeof(List[0]))) {
+		case INDEX:
+			std::cout << "Index: " << *(++it) << std::endl;
+			break;
+		default:
+			throw ConfigError((*it));
+	}
+	++it;
+}
+void setServerSetting(vector<string>::iterator &it);
+
+#define PATH 1
+#define FASTCGI 2
+/**
+ * @brief 		Set http setting
+ * @param it	[in,out] Iterator of tokens
+ */
+void setLocation(vector<string>::iterator &it, string path, bool in) {
+	string List[] = {"location", "path:", "fastcgi:"};
+	(void) in;
+	string completePath = path + *(++it);
+	++it;
+	switch (getSetting(List, *(++it), sizeof(List)/sizeof(List[0]))) {
+		case 0:
+			std::cout << "Location: " << *(++it) << std::endl;
+			break;
+		case PATH:
+			std::cout << "Path: " << *(++it) << std::endl;
+			break;
+		case FASTCGI:
+			std::cout << "Fastcgi: " << *(++it) << std::endl;
+			break;
+		default:
+			throw ConfigError((*it));
+	}
+	++it;
+}
+
+#define LISTEN 0
+#define SERVER_NAME 1
+#define ACCESS_LOG 2
+#define ROOT 3
+#define LOCATION 4
+/**
+ * @brief 		Set http setting
+ * @param it	[in,out] Iterator of tokens
+ */
+void setServerSetting(vector<string>::iterator &it) {
+	std::cout << "Server: ";
+	string List[] = {"listen", "server_name", "access_log", "root", "location"};
+	switch (getSetting(List, *it, sizeof(List)/sizeof(List[0]))) {
+		case LISTEN:
+			std::cout << "Listen: " << *(++it) << std::endl;
+			break;
+		case SERVER_NAME:
+			std::cout << "Server_name: ";
+			while (*(++it) != ";") {
+				std::cout << *it << " ";}
+			std::cout <<std::endl;
+			return;
+		case ACCESS_LOG:
+			std::cout << "Access_log: ";
+			while (*(++it) != ";") {
+				std::cout << *it << " ";}
+			std::cout <<std::endl;
+			return;
+		case ROOT:
+			std::cout << "Root: " << *(++it) << std::endl;
+			break;
+		case LOCATION:
+			setLocation(it, "", false);
+			break;
+		default:
+			throw ConfigError((*it));
+	}
+	++it;
+}
+
+#define GLOBAL	0
+#define EVENTS	1
+#define HTTP	2
+#define SERVER	3
+/**
+ * @brief define in which context the token is
  * 
  */
-int setContext(vector<string>::iterator &it, int &context) {
+void setContext(vector<string>::iterator &it, vector<int> &context) {
 	string item = *it;
-	string next = *(++it);
-	string contexts[] = {"global", "events", "http", "server"};
-	int numContexts = sizeof(contexts)/sizeof(contexts[0]);
-	for (int i = 0; i < numContexts; ++i) {
-		if (item == contexts[i] && next == "{") {
-			return (i);}
-	}
-	return (context);
+	string List[] = {"", "events", "http", "server"};
+	int tmp = getSetting(List, item, sizeof(List)/sizeof(List[0]));
+	if (*(++it) == "{" && tmp != -1) {
+		switch (tmp) {
+			case GLOBAL:
+				break;
+			case EVENTS:
+				if (context.back() != 0) {
+					throw ConfigError(item);}
+				break;
+			case HTTP:
+				if (context.back() != 0) {
+					throw ConfigError(item);}
+				break;
+			case SERVER:
+				if (context.back() != 2) {
+					throw ConfigError(item);}
+				break;
+			default:
+				throw ConfigError(item);
+		}
+		context.push_back(tmp);
+		++it;
+		return;}
+	else if (*it == "{") {
+		throw ConfigError(item);}
+	--it;
 }
 
 /**
  * @brief  Initialize settings from token vector
  * @param tokens	[in] Vector of tokens
  */
-void initSettings(vector<string> &tokens) {
-	static int context = GLOBAL;
-	static int level = 0;
-
-	vector<string>::iterator it = tokens.begin();
-	vector<string>::iterator it_end = tokens.end();
-	for (; it != it_end; ++it) {
-		context = setContext(it, context);
-		switch (context) {
+bool initSettings(vector<string> &tokens) {
+	static vector<int> context(1);
+	for (vector<string>::iterator it = tokens.begin(); it != tokens.end(); ++it) {
+		while (*it == "}" && !context.empty()) {
+			context.pop_back();
+			++it;}
+		if (it  == tokens.end()) {
+			break;}
+		setContext(it, context);	
+		if (context.back() == -1) {
+			context.pop_back();}
+		switch (context.back()) {
 			case GLOBAL:
-				setGlobalSetting();
+				setGlobalSetting(it);
+				break;
 			case EVENTS:
-				setEventsSetting();
+			 	setEventsSetting(it);
+				break;
 			case HTTP:
-				setHttpSetting();
+			 	setHttpSetting(it);
+				break;
 			case SERVER:
-				setServerSetting();
-			case LOCATION:
-				setLocationSetting();
+			 	setServerSetting(it);
+				break;
 			default:
-				throw ConfigError(string(*it));
+				throw ConfigError((*it));
 		}
 	}
-	if (level != 0) {
+	if (context.size() != 1) {
 		throw std::exception();}
+	return (true);
 }
 
 /**
@@ -88,44 +262,9 @@ void parseConfig(std::string config_file) {
 		tokenizeConfig(tokens, line);
 	}
 	file.close();
+	initSettings(tokens);
 }
 
-//**************************************************************************//
-//                              Constructors                                //
-//**************************************************************************//
-
-// Events::Events(void) {
-	// settings.push_back("worker_connections");
-	// settings.push_back("use");
-	// settings.push_back("multi_accept");
-	// settings.push_back("accept_mutex_delay");
-	// settings.push_back("debug_connection");
-	// settings.push_back("use_poll");
-	// settings.push_back("deferred_accept");}
-// 
-// Events::Events(const Events &copy) {
-	// *this = copy;}
-
-//**************************************************************************//
-//                                 Setters                                  //
-//**************************************************************************//
-
-//**************************************************************************//
-//                                 Getters                                  //
-//**************************************************************************//
-
-//**************************************************************************//
-//                             Member functions                             //
-//**************************************************************************//
-
-// bool Events::isSetting(std::string setting) {
-	// size_t pos = 0;
-	// std::cout << "setting: " << setting << ";" << std::endl;
-	// for (; pos < settings.size(); ++pos) {
-		// if (setting.compare(settings.at(pos)) == 0) {
-			// return true;}}
-	// return false;
-// }
 
 // Determine if the string following the setting is a valid one, which is an integer that ends with ";" 
 // void Events::setWorkerConnections(std::vector<std::string>::iterator &it) {
@@ -178,17 +317,3 @@ void parseConfig(std::string config_file) {
 			// throw WebExcep::UnknownDirective(setting); // unknown directive
 	// }
 // }
-
-//**************************************************************************//
-//                           Operators overload                             //
-//**************************************************************************//
-
-// Events &Events::operator=(const Events &copy){
-	// if (this != &copy){}
-	// return (*this);}
-
-//**************************************************************************//
-//                               Destructors                                //
-//**************************************************************************//
-
-// Events::~Events(void){}
