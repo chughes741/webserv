@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['send_85',['send',['../classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936',1,'TcpSocket']]],
-  ['sockfd_86',['sockfd',['../classSession.html#a6647c30a5eccb78c9177a9c3e8ceb007',1,'Session']]]
+  ['readrequest_92',['readRequest',['../socket_8cpp.html#ae12384871780d23a8e31371d53372090',1,'socket.cpp']]],
+  ['recv_93',['recv',['../classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc',1,'TcpSocket']]]
 ];

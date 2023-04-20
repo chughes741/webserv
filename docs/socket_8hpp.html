@@ -99,31 +99,30 @@ $(document).ready(function(){initNavTree('socket_8hpp.html',''); initResizable()
 <code>#include &lt;fcntl.h&gt;</code><br />
 <code>#include &lt;sys/socket.h&gt;</code><br />
 <code>#include &lt;sys/types.h&gt;</code><br />
-<code>#include &quot;events.hpp&quot;</code><br />
 <code>#include &quot;webserv.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for socket.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="socket_8hpp__incl.png" border="0" usemap="#ainclude_2socket_8hpp" alt=""/></div>
 <map name="ainclude_2socket_8hpp" id="ainclude_2socket_8hpp">
-<area shape="rect" title="Classes for using sockets as defined in RFC 793." alt="" coords="364,5,507,32"/>
-<area shape="rect" title=" " alt="" coords="193,80,285,107"/>
-<area shape="rect" title=" " alt="" coords="309,80,372,107"/>
-<area shape="rect" title=" " alt="" coords="5,304,108,331"/>
-<area shape="rect" title=" " alt="" coords="618,80,714,107"/>
-<area shape="rect" href="events_8hpp_source.html" title=" " alt="" coords="499,80,593,107"/>
-<area shape="rect" href="webserv_8hpp_source.html" title=" " alt="" coords="461,229,565,256"/>
-<area shape="rect" href="config_8hpp_source.html" title=" " alt="" coords="579,155,668,181"/>
-<area shape="rect" title=" " alt="" coords="711,229,762,256"/>
-<area shape="rect" title=" " alt="" coords="705,379,763,405"/>
-<area shape="rect" title=" " alt="" coords="771,304,833,331"/>
-<area shape="rect" href="Exception_8hpp_source.html" title=" " alt="" coords="581,304,695,331"/>
-<area shape="rect" title=" " alt="" coords="298,379,378,405"/>
-<area shape="rect" title=" " alt="" coords="593,379,680,405"/>
-<area shape="rect" title=" " alt="" coords="183,304,258,331"/>
-<area shape="rect" title=" " alt="" coords="283,304,348,331"/>
-<area shape="rect" title=" " alt="" coords="372,304,445,331"/>
-<area shape="rect" title=" " alt="" coords="469,304,556,331"/>
+<area shape="rect" title="Classes for using sockets as defined in RFC 793." alt="" coords="352,5,495,32"/>
+<area shape="rect" title=" " alt="" coords="163,80,255,107"/>
+<area shape="rect" title=" " alt="" coords="279,80,341,107"/>
+<area shape="rect" title=" " alt="" coords="5,155,108,181"/>
+<area shape="rect" title=" " alt="" coords="545,80,641,107"/>
+<area shape="rect" href="webserv_8hpp_source.html" title=" " alt="" coords="417,80,521,107"/>
+<area shape="rect" title=" " alt="" coords="857,155,931,181"/>
+<area shape="rect" title=" " alt="" coords="132,155,197,181"/>
+<area shape="rect" title=" " alt="" coords="221,155,295,181"/>
+<area shape="rect" title=" " alt="" coords="258,379,338,405"/>
+<area shape="rect" title=" " alt="" coords="474,379,533,405"/>
+<area shape="rect" title=" " alt="" coords="607,304,669,331"/>
+<area shape="rect" title=" " alt="" coords="745,155,832,181"/>
+<area shape="rect" href="Exception_8hpp_source.html" title=" " alt="" coords="342,304,457,331"/>
+<area shape="rect" href="config_8hpp.html" title="Configuration options for the HTTP server:" alt="" coords="511,229,600,256"/>
+<area shape="rect" href="events_8hpp_source.html" title=" " alt="" coords="421,155,516,181"/>
+<area shape="rect" title=" " alt="" coords="363,379,449,405"/>
+<area shape="rect" title=" " alt="" coords="531,304,582,331"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -131,9 +130,15 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="socket_8hpp__dep__incl.png" border="0" usemap="#ainclude_2socket_8hppdep" alt=""/></div>
 <map name="ainclude_2socket_8hppdep" id="ainclude_2socket_8hppdep">
-<area shape="rect" title="Classes for using sockets as defined in RFC 793." alt="" coords="53,5,196,32"/>
-<area shape="rect" href="main_8cpp_source.html" title=" " alt="" coords="5,80,111,107"/>
-<area shape="rect" href="socket_8cpp.html" title="Class implementations for using sockets as defined in RFC 793." alt="" coords="135,80,250,107"/>
+<area shape="rect" title="Classes for using sockets as defined in RFC 793." alt="" coords="145,5,288,32"/>
+<area shape="rect" href="main_8cpp_source.html" title=" " alt="" coords="5,229,111,256"/>
+<area shape="rect" href="webserv_8hpp_source.html" title=" " alt="" coords="139,80,294,107"/>
+<area shape="rect" href="socket_8cpp.html" title="Class implementations for using sockets as defined in RFC 793." alt="" coords="318,80,433,107"/>
+<area shape="rect" href="config_8hpp.html" title="Configuration options for the HTTP server:" alt="" coords="147,155,287,181"/>
+<area shape="rect" href="httpServer_8hpp.html" title="Class for handling HTTP requests." alt="" coords="397,155,565,181"/>
+<area shape="rect" href="config_8cpp_source.html" title=" " alt="" coords="135,229,245,256"/>
+<area shape="rect" href="events_8hpp_source.html" title=" " alt="" coords="269,229,415,256"/>
+<area shape="rect" href="httpServer_8cpp.html" title=" " alt="" coords="439,229,578,256"/>
 </map>
 </div>
 </div>
@@ -145,7 +150,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a TCP client connection.  <a href="classSession.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSocket.html">Socket</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSocket.html" title="Socket abstract class.">Socket</a> abstract class.  <a href="classSocket.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSocket.html" title="Socket base class.">Socket</a> base class.  <a href="classSocket.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTcpSocket.html">TcpSocket</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a TCP socket.  <a href="classTcpSocket.html#details">More...</a><br /></td></tr>

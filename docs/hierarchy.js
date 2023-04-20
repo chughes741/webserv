@@ -10,8 +10,8 @@ var hierarchy =
       [ "WebExcep::WrongParameter", "classWebExcep_1_1WrongParameter.html", null ],
       [ "WebExcep::WrongSettingValue", "classWebExcep_1_1WrongSettingValue.html", null ]
     ] ],
-    [ "HTTP", "classHTTP.html", null ],
     [ "HttpConfig", "structHttpConfig.html", null ],
+    [ "HttpServer", "classHttpServer.html", null ],
     [ "Location", "structLocation.html", null ],
     [ "Request", "structRequest.html", null ],
     [ "Response", "structResponse.html", null ],

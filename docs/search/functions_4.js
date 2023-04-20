@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['readrequest_83',['readRequest',['../socket_8cpp.html#ae12384871780d23a8e31371d53372090',1,'socket.cpp']]],
-  ['recv_84',['recv',['../classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc',1,'TcpSocket']]]
+  ['listen_91',['listen',['../classTcpSocket.html#aecb504049c6d1981223fafa46f2ef40a',1,'TcpSocket']]]
 ];

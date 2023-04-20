@@ -101,9 +101,9 @@ $(document).ready(function(){initNavTree('Http_8cpp_source.html',''); initResiza
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">/*                                                                            */</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">/* ************************************************************************** */</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="Http_8hpp.html">&quot;Http.hpp&quot;</a></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;Http.hpp&quot;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<a class="code" href="classHTTP.html">HTTP</a>::HTTP(<span class="keywordtype">void</span>) : _settings() {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;HTTP::HTTP(<span class="keywordtype">void</span>) : _settings() {</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="comment">//std::cout &lt;&lt; &quot;Default HTTP constructor called&quot; &lt;&lt; std::endl;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="comment">//THIS will need to be reviewed</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    _settings.push_back(<span class="stringliteral">&quot;include&quot;</span>);</div>
@@ -121,13 +121,13 @@ $(document).ready(function(){initNavTree('Http_8cpp_source.html',''); initResiza
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    _settings.push_back(<span class="stringliteral">&quot;resolver&quot;</span>);</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="classHTTP.html">HTTP</a>::HTTP(<span class="keyword">const</span> <a class="code" href="classHTTP.html">HTTP</a> &amp;copy) : _settings(copy._settings)</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;HTTP::HTTP(<span class="keyword">const</span> HTTP &amp;copy) : _settings(copy._settings)</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="comment">//std::cout &lt;&lt; &quot;Copy HTTP constructor called&quot;;</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    *<span class="keyword">this</span> = copy;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<a class="code" href="classHTTP.html">HTTP</a> &amp;<a class="code" href="classHTTP.html">HTTP</a>::operator=(<span class="keyword">const</span> <a class="code" href="classHTTP.html">HTTP</a> &amp;rhs) <span class="comment">// : To be updated for initializer list</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;HTTP &amp;HTTP::operator=(<span class="keyword">const</span> HTTP &amp;rhs) <span class="comment">// : To be updated for initializer list</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">//std::cout &lt;&lt; &quot;HTTP Operator assignment called&quot; &lt;&lt; std::endl;</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;rhs) {</div>
@@ -135,12 +135,12 @@ $(document).ready(function(){initNavTree('Http_8cpp_source.html',''); initResiza
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">return</span> (*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="classHTTP.html">HTTP</a>::~HTTP(<span class="keywordtype">void</span>)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;HTTP::~HTTP(<span class="keywordtype">void</span>)</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="comment">//std::cout &lt;&lt; &quot;Default HTTP destructor called&quot; &lt;&lt; std::endl;</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classHTTP.html">HTTP</a>::isSetting(std::string setting)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keywordtype">bool</span> HTTP::isSetting(std::string setting)</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">for</span> (std::vector&lt;std::string&gt;::const_iterator it = _settings.begin(); it != _settings.end(); ++it)</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    {</div>
