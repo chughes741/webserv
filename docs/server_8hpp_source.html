@@ -145,7 +145,7 @@ $(document).ready(function(){initNavTree('server_8hpp_source.html',''); initResi
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> createSocket() = 0;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;   <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="structRequest.html">Request</a>  readRequest()                   = 0;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="structRequest.html">Request</a>  receiveRequest()                = 0;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="structResponse.html">Response</a> handleRequest(<a class="code" href="structRequest.html">Request</a> request)  = 0;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span>     sendResponse(<a class="code" href="structResponse.html">Response</a> response) = 0;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
@@ -180,12 +180,12 @@ $(document).ready(function(){initNavTree('server_8hpp_source.html',''); initResi
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="comment">/**</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">     * @brief Stop the server</span></div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="classHttpServer.html#aad9c63d3f8cda248e3c87067ac3ac5a5">   92</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classHttpServer.html#aad9c63d3f8cda248e3c87067ac3ac5a5">stop</a>();</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classHttpServer.html#aad9c63d3f8cda248e3c87067ac3ac5a5">stop</a>();</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">/**</span></div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">     * @brief Create a server socket</span></div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="classHttpServer.html#abc9a3cc68d320d89544a257da11148d0">   97</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classHttpServer.html#abc9a3cc68d320d89544a257da11148d0">createSocket</a>();</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classHttpServer.html#abc9a3cc68d320d89544a257da11148d0">createSocket</a>();</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;   <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">/**</span></div>

@@ -40,7 +40,6 @@ void \mbox{\hyperlink{classHttpServer_aeb54b6186a9e7a11c6b321589f9379e1}{start}}
 \mbox{\Hypertarget{classHttpServer_aad9c63d3f8cda248e3c87067ac3ac5a5}\label{classHttpServer_aad9c63d3f8cda248e3c87067ac3ac5a5}} 
 void \mbox{\hyperlink{classHttpServer_aad9c63d3f8cda248e3c87067ac3ac5a5}{stop}} ()
 \begin{DoxyCompactList}\small\item\em Stop the server. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classHttpServer_abc9a3cc68d320d89544a257da11148d0}\label{classHttpServer_abc9a3cc68d320d89544a257da11148d0}} 
 void \mbox{\hyperlink{classHttpServer_abc9a3cc68d320d89544a257da11148d0}{create\+Socket}} ()
 \begin{DoxyCompactList}\small\item\em Create a server socket. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Additional Inherited Members}
@@ -79,6 +78,37 @@ Definition at line 28 of file server.\+cpp.
 \DoxyCodeLine{29     \mbox{\hyperlink{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}{socket\_}} = \textcolor{keyword}{new} \mbox{\hyperlink{classTcpSocket}{TcpSocket}};}
 \DoxyCodeLine{30     \mbox{\hyperlink{classServer_ad44296a781aa84fbc2cffee3407d9a25}{config\_}} = config;}
 \DoxyCodeLine{31 \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classHttpServer_abc9a3cc68d320d89544a257da11148d0}\label{classHttpServer_abc9a3cc68d320d89544a257da11148d0}} 
+\index{HttpServer@{HttpServer}!createSocket@{createSocket}}
+\index{createSocket@{createSocket}!HttpServer@{HttpServer}}
+\doxysubsubsection{\texorpdfstring{createSocket()}{createSocket()}}
+{\footnotesize\ttfamily void Http\+Server\+::create\+Socket (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Create a server socket. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]send in actual addr \end{DoxyRefDesc}
+
+
+Implements \mbox{\hyperlink{classServer}{Server}}.
+
+
+
+Definition at line 43 of file server.\+cpp.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{43                               \{}
+\DoxyCodeLine{45     \mbox{\hyperlink{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}{socket\_}}-\/>bind(\mbox{\hyperlink{classServer_ad44296a781aa84fbc2cffee3407d9a25}{config\_}}.\mbox{\hyperlink{structServerConfig_a3482ecaab23f836b640e61349d648c62}{listen}}.second, 0);}
+\DoxyCodeLine{46     \mbox{\hyperlink{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}{socket\_}}-\/>listen();}
+\DoxyCodeLine{47 \}}
 
 \end{DoxyCode}
 

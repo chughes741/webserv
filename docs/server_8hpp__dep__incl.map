@@ -1,4 +1,5 @@
 <map id="include/server.hpp" name="include/server.hpp">
-<area shape="rect" id="node1" title="Declares classes for creating web servers that can handle HTTP requests." alt="" coords="5,5,147,32"/>
-<area shape="rect" id="node2" href="$server_8cpp.html" title="Defines classes for creating web servers that can handle HTTP requests." alt="" coords="20,80,132,107"/>
+<area shape="rect" id="node1" title="Declares classes for creating web servers that can handle HTTP requests." alt="" coords="53,5,194,32"/>
+<area shape="rect" id="node2" href="$main_8cpp_source.html" title=" " alt="" coords="5,80,111,107"/>
+<area shape="rect" id="node3" href="$server_8cpp.html" title="Defines classes for creating web servers that can handle HTTP requests." alt="" coords="134,80,246,107"/>
 </map>
