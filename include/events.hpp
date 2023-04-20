@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config.hpp"
+#include "webserv.hpp"
 
 #define WORKER_CONNECTIONS 0
 #define USE 1
@@ -11,9 +11,9 @@
 #define DEFERRED_ACCEPT 6
 
 /** HTTP methods */
-#define POST "POST"
-#define GET "GET"
-#define DELETE "DELETE"
+#define POST 0x01
+#define GET 0x02
+#define DELETE 0x04
 
 /** HTTP Status codes */
 #define OK "200 OK"
@@ -33,8 +33,8 @@
 /** HTTP headers */
 #define HTTP_VERSION "HTTP/1.1"
 
-using std::string;
 using std::map;
+using std::string;
 
 /**
  * @brief Represents an HTTP request

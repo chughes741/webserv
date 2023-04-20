@@ -1,5 +1,7 @@
 #include "config.hpp"
 
+#define PRINT 0
+
 void tokenizeConfig(std::vector<std::string> &tokens, std::string line) {
 	while (line.size() > 0) {
 		size_t pos = line.find_first_not_of(" \t");

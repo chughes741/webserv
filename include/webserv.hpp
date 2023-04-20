@@ -4,11 +4,12 @@
 #include <unistd.h>
 
 #include <cstdlib>
+#include <exception>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
-#include <exception>
 
 #include "Exception.hpp"
 #include "config.hpp"
