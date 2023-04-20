@@ -11,63 +11,117 @@ Configuration for a single server block.
 
 
 
-Collaboration diagram for Server\+Config\+:\nopagebreak
+Collaboration diagram for Server\+Config\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=278pt]{structServerConfig__coll__graph}
+\includegraphics[width=350pt]{structServerConfig__coll__graph}
 \end{center}
 \end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structServerConfig_af61bcd662c3be06dd4219770350e65e6}{Server\+Config}} ()
+\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-int \mbox{\hyperlink{structServerConfig_ae459946703124ef5a1d98dba38a8b493}{port}}
-\item 
 string \mbox{\hyperlink{structServerConfig_af137c82df3d09fb2418d21f35bba5302}{server\+\_\+name}}
 \item 
-string \mbox{\hyperlink{structServerConfig_a98d36c4218c9974f3d31a0d4cba3674e}{error\+\_\+pages}} \mbox{[}5\mbox{]}
+pair$<$ string, int $>$ \mbox{\hyperlink{structServerConfig_a3482ecaab23f836b640e61349d648c62}{listen}}
 \item 
-map$<$ string, \mbox{\hyperlink{structLocation}{Location}} $>$ \mbox{\hyperlink{structServerConfig_a5b3fa51e71eeef6b7ee89d842592b91d}{locations}}
+string \mbox{\hyperlink{structServerConfig_a1fee7993152e01acfbd4ea07ef0e8ff5}{root}}
+\item 
+pair$<$ int, string $>$ \mbox{\hyperlink{structServerConfig_a5e22f760ccdea55fda2086fcee5d0ee8}{error\+\_\+page}}
+\item 
+string \mbox{\hyperlink{structServerConfig_af9aa26fc2b7c08895afc0647be6c7a2a}{client\+\_\+max\+\_\+body\+\_\+size}}
+\item 
+map$<$ string, \mbox{\hyperlink{structLocationConfig}{Location\+Config}} $>$ \mbox{\hyperlink{structServerConfig_a630ee3a41691a97e75c74c0a1ef60736}{locations}}
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Configuration for a single server block. 
 
-Definition at line 93 of file config.\+hpp.
+Definition at line 103 of file config.\+hpp.
 
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structServerConfig_af61bcd662c3be06dd4219770350e65e6}\label{structServerConfig_af61bcd662c3be06dd4219770350e65e6}} 
+\index{ServerConfig@{ServerConfig}!ServerConfig@{ServerConfig}}
+\index{ServerConfig@{ServerConfig}!ServerConfig@{ServerConfig}}
+\doxysubsubsection{\texorpdfstring{ServerConfig()}{ServerConfig()}}
+{\footnotesize\ttfamily Server\+Config\+::\+Server\+Config (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor, initializes to default values 
+
+Definition at line 105 of file config.\+hpp.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{106         : \mbox{\hyperlink{structServerConfig_af137c82df3d09fb2418d21f35bba5302}{server\_name}}(\textcolor{stringliteral}{"{}"{}}),}
+\DoxyCodeLine{107           \mbox{\hyperlink{structServerConfig_a3482ecaab23f836b640e61349d648c62}{listen}}(\textcolor{stringliteral}{"{}"{}}, 80),}
+\DoxyCodeLine{108           \mbox{\hyperlink{structServerConfig_a1fee7993152e01acfbd4ea07ef0e8ff5}{root}}(\textcolor{stringliteral}{"{}html"{}}),}
+\DoxyCodeLine{109           \mbox{\hyperlink{structServerConfig_a5e22f760ccdea55fda2086fcee5d0ee8}{error\_page}}(404, \textcolor{stringliteral}{"{}"{}}),}
+\DoxyCodeLine{110           \mbox{\hyperlink{structServerConfig_af9aa26fc2b7c08895afc0647be6c7a2a}{client\_max\_body\_size}}(\textcolor{stringliteral}{"{}1m"{}}),}
+\DoxyCodeLine{111           \mbox{\hyperlink{structServerConfig_a630ee3a41691a97e75c74c0a1ef60736}{locations}}() \{}
+\DoxyCodeLine{112     \}}
+
+\end{DoxyCode}
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{structServerConfig_a98d36c4218c9974f3d31a0d4cba3674e}\label{structServerConfig_a98d36c4218c9974f3d31a0d4cba3674e}} 
-\index{ServerConfig@{ServerConfig}!error\_pages@{error\_pages}}
-\index{error\_pages@{error\_pages}!ServerConfig@{ServerConfig}}
-\doxysubsubsection{\texorpdfstring{error\_pages}{error\_pages}}
-{\footnotesize\ttfamily string Server\+Config\+::error\+\_\+pages\mbox{[}5\mbox{]}}
+\mbox{\Hypertarget{structServerConfig_af9aa26fc2b7c08895afc0647be6c7a2a}\label{structServerConfig_af9aa26fc2b7c08895afc0647be6c7a2a}} 
+\index{ServerConfig@{ServerConfig}!client\_max\_body\_size@{client\_max\_body\_size}}
+\index{client\_max\_body\_size@{client\_max\_body\_size}!ServerConfig@{ServerConfig}}
+\doxysubsubsection{\texorpdfstring{client\_max\_body\_size}{client\_max\_body\_size}}
+{\footnotesize\ttfamily string Server\+Config\+::client\+\_\+max\+\_\+body\+\_\+size}
 
-Error pages 
+Maximum size of a request body 
 
-Definition at line 96 of file config.\+hpp.
+Definition at line 118 of file config.\+hpp.
 
-\mbox{\Hypertarget{structServerConfig_a5b3fa51e71eeef6b7ee89d842592b91d}\label{structServerConfig_a5b3fa51e71eeef6b7ee89d842592b91d}} 
+\mbox{\Hypertarget{structServerConfig_a5e22f760ccdea55fda2086fcee5d0ee8}\label{structServerConfig_a5e22f760ccdea55fda2086fcee5d0ee8}} 
+\index{ServerConfig@{ServerConfig}!error\_page@{error\_page}}
+\index{error\_page@{error\_page}!ServerConfig@{ServerConfig}}
+\doxysubsubsection{\texorpdfstring{error\_page}{error\_page}}
+{\footnotesize\ttfamily pair$<$int, string$>$ Server\+Config\+::error\+\_\+page}
+
+Default error page 
+
+Definition at line 117 of file config.\+hpp.
+
+\mbox{\Hypertarget{structServerConfig_a3482ecaab23f836b640e61349d648c62}\label{structServerConfig_a3482ecaab23f836b640e61349d648c62}} 
+\index{ServerConfig@{ServerConfig}!listen@{listen}}
+\index{listen@{listen}!ServerConfig@{ServerConfig}}
+\doxysubsubsection{\texorpdfstring{listen}{listen}}
+{\footnotesize\ttfamily pair$<$string, int$>$ Server\+Config\+::listen}
+
+Address and port to listen on 
+
+Definition at line 115 of file config.\+hpp.
+
+\mbox{\Hypertarget{structServerConfig_a630ee3a41691a97e75c74c0a1ef60736}\label{structServerConfig_a630ee3a41691a97e75c74c0a1ef60736}} 
 \index{ServerConfig@{ServerConfig}!locations@{locations}}
 \index{locations@{locations}!ServerConfig@{ServerConfig}}
 \doxysubsubsection{\texorpdfstring{locations}{locations}}
-{\footnotesize\ttfamily map$<$string, \mbox{\hyperlink{structLocation}{Location}}$>$ Server\+Config\+::locations}
+{\footnotesize\ttfamily map$<$string, \mbox{\hyperlink{structLocationConfig}{Location\+Config}}$>$ Server\+Config\+::locations}
 
 List of locations (path, location) 
 
-Definition at line 97 of file config.\+hpp.
+Definition at line 120 of file config.\+hpp.
 
-\mbox{\Hypertarget{structServerConfig_ae459946703124ef5a1d98dba38a8b493}\label{structServerConfig_ae459946703124ef5a1d98dba38a8b493}} 
-\index{ServerConfig@{ServerConfig}!port@{port}}
-\index{port@{port}!ServerConfig@{ServerConfig}}
-\doxysubsubsection{\texorpdfstring{port}{port}}
-{\footnotesize\ttfamily int Server\+Config\+::port}
+\mbox{\Hypertarget{structServerConfig_a1fee7993152e01acfbd4ea07ef0e8ff5}\label{structServerConfig_a1fee7993152e01acfbd4ea07ef0e8ff5}} 
+\index{ServerConfig@{ServerConfig}!root@{root}}
+\index{root@{root}!ServerConfig@{ServerConfig}}
+\doxysubsubsection{\texorpdfstring{root}{root}}
+{\footnotesize\ttfamily string Server\+Config\+::root}
 
-Port number 
+Root directory for serving files 
 
-Definition at line 94 of file config.\+hpp.
+Definition at line 116 of file config.\+hpp.
 
 \mbox{\Hypertarget{structServerConfig_af137c82df3d09fb2418d21f35bba5302}\label{structServerConfig_af137c82df3d09fb2418d21f35bba5302}} 
 \index{ServerConfig@{ServerConfig}!server\_name@{server\_name}}
@@ -77,7 +131,7 @@ Definition at line 94 of file config.\+hpp.
 
 \mbox{\hyperlink{classServer}{Server}} name 
 
-Definition at line 95 of file config.\+hpp.
+Definition at line 114 of file config.\+hpp.
 
 
 

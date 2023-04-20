@@ -1,6 +1,6 @@
 <map id="HttpConfig" name="HttpConfig">
-<area shape="rect" id="node1" title="Configuration for an HTTP server." alt="" coords="184,187,275,213"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,96,181,123"/>
-<area shape="rect" id="node3" title=" " alt="" coords="245,5,304,32"/>
-<area shape="rect" id="node4" href="$structEventsConfig.html" title="Configuration for an events block." alt="" coords="316,96,423,123"/>
+<area shape="rect" id="node1" title="Configuration for an HTTP server." alt="" coords="189,124,280,151"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,181,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="205,5,264,32"/>
+<area shape="rect" id="node4" title=" " alt="" coords="345,5,484,32"/>
 </map>

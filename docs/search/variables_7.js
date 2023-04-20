@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['locations_113',['locations',['../structServerConfig.html#a5b3fa51e71eeef6b7ee89d842592b91d',1,'ServerConfig']]]
+  ['method_112',['method',['../structRequest.html#a39b989ccc181b152b7c8cd3131f4cbfa',1,'Request']]]
 ];

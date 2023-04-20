@@ -91,9 +91,6 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>accept()
 : <a class="el" href="classTcpSocket.html#ad496c5121ff3b27307a8960733deddb1">TcpSocket</a>
 </li>
-<li>accept_mutex_delay
-: <a class="el" href="structEventsConfig.html#a21c7af7eea1e10ce9654e5d47cf4960e">EventsConfig</a>
-</li>
 <li>addr()
 : <a class="el" href="classSession.html#a7eb187e0eeac6ae31f444a87244ee806">Session</a>
 </li>
@@ -115,21 +112,25 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 
 
 <h3><a id="index_c"></a>- c -</h3><ul>
+<li>cgi_enabled
+: <a class="el" href="structLocationConfig.html#aaeaa7cdde7e9cb5d232666ea519d8d56">LocationConfig</a>
+</li>
 <li>cgi_path
-: <a class="el" href="structLocation.html#a2432b05ac52e1856549b2b89e41e1a25">Location</a>
+: <a class="el" href="structLocationConfig.html#a2c60cf964254de1f6130a539950f0386">LocationConfig</a>
+</li>
+<li>client_max_body_size
+: <a class="el" href="structHttpConfig.html#aef5414f2cb85759ca8026e61268c55aa">HttpConfig</a>
+, <a class="el" href="structLocationConfig.html#a0d1c42f145355eaa75c554c7601551db">LocationConfig</a>
+, <a class="el" href="structServerConfig.html#af9aa26fc2b7c08895afc0647be6c7a2a">ServerConfig</a>
 </li>
 <li>close()
 : <a class="el" href="classTcpSocket.html#a68f30d391495a328074eb28f5defdd7d">TcpSocket</a>
 </li>
-</ul>
-
-
-<h3><a id="index_d"></a>- d -</h3><ul>
-<li>debug_connection
-: <a class="el" href="structEventsConfig.html#ae203f356393e1e39a5a7268127e664ff">EventsConfig</a>
+<li>config_
+: <a class="el" href="classServer.html#ad44296a781aa84fbc2cffee3407d9a25">Server</a>
 </li>
-<li>deferred_accept
-: <a class="el" href="structEventsConfig.html#a5bb1aa7f1697239c0ac0d084d8547e8c">EventsConfig</a>
+<li>createSocket()
+: <a class="el" href="classHttpServer.html#abc9a3cc68d320d89544a257da11148d0">HttpServer</a>
 </li>
 </ul>
 
@@ -138,11 +139,10 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>error_log
 : <a class="el" href="structHttpConfig.html#ac12ca219699e31e7b7acb25fcb0d4d25">HttpConfig</a>
 </li>
-<li>error_pages
-: <a class="el" href="structServerConfig.html#a98d36c4218c9974f3d31a0d4cba3674e">ServerConfig</a>
-</li>
-<li>events
-: <a class="el" href="structHttpConfig.html#a11c4e900e5e73dcdb6dbc3ec5867ccfd">HttpConfig</a>
+<li>error_page
+: <a class="el" href="structHttpConfig.html#a529e773b73277aed1d2bad3fd584bc37">HttpConfig</a>
+, <a class="el" href="structLocationConfig.html#a38cac2d5c54e473702acae6cd4955c27">LocationConfig</a>
+, <a class="el" href="structServerConfig.html#a5e22f760ccdea55fda2086fcee5d0ee8">ServerConfig</a>
 </li>
 </ul>
 
@@ -152,25 +152,35 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 : <a class="el" href="structRequest.html#ac78776d74d0d48e31c06a750d6dee6b6">Request</a>
 , <a class="el" href="structResponse.html#ad122055b36cfdbf238c43e49cb41959c">Response</a>
 </li>
+<li>HttpConfig()
+: <a class="el" href="structHttpConfig.html#ad9fe0c4fa82845bcc472720d89b2d22f">HttpConfig</a>
+</li>
 <li>HttpServer()
-: <a class="el" href="classHttpServer.html#a6b849e844227fda545daf17a59cac229">HttpServer</a>
+: <a class="el" href="classHttpServer.html#ad764d82eb2809cf2d9a304e02b749207">HttpServer</a>
 </li>
 </ul>
 
 
 <h3><a id="index_i"></a>- i -</h3><ul>
 <li>index_file
-: <a class="el" href="structLocation.html#a1b6509d4c461ad8cd11f89d420bc8d6f">Location</a>
+: <a class="el" href="structLocationConfig.html#af598d3a6884a357a9fadbab6d2f57567">LocationConfig</a>
 </li>
 </ul>
 
 
 <h3><a id="index_l"></a>- l -</h3><ul>
-<li>listen()
-: <a class="el" href="classTcpSocket.html#aecb504049c6d1981223fafa46f2ef40a">TcpSocket</a>
+<li>limit_except
+: <a class="el" href="structLocationConfig.html#a5db69f9eb261f6a368a7c8e1acc4abb2">LocationConfig</a>
+</li>
+<li>listen
+: <a class="el" href="structServerConfig.html#a3482ecaab23f836b640e61349d648c62">ServerConfig</a>
+, <a class="el" href="classTcpSocket.html#aecb504049c6d1981223fafa46f2ef40a">TcpSocket</a>
+</li>
+<li>LocationConfig()
+: <a class="el" href="structLocationConfig.html#a4d9d9ff50c98b379a1cbcc834abc115e">LocationConfig</a>
 </li>
 <li>locations
-: <a class="el" href="structServerConfig.html#a5b3fa51e71eeef6b7ee89d842592b91d">ServerConfig</a>
+: <a class="el" href="structServerConfig.html#a630ee3a41691a97e75c74c0a1ef60736">ServerConfig</a>
 </li>
 </ul>
 
@@ -178,19 +188,6 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <h3><a id="index_m"></a>- m -</h3><ul>
 <li>method
 : <a class="el" href="structRequest.html#a39b989ccc181b152b7c8cd3131f4cbfa">Request</a>
-</li>
-<li>multi_accept
-: <a class="el" href="structEventsConfig.html#aeaf265d49c6c63525891ced01130f041">EventsConfig</a>
-</li>
-</ul>
-
-
-<h3><a id="index_p"></a>- p -</h3><ul>
-<li>pid_file
-: <a class="el" href="structHttpConfig.html#ac8758af23712f52be49980ef418f9329">HttpConfig</a>
-</li>
-<li>port
-: <a class="el" href="structServerConfig.html#ae459946703124ef5a1d98dba38a8b493">ServerConfig</a>
 </li>
 </ul>
 
@@ -200,7 +197,9 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 : <a class="el" href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc">TcpSocket</a>
 </li>
 <li>root
-: <a class="el" href="structLocation.html#a51c911468546131ab695943087dbbbbb">Location</a>
+: <a class="el" href="structHttpConfig.html#a951bc94c535f7b4d482e3dc3c53bf1f4">HttpConfig</a>
+, <a class="el" href="structLocationConfig.html#a13996dc3692eed3eb9e2ecb246f855dd">LocationConfig</a>
+, <a class="el" href="structServerConfig.html#a1fee7993152e01acfbd4ea07ef0e8ff5">ServerConfig</a>
 </li>
 </ul>
 
@@ -215,11 +214,17 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>server_name
 : <a class="el" href="structServerConfig.html#af137c82df3d09fb2418d21f35bba5302">ServerConfig</a>
 </li>
+<li>ServerConfig()
+: <a class="el" href="structServerConfig.html#af61bcd662c3be06dd4219770350e65e6">ServerConfig</a>
+</li>
 <li>servers
 : <a class="el" href="structHttpConfig.html#af3c802628373bf70e0436c31c3dc2ef3">HttpConfig</a>
 </li>
 <li>sessions_
 : <a class="el" href="classSocket.html#a256125f9e9cb562c1093f61f3dd86750">Socket</a>
+</li>
+<li>socket_
+: <a class="el" href="classServer.html#a2d53ba24cc25644c4eca7aaec319bcf7">Server</a>
 </li>
 <li>sockfd()
 : <a class="el" href="classSession.html#a6647c30a5eccb78c9177a9c3e8ceb007">Session</a>
@@ -232,6 +237,9 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 </li>
 <li>status
 : <a class="el" href="structResponse.html#aed441175ee65383ca6c0ad0962c4a7dd">Response</a>
+</li>
+<li>stop()
+: <a class="el" href="classHttpServer.html#aad9c63d3f8cda248e3c87067ac3ac5a5">HttpServer</a>
 </li>
 </ul>
 
@@ -247,12 +255,6 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>uri
 : <a class="el" href="structRequest.html#a1c2e4f1e54a9ea1ea455d513a18c5fd1">Request</a>
 </li>
-<li>use
-: <a class="el" href="structEventsConfig.html#ab27090310e6c22a9ece3b4943db5b2f1">EventsConfig</a>
-</li>
-<li>use_poll
-: <a class="el" href="structEventsConfig.html#a82e45599525b8ee75a1bb2d79208fa9b">EventsConfig</a>
-</li>
 </ul>
 
 
@@ -265,9 +267,6 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 
 
 <h3><a id="index__7E"></a>- ~ -</h3><ul>
-<li>~HttpServer()
-: <a class="el" href="classHttpServer.html#a5e9887bc9a815fc4b2b506a335d916af">HttpServer</a>
-</li>
 <li>~Socket()
 : <a class="el" href="classSocket.html#a7b36181d6700fa5c4a51a56114f0942d">Socket</a>
 </li>

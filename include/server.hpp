@@ -1,28 +1,122 @@
-#ifndef SERVER_HPP
- #define SERVER_HPP
+/**
+ * @file server.hpp
+ * @brief Declares classes for creating web servers that can handle HTTP
+ * requests.
+ *
+ * This file contains the declaration of the Server and HttpServer classes.
+ * The Server class is an abstract base class that provides an interface for
+ * creating servers. The HttpServer class inherits from the Server class and
+ * implements an HTTP server that can receive and send HTTP requests and
+ * responses.
+ *
+ * The HttpServer class can be configured with a ServerConfig object that
+ * specifies the IP address and port number on which to listen for incoming
+ * connections.
+ *
+ * The HttpServer class currently supports only the GET method for serving
+ * static files. It can serve a default HTML file if the root URI is requested,
+ * or it can return a 404 Not Found error for any other URI.
+ *
+ * To use the HttpServer class, you must create an instance of it with a
+ * ServerConfig object, call the start() method to begin listening for
+ * connections, and then call the receiveRequest() method in a loop to receive
+ * incoming HTTP requests. Once you have received a request, you can use the
+ * handleRequest() method to generate a response, and then send the response
+ * with the sendResponse() method.
+ *
+ * @note This code is for educational purposes only and should not be used in
+ * production environments without extensive testing and modification.
+ *
+ * @version 0.1
+ * @date 2023-04-19
+ * @authors
+ *   - Francis L.
+ *   - Marc-André L.
+ *   - Cole H.
+ */
 
-# include <iostream>
+#pragma once
 
+#include "webserv.hpp"
+
+using std::string;
+
+/**
+ * @brief Base class for servers
+ * @pure
+ */
 class Server {
-public:
-//Default constructor (Required)
-	Server();
-//Copy constructor (Required)
-	Server (const Server &copy);
-//Constructors
-//Default Destructor (Required)
-	~Server();
-//Destructors
-//Copy assignment operator (Required)
-	Server & operator = (const Server &copy);
-//Operators
-//Swap function
-//Setters & Getters
-//Other functions
-protected:
+   public:
+    virtual ~Server() = 0;
 
-private:
-	bool bracketClose;
+    virtual void start()        = 0;
+    virtual void stop()         = 0;
+    virtual void createSocket() = 0;
+
+   protected:
+    virtual Request  receiveRequest()                = 0;
+    virtual Response handleRequest(Request request)  = 0;
+    virtual void     sendResponse(Response response) = 0;
+
+   protected:
+    Socket*      socket_; /**< Socket used by the server */
+    ServerConfig config_; /**< Configuration for the server */
 };
 
-#endif
+/**
+ * @brief Represents an HTTP server
+ */
+class HttpServer : public Server {
+   public:
+    /**
+     * @brief Constructor
+     *
+     * @param config Configuration for the server
+     */
+    HttpServer(const ServerConfig& config);
+    ~HttpServer() throw();
+
+   private:
+    // HttpServer(const HttpServer& other) {}
+    // HttpServer& operator=(const HttpServer& other) {}
+
+   public:
+    /**
+     * @brief Start the server
+     */
+    void start();
+
+    /**
+     * @brief Stop the server
+     */
+    void stop();
+
+    /**
+     * @brief Create a server socket
+     */
+    void createSocket();
+
+   private:
+    /**
+     * @brief Read a request from the socket
+     *
+     * @return Request
+     */
+
+    Request receiveRequest();
+
+    /**
+     * @brief Handle a request
+     *
+     * @param request Request to handle
+     * @return Response
+     */
+    Response handleRequest(Request request);
+
+    /**
+     * @brief Write a response to the socket
+     *
+     * @param response Response to write
+     */
+    void sendResponse(Response response);
+};

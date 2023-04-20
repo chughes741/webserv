@@ -5,10 +5,7 @@
 Configuration options for the HTTP server\+:  
 
 
-{\ttfamily \#include $<$map$>$}\newline
-{\ttfamily \#include $<$string$>$}\newline
-{\ttfamily \#include $<$vector$>$}\newline
-{\ttfamily \#include \char`\"{}Exception.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}events.\+hpp\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}webserv.\+hpp\char`\"{}}\newline
 Include dependency graph for config.\+hpp\+:
 \nopagebreak
@@ -29,20 +26,12 @@ This graph shows which files directly or indirectly include this file\+:
 \doxysubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-class \mbox{\hyperlink{structLocation}{Location}}
+struct \mbox{\hyperlink{structLocationConfig}{Location\+Config}}
 \begin{DoxyCompactList}\small\item\em Configuration options for a single location block. \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structServerConfig}{Server\+Config}}
 \begin{DoxyCompactList}\small\item\em Configuration for a single server block. \end{DoxyCompactList}\item 
-struct \mbox{\hyperlink{structEventsConfig}{Events\+Config}}
-\begin{DoxyCompactList}\small\item\em Configuration for an events block. \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structHttpConfig}{Http\+Config}}
 \begin{DoxyCompactList}\small\item\em Configuration for an HTTP server. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Macros}
-\begin{DoxyCompactItemize}
-\item 
-\mbox{\Hypertarget{config_8hpp_a8b43bafee90b30676faae508c21cb8d7}\label{config_8hpp_a8b43bafee90b30676faae508c21cb8d7}} 
-\#define {\bfseries PRINT}~0
-\end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 

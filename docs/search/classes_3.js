@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['location_68',['Location',['../structLocation.html',1,'']]]
+  ['request_64',['Request',['../structRequest.html',1,'']]],
+  ['response_65',['Response',['../structResponse.html',1,'']]]
 ];

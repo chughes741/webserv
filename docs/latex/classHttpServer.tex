@@ -7,34 +7,57 @@ Represents an HTTP server.
 
 
 
-{\ttfamily \#include $<$http\+Server.\+hpp$>$}
+{\ttfamily \#include $<$server.\+hpp$>$}
 
+
+
+Inheritance diagram for Http\+Server\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=149pt]{classHttpServer__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Http\+Server\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classHttpServer__coll__graph}
+\end{center}
+\end{figure}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classHttpServer_a6b849e844227fda545daf17a59cac229}{Http\+Server}} (\mbox{\hyperlink{structServerConfig}{Server\+Config}} config)
+\mbox{\hyperlink{classHttpServer_ad764d82eb2809cf2d9a304e02b749207}{Http\+Server}} (const \mbox{\hyperlink{structServerConfig}{Server\+Config}} \&config)
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classHttpServer_a5e9887bc9a815fc4b2b506a335d916af}\label{classHttpServer_a5e9887bc9a815fc4b2b506a335d916af}} 
-\mbox{\hyperlink{classHttpServer_a5e9887bc9a815fc4b2b506a335d916af}{$\sim$\+Http\+Server}} ()  throw ()
-\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classHttpServer_aeb54b6186a9e7a11c6b321589f9379e1}\label{classHttpServer_aeb54b6186a9e7a11c6b321589f9379e1}} 
 void \mbox{\hyperlink{classHttpServer_aeb54b6186a9e7a11c6b321589f9379e1}{start}} ()
-\begin{DoxyCompactList}\small\item\em Start the server. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Start the server. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classHttpServer_aad9c63d3f8cda248e3c87067ac3ac5a5}\label{classHttpServer_aad9c63d3f8cda248e3c87067ac3ac5a5}} 
+void \mbox{\hyperlink{classHttpServer_aad9c63d3f8cda248e3c87067ac3ac5a5}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Stop the server. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classHttpServer_abc9a3cc68d320d89544a257da11148d0}{create\+Socket}} ()
+\begin{DoxyCompactList}\small\item\em Create a server socket. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
 
 
 \doxysubsection{Detailed Description}
 Represents an HTTP server. 
 
-Definition at line 20 of file http\+Server.\+hpp.
+Definition at line 69 of file server.\+hpp.
 
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classHttpServer_a6b849e844227fda545daf17a59cac229}\label{classHttpServer_a6b849e844227fda545daf17a59cac229}} 
+\mbox{\Hypertarget{classHttpServer_ad764d82eb2809cf2d9a304e02b749207}\label{classHttpServer_ad764d82eb2809cf2d9a304e02b749207}} 
 \index{HttpServer@{HttpServer}!HttpServer@{HttpServer}}
 \index{HttpServer@{HttpServer}!HttpServer@{HttpServer}}
 \doxysubsubsection{\texorpdfstring{HttpServer()}{HttpServer()}}
-{\footnotesize\ttfamily Http\+Server\+::\+Http\+Server (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structServerConfig}{Server\+Config}}}]{config }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Http\+Server\+::\+Http\+Server (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structServerConfig}{Server\+Config}} \&}]{config }\end{DoxyParamCaption})}
 
 
 
@@ -47,16 +70,50 @@ Constructor.
 \end{DoxyParams}
 
 
-Definition at line 18 of file http\+Server.\+cpp.
+Definition at line 28 of file server.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{18 : socket\_(), config\_(config) \{\}}
+\DoxyCodeLine{28                                                  \{}
+\DoxyCodeLine{29     \mbox{\hyperlink{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}{socket\_}} = \textcolor{keyword}{new} \mbox{\hyperlink{classTcpSocket}{TcpSocket}};}
+\DoxyCodeLine{30     \mbox{\hyperlink{classServer_ad44296a781aa84fbc2cffee3407d9a25}{config\_}} = config;}
+\DoxyCodeLine{31 \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classHttpServer_abc9a3cc68d320d89544a257da11148d0}\label{classHttpServer_abc9a3cc68d320d89544a257da11148d0}} 
+\index{HttpServer@{HttpServer}!createSocket@{createSocket}}
+\index{createSocket@{createSocket}!HttpServer@{HttpServer}}
+\doxysubsubsection{\texorpdfstring{createSocket()}{createSocket()}}
+{\footnotesize\ttfamily void Http\+Server\+::create\+Socket (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Create a server socket. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]send in actual addr \end{DoxyRefDesc}
+
+
+Implements \mbox{\hyperlink{classServer}{Server}}.
+
+
+
+Definition at line 43 of file server.\+cpp.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{43                               \{}
+\DoxyCodeLine{45     \mbox{\hyperlink{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}{socket\_}}-\/>bind(\mbox{\hyperlink{classServer_ad44296a781aa84fbc2cffee3407d9a25}{config\_}}.\mbox{\hyperlink{structServerConfig_a3482ecaab23f836b640e61349d648c62}{listen}}.second, 0);}
+\DoxyCodeLine{46     \mbox{\hyperlink{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}{socket\_}}-\/>listen();}
+\DoxyCodeLine{47 \}}
 
 \end{DoxyCode}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/\mbox{\hyperlink{httpServer_8hpp}{http\+Server.\+hpp}}\item 
-src/\mbox{\hyperlink{httpServer_8cpp}{http\+Server.\+cpp}}\end{DoxyCompactItemize}
+include/\mbox{\hyperlink{server_8hpp}{server.\+hpp}}\item 
+src/\mbox{\hyperlink{server_8cpp}{server.\+cpp}}\end{DoxyCompactItemize}

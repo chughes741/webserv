@@ -96,29 +96,65 @@ $(document).ready(function(){initNavTree('classHttpServer.html',''); initResizab
 <p>Represents an HTTP server.  
  <a href="classHttpServer.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="httpServer_8hpp_source.html">httpServer.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="server_8hpp_source.html">server.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for HttpServer:</div>
+<div class="dyncontent">
+<div class="center"><img src="classHttpServer__inherit__graph.png" border="0" usemap="#aHttpServer_inherit__map" alt="Inheritance graph"/></div>
+<map name="aHttpServer_inherit__map" id="aHttpServer_inherit__map">
+<area shape="rect" title="Represents an HTTP server." alt="" coords="5,80,97,107"/>
+<area shape="rect" href="classServer.html" title="Base class for servers." alt="" coords="19,5,83,32"/>
+</map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for HttpServer:</div>
+<div class="dyncontent">
+<div class="center"><img src="classHttpServer__coll__graph.png" border="0" usemap="#aHttpServer_coll__map" alt="Collaboration graph"/></div>
+<map name="aHttpServer_coll__map" id="aHttpServer_coll__map">
+<area shape="rect" title="Represents an HTTP server." alt="" coords="745,79,837,105"/>
+<area shape="rect" href="classServer.html" title="Base class for servers." alt="" coords="632,79,696,105"/>
+<area shape="rect" href="classSocket.html" title="Socket base class." alt="" coords="445,31,511,57"/>
+<area shape="rect" title=" " alt="" coords="39,5,195,32"/>
+<area shape="rect" href="structServerConfig.html" title="Configuration for a single server block." alt="" coords="425,104,531,131"/>
+<area shape="rect" title=" " alt="" coords="5,56,228,83"/>
+<area shape="rect" title=" " alt="" coords="47,107,186,133"/>
+<area shape="rect" title=" " alt="" coords="87,179,146,205"/>
+<area shape="rect" title=" " alt="" coords="47,229,186,256"/>
+</map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6b849e844227fda545daf17a59cac229"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHttpServer.html#a6b849e844227fda545daf17a59cac229">HttpServer</a> (<a class="el" href="structServerConfig.html">ServerConfig</a> config)</td></tr>
-<tr class="memdesc:a6b849e844227fda545daf17a59cac229"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classHttpServer.html#a6b849e844227fda545daf17a59cac229">More...</a><br /></td></tr>
-<tr class="separator:a6b849e844227fda545daf17a59cac229"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e9887bc9a815fc4b2b506a335d916af"><td class="memItemLeft" align="right" valign="top"><a id="a5e9887bc9a815fc4b2b506a335d916af"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHttpServer.html#a5e9887bc9a815fc4b2b506a335d916af">~HttpServer</a> ()  throw ()</td></tr>
-<tr class="memdesc:a5e9887bc9a815fc4b2b506a335d916af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
-<tr class="separator:a5e9887bc9a815fc4b2b506a335d916af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad764d82eb2809cf2d9a304e02b749207"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHttpServer.html#ad764d82eb2809cf2d9a304e02b749207">HttpServer</a> (const <a class="el" href="structServerConfig.html">ServerConfig</a> &amp;config)</td></tr>
+<tr class="memdesc:ad764d82eb2809cf2d9a304e02b749207"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classHttpServer.html#ad764d82eb2809cf2d9a304e02b749207">More...</a><br /></td></tr>
+<tr class="separator:ad764d82eb2809cf2d9a304e02b749207"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb54b6186a9e7a11c6b321589f9379e1"><td class="memItemLeft" align="right" valign="top"><a id="aeb54b6186a9e7a11c6b321589f9379e1"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHttpServer.html#aeb54b6186a9e7a11c6b321589f9379e1">start</a> ()</td></tr>
 <tr class="memdesc:aeb54b6186a9e7a11c6b321589f9379e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start the server. <br /></td></tr>
 <tr class="separator:aeb54b6186a9e7a11c6b321589f9379e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad9c63d3f8cda248e3c87067ac3ac5a5"><td class="memItemLeft" align="right" valign="top"><a id="aad9c63d3f8cda248e3c87067ac3ac5a5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHttpServer.html#aad9c63d3f8cda248e3c87067ac3ac5a5">stop</a> ()</td></tr>
+<tr class="memdesc:aad9c63d3f8cda248e3c87067ac3ac5a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the server. <br /></td></tr>
+<tr class="separator:aad9c63d3f8cda248e3c87067ac3ac5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc9a3cc68d320d89544a257da11148d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHttpServer.html#abc9a3cc68d320d89544a257da11148d0">createSocket</a> ()</td></tr>
+<tr class="memdesc:abc9a3cc68d320d89544a257da11148d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a server socket.  <a href="classHttpServer.html#abc9a3cc68d320d89544a257da11148d0">More...</a><br /></td></tr>
+<tr class="separator:abc9a3cc68d320d89544a257da11148d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_attribs_classServer"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classServer')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classServer.html">Server</a></td></tr>
+<tr class="memitem:a2d53ba24cc25644c4eca7aaec319bcf7 inherit pro_attribs_classServer"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSocket.html">Socket</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServer.html#a2d53ba24cc25644c4eca7aaec319bcf7">socket_</a></td></tr>
+<tr class="separator:a2d53ba24cc25644c4eca7aaec319bcf7 inherit pro_attribs_classServer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad44296a781aa84fbc2cffee3407d9a25 inherit pro_attribs_classServer"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structServerConfig.html">ServerConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServer.html#ad44296a781aa84fbc2cffee3407d9a25">config_</a></td></tr>
+<tr class="separator:ad44296a781aa84fbc2cffee3407d9a25 inherit pro_attribs_classServer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents an HTTP server. </p>
 
-<p class="definition">Definition at line <a class="el" href="httpServer_8hpp_source.html#l00020">20</a> of file <a class="el" href="httpServer_8hpp_source.html">httpServer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="server_8hpp_source.html#l00069">69</a> of file <a class="el" href="server_8hpp_source.html">server.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a6b849e844227fda545daf17a59cac229"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b849e844227fda545daf17a59cac229">&#9670;&nbsp;</a></span>HttpServer()</h2>
+<a id="ad764d82eb2809cf2d9a304e02b749207"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad764d82eb2809cf2d9a304e02b749207">&#9670;&nbsp;</a></span>HttpServer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -126,7 +162,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
         <tr>
           <td class="memname">HttpServer::HttpServer </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structServerConfig.html">ServerConfig</a>&#160;</td>
+          <td class="paramtype">const <a class="el" href="structServerConfig.html">ServerConfig</a> &amp;&#160;</td>
           <td class="paramname"><em>config</em></td><td>)</td>
           <td></td>
         </tr>
@@ -141,14 +177,58 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="httpServer_8cpp_source.html#l00018">18</a> of file <a class="el" href="httpServer_8cpp_source.html">httpServer.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;: socket_(), config_(config) {}</div>
+<p class="definition">Definition at line <a class="el" href="server_8cpp_source.html#l00028">28</a> of file <a class="el" href="server_8cpp_source.html">server.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                                                 {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="classServer.html#a2d53ba24cc25644c4eca7aaec319bcf7">socket_</a> = <span class="keyword">new</span> <a class="code" href="classTcpSocket.html">TcpSocket</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="classServer.html#ad44296a781aa84fbc2cffee3407d9a25">config_</a> = config;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
+<div class="ttc" id="aclassServer_html_a2d53ba24cc25644c4eca7aaec319bcf7"><div class="ttname"><a href="classServer.html#a2d53ba24cc25644c4eca7aaec319bcf7">Server::socket_</a></div><div class="ttdeci">Socket * socket_</div><div class="ttdef"><b>Definition:</b> <a href="server_8hpp_source.html#l00062">server.hpp:62</a></div></div>
+<div class="ttc" id="aclassServer_html_ad44296a781aa84fbc2cffee3407d9a25"><div class="ttname"><a href="classServer.html#ad44296a781aa84fbc2cffee3407d9a25">Server::config_</a></div><div class="ttdeci">ServerConfig config_</div><div class="ttdef"><b>Definition:</b> <a href="server_8hpp_source.html#l00063">server.hpp:63</a></div></div>
+<div class="ttc" id="aclassTcpSocket_html"><div class="ttname"><a href="classTcpSocket.html">TcpSocket</a></div><div class="ttdoc">Represents a TCP socket.</div><div class="ttdef"><b>Definition:</b> <a href="socket_8hpp_source.html#l00070">socket.hpp:70</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="abc9a3cc68d320d89544a257da11148d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc9a3cc68d320d89544a257da11148d0">&#9670;&nbsp;</a></span>createSocket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HttpServer::createSocket </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a server socket. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>send in actual addr </dd></dl>
+
+<p>Implements <a class="el" href="classServer.html">Server</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="server_8cpp_source.html#l00043">43</a> of file <a class="el" href="server_8cpp_source.html">server.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                              {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="classServer.html#a2d53ba24cc25644c4eca7aaec319bcf7">socket_</a>-&gt;bind(<a class="code" href="classServer.html#ad44296a781aa84fbc2cffee3407d9a25">config_</a>.<a class="code" href="structServerConfig.html#a3482ecaab23f836b640e61349d648c62">listen</a>.second, 0);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="classServer.html#a2d53ba24cc25644c4eca7aaec319bcf7">socket_</a>-&gt;listen();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="ttc" id="astructServerConfig_html_a3482ecaab23f836b640e61349d648c62"><div class="ttname"><a href="structServerConfig.html#a3482ecaab23f836b640e61349d648c62">ServerConfig::listen</a></div><div class="ttdeci">pair&lt; string, int &gt; listen</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00115">config.hpp:115</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>include/<a class="el" href="httpServer_8hpp_source.html">httpServer.hpp</a></li>
-<li>src/<a class="el" href="httpServer_8cpp_source.html">httpServer.cpp</a></li>
+<li>include/<a class="el" href="server_8hpp_source.html">server.hpp</a></li>
+<li>src/<a class="el" href="server_8cpp_source.html">server.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

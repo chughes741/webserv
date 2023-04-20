@@ -1,10 +1,10 @@
 var annotated_dup =
 [
-    [ "EventsConfig", "structEventsConfig.html", "structEventsConfig" ],
     [ "FileError", "classFileError.html", "classFileError" ],
     [ "HttpConfig", "structHttpConfig.html", "structHttpConfig" ],
     [ "HttpServer", "classHttpServer.html", "classHttpServer" ],
-    [ "Location", "structLocation.html", "structLocation" ],
+    [ "Location", "classLocation.html", "classLocation" ],
+    [ "LocationConfig", "structLocationConfig.html", "structLocationConfig" ],
     [ "Request", "structRequest.html", "structRequest" ],
     [ "Response", "structResponse.html", "structResponse" ],
     [ "Server", "classServer.html", "classServer" ],

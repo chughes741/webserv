@@ -18,7 +18,7 @@ add_executable(webserv
   src/main.cpp
   src/config.cpp
   src/socket.cpp
-  src/httpServer.cpp
+  src/server.cpp
 )
 target_include_directories(webserv PUBLIC
   ${PROJECT_SOURCE_DIR}/include/

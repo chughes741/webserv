@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['method_114',['method',['../structRequest.html#a39b989ccc181b152b7c8cd3131f4cbfa',1,'Request']]],
-  ['multi_5faccept_115',['multi_accept',['../structEventsConfig.html#aeaf265d49c6c63525891ced01130f041',1,'EventsConfig']]]
+  ['root_113',['root',['../structLocationConfig.html#a13996dc3692eed3eb9e2ecb246f855dd',1,'LocationConfig::root()'],['../structServerConfig.html#a1fee7993152e01acfbd4ea07ef0e8ff5',1,'ServerConfig::root()'],['../structHttpConfig.html#a951bc94c535f7b4d482e3dc3c53bf1f4',1,'HttpConfig::root()']]]
 ];
