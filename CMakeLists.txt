@@ -16,6 +16,7 @@ add_compile_definitions(CONFIG_FILE="../config/server.conf")
 
 add_executable(webserv
   src/main.cpp
+  src/events.cpp
   src/config.cpp
   src/socket.cpp
   src/server.cpp
