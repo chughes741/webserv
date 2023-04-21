@@ -14,13 +14,9 @@ set(CMAKE_MAKE_PROGRAM make)
 add_compile_options(-Wall -Werror -Wextra -ffast-math -ftree-vectorize)
 add_compile_definitions(CONFIG_FILE="../config/server.conf")
 
-add_executable(webserv
-  src/main.cpp
-  src/events.cpp
-  src/config.cpp
-  src/socket.cpp
-  src/server.cpp
-)
+file(GLOB SOURCES "src/*.cpp")
+
+add_executable(webserv ${SOURCES})
 target_include_directories(webserv PUBLIC
   ${PROJECT_SOURCE_DIR}/include/
 )
