@@ -65,7 +65,6 @@
 
 #pragma once
 
-#include "events.hpp"
 #include "webserv.hpp"
 
 /** HTTP methods */

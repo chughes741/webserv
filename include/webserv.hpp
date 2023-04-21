@@ -11,7 +11,6 @@
 #include <string>
 #include <vector>
 
-#include "Exception.hpp"
 #include "config.hpp"
 #include "events.hpp"
 #include "socket.hpp"
