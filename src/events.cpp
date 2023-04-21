@@ -1,76 +1,72 @@
-// #include "events.hpp"
+#include "events.hpp"
 
-// using std::cerr;
-// using std::cout;
-// using std::endl;
-// using std::string;
+// KQueue static member initialization
+int KQueue::queue_fd_ = -1;
+struct timespec KQueue::timeout_ = {0, 0};
 
-// /** @todo check if this buffersize should be larger */
-// #define READ_BUFFER_SIZE 1024
-// #define CRLF "\r\n"
+void KQueue::createQueue() {
+	// Creates kqueue. Does not run if one already exists
+	if (queue_fd_ == 0) {
+		queue_fd_ = kqueue();
+	}
 
-// /**
-//  * @brief Read a request from a socket
-//  *
-//  * @param socket socket to read from
-//  * @return Request the request that was read
-//  */
-// Request readRequest(int socket) {
-//     Request request;
+	// Check if kqueue was created successfully
+	if (queue_fd_ == -1) {
+		throw runtime_error("createQueue() failed");
+	}
+}
 
-//     char   buffer[READ_BUFFER_SIZE];
-//     string buffer_string;
-//     int    bytes_read = recv(socket, buffer, READ_BUFFER_SIZE, 0);
+void KQueue::addSocket(int fd) {
+	struct kevent event;
 
-//     while (bytes_read > 0) {
-//         buffer_string.append(buffer, bytes_read);
-//         bytes_read = recv(socket, buffer, READ_BUFFER_SIZE, 0);
-//     }
+	// Initialize kevent structure.
+	EV_SET(&event, fd, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, NULL);
+	
+	// Add event to the kqueue.
+	int ret = kevent(queue_fd_, &event, 1, NULL, 0, NULL);
 
-//     if (bytes_read == -1) {
-//         cerr << "Error reading from socket" << endl;
-//     }
+	// Check if event was added successfully
+	if (ret == -1) {
+		throw runtime_error("addSocket() failed");
+	}
 
-//     /** start-line */
-//     request.method = buffer_string.substr(0, buffer_string.find(' '));
-//     buffer_string.erase(0, buffer_string.find(' ') + 1);
-//     request.uri = buffer_string.substr(0, buffer_string.find(' '));
-//     buffer_string.erase(0, buffer_string.find(' ') + 1);
-//     request.version = buffer_string.substr(0, buffer_string.find(CRLF));
-//     buffer_string.erase(0, buffer_string.find(CRLF) + 2);
+	// Add event to the map of events.
+	events_[fd] = event;
+}
 
-//     /** body */
-//     request.body = buffer_string.substr(buffer_string.find("\r\n\r\n") + 4);
-//     buffer_string.erase(buffer_string.find("\r\n\r\n") + 2);
+void KQueue::removeSocket(int fd) {
+	// Check if event exists.
+	if (events_.find(fd) == events_.end()) {
+		throw runtime_error("removeSocket() failed");
+	}
+	
+	// Get event from the map of events.
+	struct kevent event = events_[fd];
 
-//     /** headers */
-// 	while (buffer_string.find(CRLF) != string::npos) {
-// 		string key = buffer_string.substr(0, buffer_string.find(':'));
-// 		buffer_string.erase(0, buffer_string.find(':') + 2);
-// 		string value = buffer_string.substr(0, buffer_string.find(CRLF));
-// 		buffer_string.erase(0, buffer_string.find(CRLF) + 2);
-// 		request.headers[key] = value;
-// 	}
+	// Edit event.
+	EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
 
-//     return request;
-// }
+	// Delete event from the kqueue.
+	int ret = kevent(queue_fd_, &event, 1, NULL, 0, NULL);
 
-// void writeResponse(int socket, Response response) {
-//     string buffer;
+	// Check if event was deleted successfully
+	if (ret == -1) {
+		throw runtime_error("removeSocket() failed");
+	}
 
-//     /** status-line */
-//     buffer.append(response.version + " ");
-//     buffer.append(response.status + " ");
-//     buffer.append(response.server + CRLF);
+	// Delete event from the map of events.
+	events_.erase(fd);
+}
 
-//     /** headers */
-// 	for (map<string, string>::iterator it = response.headers.begin();
-// 		 it != response.headers.end(); ++it) {
-// 		buffer.append(it->first + ": " + it->second + CRLF);
-// 	}
+struct kevent KQueue::eventListen() {
+	// Wait for events on the kqueue.
+	struct kevent event;
+	int ret = kevent(queue_fd_, NULL, 0, &event, 1, &timeout_);
 
-//     /** body */
-//     buffer.append(CRLF + response.body);
+	// Check if event was received successfully
+	if (ret == -1) {
+		throw runtime_error("eventListen() failed");
+	}
 
-//     send(socket, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
-// }
+	return event;
+}
