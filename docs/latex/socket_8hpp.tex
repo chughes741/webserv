@@ -1,0 +1,67 @@
+\hypertarget{socket_8hpp}{}\doxysection{include/socket.hpp File Reference}
+\label{socket_8hpp}\index{include/socket.hpp@{include/socket.hpp}}
+
+
+Classes for using sockets as defined in RFC 793.  
+
+
+{\ttfamily \#include $<$arpa/inet.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$sys/socket.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}webserv.\+hpp\char`\"{}}\newline
+Include dependency graph for socket.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{socket_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{socket_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classSession}{Session}}
+\begin{DoxyCompactList}\small\item\em Represents a TCP client connection. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classSocket}{Socket}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classSocket}{Socket}} base class. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classTcpSocket}{Tcp\+Socket}}
+\begin{DoxyCompactList}\small\item\em Represents a TCP socket. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{socket_8hpp_a1796443b7944a7392134ade88fd5c4ad}\label{socket_8hpp_a1796443b7944a7392134ade88fd5c4ad}} 
+\#define {\bfseries SO\+\_\+\+MAX\+\_\+\+QUEUE}~10
+\item 
+\mbox{\Hypertarget{socket_8hpp_a46167a977503a51eb6efe97e870568c3}\label{socket_8hpp_a46167a977503a51eb6efe97e870568c3}} 
+\#define {\bfseries READ\+\_\+\+BUFFER\+\_\+\+SIZE}~1024
+\item 
+\mbox{\Hypertarget{socket_8hpp_a6cb23a858b0a21bdaa644b9181dc415f}\label{socket_8hpp_a6cb23a858b0a21bdaa644b9181dc415f}} 
+\#define {\bfseries CRLF}~\char`\"{}\textbackslash{}r\textbackslash{}n\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Classes for using sockets as defined in RFC 793. 
+
+\begin{DoxyAuthor}{Author}
+Francis L. 
+
+Marc-\/\+André L. 
+
+Cole H. 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2023-\/04-\/19 
+\end{DoxyDate}

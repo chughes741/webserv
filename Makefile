@@ -21,12 +21,11 @@ ARG =
 NUM_CORES := $(shell nproc)
 
 # Compiler and flags
-CC		:=	c++
-CFLAGS	=	-Wall -Werror -Wextra -g -Wc++11-extensions -std=c++98 -I$I
-SFLAGS	:=	-fsanitize=address
-LFLAGS	:=	--leak-check=full --show-leak-kinds=all
-#VFLAGS 	:=	-DNUM_CORES=$(NUM_CORES)
-RM		:=	rm -rf
+CC		=	c++
+CFLAGS	=	-Wall -Werror -Wextra -g -std=c++98 -I$I -DCONFIG_FILE="\"./config/server.conf\""
+SFLAGS	=	-fsanitize=address
+LFLAGS	=	--leak-check=full --show-leak-kinds=all
+RM		=	rm -rf
 
 S = src/
 O = obj/

@@ -1,8 +1,9 @@
 
 #include "config.hpp"
 #include "socket.hpp"
-
 #include "Parser.hpp"
+#include "webserv.hpp"
+#include "server.hpp"
 
 /** Maximum pending connections in queue */
 #define SO_MAX_QUEUE 10
@@ -48,22 +49,17 @@ int main(int argc, char* argv[]) {
         } catch (std::runtime_error& e) {
             std::cerr << e.what() << std::endl;
         }
+    } catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return (EXIT_FAILURE);
     }
 
-    while (true) {
-        /** @todo accept connections */
-        break;
-    }
+    ServerConfig config = ServerConfig();
 
-    /** Close sockets */
-    for (vector<Socket>::iterator it = sockets.begin(); it != sockets.end();
-         ++it) {
-        try {
-            it->close();
-        } catch (std::runtime_error& e) {
-            std::cerr << e.what() << std::endl;
-        }
-    }
+    Server *server = new HttpServer(config);
 
+    server->start();
+
+    delete server;
     return (EXIT_SUCCESS);
 }

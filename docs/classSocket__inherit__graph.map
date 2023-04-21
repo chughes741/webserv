@@ -1,0 +1,4 @@
+<map id="Socket" name="Socket">
+<area shape="rect" id="node1" title="Socket base class." alt="" coords="16,5,81,32"/>
+<area shape="rect" id="node2" href="$classTcpSocket.html" title="Represents a TCP socket." alt="" coords="5,80,92,107"/>
+</map>

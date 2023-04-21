@@ -1,0 +1,102 @@
+\hypertarget{config_8hpp}{}\doxysection{include/config.hpp File Reference}
+\label{config_8hpp}\index{include/config.hpp@{include/config.hpp}}
+
+
+Configuration options for the HTTP server\+:  
+
+
+{\ttfamily \#include \char`\"{}events.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}webserv.\+hpp\char`\"{}}\newline
+Include dependency graph for config.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{config_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{config_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structLocationConfig}{Location\+Config}}
+\begin{DoxyCompactList}\small\item\em Configuration options for a single location block. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structServerConfig}{Server\+Config}}
+\begin{DoxyCompactList}\small\item\em Configuration for a single server block. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structHttpConfig}{Http\+Config}}
+\begin{DoxyCompactList}\small\item\em Configuration for an HTTP server. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{config_8hpp_aa48d7d115d01a5f1434c40b8532d5100}\label{config_8hpp_aa48d7d115d01a5f1434c40b8532d5100}} 
+void {\bfseries parse\+Config} (string)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Configuration options for the HTTP server\+: 
+
+\begin{DoxyAuthor}{Author}
+Francis L. 
+
+Marc-\/\+André L. 
+
+Cole H. 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2023-\/04-\/19
+\end{DoxyDate}
+
+\begin{DoxyItemize}
+\item syntax\+: http \{ ... \}
+\item default\+:
+\item context\+: global
+\item syntax\+: server \{ ... \}
+\item default\+:
+\item context\+: http
+\item syntax\+: server\+\_\+name name ...;
+\item default\+: server\+\_\+name \char`\"{}\char`\"{};
+\item context\+: server
+\item syntax\+: listen \mbox{[}address\mbox{]}\mbox{[}\+:port\mbox{]};
+\item default\+: listen $\ast$\+:80;
+\item context\+: server
+\item syntax\+: location uri \{ ... \}
+\item default\+:
+\item context\+: server
+\item syntax\+: error\+\_\+page code ... uri;
+\item default\+:
+\item context\+: http, server, location
+\item syntax\+: client\+\_\+max\+\_\+body\+\_\+size size;
+\item default\+: client\+\_\+max\+\_\+body\+\_\+size 1m;
+\item context\+: http, server, location
+\item syntax\+: root path;
+\item default\+: root html;
+\item context\+: http, server, location
+\item syntax\+: limit\+\_\+except method ...;
+\item default\+: limit\+\_\+except GET POST DELETE;
+\item context\+: location
+\item HTTP redirections?
+\item Turn on or off directory listing?
+\item Default file if request is a directory?
+\item CGI based on certain file extensions?
+\item Save location of uploaded files?
+\end{DoxyItemize}
+
+Potential configuration options\+:
+\begin{DoxyItemize}
+\item aio (asynchronous I/O)
+\item alias (alias for a location)
+\item auth\+\_\+delay (delay for 401 response, helps prevent brute force attacks)\textbackslash{}
+\item internal (location can only be used for internal requests)
+\item output\+\_\+buffers (number and size of buffers for reading response from disk) 
+\end{DoxyItemize}

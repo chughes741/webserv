@@ -1,0 +1,61 @@
+\hypertarget{server_8hpp}{}\doxysection{include/server.hpp File Reference}
+\label{server_8hpp}\index{include/server.hpp@{include/server.hpp}}
+
+
+Declares classes for creating web servers that can handle HTTP requests.  
+
+
+{\ttfamily \#include \char`\"{}webserv.\+hpp\char`\"{}}\newline
+Include dependency graph for server.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{server_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=261pt]{server_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classServer}{Server}}
+\begin{DoxyCompactList}\small\item\em Base class for servers. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classHttpServer}{Http\+Server}}
+\begin{DoxyCompactList}\small\item\em Represents an HTTP server. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Declares classes for creating web servers that can handle HTTP requests. 
+
+This file contains the declaration of the \mbox{\hyperlink{classServer}{Server}} and \mbox{\hyperlink{classHttpServer}{Http\+Server}} classes. The \mbox{\hyperlink{classServer}{Server}} class is an abstract base class that provides an interface for creating servers. The \mbox{\hyperlink{classHttpServer}{Http\+Server}} class inherits from the \mbox{\hyperlink{classServer}{Server}} class and implements an HTTP server that can receive and send HTTP requests and responses.
+
+The \mbox{\hyperlink{classHttpServer}{Http\+Server}} class can be configured with a \mbox{\hyperlink{structServerConfig}{Server\+Config}} object that specifies the IP address and port number on which to listen for incoming connections.
+
+The \mbox{\hyperlink{classHttpServer}{Http\+Server}} class currently supports only the GET method for serving static files. It can serve a default HTML file if the root URI is requested, or it can return a 404 Not Found error for any other URI.
+
+To use the \mbox{\hyperlink{classHttpServer}{Http\+Server}} class, you must create an instance of it with a \mbox{\hyperlink{structServerConfig}{Server\+Config}} object, call the start() method to begin listening for connections, and then call the receive\+Request() method in a loop to receive incoming HTTP requests. Once you have received a request, you can use the handle\+Request() method to generate a response, and then send the response with the send\+Response() method.
+
+\begin{DoxyNote}{Note}
+This code is for educational purposes only and should not be used in production environments without extensive testing and modification.
+\end{DoxyNote}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2023-\/04-\/19 
+\end{DoxyDate}
+\begin{DoxyAuthor}{Authors}
+
+\begin{DoxyItemize}
+\item Francis L.
+\item Marc-\/\+André L.
+\item Cole H. 
+\end{DoxyItemize}
+\end{DoxyAuthor}
