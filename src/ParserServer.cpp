@@ -60,6 +60,5 @@ bool Parser::setServerSetting() {
 		default:
 			throw std::invalid_argument("Invalid setting in server context: " + *it);
 	}
-	++it;
 	return (true);
 }

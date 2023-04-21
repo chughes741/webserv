@@ -13,11 +13,9 @@ set(CMAKE_CXX_STANDARD 98)
 set(CMAKE_MAKE_PROGRAM make)
 add_compile_options(-Wall -Werror -Wextra -ffast-math -ftree-vectorize)
 
-add_executable(webserv
-  src/main.cpp
-  src/config.cpp
-  src/socket.cpp
-)
+file(GLOB SOURCES "src/*.cpp")
+
+add_executable(webserv ${SOURCES})
 target_include_directories(webserv PUBLIC
   ${PROJECT_SOURCE_DIR}/include/
 )

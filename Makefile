@@ -25,7 +25,7 @@ CC		:=	c++
 CFLAGS	=	-Wall -Werror -Wextra -g -Wc++11-extensions -std=c++98 -I$I
 SFLAGS	:=	-fsanitize=address
 LFLAGS	:=	--leak-check=full --show-leak-kinds=all
-VFLAGS 	:=	-DNUM_CORES=$(NUM_CORES)
+#VFLAGS 	:=	-DNUM_CORES=$(NUM_CORES)
 RM		:=	rm -rf
 
 S = src/

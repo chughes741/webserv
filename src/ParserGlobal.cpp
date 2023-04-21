@@ -1,11 +1,11 @@
 #include "Parser.hpp"
 
-// void setWorkerProcessses(string num) {
-// 	if (num == "auto") {
-// 		httpConfig.
-// 	}
-// 	std::cout << NUM_CORES;
-// }
+bool setWorkerProcessses(string num) {
+ 	if (num == "auto") {
+ 		
+ 	}
+	return true;
+}
 
 
 /**
