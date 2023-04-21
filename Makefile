@@ -17,12 +17,16 @@ ARG =
 #                                VARIABLES                                     #
 #------------------------------------------------------------------------------#
 
+# Retrieve the number of CPU cores
+NUM_CORES := $(shell nproc)
+
 # Compiler and flags
-CC		=	c++
+CC		:=	c++
 CFLAGS	=	-Wall -Werror -Wextra -g -Wc++11-extensions -std=c++98 -I$I
-SFLAGS	=	-fsanitize=address
-LFLAGS	=	--leak-check=full --show-leak-kinds=all
-RM		=	rm -rf
+SFLAGS	:=	-fsanitize=address
+LFLAGS	:=	--leak-check=full --show-leak-kinds=all
+VFLAGS 	:=	-DNUM_CORES=$(NUM_CORES)
+RM		:=	rm -rf
 
 S = src/
 O = obj/
@@ -42,7 +46,7 @@ all: $(NAME)
 
 # Generates output file
 $(NAME): $(OBJS)
-	$(HIDE)$(CC) $(CFLAGS) $(OBJS) -o $@
+	$(HIDE)$(CC) $(CFLAGS) $(VFLAGS) $(OBJS) -o $@
 
 #Create objects directory
 $O:
@@ -50,7 +54,7 @@ $O:
 $(OBJS): | $O
 # Compiles sources into objects
 $(OBJS): $O%.o: $S%.cpp $(INC)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(VFLAGS) -c $< -o $@
 
 # Removes objects
 clean:
@@ -77,3 +81,5 @@ segfault: $(OBJ)
 vcpkg:
 	./vcpkg/bootstrap-vcpkg.sh
 	./vcpkg/vcpkg install gtest
+
+

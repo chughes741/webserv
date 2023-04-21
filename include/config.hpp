@@ -4,19 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "webserv.hpp"
-#include "Exception.hpp"
-
 #define CONFIG_FILE "./config/server.conf"
-
-/* For printing configuration file */
-#define PRINT 0
-
-#define GLOBAL 0
-#define EVENTS 1
-#define HTTP 2
-#define SERVER 3
-#define LOCATION 4
 
 #define BLOCK 1
 #define SETTING 2
@@ -69,4 +57,7 @@ struct HttpConfig {
 extern HttpConfig httpConfig;
 
 
-void parseConfig(string);
+// void parseConfig(string);
+
+// int	getNumCores();
+// void setWorkerProcessses();
