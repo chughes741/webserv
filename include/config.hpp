@@ -65,8 +65,10 @@
 
 #pragma once
 
-#include "events.hpp"
-#include "webserv.hpp"
+#define CONFIG_FILE "./config/server.conf"
+
+#define BLOCK 1
+#define SETTING 2
 
 using std::map;
 using std::pair;
@@ -140,4 +142,10 @@ struct HttpConfig {
     string client_max_body_size;     /**< Maximum size of a request body */
 };
 
-void parseConfig(string);
+extern HttpConfig httpConfig;
+
+
+// void parseConfig(string);
+
+// int	getNumCores();
+// void setWorkerProcessses();
