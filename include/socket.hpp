@@ -10,11 +10,15 @@
 
 #pragma once
 
+#include <iostream>
+#include <stdio.h>
+#include <unistd.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 
+#include "events.hpp"
 #include "webserv.hpp"
 
 using std::map;

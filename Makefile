@@ -17,6 +17,9 @@ ARG =
 #                                VARIABLES                                     #
 #------------------------------------------------------------------------------#
 
+# Retrieve the number of CPU cores
+NUM_CORES := $(shell nproc)
+
 # Compiler and flags
 CC		=	c++
 CFLAGS	=	-Wall -Werror -Wextra -g -std=c++98 -I$I -DCONFIG_FILE="\"./config/server.conf\""
@@ -42,7 +45,7 @@ all: $(NAME)
 
 # Generates output file
 $(NAME): $(OBJS)
-	$(HIDE)$(CC) $(CFLAGS) $(OBJS) -o $@
+	$(HIDE)$(CC) $(CFLAGS) $(VFLAGS) $(OBJS) -o $@
 
 #Create objects directory
 $O:
@@ -50,7 +53,7 @@ $O:
 $(OBJS): | $O
 # Compiles sources into objects
 $(OBJS): $O%.o: $S%.cpp $(INC)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(VFLAGS) -c $< -o $@
 
 # Removes objects
 clean:
@@ -77,3 +80,5 @@ segfault: $(OBJ)
 vcpkg:
 	./vcpkg/bootstrap-vcpkg.sh
 	./vcpkg/vcpkg install gtest
+
+

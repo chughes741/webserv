@@ -184,4 +184,10 @@ struct HttpConfig {
     string client_max_body_size;     /**< Maximum size of a request body */
 };
 
-void parseConfig(string);
+extern HttpConfig httpConfig;
+
+
+// void parseConfig(string);
+
+// int	getNumCores();
+// void setWorkerProcessses();
