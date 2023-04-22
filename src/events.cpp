@@ -3,6 +3,8 @@
 // KQueue static member initialization
 int KQueue::queue_fd_ = -1;
 struct timespec KQueue::timeout_ = {0, 0};
+map<int, struct kevent> KQueue::events_;
+
 
 void KQueue::createQueue() {
 	// Creates kqueue. Does not run if one already exists

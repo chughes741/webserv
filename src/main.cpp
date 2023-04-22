@@ -45,13 +45,10 @@ int main(int argc, char* argv[]) {
     /** Create a socket for each port */
     for (vector<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
         try {
-            sockets.push_back(Socket(*it, INADDR_ANY));
+           // sockets.push_back(Socket(*it, INADDR_ANY));
         } catch (std::runtime_error& e) {
             std::cerr << e.what() << std::endl;
         }
-    } catch (std::exception& e) {
-        std::cerr << e.what() << std::endl;
-        return (EXIT_FAILURE);
     }
 
     ServerConfig config = ServerConfig();

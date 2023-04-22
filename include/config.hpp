@@ -9,23 +9,23 @@
  *
  * Configuration options for the HTTP server:
  *
- * - syntax: http { ... }
+ * - syntax: http { ... } ok
  * - default:
  * - context: global
  *
- * - syntax: server { ... }
+ * - syntax: server { ... } ok
  * - default:
  * - context: http
  *
- * - syntax: server_name name ...;
+ * - syntax: server_name name ...; ok
  * - default: server_name "";
  * - context: server
  *
- * - syntax: listen [address][:port];
+ * - syntax: listen [address][:port]; ok
  * - default: listen *:80;
  * - context: server
  *
- * - syntax: location uri { ... }
+ * - syntax: location uri { ... } ok
  * - default:
  * - context: server
  *
@@ -66,6 +66,10 @@
 #pragma once
 
 #include "webserv.hpp"
+
+#ifndef CONFIG_FILE
+# define CONFIG_FILE "./config/server.conf"
+#endif
 
 /** HTTP methods */
 #define POST 0x01
@@ -155,7 +159,7 @@ struct ServerConfig {
           locations() {
     }
 
-    string            server_name; /**< Server name */
+    string            server_name; /**< Server name */ /*TODO Nginx can take multiple domains, can we?*/
     pair<string, int> listen;      /**< Address and port to listen on */
     string            root;        /**< Root directory for serving files */
     pair<int, string> error_page;  /**< Default error page */
