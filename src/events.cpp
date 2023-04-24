@@ -1,3 +1,28 @@
+/**
+ * @file events.cpp
+ * @brief Defines classes for handling events
+ *
+ * This file contains the implementation of the EventLoop, KqueueEventLoop, and
+ * EpollEventLoop classes. The EventLoop class is an abstract base class that
+ * provides an interface for creating event loops. The KqueueEventLoop class
+ * inherits from the EventLoop class and implements an event loop that uses the
+ * kqueue system call. The EpollEventLoop class inherits from the EventLoop
+ * class and implements an event loop that uses the epoll system call.
+ *
+ * @note The KqueueEventLoop class is only available on MacOS and the
+ * EpollEventLoop class is only available on Linux.
+ *
+ * @note This code is for educational purposes only and should not be used in
+ * production environments without extensive testing and modification.
+ *
+ * @version 0.1
+ * @date 2023-04-24
+ * @authors
+ *  - Francis L.
+ *  - Marc-André L.
+ *  - Cole H.
+ */
+
 #include "events.hpp"
 
 EventLoop::~EventLoop() {
@@ -34,7 +59,7 @@ void KqueueEventLoop::stop() {
 void KqueueEventLoop::registerSocket(int fd, int events) {
     struct kevent event;
 
-	// Handle conversion from events to kqueue events
+    // Handle conversion from events to kqueue events
 
     // Initialize kevent structure.
     EV_SET(&event, fd, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, NULL);
