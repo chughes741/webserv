@@ -12,7 +12,7 @@ bool Parser::setListen() {
 			throw std::logic_error("Invalid port number for listen: " + num);
 		}
 	}
-	(httpConfig.servers.back()).port = stoi(num);
+	// (httpConfig.servers.back()) = stoi(num);
 	std::cout << "Listen: " << *(it) << std::endl;
 	++it;
 	return (true);

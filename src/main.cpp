@@ -18,11 +18,13 @@ HttpConfig httpConfig = HttpConfig();
  * @param argv config file name
  */
 int main(int argc, char* argv[]) {
-    /** Parse the config file x*/
+    // Exit if the number of arguments is greater than 2
 	if (argc > 2) {
 		std::cerr << "Usage: ./webserv [config_file]" << std::endl;
 		return (EXIT_FAILURE);
 	}
+
+    // Parse config file
 	httpConfig = HttpConfig();
 	try {
 		if (argc == 2) {
@@ -36,27 +38,9 @@ int main(int argc, char* argv[]) {
 		return (EXIT_FAILURE);
 	}
 
-    vector<int>    ports;
-    vector<Socket> sockets;
-
-    /** @todo get ports from config */
-    ports.push_back(3000);
-
-    /** Create a socket for each port */
-    for (vector<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
-        try {
-            sockets.push_back(Socket(*it, INADDR_ANY));
-        } catch (std::runtime_error& e) {
-            std::cerr << e.what() << std::endl;
-        }
-    } catch (std::exception& e) {
-        std::cerr << e.what() << std::endl;
-        return (EXIT_FAILURE);
-    }
-
-    ServerConfig config = ServerConfig();
-
-    Server *server = new HttpServer(config);
+    // Create server
+	ServerConfig test_config;
+    Server *server = new HttpServer(test_config);
 
     server->start();
 
