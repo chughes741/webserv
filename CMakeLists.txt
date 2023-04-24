@@ -12,10 +12,18 @@ FetchContent_MakeAvailable(googletest)
 set(CMAKE_CXX_STANDARD 98)
 set(CMAKE_MAKE_PROGRAM make)
 add_compile_options(-Wall -Werror -Wextra -ffast-math -ftree-vectorize)
+add_compile_definitions(CONFIG_FILE="../config/server.conf")
+
 
 file(GLOB SOURCES "src/*.cpp")
 
-add_executable(webserv ${SOURCES})
+add_executable(webserv
+  src/config.cpp
+  src/events.cpp
+  src/main.cpp
+  src/server.cpp
+  src/socket.cpp
+)
 target_include_directories(webserv PUBLIC
   ${PROJECT_SOURCE_DIR}/include/
 )

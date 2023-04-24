@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['server_2ecpp_77',['server.cpp',['../server_8cpp.html',1,'']]],
-  ['server_2ehpp_78',['server.hpp',['../server_8hpp.html',1,'']]],
-  ['socket_2ecpp_79',['socket.cpp',['../socket_8cpp.html',1,'']]],
-  ['socket_2ehpp_80',['socket.hpp',['../socket_8hpp.html',1,'']]]
+  ['events_2ecpp_82',['events.cpp',['../events_8cpp.html',1,'']]],
+  ['events_2ehpp_83',['events.hpp',['../events_8hpp.html',1,'']]]
 ];

@@ -92,46 +92,68 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="config_8hpp.html" title="Configuration options for the HTTP server:">&quot;config.hpp&quot;</a></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="socket_8hpp.html" title="Classes for using sockets as defined in RFC 793.">&quot;socket.hpp&quot;</a></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="webserv_8hpp.html">&quot;webserv.hpp&quot;</a></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="server_8hpp.html" title="Declares classes for creating web servers that can handle HTTP requests.">&quot;server.hpp&quot;</a></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">/** Maximum pending connections in queue */</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">define</span> <span class="preprocessor">SO_MAX_QUEUE</span> 10</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">/** Global config object */</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<a class="code" href="structHttpConfig.html">HttpConfig</a> httpConfig = <a class="code" href="structHttpConfig.html">HttpConfig</a><a class="code" href="structHttpConfig.html#ad9fe0c4fa82845bcc472720d89b2d22f">(</a><a class="code" href="structHttpConfig.html#ad9fe0c4fa82845bcc472720d89b2d22f">)</a>;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">/**</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * @brief Main function</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * @param argc Number of arguments</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * @param argv config file name</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="comment">/** Parse the config file x*/</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">if</span> (argc == 1) {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;            parseConfig(CONFIG_FILE);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (argc == 2) {</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;            parseConfig(argv[1]);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;            std::cerr &lt;&lt; <span class="stringliteral">&quot;Usage: ./webserv [config_file]&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;            <span class="keywordflow">return</span> (EXIT_FAILURE);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        }</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    } <span class="keywordflow">catch</span> (std::exception&amp; e) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">return</span> (EXIT_FAILURE);</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="Parser_8hpp.html">&quot;Parser.hpp&quot;</a></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="webserv_8hpp.html">&quot;webserv.hpp&quot;</a></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="server_8hpp.html" title="Declares classes for creating web servers that can handle HTTP requests.">&quot;server.hpp&quot;</a></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">/** Maximum pending connections in queue */</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">define</span> <span class="preprocessor">SO_MAX_QUEUE</span> 10</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">/** Global config object */</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<a class="code" href="structHttpConfig.html">HttpConfig</a> httpConfig = <a class="code" href="structHttpConfig.html">HttpConfig</a><a class="code" href="structHttpConfig.html#ad9fe0c4fa82845bcc472720d89b2d22f">(</a><a class="code" href="structHttpConfig.html#ad9fe0c4fa82845bcc472720d89b2d22f">)</a>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">/**</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * @brief Main function</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * @param argc Number of arguments</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * @param argv config file name</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="comment">/** Parse the config file x*/</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordflow">if</span> (argc &gt; 2) {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;Usage: ./webserv [config_file]&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordflow">return</span> (EXIT_FAILURE);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    }</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    httpConfig = <a class="code" href="structHttpConfig.html">HttpConfig</a><a class="code" href="structHttpConfig.html#ad9fe0c4fa82845bcc472720d89b2d22f">(</a><a class="code" href="structHttpConfig.html#ad9fe0c4fa82845bcc472720d89b2d22f">)</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordflow">if</span> (argc == 2) {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;            parseConfig(argv[1]);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            parseConfig(CONFIG_FILE);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        }</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    }</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="structServerConfig.html">ServerConfig</a> config = <a class="code" href="structServerConfig.html">ServerConfig</a><a class="code" href="structServerConfig.html#af61bcd662c3be06dd4219770350e65e6">(</a><a class="code" href="structServerConfig.html#af61bcd662c3be06dd4219770350e65e6">)</a>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="classServer.html">Server</a> *server = <span class="keyword">new</span> <a class="code" href="classHttpServer.html">HttpServer</a><a class="code" href="classHttpServer.html#ad764d82eb2809cf2d9a304e02b749207">(</a>config<a class="code" href="classHttpServer.html#ad764d82eb2809cf2d9a304e02b749207">)</a>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordflow">catch</span> (std::exception &amp;e) {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">return</span> (EXIT_FAILURE);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    }</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    server-&gt;start();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">delete</span> server;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">return</span> (EXIT_SUCCESS);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    vector&lt;<span class="keywordtype">int</span>&gt;    ports;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    vector&lt;<a class="code" href="classSocket.html">Socket</a>&gt; sockets;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">/** @todo get ports from config */</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    ports.push_back(3000);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="comment">/** Create a socket for each port */</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">for</span> (vector&lt;<span class="keywordtype">int</span>&gt;::iterator it = ports.begin(); it != ports.end(); ++it) {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            sockets.push_back(Socket(*it, INADDR_ANY));</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        } <span class="keywordflow">catch</span> (std::runtime_error&amp; e) {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        }</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    } <span class="keywordflow">catch</span> (std::exception&amp; e) {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">return</span> (EXIT_FAILURE);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    ServerConfig config = ServerConfig();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="classServer.html">Server</a> *server = <span class="keyword">new</span> HttpServer(config);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    server-&gt;start();</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">delete</span> server;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> (EXIT_SUCCESS);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -1,5 +1,28 @@
 var searchData=
 [
-  ['unknowndirective_50',['UnknownDirective',['../classWebExcep_1_1UnknownDirective.html',1,'WebExcep']]],
-  ['uri_51',['uri',['../structRequest.html#a1c2e4f1e54a9ea1ea455d513a18c5fd1',1,'Request']]]
+  ['send_37',['send',['../classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936',1,'TcpSocket']]],
+  ['server_38',['Server',['../classServer.html',1,'']]],
+  ['server_39',['server',['../structResponse.html#ae3393f7b594595cdef88d865e9194bc0',1,'Response']]],
+  ['server_2ecpp_40',['server.cpp',['../server_8cpp.html',1,'']]],
+  ['server_2ehpp_41',['server.hpp',['../server_8hpp.html',1,'']]],
+  ['server_5fname_42',['server_name',['../structServerConfig.html#af137c82df3d09fb2418d21f35bba5302',1,'ServerConfig']]],
+  ['serverconfig_43',['ServerConfig',['../structServerConfig.html',1,'ServerConfig'],['../structServerConfig.html#af61bcd662c3be06dd4219770350e65e6',1,'ServerConfig::ServerConfig()']]],
+  ['servers_44',['servers',['../structHttpConfig.html#af3c802628373bf70e0436c31c3dc2ef3',1,'HttpConfig']]],
+  ['session_45',['Session',['../classSession.html',1,'']]],
+  ['sessions_5f_46',['sessions_',['../classSocket.html#a256125f9e9cb562c1093f61f3dd86750',1,'Socket']]],
+  ['setcontext_47',['setContext',['../classParser.html#a0884a695ce761f114a5b3f2953ad4b51',1,'Parser']]],
+  ['setglobalsetting_48',['setGlobalSetting',['../classParser.html#afd3f83f8e16969f87e0eaa2d095aa19f',1,'Parser']]],
+  ['sethttpsetting_49',['setHttpSetting',['../classParser.html#a769741a7d07969f22b50401ffa60df0c',1,'Parser']]],
+  ['setlisten_50',['setListen',['../classParser.html#ae2a73f3b789a406d9e7d47854074cf6e',1,'Parser']]],
+  ['setlocationsetting_51',['setLocationSetting',['../classParser.html#a3e601a4c26c20b5f308baaed5fee2673',1,'Parser']]],
+  ['setserversetting_52',['setServerSetting',['../classParser.html#a3ae2114fadfd138606fabfcf5e89d9e2',1,'Parser']]],
+  ['socket_53',['Socket',['../classSocket.html',1,'']]],
+  ['socket_2ecpp_54',['socket.cpp',['../socket_8cpp.html',1,'']]],
+  ['socket_2ehpp_55',['socket.hpp',['../socket_8hpp.html',1,'']]],
+  ['socket_5f_56',['socket_',['../classServer.html#a2d53ba24cc25644c4eca7aaec319bcf7',1,'Server']]],
+  ['sockfd_57',['sockfd',['../classSession.html#a6647c30a5eccb78c9177a9c3e8ceb007',1,'Session']]],
+  ['sockfd_5f_58',['sockfd_',['../classSocket.html#a7cf176290950fc3ddda59fc43e49f2ed',1,'Socket']]],
+  ['start_59',['start',['../classHttpServer.html#aeb54b6186a9e7a11c6b321589f9379e1',1,'HttpServer']]],
+  ['status_60',['status',['../structResponse.html#aed441175ee65383ca6c0ad0962c4a7dd',1,'Response']]],
+  ['stop_61',['stop',['../classHttpServer.html#aad9c63d3f8cda248e3c87067ac3ac5a5',1,'HttpServer']]]
 ];

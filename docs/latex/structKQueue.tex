@@ -1,0 +1,146 @@
+\hypertarget{structKQueue}{}\doxysection{KQueue Class Reference}
+\label{structKQueue}\index{KQueue@{KQueue}}
+
+
+\mbox{\hyperlink{structKQueue}{KQueue}} class for handling events.  
+
+
+
+
+{\ttfamily \#include $<$events.\+hpp$>$}
+
+
+
+Inheritance diagram for KQueue\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=140pt]{structKQueue__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for KQueue\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=140pt]{structKQueue__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structKQueue_a66f2e271119c9053f70cd52784bea32c}\label{structKQueue_a66f2e271119c9053f70cd52784bea32c}} 
+static void \mbox{\hyperlink{structKQueue_a66f2e271119c9053f70cd52784bea32c}{create\+Queue}} ()
+\begin{DoxyCompactList}\small\item\em Creates kqueue. Does not run if one already exists. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{structKQueue_afacd802b2b8451e07c4a16e10c8c0403}{add\+Socket}} (int fd)
+\begin{DoxyCompactList}\small\item\em Adds a socket to the kqueue. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{structKQueue_ae28fa68419667aec7d8e2ec7459a7dbf}{remove\+Socket}} (int fd)
+\begin{DoxyCompactList}\small\item\em Removes a socket from the kqueue. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structKQueue_a07b46280bd8b1c33c25ddf1b5abac973}\label{structKQueue_a07b46280bd8b1c33c25ddf1b5abac973}} 
+static struct kevent \mbox{\hyperlink{structKQueue_a07b46280bd8b1c33c25ddf1b5abac973}{event\+Listen}} ()
+\begin{DoxyCompactList}\small\item\em Waits for events on the kqueue. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{structKQueue}{KQueue}} class for handling events. 
+
+This class wraps around the kqueue system call and provides a simple interface for adding and removing sockets from the kqueue. 
+
+Definition at line 5 of file events.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structKQueue_afacd802b2b8451e07c4a16e10c8c0403}\label{structKQueue_afacd802b2b8451e07c4a16e10c8c0403}} 
+\index{KQueue@{KQueue}!addSocket@{addSocket}}
+\index{addSocket@{addSocket}!KQueue@{KQueue}}
+\doxysubsubsection{\texorpdfstring{addSocket()}{addSocket()}}
+{\footnotesize\ttfamily void KQueue\+::add\+Socket (\begin{DoxyParamCaption}\item[{int}]{fd }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Adds a socket to the kqueue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fd} & file descriptor of the socket \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 19 of file events.\+cpp.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{19                              \{}
+\DoxyCodeLine{20     \textcolor{keyword}{struct }kevent event;}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22     \textcolor{comment}{// Initialize kevent structure.}}
+\DoxyCodeLine{23     EV\_SET(\&event, fd, EVFILT\_READ, EV\_ADD | EV\_CLEAR, 0, 0, NULL);}
+\DoxyCodeLine{24     }
+\DoxyCodeLine{25     \textcolor{comment}{// Add event to the kqueue.}}
+\DoxyCodeLine{26     \textcolor{keywordtype}{int} ret = kevent(queue\_fd\_, \&event, 1, NULL, 0, NULL);}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28     \textcolor{comment}{// Check if event was added successfully}}
+\DoxyCodeLine{29     \textcolor{keywordflow}{if} (ret == -\/1) \{}
+\DoxyCodeLine{30         \textcolor{keywordflow}{throw} runtime\_error(\textcolor{stringliteral}{"{}addSocket() failed"{}});}
+\DoxyCodeLine{31     \}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     \textcolor{comment}{// Add event to the map of events.}}
+\DoxyCodeLine{34     events\_[fd] = event;}
+\DoxyCodeLine{35 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{structKQueue_ae28fa68419667aec7d8e2ec7459a7dbf}\label{structKQueue_ae28fa68419667aec7d8e2ec7459a7dbf}} 
+\index{KQueue@{KQueue}!removeSocket@{removeSocket}}
+\index{removeSocket@{removeSocket}!KQueue@{KQueue}}
+\doxysubsubsection{\texorpdfstring{removeSocket()}{removeSocket()}}
+{\footnotesize\ttfamily void KQueue\+::remove\+Socket (\begin{DoxyParamCaption}\item[{int}]{fd }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Removes a socket from the kqueue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fd} & file descriptor of the socket \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 37 of file events.\+cpp.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{37                                 \{}
+\DoxyCodeLine{38     \textcolor{comment}{// Check if event exists.}}
+\DoxyCodeLine{39     \textcolor{keywordflow}{if} (events\_.find(fd) == events\_.end()) \{}
+\DoxyCodeLine{40         \textcolor{keywordflow}{throw} runtime\_error(\textcolor{stringliteral}{"{}removeSocket() failed"{}});}
+\DoxyCodeLine{41     \}}
+\DoxyCodeLine{42     }
+\DoxyCodeLine{43     \textcolor{comment}{// Get event from the map of events.}}
+\DoxyCodeLine{44     \textcolor{keyword}{struct }kevent event = events\_[fd];}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46     \textcolor{comment}{// Edit event.}}
+\DoxyCodeLine{47     EV\_SET(\&event, fd, EVFILT\_READ, EV\_DELETE, 0, 0, NULL);}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49     \textcolor{comment}{// Delete event from the kqueue.}}
+\DoxyCodeLine{50     \textcolor{keywordtype}{int} ret = kevent(queue\_fd\_, \&event, 1, NULL, 0, NULL);}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{comment}{// Check if event was deleted successfully}}
+\DoxyCodeLine{53     \textcolor{keywordflow}{if} (ret == -\/1) \{}
+\DoxyCodeLine{54         \textcolor{keywordflow}{throw} runtime\_error(\textcolor{stringliteral}{"{}removeSocket() failed"{}});}
+\DoxyCodeLine{55     \}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57     \textcolor{comment}{// Delete event from the map of events.}}
+\DoxyCodeLine{58     events\_.erase(fd);}
+\DoxyCodeLine{59 \}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/events.\+cpp\item 
+include/events.\+hpp\end{DoxyCompactItemize}
