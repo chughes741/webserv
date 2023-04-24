@@ -182,3 +182,5 @@ void EpollEventLoop::unregisterSocket(int fd) {
 	// Delete event from the map of events.
 	events_.erase(fd);
 }
+
+#endif // __APPLE__
