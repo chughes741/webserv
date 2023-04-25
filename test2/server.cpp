@@ -7,7 +7,7 @@
 #include <string.h>
 #include <new>
 
-#define PORT 8081
+#define PORT 8080
 int main(int argc, char const *argv[])
 {
     (void) argc;
@@ -50,6 +50,13 @@ int main(int argc, char const *argv[])
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
     {
         perror("In socket");
+        exit(EXIT_FAILURE);
+    }
+
+    int opt = 1;
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+    {
+        perror("setsockopt");
         exit(EXIT_FAILURE);
     }
     
