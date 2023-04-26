@@ -42,7 +42,8 @@
 #include <sys/time.h>
 #include <sys/types.h>
 
-#include "webserv.hpp"
+#include <map>
+#include <exception>
 
 using std::map;
 using std::runtime_error;

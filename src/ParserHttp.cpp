@@ -18,3 +18,11 @@ bool Parser::setHttpSetting() {
 	++it;
 	return true;
 }
+
+bool Parser::setHttpContext() {
+	if (context.back() != 0) {
+		throw std::logic_error("Http context needs to be global.");}
+	context.push_back(HTTP);
+	++it;
+	return true;
+}

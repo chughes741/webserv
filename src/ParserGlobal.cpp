@@ -25,7 +25,8 @@ bool Parser::setGlobalSetting() {
 			std::cout << "error_log: " << *(it) << std::endl;
 			break;
 		case PID:
-			// httpConfig.pid_file = *(++it);
+			//httpConfig.pid_file = *(++it);
+			++it;
 			std::cout << "pid: " << *(it) << std::endl;
 			break;
 		default:

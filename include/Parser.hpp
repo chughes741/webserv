@@ -43,24 +43,26 @@ public:
 	void tokenizeConfig(string);
 	void initSettings();
 	bool contextSwitchCase(int);
-	void setContext();
+	bool setContext();
 	int getSetting(string settingsList[], int size);
 
 	bool setGlobalSetting();
-
-	bool setEventsSetting();
-		bool setWorkerConnections();
-	bool setHttpSetting();
-
-	bool setServerSetting();
-		bool setListen();
-		bool setServerName();
-		bool setAccessLog();
-		bool setRoot();
+	bool setEventsContext();
+		bool setEventsSetting();
+			bool setWorkerConnections();
+	bool setHttpContext();
+		bool setHttpSetting();
+	bool setServerContext();
+		bool setServerSetting();
+			bool setListen();
+				int	retrievePort(string);
+			bool setServerName();
+			bool setAccessLog();
+			bool setRoot();
 	bool setLocationSetting();
-		void setLocationUri();
-		void setPath();
-		void setFastCGI();
+		string setLocationUri();
+		void setPath(string &);
+		void setFastCGI(string &);
 private:
 	vector<string> tokens;
 	vector<int> context;

@@ -17,3 +17,11 @@ bool Parser::setEventsSetting() {
 			throw std::invalid_argument("Invalid setting: " + *it);
 	}
 }
+
+bool Parser::setEventsContext() {
+	if (context.back() != 0) {
+		throw std::logic_error("Events context needs to be global.");}
+	context.push_back(EVENTS);
+	++it;
+	return true;
+}

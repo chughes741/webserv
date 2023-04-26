@@ -5,6 +5,8 @@
 #include "webserv.hpp"
 #include "server.hpp"
 
+#include "Test.hpp"
+
 /** Maximum pending connections in queue */
 #define SO_MAX_QUEUE 10
 
@@ -37,10 +39,26 @@ int main(int argc, char* argv[]) {
 		std::cerr << e.what() << std::endl;
 		return (EXIT_FAILURE);
 	}
+	//Test	test;
+    vector<int>    ports;
+    vector<Socket> sockets;
 
-    // Create server
-	ServerConfig test_config;
-    Server *server = new HttpServer(test_config);
+
+    /** @todo get ports from config */
+    ports.push_back(3000);
+
+    /** Create a socket for each port */
+    for (vector<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
+        try {
+           // sockets.push_back(Socket(*it, INADDR_ANY));
+        } catch (std::runtime_error& e) {
+            std::cerr << e.what() << std::endl;
+        }
+    }
+
+    ServerConfig config = ServerConfig();
+
+    Server *server = new HttpServer(config);
 
     server->start();
 

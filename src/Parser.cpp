@@ -17,9 +17,14 @@ Parser::Parser(void) : context(1) {}
 //**************************************************************************//
 //                             Member functions                             //
 //**************************************************************************//
-
-bool Parser::contextSwitchCase(int c) {
-	switch (c) {
+/**
+ * @brief Call the appropriate context setting function
+ * 
+ * @param context to represent which context
+ * @return true or throw logic_error
+ */
+bool Parser::contextSwitchCase(int context) {
+	switch (context) {
 		case GLOBAL:
 			return setGlobalSetting();
 		case EVENTS:
@@ -38,7 +43,6 @@ bool Parser::contextSwitchCase(int c) {
  * @brief Get the Setting object
  * 
  * @param settingsList		Array of settings
- * @param setting 			Setting to find
  * @param size 				Size of settings array
  * @return int				Index of setting in settings array
  */
@@ -54,36 +58,26 @@ int Parser::getSetting(string settingsList[], int size) {
  * @brief define in which context the token is
  * 
  */
-void Parser::setContext() {
+bool Parser::setContext() {
 	string item = *it;
 	string List[] = {"", "events", "http", "server"};
 	int tmp = getSetting(List, sizeof(List)/sizeof(List[0]));
 	if (*(++it) == "{" && tmp != -1) {
 		switch (tmp) {
-			case GLOBAL:
-				break;
 			case EVENTS:
-				if (context.back() != 0) {
-					throw std::logic_error("Wrong context item: " + item);}
-				break;
+				return setEventsContext();
 			case HTTP:
-				if (context.back() != 0) {
-					throw std::logic_error("Wrong context item: " + item);}
-				break;
+				return setHttpContext();
 			case SERVER:
-				if (context.back() != 2) {
-					throw std::logic_error("Wrong context item: " + item);}
-				httpConfig.servers.push_back(ServerConfig());
-				break;
+				return setServerContext();
 			default:
 				throw std::logic_error("Invalid context: " + item);
 		}
-		context.push_back(tmp);
-		++it;
-		return;}
+	}
 	else if (*it == "{") {
 		throw std::logic_error("Invalid Context: " + item);}
 	--it;
+	return true;
 }
 
 /**
