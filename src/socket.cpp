@@ -54,6 +54,7 @@ TcpSocket::TcpSocket() {
     if (sockfd_ == -1) {
         throw runtime_error("Error: Failed to create socket");
     }
+    
 }
 
 TcpSocket::~TcpSocket() {}

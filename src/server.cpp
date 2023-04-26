@@ -22,6 +22,9 @@
 
 #include "server.hpp"
 
+using std::cerr;
+using std::endl;
+
 extern HttpConfig httpConfig;
 
 Server::~Server() {
@@ -43,17 +46,31 @@ HttpServer::~HttpServer() throw() {
 
 void HttpServer::start() {
     // Create a socket for each server in the config
+    Socket* new_socket;
     for (vector<ServerConfig>::iterator it = httpConfig.servers.begin();
          it != httpConfig.servers.end(); ++it) {
-        Socket* new_socket = new TcpSocket();
-        int server_id = new_socket->bind(it->listen.first, it->listen.second);
-        new_socket->listen();
+        try {
+            // Create a new socket
+            new_socket = new TcpSocket();
 
-        // Add the socket to the map
-        server_sockets_[server_id] = new_socket;
+            // Bind the socket to the address/port
+            int server_id =
+                new_socket->bind(it->listen.first, it->listen.second);
 
-        // Add the socket to the listener
-        listener_->registerEvent(server_id, 0); /** @todo event flags */
+            // Listen for connections
+            new_socket->listen();
+
+            // Add the socket to the map
+            server_sockets_[server_id] = new_socket;
+
+            // Add the socket to the listener
+            listener_->registerEvent(server_id, 0); /** @todo event flags */
+        } catch (runtime_error& e) {
+            cerr << e.what() << endl;
+
+            // Delete the socket, is this safe even if it wasn't constructed?
+            delete new_socket;
+        }
     }
 
     // Run the server
@@ -64,7 +81,11 @@ void HttpServer::stop() {
     // Close all sockets and delete them
     for (map<int, Socket*>::iterator it = server_sockets_.begin();
          it != server_sockets_.end(); ++it) {
-        it->second->close();
+        try {
+            it->second->close();
+        } catch (runtime_error& e) {
+            cerr << e.what() << endl;
+        }
         delete it->second;
     }
 
