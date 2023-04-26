@@ -5,6 +5,8 @@
 #include "webserv.hpp"
 #include "server.hpp"
 
+#include "Test.hpp"
+
 /** Maximum pending connections in queue */
 #define SO_MAX_QUEUE 10
 
@@ -35,9 +37,10 @@ int main(int argc, char* argv[]) {
 		std::cerr << e.what() << std::endl;
 		return (EXIT_FAILURE);
 	}
-
+	//Test	test;
     vector<int>    ports;
     vector<Socket> sockets;
+
 
     /** @todo get ports from config */
     ports.push_back(3000);
