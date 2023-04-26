@@ -2,7 +2,7 @@
  * @file events.hpp
  * @brief Declares classes for handling events on sockets using the kqueue or
  * epoll system calls.
- * 
+ *
  * This file contains the declaration of the abstract EventLoop class and its
  * two derived classes, KqueueEventLoop and EpollEventLoop. The EventLoop class
  * provides an interface for handling events on sockets, such as registering
@@ -10,20 +10,20 @@
  * EpollEventLoop classes inherit from the EventLoop class and implement the
  * event handling functionality using the kqueue and epoll system calls,
  * respectively.
- * 
+ *
  * To use the EventLoop classes, you must create an instance of one of the
  * derived classes, register the sockets you want to monitor using the
  * registerSocket() method, and then call the start() method to begin monitoring
  * events on the registered sockets. Once you have received an event, you can
  * use the handleEvent() method to process the event and take appropriate
  * action, such as reading or writing data to the socket.
- * 
+ *
  * @note The KqueueEventLoop class is used on MacOS, and the EpollEventLoop
  * class is used on Linux.
- * 
+ *
  * @note This code is for educational purposes only and should not be used in
  * production environments without extensive testing and modification.
- * 
+ *
  * @version 0.1
  * @date 2023-04-24
  * @authors
@@ -55,8 +55,7 @@ class EventLoop {
    public:
     virtual ~EventLoop();
 
-    virtual void start()                            = 0;
-    virtual void stop()                             = 0;
+    virtual int  wait()                             = 0;
     virtual void registerSocket(int fd, int events) = 0;
     virtual void unregisterSocket(int fd)           = 0;
 
@@ -74,13 +73,9 @@ class KqueueEventLoop : public EventLoop {
    public:
     KqueueEventLoop();
 
-    void start();
-    void stop();
+    int  wait();
     void registerSocket(int fd, int events);
     void unregisterSocket(int fd);
-
-   private:
-    struct kevent eventListen();
 
    private:
     int                     queue_fd_; /**< kqueue file descriptor */
@@ -98,8 +93,7 @@ class EpollEventLoop : public EventLoop {
    public:
     EpollEventLoop();
 
-    void start();
-    void stop();
+    int  wait();
     void registerSocket(int fd, int events);
     void unregisterSocket(int fd);
 

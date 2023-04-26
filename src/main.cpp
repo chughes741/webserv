@@ -20,11 +20,13 @@ HttpConfig httpConfig = HttpConfig();
  * @param argv config file name
  */
 int main(int argc, char* argv[]) {
-    /** Parse the config file x*/
+    // Exit if the number of arguments is greater than 2
 	if (argc > 2) {
 		std::cerr << "Usage: ./webserv [config_file]" << std::endl;
 		return (EXIT_FAILURE);
 	}
+
+    // Parse config file
 	httpConfig = HttpConfig();
 	try {
 		if (argc == 2) {
