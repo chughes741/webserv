@@ -5,7 +5,7 @@ HTTP server written in C++
 [GitHub Pages](https://chughes741.github.io/webserv/)
 
 ## Introduction
-[Project Page](https://cdn.intra.42.fr/pdf/pdf/66921/en.subject.pdf)
+[Project Page](resources/en.subject.pdf)
 
 The Hypertext Transfer Protocol (HTTP) is an application protocol for distributed, collaborative, hypermedia information systems.
 
