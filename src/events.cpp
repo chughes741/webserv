@@ -2,15 +2,15 @@
  * @file events.cpp
  * @brief Defines classes for handling events
  *
- * This file contains the implementation of the EventLoop, KqueueEventLoop, and
- * EpollEventLoop classes. The EventLoop class is an abstract base class that
- * provides an interface for creating event loops. The KqueueEventLoop class
- * inherits from the EventLoop class and implements an event loop that uses the
- * kqueue system call. The EpollEventLoop class inherits from the EventLoop
+ * This file contains the implementation of the EventListener, KqueueEventListener, and
+ * EpollEventListener classes. The EventListener class is an abstract base class that
+ * provides an interface for creating event loops. The KqueueEventListener class
+ * inherits from the EventListener class and implements an event loop that uses the
+ * kqueue system call. The EpollEventListener class inherits from the EventListener
  * class and implements an event loop that uses the epoll system call.
  *
- * @note The KqueueEventLoop class is only available on MacOS and the
- * EpollEventLoop class is only available on Linux.
+ * @note The KqueueEventListener class is only available on MacOS and the
+ * EpollEventListener class is only available on Linux.
  *
  * @note This code is for educational purposes only and should not be used in
  * production environments without extensive testing and modification.
@@ -25,12 +25,12 @@
 
 #include "events.hpp"
 
-EventLoop::~EventLoop() {
+EventListener::~EventListener() {
 }
 
 #ifdef __APPLE__
 
-KqueueEventLoop::KqueueEventLoop() {
+KqueueEventListener::KqueueEventListener() {
     // Create a new kqueue
     queue_fd_ = kqueue();
     timeout_.tv_sec = 0;
@@ -42,7 +42,7 @@ KqueueEventLoop::KqueueEventLoop() {
     }
 }
 
-int KqueueEventLoop::wait() {
+int KqueueEventListener::listen() {
     // Wait for events on the kqueue.
     struct kevent event;
     int           ret = kevent(queue_fd_, NULL, 0, &event, 1, &timeout_);
@@ -55,7 +55,7 @@ int KqueueEventLoop::wait() {
     return event.ident;
 }
 
-void KqueueEventLoop::registerSocket(int fd, int events) {
+void KqueueEventListener::registerEvent(int fd, int events) {
     struct kevent event;
 
     // Handle conversion from events to kqueue events
@@ -69,17 +69,17 @@ void KqueueEventLoop::registerSocket(int fd, int events) {
 
     // Check if event was added successfully
     if (ret == -1) {
-        throw runtime_error("registerSocket() failed");
+        throw runtime_error("registerEvent() failed");
     }
 
     // Add event to the map of events.
     events_[fd] = event;
 }
 
-void KqueueEventLoop::unregisterSocket(int fd) {
+void KqueueEventListener::unregisterEvent(int fd) {
     // Check if event exists.
     if (events_.find(fd) == events_.end()) {
-        throw runtime_error("unregisterSocket() failed");
+        throw runtime_error("unregisterEvent() failed");
     }
 
     // Get event from the map of events.
@@ -102,7 +102,7 @@ void KqueueEventLoop::unregisterSocket(int fd) {
 
 #elif __linux__
 
-EpollEventLoop::EpollEventLoop() {
+EpollEventListener::EpollEventListener() {
     // Create a new epoll
     epoll_fd_ = epoll_create(1);  // 1 is ignored, can't be 0
 
@@ -112,7 +112,7 @@ EpollEventLoop::EpollEventLoop() {
     }
 }
 
-int EpollEventLoop::wait() {
+int EpollEventListener::listen() {
     // Get an event from epoll
     struct epoll_event events[1];
     int                ret = epoll_wait(epoll_fd_, events, 1, -1);
@@ -125,7 +125,7 @@ int EpollEventLoop::wait() {
     return events[0].data.fd;
 }
 
-void EpollEventLoop::registerSocket(int fd, int events) {
+void EpollEventListener::registerEvent(int fd, int events) {
     struct epoll_event event;
 
     // Handle conversion from events to epoll events
@@ -140,17 +140,17 @@ void EpollEventLoop::registerSocket(int fd, int events) {
 
     // Check if event was added successfully
     if (ret == -1) {
-        throw runtime_error("registerSocket() failed");
+        throw runtime_error("registerEvent() failed");
     }
 
     // Add event to the map of events.
     events_[fd] = event;
 }
 
-void EpollEventLoop::unregisterSocket(int fd) {
+void EpollEventListener::unregisterEvent(int fd) {
     // Check if event exists.
     if (events_.find(fd) == events_.end()) {
-        throw runtime_error("unregisterSocket() failed");
+        throw runtime_error("unregisterEvent() failed");
     }
 
     // Delete event from the epoll.
@@ -158,7 +158,7 @@ void EpollEventLoop::unregisterSocket(int fd) {
 
     // Check if event was deleted successfully
     if (ret == -1) {
-        throw runtime_error("unregisterSocket() failed");
+        throw runtime_error("unregisterEvent() failed");
     }
 
     // Delete event from the map of events.

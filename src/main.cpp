@@ -7,6 +7,8 @@
 
 #include "Test.hpp"
 
+HttpConfig httpConfig;
+
 /**
  * @brief Main function
  *
@@ -21,7 +23,6 @@ int main(int argc, char* argv[]) {
 	}
 
     // Parse config file
-	HttpConfig httpConfig = HttpConfig();
 	try {
 		if (argc == 2) {
 			parseConfig(argv[1]);
@@ -35,7 +36,7 @@ int main(int argc, char* argv[]) {
 	}
 
     // Initialize server
-    HttpServer httpServer = HttpServer(httpConfig);
+    HttpServer httpServer = HttpServer();
 
     // Run server
     while(true) {

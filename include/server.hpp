@@ -39,6 +39,7 @@
 
 #include "webserv.hpp"
 
+using std::map;
 using std::string;
 
 /**
@@ -49,18 +50,20 @@ class Server {
    public:
     virtual ~Server() = 0;
 
-    virtual void start()        = 0;
-    virtual void stop()         = 0;
-    virtual void createSocket() = 0;
+    virtual void start() = 0;
+    virtual void stop()  = 0;
 
    protected:
+    virtual void run() = 0;
+
     virtual Request  receiveRequest()                = 0;
     virtual Response handleRequest(Request request)  = 0;
     virtual void     sendResponse(Response response) = 0;
 
    protected:
-    Socket*      socket_; /**< Socket used by the server */
-    ServerConfig config_; /**< Configuration for the server */
+    map<int, Socket*>  server_sockets_; /**< Map of server IDs to sockets */
+    map<int, Session*> sessions_;       /**< Map of session IDs to sessions */
+    EventListener*     listener_;       /**< Event listener for the server */
 };
 
 /**
@@ -73,7 +76,7 @@ class HttpServer : public Server {
      *
      * @param config Configuration for the server
      */
-    HttpServer(const ServerConfig& config);
+    HttpServer();
     ~HttpServer() throw();
 
    private:
@@ -91,12 +94,12 @@ class HttpServer : public Server {
      */
     void stop();
 
-    /**
-     * @brief Create a server socket
-     */
-    void createSocket();
-
    private:
+    /**
+     * @brief Run the server
+     */
+    void run();
+
     /**
      * @brief Read a request from the socket
      *
