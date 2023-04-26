@@ -15,7 +15,7 @@ jobs:
         run: sudo apt install clang-format
 
       - name: Run clang-format
-        run: git clang-format main --binary clang-format
+        run: git clang-format --binary clang-format -- main
 
       - name: Check for modified files
         id: git-check
