@@ -2,28 +2,28 @@
  * @file events.hpp
  * @brief Declares classes for handling events on sockets using the kqueue or
  * epoll system calls.
- * 
- * This file contains the declaration of the abstract EventLoop class and its
- * two derived classes, KqueueEventLoop and EpollEventLoop. The EventLoop class
- * provides an interface for handling events on sockets, such as registering
- * and unregistering sockets for read and write events. The KqueueEventLoop and
- * EpollEventLoop classes inherit from the EventLoop class and implement the
- * event handling functionality using the kqueue and epoll system calls,
- * respectively.
- * 
- * To use the EventLoop classes, you must create an instance of one of the
- * derived classes, register the sockets you want to monitor using the
- * registerSocket() method, and then call the start() method to begin monitoring
- * events on the registered sockets. Once you have received an event, you can
+ *
+ * This file contains the declaration of the abstract EventListener class and
+ * its two derived classes, KqueueEventListener and EpollEventListener. The
+ * EventListener class provides an interface for handling events on sockets,
+ * such as registerEventing and unregisterEventing sockets for read and write events. The
+ * KqueueEventListener and EpollEventListener classes inherit from the
+ * EventListener class and implement the event handling functionality using the
+ * kqueue and epoll system calls, respectively.
+ *
+ * To use the EventListener classes, you must create an instance of one of the
+ * derived classes, registerEvent the sockets you want to monitor using the
+ * registerEventSocket() method, and then call the start() method to begin monitoring
+ * events on the registerEvented sockets. Once you have received an event, you can
  * use the handleEvent() method to process the event and take appropriate
  * action, such as reading or writing data to the socket.
- * 
- * @note The KqueueEventLoop class is used on MacOS, and the EpollEventLoop
- * class is used on Linux.
- * 
+ *
+ * @note The KqueueEventListener class is used on MacOS, and the
+ * EpollEventListener class is used on Linux.
+ *
  * @note This code is for educational purposes only and should not be used in
  * production environments without extensive testing and modification.
- * 
+ *
  * @version 0.1
  * @date 2023-04-24
  * @authors
@@ -42,8 +42,8 @@
 #include <sys/time.h>
 #include <sys/types.h>
 
-#include <map>
 #include <exception>
+#include <map>
 
 using std::map;
 using std::runtime_error;
@@ -51,36 +51,31 @@ using std::runtime_error;
 /**
  * @brief Abstract class for handling event
  */
-class EventLoop {
+class EventListener {
    public:
-    virtual ~EventLoop();
+    virtual ~EventListener();
 
-    virtual void start()                            = 0;
-    virtual void stop()                             = 0;
-    virtual void registerSocket(int fd, int events) = 0;
-    virtual void unregisterSocket(int fd)           = 0;
+    virtual int  listen()                           = 0;
+    virtual void registerEvent(int fd, int events) = 0;
+    virtual void unregisterEvent(int fd)           = 0;
 
    protected:
 };
 
 #ifdef __APPLE__
 /**
- * @brief KqueueEventLoop class for handling events, used on MacOS
+ * @brief KqueueEventListener class for handling events, used on MacOS
  *
  * @details This class wraps around the kqueue system call and provides
  * a simple interface for adding and removing sockets from the kqueue.
  */
-class KqueueEventLoop : public EventLoop {
+class KqueueEventListener : public EventListener {
    public:
-    KqueueEventLoop();
+    KqueueEventListener();
 
-    void start();
-    void stop();
-    void registerSocket(int fd, int events);
-    void unregisterSocket(int fd);
-
-   private:
-    struct kevent eventListen();
+    int  listen();
+    void registerEvent(int fd, int events);
+    void unregisterEvent(int fd);
 
    private:
     int                     queue_fd_; /**< kqueue file descriptor */
@@ -94,14 +89,13 @@ class KqueueEventLoop : public EventLoop {
  * @details This class wraps around the epoll system call and provides
  * a simple interface for adding and removing sockets from the epoll.
  */
-class EpollEventLoop : public EventLoop {
+class EpollEventListener : public EventListener {
    public:
-    EpollEventLoop();
+    EpollEventListener();
 
-    void start();
-    void stop();
-    void registerSocket(int fd, int events);
-    void unregisterSocket(int fd);
+    int  listen();
+    void registerEvent(int fd, int events);
+    void unregisterEvent(int fd);
 
    private:
     int                          epoll_fd_; /**< epoll file descriptor */
