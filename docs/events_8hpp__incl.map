@@ -1,0 +1,20 @@
+<map id="include/events.hpp" name="include/events.hpp">
+<area shape="rect" id="node1" title="Declares classes for handling events on sockets using the kqueue or epoll system calls." alt="" coords="145,5,290,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,80,96,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="51,229,147,256"/>
+<area shape="rect" id="node4" href="$webserv_8hpp_source.html" title=" " alt="" coords="525,80,629,107"/>
+<area shape="rect" id="node5" title=" " alt="" coords="506,229,609,256"/>
+<area shape="rect" id="node6" title=" " alt="" coords="653,229,728,256"/>
+<area shape="rect" id="node7" title=" " alt="" coords="749,155,814,181"/>
+<area shape="rect" id="node8" title=" " alt="" coords="838,155,925,181"/>
+<area shape="rect" id="node9" title=" " alt="" coords="949,155,1022,181"/>
+<area shape="rect" id="node10" title=" " alt="" coords="885,229,965,256"/>
+<area shape="rect" id="node11" title=" " alt="" coords="288,155,339,181"/>
+<area shape="rect" id="node12" title=" " alt="" coords="363,155,421,181"/>
+<area shape="rect" id="node13" title=" " alt="" coords="446,155,509,181"/>
+<area shape="rect" id="node14" href="$config_8hpp.html" title="Configuration options for the HTTP server:" alt="" coords="533,155,622,181"/>
+<area shape="rect" id="node15" href="$socket_8hpp.html" title="Classes for using sockets as defined in RFC 793." alt="" coords="171,155,263,181"/>
+<area shape="rect" id="node16" title=" " alt="" coords="375,229,441,256"/>
+<area shape="rect" id="node17" title=" " alt="" coords="171,229,263,256"/>
+<area shape="rect" id="node18" title=" " alt="" coords="287,229,350,256"/>
+</map>

@@ -1,6 +1,8 @@
 # webserv
 HTTP server written in C++
 
+## Documentation
+[GitHub Pages](https://chughes741.github.io/webserv/)
 
 ## Introduction
 [Project Page](https://cdn.intra.42.fr/pdf/pdf/66921/en.subject.pdf)
