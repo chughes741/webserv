@@ -7,17 +7,13 @@
 
 #include "Test.hpp"
 
-/** Maximum pending connections in queue */
-#define SO_MAX_QUEUE 10
-
-/** Global config object */
-HttpConfig httpConfig = HttpConfig();
+HttpConfig httpConfig;
 
 /**
  * @brief Main function
  *
  * @param argc Number of arguments
- * @param argv config file name
+ * @param argv [1] config file name
  */
 int main(int argc, char* argv[]) {
     // Exit if the number of arguments is greater than 2
@@ -27,7 +23,6 @@ int main(int argc, char* argv[]) {
 	}
 
     // Parse config file
-	httpConfig = HttpConfig();
 	try {
 		if (argc == 2) {
 			parseConfig(argv[1]);
@@ -39,29 +34,20 @@ int main(int argc, char* argv[]) {
 		std::cerr << e.what() << std::endl;
 		return (EXIT_FAILURE);
 	}
-	//Test	test;
-    vector<int>    ports;
-    vector<Socket> sockets;
 
+    // Initialize server
+    HttpServer httpServer = HttpServer();
 
-    /** @todo get ports from config */
-    ports.push_back(3000);
-
-    /** Create a socket for each port */
-    for (vector<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
+    // Run server
+    while(true) {
         try {
-           // sockets.push_back(Socket(*it, INADDR_ANY));
-        } catch (std::runtime_error& e) {
+            httpServer.start();
+        }
+        catch (std::exception &e) { /** @todo needs a more specific exception */
             std::cerr << e.what() << std::endl;
+            httpServer.stop();
         }
     }
 
-    ServerConfig config = ServerConfig();
-
-    Server *server = new HttpServer(config);
-
-    server->start();
-
-    delete server;
     return (EXIT_SUCCESS);
 }

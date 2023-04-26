@@ -22,35 +22,103 @@
 
 #include "server.hpp"
 
+using std::cerr;
+using std::endl;
+
+extern HttpConfig httpConfig;
+
 Server::~Server() {
 }
 
-HttpServer::HttpServer(const ServerConfig &config) {
-    socket_ = new TcpSocket;
-    config_ = config;
+HttpServer::HttpServer() {
+    // Create a listener
+#ifdef __APPLE__
+    listener_ = new KqueueEventListener();
+#elif __linux__
+    listener_ = new EpollEventListener();
+#else
+#error "Unsupported platform"
+#endif  // __APPLE__
 }
 
 HttpServer::~HttpServer() throw() {
-    delete socket_;
 }
 
 void HttpServer::start() {
+    // Create a socket for each server in the config
+    Socket* new_socket;
+    for (vector<ServerConfig>::iterator it = httpConfig.servers.begin();
+         it != httpConfig.servers.end(); ++it) {
+        try {
+            // Create a new socket
+            new_socket = new TcpSocket();
+
+            // Bind the socket to the address/port
+            int server_id =
+                new_socket->bind(it->listen.first, it->listen.second);
+
+            // Listen for connections
+            new_socket->listen();
+
+            // Add the socket to the map
+            server_sockets_[server_id] = new_socket;
+
+            // Add the socket to the listener
+            listener_->registerEvent(server_id, 0); /** @todo event flags */
+        } catch (runtime_error& e) {
+            cerr << e.what() << endl;
+
+            // Delete the socket, is this safe even if it wasn't constructed?
+            delete new_socket;
+        }
+    }
+
+    // Run the server
+    run();
 }
 
 void HttpServer::stop() {
+    // Close all sockets and delete them
+    for (map<int, Socket*>::iterator it = server_sockets_.begin();
+         it != server_sockets_.end(); ++it) {
+        try {
+            it->second->close();
+        } catch (runtime_error& e) {
+            cerr << e.what() << endl;
+        }
+        delete it->second;
+    }
+
+    // Clear the map of sockets
+    server_sockets_.clear();
 }
 
-void HttpServer::createSocket() {
-    /** @todo send in actual addr */
-    socket_->bind(config_.listen.second, 0);
-    socket_->listen();
+void HttpServer::run() {
+    // Loop forever
+    while (true) {
+        // Wait for an event
+        int event = listener_->listen();
+
+        // Handle event
+        switch (event) {
+            case 0: /** @todo add event macros */
+                /** @todo write error handler */
+                break;
+            case 1:
+                /** @todo write handlers */
+                break;
+            default:
+                /** @todo what should default case be */
+                break;
+        }
+    }
 }
 
 Request HttpServer::receiveRequest() {
     Request request;
 
     /** @todo should be client_id not 0 */
-    string buffer = socket_->recv(0);
+    string buffer = sessions_[0]->recv(0);
 
     // start-line
     request.method = buffer.substr(0, buffer.find(' '));
@@ -115,5 +183,5 @@ void HttpServer::sendResponse(Response response) {
     buffer.append(CRLF + response.body);
 
     /** @todo should be client_id not 0 */
-    socket_->send(0, buffer);
+    sessions_[0]->send(0, buffer);
 }
