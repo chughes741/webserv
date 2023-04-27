@@ -53,7 +53,7 @@ TEST(ServerTest, StartAndStop) {
         .Times(AtLeast(1));
 
     // Call the start() method of the Server object
-    server.start();
+    server.start(false);
 
     // Call the stop() method of the Server object
     server.stop();

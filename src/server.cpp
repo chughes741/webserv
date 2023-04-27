@@ -40,7 +40,7 @@ HttpServer::HttpServer(SocketGenerator socket_generator, HttpConfig httpConfig,
 HttpServer::~HttpServer() throw() {
 }
 
-void HttpServer::start() {
+void HttpServer::start(bool run_server) {
     // Create a socket for each server in the config
     Socket* new_socket;
     for (vector<ServerConfig>::iterator it = config_.servers.begin();
@@ -70,7 +70,8 @@ void HttpServer::start() {
     }
 
     // Run the server
-    run();
+    if (run_server == true)
+        run();
 }
 
 void HttpServer::stop() {

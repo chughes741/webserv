@@ -56,7 +56,7 @@ class Server {
 
     virtual ~Server() = 0;
 
-    virtual void start() = 0;
+    virtual void start(bool) = 0;
     virtual void stop()  = 0;
 
    protected:
@@ -96,7 +96,7 @@ class HttpServer : public Server {
     /**
      * @brief Start the server
      */
-    void start();
+    void start(bool run_server = true);
 
     /**
      * @brief Stop the server
