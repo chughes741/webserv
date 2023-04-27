@@ -81,7 +81,7 @@ class HttpServer : public Server {
      *
      * @param config Configuration for the server
      */
-    HttpServer(HttpConfig config);
+    HttpServer(HttpConfig config, EventListener* listener);
     ~HttpServer() throw();
 
    private:

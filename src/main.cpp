@@ -46,8 +46,18 @@ int main(int argc, char *argv[]) {
         return (EXIT_FAILURE);
     }
 
+    // Create a listener
+    EventListener *listener;
+#ifdef __APPLE__
+    listener = new KqueueEventListener();
+#elif __linux__
+    listener = new EpollEventListener();
+#else
+#error "Unsupported platform"
+#endif  // __APPLE__
+
     // Initialize server
-    HttpServer httpServer = HttpServer(httpConfig);
+    HttpServer httpServer = HttpServer(httpConfig, listener);
 
     // Run server
     while (true) {

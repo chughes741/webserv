@@ -30,17 +30,9 @@ extern HttpConfig httpConfig;
 Server::~Server() {
 }
 
-HttpServer::HttpServer(HttpConfig httpConfig) {
+HttpServer::HttpServer(HttpConfig httpConfig, EventListener* listener) {
     config_ = httpConfig;
-
-    // Create a listener
-#ifdef __APPLE__
-    listener_ = new KqueueEventListener();
-#elif __linux__
-    listener_ = new EpollEventListener();
-#else
-#error "Unsupported platform"
-#endif  // __APPLE__
+    listener_ = listener;
 }
 
 HttpServer::~HttpServer() throw() {
