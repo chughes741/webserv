@@ -2,6 +2,6 @@
 
 #include "webserv.hpp"
 
-TEST(socketTest, BasicAssertions) {
+TEST(eventsTest, BasicAssertions) {
     EXPECT_TRUE(true);
 }

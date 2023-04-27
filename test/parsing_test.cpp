@@ -2,6 +2,6 @@
 
 #include "webserv.hpp"
 
-TEST(webservTest, BasicAssertions) {
+TEST(parsingTest, BasicAssertions) {
 	EXPECT_TRUE(true);
 }

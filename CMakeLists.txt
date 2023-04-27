@@ -18,7 +18,6 @@ add_compile_definitions(CONFIG_FILE="../config/server.conf")
 file(GLOB SOURCES "src/*.cpp")
 
 add_executable(webserv
-  src/config.cpp
   src/events.cpp
   src/main.cpp
   src/server.cpp
@@ -36,18 +35,46 @@ set_target_properties(webserv PROPERTIES
 # Test executables
 enable_testing()
 
-# webserv_test
-add_executable(webserv_test test/webserv_test.cpp)
+# events_test
+add_executable(events_test test/events_test.cpp)
 target_link_libraries(
-  webserv_test
+  events_test
   PUBLIC GTest::gtest_main
 )
-target_include_directories(webserv_test PUBLIC
+target_include_directories(events_test PUBLIC
   ${PROJECT_SOURCE_DIR}/include/
 )
 add_test(
-  NAME webserv_test
-  COMMAND $<TARGET_FILE:webserv_test>
+  NAME events_test
+  COMMAND $<TARGET_FILE:events_test>
+)
+
+# parsing_test
+add_executable(parsing_test test/parsing_test.cpp)
+target_link_libraries(
+  parsing_test
+  PUBLIC GTest::gtest_main
+)
+target_include_directories(parsing_test PUBLIC
+  ${PROJECT_SOURCE_DIR}/include/
+)
+add_test(
+  NAME parsing_test
+  COMMAND $<TARGET_FILE:parsing_test>
+)
+
+# server_test
+add_executable(server_test test/server_test.cpp)
+target_link_libraries(
+  server_test
+  PUBLIC GTest::gtest_main
+)
+target_include_directories(server_test PUBLIC
+  ${PROJECT_SOURCE_DIR}/include/
+)
+add_test(
+  NAME server_test
+  COMMAND $<TARGET_FILE:server_test>
 )
 
 # socket_test
@@ -62,4 +89,18 @@ target_include_directories(socket_test PUBLIC
 add_test(
   NAME socket_test
   COMMAND $<TARGET_FILE:socket_test>
+)
+
+# webserv_test
+add_executable(webserv_test test/webserv_test.cpp)
+target_link_libraries(
+  webserv_test
+  PUBLIC GTest::gtest_main
+)
+target_include_directories(webserv_test PUBLIC
+  ${PROJECT_SOURCE_DIR}/include/
+)
+add_test(
+  NAME webserv_test
+  COMMAND $<TARGET_FILE:webserv_test>
 )
