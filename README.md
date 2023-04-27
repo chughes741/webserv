@@ -107,3 +107,34 @@ You must provide some configuration files and default basic files to test and de
 > The important thing is resilience. Your server should never die.
 
 > Do not test with only one program. Write your tests with a more convenient language such as Python or Golang, and so forth. Even in C or C++ if you want to.
+
+## Installation & Usage
+1. Clone the repository:
+```bash
+git clone https://github.com/chughes741/webserv.git
+```
+2. Navigate to the project directory:
+```bash
+cd webserv
+```
+3. Build the project using Make or cmake
+
+	3.1 Using Make
+```bash
+make
+```
+	3.2 using cmake
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
+4. Run the server
+Adapt the conf/server.conf file to your need or provide a specific configuration file:
+```bash
+./webserv
+```
+```bash
+./webserv "your configuration file"
+```
