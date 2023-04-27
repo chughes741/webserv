@@ -1,5 +1,14 @@
 var searchData=
 [
-  ['_7esocket_116',['~Socket',['../classSocket.html#a7b36181d6700fa5c4a51a56114f0942d',1,'Socket']]],
-  ['_7etcpsocket_117',['~TcpSocket',['../classTcpSocket.html#a4c6d246451c51ac4226a9301f6711086',1,'TcpSocket']]]
+  ['serverconfig_111',['ServerConfig',['../structServerConfig.html#af61bcd662c3be06dd4219770350e65e6',1,'ServerConfig']]],
+  ['setcontext_112',['setContext',['../classParser.html#aa908b9fa132aae72f9bf9792bc1d7096',1,'Parser']]],
+  ['setglobalsetting_113',['setGlobalSetting',['../classParser.html#afd3f83f8e16969f87e0eaa2d095aa19f',1,'Parser']]],
+  ['sethttpsetting_114',['setHttpSetting',['../classParser.html#a769741a7d07969f22b50401ffa60df0c',1,'Parser']]],
+  ['setlisten_115',['setListen',['../classParser.html#ae2a73f3b789a406d9e7d47854074cf6e',1,'Parser']]],
+  ['setlocationsetting_116',['setLocationSetting',['../classParser.html#a3e601a4c26c20b5f308baaed5fee2673',1,'Parser']]],
+  ['setservername_117',['setServerName',['../classParser.html#a2fd377280dd07402810b49b0afbc36a0',1,'Parser']]],
+  ['setserversetting_118',['setServerSetting',['../classParser.html#a3ae2114fadfd138606fabfcf5e89d9e2',1,'Parser']]],
+  ['sockfd_119',['sockfd',['../classSession.html#a6647c30a5eccb78c9177a9c3e8ceb007',1,'Session']]],
+  ['start_120',['start',['../classHttpServer.html#aeb54b6186a9e7a11c6b321589f9379e1',1,'HttpServer']]],
+  ['stop_121',['stop',['../classHttpServer.html#aad9c63d3f8cda248e3c87067ac3ac5a5',1,'HttpServer']]]
 ];

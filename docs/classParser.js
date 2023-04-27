@@ -2,7 +2,7 @@ var classParser =
 [
     [ "Parser", "classParser.html#afdb0f887a68b3798fff6f302d0788dac", null ],
     [ "~Parser", "classParser.html#a3e658b5917a93a3ef648050d060e3a93", null ],
-    [ "contextSwitchCase", "classParser.html#a01480431569484f652e4a3fb4c38975b", null ],
+    [ "contextSwitchCase", "classParser.html#a8d71a164fcae55af0a65720eb8f59852", null ],
     [ "getSetting", "classParser.html#ac828b8836205819d67edb61f78f0e354", null ],
     [ "initSettings", "classParser.html#ae76473bd7ac12e0671da1354b24e44a0", null ],
     [ "retrievePort", "classParser.html#a32db756a819d2d0454071100f469805d", null ],

@@ -91,105 +91,116 @@ $(document).ready(function(){initNavTree('Test_8hpp_source.html',''); initResiza
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">pragma</span> <span class="preprocessor">once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#</span> <span class="preprocessor">include</span> <a class="code" href="config_8hpp.html" title="Configuration options for the HTTP server:">&quot;config.hpp&quot;</a></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;sys/socket.h&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;fcntl.h&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">fstream</span><span class="preprocessor">&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">sstream</span><span class="preprocessor">&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">cstring</span><span class="preprocessor">&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">using</span> std::memset;</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">stdlib</span><span class="preprocessor">.</span><span class="preprocessor">h</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">cstring</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">fstream</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">sstream</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;fcntl.h&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;sys/socket.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#</span><span class="preprocessor">include</span> <a class="code" href="webserv_8hpp.html">&quot;webserv.hpp&quot;</a></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keywordtype">bool</span> setBlocking(<span class="keywordtype">int</span> fd, <span class="keywordtype">bool</span> blocking) {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordflow">if</span> (fd &lt; 0) {<span class="keywordflow">return</span> <span class="keyword">false</span>;}</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">int</span> flags = fcntl(fd, F_GETFL, 0);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordflow">if</span> (flags == -1) {<span class="keywordflow">return</span> <span class="keyword">false</span>;}</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    flags = blocking ? (flags &amp; ~O_NONBLOCK) : (flags | O_NONBLOCK);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordflow">return</span> (fcntl(fd, F_SETFL, flags) == 0) ? <span class="keyword">true</span> : <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classTest.html">   21</a></span>&#160;<span class="keyword">class</span> <a class="code" href="classTest.html">Test</a> {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    Test() {</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordtype">int</span> server_fd;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keyword">struct</span> sockaddr_in address;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordtype">int</span> addrlen = <span class="keyword">sizeof</span>(address);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">int</span> port = (httpConfig<a class="code" href="structHttpConfig.html#af3c802628373bf70e0436c31c3dc2ef3">.</a><a class="code" href="structHttpConfig.html#af3c802628373bf70e0436c31c3dc2ef3">servers</a>.back())<a class="code" href="structServerConfig.html#a3482ecaab23f836b640e61349d648c62">.</a><a class="code" href="structServerConfig.html#a3482ecaab23f836b640e61349d648c62">listen</a>.second;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="comment">//const int port = 8080;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordflow">if</span> ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            perror(<span class="stringliteral">&quot;in socker&quot;</span>);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            exit(EXIT_FAILURE);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        }</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordtype">int</span> opt = 1;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">if</span> (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &amp;opt, <span class="keyword">sizeof</span>(opt)) &lt; 0)</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            perror(<span class="stringliteral">&quot;setsockopt&quot;</span>);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">using</span> std::memset;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keywordtype">bool</span> setBlocking(<span class="keywordtype">int</span> fd, <span class="keywordtype">bool</span> blocking) {</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordflow">if</span> (fd &lt; 0) {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    }</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">int</span> flags = fcntl(fd, F_GETFL, 0);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordflow">if</span> (flags == -1) {</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    }</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    flags = blocking ? (flags &amp; ~O_NONBLOCK) : (flags | O_NONBLOCK);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> (fcntl(fd, F_SETFL, flags) == 0) ? <span class="keyword">true</span> : <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classTest.html">   27</a></span>&#160;<span class="keyword">class</span> <a class="code" href="classTest.html">Test</a> {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;   <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classTest.html#a99f2bbfac6c95612322b0f10e607ebe5">   29</a></span>&#160;    <a class="code" href="classTest.html#a99f2bbfac6c95612322b0f10e607ebe5">Test</a>() {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordtype">int</span>                server_fd;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keyword">struct</span> sockaddr_in address;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">int</span>                addrlen = <span class="keyword">sizeof</span>(address);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">int</span>          port    = (httpConfig.servers.back()).listen.second;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="comment">// const int port = 8080;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">if</span> ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            perror(<span class="stringliteral">&quot;in socker&quot;</span>);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            exit(EXIT_FAILURE);</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        }</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        address.sin_family = AF_INET;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        address.sin_addr.s_addr = INADDR_ANY;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        address.sin_port = htons(port);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        memset(address.sin_zero, <span class="stringliteral">&#39;\0&#39;</span>, <span class="keyword">sizeof</span>(address.sin_zero));</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordtype">int</span> opt = 1;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">if</span> (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &amp;opt, <span class="keyword">sizeof</span>(opt)) &lt;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            0) {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            perror(<span class="stringliteral">&quot;setsockopt&quot;</span>);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            exit(EXIT_FAILURE);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        }</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">if</span> (bind(server_fd, (<span class="keyword">struct</span> sockaddr *)&amp;address, <span class="keyword">sizeof</span>(address)) &lt; 0) {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            perror(<span class="stringliteral">&quot;Bind failed&quot;</span>);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            exit(EXIT_FAILURE);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        }</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">if</span> (listen(server_fd, 10) &lt; 0) {</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            perror(<span class="stringliteral">&quot;In listen&quot;</span>);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            exit(EXIT_FAILURE);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordtype">int</span> new_socket;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">while</span> (1) {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="keywordflow">if</span> ((new_socket = accept(server_fd, (<span class="keyword">struct</span> sockaddr *)&amp;address, (socklen_t*)&amp;addrlen)) &lt; 0) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                perror(<span class="stringliteral">&quot;In accept&quot;</span>);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                exit(EXIT_FAILURE);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <span class="keywordtype">char</span> buffer[30000] = {0};</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordtype">long</span> valread = read(new_socket, buffer, 30000);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordflow">if</span> (valread &lt; 0) {}</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            std::cout &lt;&lt; buffer &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="comment">// open and read the file</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            std::string request(buffer);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            std::string resource;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            std::istringstream iss(request);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            std::string line;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            std::getline(iss, line);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keywordflow">if</span> (line.find(<span class="stringliteral">&quot;GET&quot;</span>) != std::string::npos) {</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                size_t start = line.find_first_of(<span class="stringliteral">&quot; &quot;</span>) + 1;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                size_t end = line.find_last_of(<span class="stringliteral">&quot; &quot;</span>) - 1;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                resource = line.substr(start, end - start + 1);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            std::cout &lt;&lt; resource &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            std::ifstream file;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keywordflow">if</span> (resource.compare(<span class="stringliteral">&quot;/&quot;</span>) == 0) {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                file.open(<span class="stringliteral">&quot;docs/_site/index.html&quot;</span>);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <span class="keywordflow">else</span>  {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                file.open(<span class="stringliteral">&quot;docs/_site&quot;</span> + resource);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        address.sin_family      = AF_INET;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        address.sin_addr.s_addr = INADDR_ANY;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        address.sin_port        = htons(port);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        memset(address.sin_zero, <span class="stringliteral">&#39;\0&#39;</span>, <span class="keyword">sizeof</span>(address.sin_zero));</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordflow">if</span> (bind(server_fd, (<span class="keyword">struct</span> sockaddr *)&amp;address, <span class="keyword">sizeof</span>(address)) &lt; 0) {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            perror(<span class="stringliteral">&quot;Bind failed&quot;</span>);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            exit(EXIT_FAILURE);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        }</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">if</span> (listen(server_fd, 10) &lt; 0) {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            perror(<span class="stringliteral">&quot;In listen&quot;</span>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            exit(EXIT_FAILURE);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">int</span> new_socket;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordflow">while</span> (1) {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordflow">if</span> ((new_socket = accept(server_fd, (<span class="keyword">struct</span> sockaddr *)&amp;address,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                                     (socklen_t *)&amp;addrlen)) &lt; 0) {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                perror(<span class="stringliteral">&quot;In accept&quot;</span>);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                exit(EXIT_FAILURE);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="keywordtype">char</span> buffer[30000] = {0};</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keywordtype">long</span> valread       = read(new_socket, buffer, 30000);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="keywordflow">if</span> (valread &lt; 0) {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            std::cout &lt;&lt; buffer &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <span class="comment">// open and read the file</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            std::string        request(buffer);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            std::string        resource;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            std::istringstream iss(request);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            std::string        line;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            std::getline(iss, line);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keywordflow">if</span> (line.find(<span class="stringliteral">&quot;GET&quot;</span>) != std::string::npos) {</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                size_t start = line.find_first_of(<span class="stringliteral">&quot; &quot;</span>) + 1;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                size_t end   = line.find_last_of(<span class="stringliteral">&quot; &quot;</span>) - 1;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                resource     = line.substr(start, end - start + 1);</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            }</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            std::stringstream file_buffer;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            file_buffer &lt;&lt; file.rdbuf();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            file.close();</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            std::string file_contents = file_buffer.str();</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            setBlocking(new_socket, <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            std::string response = <span class="stringliteral">&quot;HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: &quot;</span> + std::to_string(file_contents.size()) + <span class="stringliteral">&quot;\r\n\r\n&quot;</span> + file_contents + <span class="stringliteral">&quot;\r\n&quot;</span>;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="comment">//write(new_socket, response.c_str(), response.size());</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            send(new_socket, response.c_str(), response.size(), 0);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="comment">//setBlocking(new_socket, false);</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            close(new_socket);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            file_buffer.clear();</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        close(server_fd);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;};</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            std::cout &lt;&lt; resource &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            std::ifstream file;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <span class="keywordflow">if</span> (resource.compare(<span class="stringliteral">&quot;/&quot;</span>) == 0) {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                file.open(<span class="stringliteral">&quot;docs/_site/index.html&quot;</span>);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            } <span class="keywordflow">else</span> { <span class="comment">/** @todo this conversion is not possible */</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                file.open(<span class="stringliteral">&quot;docs/_site&quot;</span> + resource);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            std::stringstream file_buffer;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            file_buffer &lt;&lt; file.rdbuf();</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            file.close();</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            std::string file_contents = file_buffer.str();</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            setBlocking(new_socket, <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <span class="comment">/** @todo to_string in C++11 */</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            std::string response =</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                <span class="stringliteral">&quot;HTTP/1.1 200 OK\r\nContent-Type: &quot;</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                <span class="stringliteral">&quot;text/html\r\nContent-Length: &quot;</span> +</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                std::to_string(file_contents.size()) + <span class="stringliteral">&quot;\r\n\r\n&quot;</span> +</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                file_contents + <span class="stringliteral">&quot;\r\n&quot;</span>;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="comment">// write(new_socket, response.c_str(), response.size());</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            send(new_socket, response.c_str(), response.size(), 0);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="comment">// setBlocking(new_socket, false);</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            close(new_socket);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            file_buffer.clear();</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        close(server_fd);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;   <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;};</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
