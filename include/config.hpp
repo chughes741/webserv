@@ -176,7 +176,7 @@ struct ServerConfig {
 struct HttpConfig {
     /** Constructor, initializes to default values */
     HttpConfig()
-        : servers(),
+        : servers(1),
           error_page(404, ""),
           error_log("error.log"),
           root("html"),
