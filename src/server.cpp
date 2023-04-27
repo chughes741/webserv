@@ -30,7 +30,9 @@ extern HttpConfig httpConfig;
 Server::~Server() {
 }
 
-HttpServer::HttpServer() {
+HttpServer::HttpServer(HttpConfig httpConfig) {
+    config_ = httpConfig;
+
     // Create a listener
 #ifdef __APPLE__
     listener_ = new KqueueEventListener();
@@ -47,8 +49,8 @@ HttpServer::~HttpServer() throw() {
 void HttpServer::start() {
     // Create a socket for each server in the config
     Socket* new_socket;
-    for (vector<ServerConfig>::iterator it = httpConfig.servers.begin();
-         it != httpConfig.servers.end(); ++it) {
+    for (vector<ServerConfig>::iterator it = config_.servers.begin();
+         it != config_.servers.end(); ++it) {
         try {
             // Create a new socket
             new_socket = new TcpSocket();

@@ -42,7 +42,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 
-#include <exception>
+#include <stdexcept>
 #include <map>
 
 using std::map;

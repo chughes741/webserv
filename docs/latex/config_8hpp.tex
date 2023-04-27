@@ -6,8 +6,7 @@ Configuration options for the HTTP server\+:
 
 
 {\ttfamily \#include \char`\"{}webserv.\+hpp\char`\"{}}\newline
-Include dependency graph for config.\+hpp\+:
-\nopagebreak
+Include dependency graph for config.\+hpp\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -89,7 +88,8 @@ struct \mbox{\hyperlink{structHttpConfig}{Http\+Config}}
 \doxysubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{structHttpConfig}{Http\+Config}} \mbox{\hyperlink{config_8hpp_a0f7c21c84382fa32de57f78ea0311931}{http\+Config}}
+\mbox{\Hypertarget{config_8hpp_a0f7c21c84382fa32de57f78ea0311931}\label{config_8hpp_a0f7c21c84382fa32de57f78ea0311931}} 
+\mbox{\hyperlink{structHttpConfig}{Http\+Config}} {\bfseries http\+Config}
 \end{DoxyCompactItemize}
 
 
@@ -111,19 +111,19 @@ Cole H.
 \end{DoxyDate}
 
 \begin{DoxyItemize}
-\item syntax\+: http \{ ... \}
+\item syntax\+: http \{ ... \} ok
 \item default\+:
 \item context\+: global
-\item syntax\+: server \{ ... \}
+\item syntax\+: server \{ ... \} ok
 \item default\+:
 \item context\+: http
-\item syntax\+: server\+\_\+name name ...;
+\item syntax\+: server\+\_\+name name ...; ok
 \item default\+: server\+\_\+name \char`\"{}\char`\"{};
 \item context\+: server
-\item syntax\+: listen \mbox{[}address\mbox{]}\mbox{[}\+:port\mbox{]};
+\item syntax\+: listen \mbox{[}address\mbox{]}\mbox{[}\+:port\mbox{]}; ok
 \item default\+: listen $\ast$\+:80;
 \item context\+: server
-\item syntax\+: location uri \{ ... \}
+\item syntax\+: location uri \{ ... \} ok
 \item default\+:
 \item context\+: server
 \item syntax\+: error\+\_\+page code ... uri;
@@ -163,7 +163,7 @@ Potential configuration options\+:
 
 HTTP headers 
 
-Definition at line 91 of file config.\+hpp.
+Definition at line 95 of file config.\+hpp.
 
 \mbox{\Hypertarget{config_8hpp_aba51915c87d64af47fb1cc59348961c9}\label{config_8hpp_aba51915c87d64af47fb1cc59348961c9}} 
 \index{config.hpp@{config.hpp}!OK@{OK}}
@@ -173,7 +173,7 @@ Definition at line 91 of file config.\+hpp.
 
 HTTP Status codes 
 
-Definition at line 76 of file config.\+hpp.
+Definition at line 80 of file config.\+hpp.
 
 \mbox{\Hypertarget{config_8hpp_aaa567395088118b7a0aec48af9278fa1}\label{config_8hpp_aaa567395088118b7a0aec48af9278fa1}} 
 \index{config.hpp@{config.hpp}!POST@{POST}}
@@ -183,18 +183,5 @@ Definition at line 76 of file config.\+hpp.
 
 HTTP methods 
 
-Definition at line 71 of file config.\+hpp.
-
-
-
-\doxysubsection{Variable Documentation}
-\mbox{\Hypertarget{config_8hpp_a0f7c21c84382fa32de57f78ea0311931}\label{config_8hpp_a0f7c21c84382fa32de57f78ea0311931}} 
-\index{config.hpp@{config.hpp}!httpConfig@{httpConfig}}
-\index{httpConfig@{httpConfig}!config.hpp@{config.hpp}}
-\doxysubsubsection{\texorpdfstring{httpConfig}{httpConfig}}
-{\footnotesize\ttfamily \mbox{\hyperlink{structHttpConfig}{Http\+Config}} http\+Config\hspace{0.3cm}{\ttfamily [extern]}}
-
-Global config object 
-
-Definition at line 12 of file main.\+cpp.
+Definition at line 75 of file config.\+hpp.
 

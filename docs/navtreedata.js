@@ -25,6 +25,13 @@
 var NAVTREE =
 [
   [ "webserv", "index.html", [
+    [ "Documentation", "index.html#autotoc_md1", null ],
+    [ "Introduction", "index.html#autotoc_md2", null ],
+    [ "Mandatory", "index.html#autotoc_md3", null ],
+    [ "Requirements", "index.html#autotoc_md4", null ],
+    [ "MacOS", "index.html#autotoc_md5", null ],
+    [ "Configuration File", "index.html#autotoc_md6", null ],
+    [ "Installation & Usage", "index.html#autotoc_md7", null ],
     [ "Todo List", "todo.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
@@ -40,7 +47,6 @@ var NAVTREE =
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [
         [ "All", "globals.html", null ],
-        [ "Variables", "globals_vars.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]

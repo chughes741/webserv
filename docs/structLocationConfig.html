@@ -134,7 +134,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Configuration options for a single location block. </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00123">123</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00127">127</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4d9d9ff50c98b379a1cbcc834abc115e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4d9d9ff50c98b379a1cbcc834abc115e">&#9670;&nbsp;</a></span>LocationConfig()</h2>
@@ -160,23 +160,23 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Constructor, initializes to default values </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00125">125</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        : <a class="code" href="structLocationConfig.html#a0d1c42f145355eaa75c554c7601551db">client_max_body_size</a>(<span class="stringliteral">&quot;1m&quot;</span>),</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;          <a class="code" href="structLocationConfig.html#a38cac2d5c54e473702acae6cd4955c27">error_page</a>(404, <span class="stringliteral">&quot;&quot;</span>),</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;          <a class="code" href="structLocationConfig.html#a13996dc3692eed3eb9e2ecb246f855dd">root</a>(<span class="stringliteral">&quot;html&quot;</span>),</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;          <a class="code" href="structLocationConfig.html#af598d3a6884a357a9fadbab6d2f57567">index_file</a>(<span class="stringliteral">&quot;index.html&quot;</span>),</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;          <a class="code" href="structLocationConfig.html#a5db69f9eb261f6a368a7c8e1acc4abb2">limit_except</a>(GET | <a class="code" href="config_8hpp.html#aaa567395088118b7a0aec48af9278fa1">POST</a> | DELETE),</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;          <a class="code" href="structLocationConfig.html#aaeaa7cdde7e9cb5d232666ea519d8d56">cgi_enabled</a>(<span class="keyword">false</span>),</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;          <a class="code" href="structLocationConfig.html#a2c60cf964254de1f6130a539950f0386">cgi_path</a>(<span class="stringliteral">&quot;&quot;</span>) {</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    }</div>
-<div class="ttc" id="aconfig_8hpp_html_aaa567395088118b7a0aec48af9278fa1"><div class="ttname"><a href="config_8hpp.html#aaa567395088118b7a0aec48af9278fa1">POST</a></div><div class="ttdeci">#define POST</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00071">config.hpp:71</a></div></div>
-<div class="ttc" id="astructLocationConfig_html_a0d1c42f145355eaa75c554c7601551db"><div class="ttname"><a href="structLocationConfig.html#a0d1c42f145355eaa75c554c7601551db">LocationConfig::client_max_body_size</a></div><div class="ttdeci">string client_max_body_size</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00135">config.hpp:135</a></div></div>
-<div class="ttc" id="astructLocationConfig_html_a13996dc3692eed3eb9e2ecb246f855dd"><div class="ttname"><a href="structLocationConfig.html#a13996dc3692eed3eb9e2ecb246f855dd">LocationConfig::root</a></div><div class="ttdeci">string root</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00137">config.hpp:137</a></div></div>
-<div class="ttc" id="astructLocationConfig_html_a2c60cf964254de1f6130a539950f0386"><div class="ttname"><a href="structLocationConfig.html#a2c60cf964254de1f6130a539950f0386">LocationConfig::cgi_path</a></div><div class="ttdeci">string cgi_path</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00141">config.hpp:141</a></div></div>
-<div class="ttc" id="astructLocationConfig_html_a38cac2d5c54e473702acae6cd4955c27"><div class="ttname"><a href="structLocationConfig.html#a38cac2d5c54e473702acae6cd4955c27">LocationConfig::error_page</a></div><div class="ttdeci">pair&lt; int, string &gt; error_page</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00136">config.hpp:136</a></div></div>
-<div class="ttc" id="astructLocationConfig_html_a5db69f9eb261f6a368a7c8e1acc4abb2"><div class="ttname"><a href="structLocationConfig.html#a5db69f9eb261f6a368a7c8e1acc4abb2">LocationConfig::limit_except</a></div><div class="ttdeci">unsigned short limit_except</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00139">config.hpp:139</a></div></div>
-<div class="ttc" id="astructLocationConfig_html_aaeaa7cdde7e9cb5d232666ea519d8d56"><div class="ttname"><a href="structLocationConfig.html#aaeaa7cdde7e9cb5d232666ea519d8d56">LocationConfig::cgi_enabled</a></div><div class="ttdeci">bool cgi_enabled</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00140">config.hpp:140</a></div></div>
-<div class="ttc" id="astructLocationConfig_html_af598d3a6884a357a9fadbab6d2f57567"><div class="ttname"><a href="structLocationConfig.html#af598d3a6884a357a9fadbab6d2f57567">LocationConfig::index_file</a></div><div class="ttdeci">string index_file</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00138">config.hpp:138</a></div></div>
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00129">129</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        : <a class="code" href="structLocationConfig.html#a0d1c42f145355eaa75c554c7601551db">client_max_body_size</a>(<span class="stringliteral">&quot;1m&quot;</span>),</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;          <a class="code" href="structLocationConfig.html#a38cac2d5c54e473702acae6cd4955c27">error_page</a>(404, <span class="stringliteral">&quot;&quot;</span>),</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;          <a class="code" href="structLocationConfig.html#a13996dc3692eed3eb9e2ecb246f855dd">root</a>(<span class="stringliteral">&quot;html&quot;</span>),</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;          <a class="code" href="structLocationConfig.html#af598d3a6884a357a9fadbab6d2f57567">index_file</a>(<span class="stringliteral">&quot;index.html&quot;</span>),</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;          <a class="code" href="structLocationConfig.html#a5db69f9eb261f6a368a7c8e1acc4abb2">limit_except</a>(GET | <a class="code" href="config_8hpp.html#aaa567395088118b7a0aec48af9278fa1">POST</a> | DELETE),</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;          <a class="code" href="structLocationConfig.html#aaeaa7cdde7e9cb5d232666ea519d8d56">cgi_enabled</a>(<span class="keyword">false</span>),</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;          <a class="code" href="structLocationConfig.html#a2c60cf964254de1f6130a539950f0386">cgi_path</a>(<span class="stringliteral">&quot;&quot;</span>) {</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    }</div>
+<div class="ttc" id="aconfig_8hpp_html_aaa567395088118b7a0aec48af9278fa1"><div class="ttname"><a href="config_8hpp.html#aaa567395088118b7a0aec48af9278fa1">POST</a></div><div class="ttdeci">#define POST</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00075">config.hpp:75</a></div></div>
+<div class="ttc" id="astructLocationConfig_html_a0d1c42f145355eaa75c554c7601551db"><div class="ttname"><a href="structLocationConfig.html#a0d1c42f145355eaa75c554c7601551db">LocationConfig::client_max_body_size</a></div><div class="ttdeci">string client_max_body_size</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00139">config.hpp:139</a></div></div>
+<div class="ttc" id="astructLocationConfig_html_a13996dc3692eed3eb9e2ecb246f855dd"><div class="ttname"><a href="structLocationConfig.html#a13996dc3692eed3eb9e2ecb246f855dd">LocationConfig::root</a></div><div class="ttdeci">string root</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00141">config.hpp:141</a></div></div>
+<div class="ttc" id="astructLocationConfig_html_a2c60cf964254de1f6130a539950f0386"><div class="ttname"><a href="structLocationConfig.html#a2c60cf964254de1f6130a539950f0386">LocationConfig::cgi_path</a></div><div class="ttdeci">string cgi_path</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00145">config.hpp:145</a></div></div>
+<div class="ttc" id="astructLocationConfig_html_a38cac2d5c54e473702acae6cd4955c27"><div class="ttname"><a href="structLocationConfig.html#a38cac2d5c54e473702acae6cd4955c27">LocationConfig::error_page</a></div><div class="ttdeci">pair&lt; int, string &gt; error_page</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00140">config.hpp:140</a></div></div>
+<div class="ttc" id="astructLocationConfig_html_a5db69f9eb261f6a368a7c8e1acc4abb2"><div class="ttname"><a href="structLocationConfig.html#a5db69f9eb261f6a368a7c8e1acc4abb2">LocationConfig::limit_except</a></div><div class="ttdeci">unsigned short limit_except</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00143">config.hpp:143</a></div></div>
+<div class="ttc" id="astructLocationConfig_html_aaeaa7cdde7e9cb5d232666ea519d8d56"><div class="ttname"><a href="structLocationConfig.html#aaeaa7cdde7e9cb5d232666ea519d8d56">LocationConfig::cgi_enabled</a></div><div class="ttdeci">bool cgi_enabled</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00144">config.hpp:144</a></div></div>
+<div class="ttc" id="astructLocationConfig_html_af598d3a6884a357a9fadbab6d2f57567"><div class="ttname"><a href="structLocationConfig.html#af598d3a6884a357a9fadbab6d2f57567">LocationConfig::index_file</a></div><div class="ttdeci">string index_file</div><div class="ttdef"><b>Definition:</b> <a href="config_8hpp_source.html#l00142">config.hpp:142</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -194,7 +194,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Enable CGI </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00140">140</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00144">144</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
 
 </div>
 </div>
@@ -211,7 +211,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Path to CGI programs </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00141">141</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00145">145</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
 
 </div>
 </div>
@@ -228,7 +228,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Maximum size of a request body </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00135">135</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00139">139</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
 
 </div>
 </div>
@@ -245,7 +245,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Default error page </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00136">136</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00140">140</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
 
 </div>
 </div>
@@ -262,7 +262,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Name of the index file </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00138">138</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00142">142</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
 
 </div>
 </div>
@@ -279,7 +279,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Allowed methods </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00139">139</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00143">143</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
 
 </div>
 </div>
@@ -296,7 +296,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Root directory for serving files </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00137">137</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00141">141</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
 
 </div>
 </div>

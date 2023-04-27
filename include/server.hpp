@@ -64,6 +64,7 @@ class Server {
     map<int, Socket*>  server_sockets_; /**< Map of server IDs to sockets */
     map<int, Session*> sessions_;       /**< Map of session IDs to sessions */
     EventListener*     listener_;       /**< Event listener for the server */
+    HttpConfig         config_;         /**< Configuration for the server */
 };
 
 /**
@@ -76,7 +77,7 @@ class HttpServer : public Server {
      *
      * @param config Configuration for the server
      */
-    HttpServer();
+    HttpServer(HttpConfig config);
     ~HttpServer() throw();
 
    private:

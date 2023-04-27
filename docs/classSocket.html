@@ -107,38 +107,23 @@ Inheritance diagram for Socket:</div>
 <area shape="rect" href="classTcpSocket.html" title="Represents a TCP socket." alt="" coords="5,80,92,107"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for Socket:</div>
-<div class="dyncontent">
-<div class="center"><img src="classSocket__coll__graph.png" border="0" usemap="#aSocket_coll__map" alt="Collaboration graph"/></div>
-<map name="aSocket_coll__map" id="aSocket_coll__map">
-<area shape="rect" title="Socket base class." alt="" coords="51,95,116,121"/>
-<area shape="rect" title=" " alt="" coords="5,5,161,32"/>
-</map>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7b36181d6700fa5c4a51a56114f0942d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSocket.html#a7b36181d6700fa5c4a51a56114f0942d">~Socket</a> ()=0</td></tr>
 <tr class="separator:a7b36181d6700fa5c4a51a56114f0942d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d202dd3b2473ea8684c061e7c1e2239"><td class="memItemLeft" align="right" valign="top"><a id="a4d202dd3b2473ea8684c061e7c1e2239"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>bind</b> (in_port_t port, in_addr_t addr)=0</td></tr>
-<tr class="separator:a4d202dd3b2473ea8684c061e7c1e2239"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4be5e9eb50f04be9050f6ce43c57de80"><td class="memItemLeft" align="right" valign="top"><a id="a4be5e9eb50f04be9050f6ce43c57de80"></a>
+virtual int&#160;</td><td class="memItemRight" valign="bottom"><b>bind</b> (string addr, int port)=0</td></tr>
+<tr class="separator:a4be5e9eb50f04be9050f6ce43c57de80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1fd6dc593be6cb4bd907083a685b11e2"><td class="memItemLeft" align="right" valign="top"><a id="a1fd6dc593be6cb4bd907083a685b11e2"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>listen</b> ()=0</td></tr>
 <tr class="separator:a1fd6dc593be6cb4bd907083a685b11e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e394c68fab8b848ac86c0d07a5c4b8b"><td class="memItemLeft" align="right" valign="top"><a id="a0e394c68fab8b848ac86c0d07a5c4b8b"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>accept</b> ()=0</td></tr>
-<tr class="separator:a0e394c68fab8b848ac86c0d07a5c4b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4795c87ecc1270eb8cff66f2fbac3660"><td class="memItemLeft" align="right" valign="top"><a id="a4795c87ecc1270eb8cff66f2fbac3660"></a>
+virtual pair&lt; int, <a class="el" href="classSession.html">Session</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>accept</b> ()=0</td></tr>
+<tr class="separator:a4795c87ecc1270eb8cff66f2fbac3660"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95b80f1181dc2b18bdc896ee7f926430"><td class="memItemLeft" align="right" valign="top"><a id="a95b80f1181dc2b18bdc896ee7f926430"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>close</b> ()=0</td></tr>
 <tr class="separator:a95b80f1181dc2b18bdc896ee7f926430"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff69d0269a78ed12dffb27df0a248684"><td class="memItemLeft" align="right" valign="top"><a id="aff69d0269a78ed12dffb27df0a248684"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>send</b> (int client, string message) const =0</td></tr>
-<tr class="separator:aff69d0269a78ed12dffb27df0a248684"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef4d1134901589dadae96129b63c4229"><td class="memItemLeft" align="right" valign="top"><a id="aef4d1134901589dadae96129b63c4229"></a>
-virtual string&#160;</td><td class="memItemRight" valign="bottom"><b>recv</b> (int client) const =0</td></tr>
-<tr class="separator:aef4d1134901589dadae96129b63c4229"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -146,13 +131,11 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a7cf176290950fc3ddda59fc43e49f2ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44059c2711bad07f9ff76ecdd3517dd4"><td class="memItemLeft" align="right" valign="top">struct sockaddr_in&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a></td></tr>
 <tr class="separator:a44059c2711bad07f9ff76ecdd3517dd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a256125f9e9cb562c1093f61f3dd86750"><td class="memItemLeft" align="right" valign="top">map&lt; int, <a class="el" href="classSession.html">Session</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSocket.html#a256125f9e9cb562c1093f61f3dd86750">sessions_</a></td></tr>
-<tr class="separator:a256125f9e9cb562c1093f61f3dd86750"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classSocket.html" title="Socket base class.">Socket</a> base class. </p>
 
-<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00054">54</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00066">66</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7b36181d6700fa5c4a51a56114f0942d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7b36181d6700fa5c4a51a56114f0942d">&#9670;&nbsp;</a></span>~Socket()</h2>
@@ -178,8 +161,8 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Used to make it a pure abstract class </p>
 
-<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00017">17</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{}</div>
+<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00043">43</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -205,32 +188,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p><a class="el" href="classServer.html" title="Base class for servers.">Server</a> address </p>
 
-<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00066">66</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a256125f9e9cb562c1093f61f3dd86750"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a256125f9e9cb562c1093f61f3dd86750">&#9670;&nbsp;</a></span>sessions_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">map&lt;int, <a class="el" href="classSession.html">Session</a>&gt; Socket::sessions_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Map of client sockets </p>
-
-<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00068">68</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00076">76</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
 
 </div>
 </div>
@@ -255,7 +213,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p><a class="el" href="classServer.html" title="Base class for servers.">Server</a> socket file descriptor </p>
 
-<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00066">66</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00076">76</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
 
 </div>
 </div>

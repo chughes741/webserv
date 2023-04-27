@@ -6,8 +6,7 @@ Defines classes for handling events.
 
 
 {\ttfamily \#include \char`\"{}events.\+hpp\char`\"{}}\newline
-Include dependency graph for events.\+cpp\+:
-\nopagebreak
+Include dependency graph for events.\+cpp\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -19,10 +18,10 @@ Include dependency graph for events.\+cpp\+:
 \doxysubsection{Detailed Description}
 Defines classes for handling events. 
 
-This file contains the implementation of the \mbox{\hyperlink{classEventLoop}{Event\+Loop}}, Kqueue\+Event\+Loop, and Epoll\+Event\+Loop classes. The \mbox{\hyperlink{classEventLoop}{Event\+Loop}} class is an abstract base class that provides an interface for creating event loops. The Kqueue\+Event\+Loop class inherits from the \mbox{\hyperlink{classEventLoop}{Event\+Loop}} class and implements an event loop that uses the kqueue system call. The Epoll\+Event\+Loop class inherits from the \mbox{\hyperlink{classEventLoop}{Event\+Loop}} class and implements an event loop that uses the epoll system call.
+This file contains the implementation of the \mbox{\hyperlink{classEventListener}{Event\+Listener}}, Kqueue\+Event\+Listener, and Epoll\+Event\+Listener classes. The \mbox{\hyperlink{classEventListener}{Event\+Listener}} class is an abstract base class that provides an interface for creating event loops. The Kqueue\+Event\+Listener class inherits from the \mbox{\hyperlink{classEventListener}{Event\+Listener}} class and implements an event loop that uses the kqueue system call. The Epoll\+Event\+Listener class inherits from the \mbox{\hyperlink{classEventListener}{Event\+Listener}} class and implements an event loop that uses the epoll system call.
 
 \begin{DoxyNote}{Note}
-The Kqueue\+Event\+Loop class is only available on Mac\+OS and the Epoll\+Event\+Loop class is only available on Linux.
+The Kqueue\+Event\+Listener class is only available on Mac\+OS and the Epoll\+Event\+Listener class is only available on Linux.
 
 This code is for educational purposes only and should not be used in production environments without extensive testing and modification.
 \end{DoxyNote}

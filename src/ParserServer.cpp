@@ -13,7 +13,7 @@ int Parser::retrievePort(string num) {
                                    num);
         }
     }
-    return (std::stoi(num));
+    return (std::stoi(num)); /** @todo std::stoi is C++11 */
 }
 
 /**

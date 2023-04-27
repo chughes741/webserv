@@ -1,6 +1,6 @@
 var hierarchy =
 [
-    [ "EventLoop", "classEventLoop.html", null ],
+    [ "EventListener", "classEventListener.html", null ],
     [ "HttpConfig", "structHttpConfig.html", null ],
     [ "LocationConfig", "structLocationConfig.html", null ],
     [ "Parser", "classParser.html", null ],
@@ -13,5 +13,6 @@ var hierarchy =
     [ "Session", "classSession.html", null ],
     [ "Socket", "classSocket.html", [
       [ "TcpSocket", "classTcpSocket.html", null ]
-    ] ]
+    ] ],
+    [ "Test", "classTest.html", null ]
 ];

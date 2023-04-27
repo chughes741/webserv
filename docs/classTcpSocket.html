@@ -111,9 +111,8 @@ Collaboration diagram for TcpSocket:</div>
 <div class="dyncontent">
 <div class="center"><img src="classTcpSocket__coll__graph.png" border="0" usemap="#aTcpSocket_coll__map" alt="Collaboration graph"/></div>
 <map name="aTcpSocket_coll__map" id="aTcpSocket_coll__map">
-<area shape="rect" title="Represents a TCP socket." alt="" coords="40,171,127,197"/>
-<area shape="rect" href="classSocket.html" title="Socket base class." alt="" coords="51,95,116,121"/>
-<area shape="rect" title=" " alt="" coords="5,5,161,32"/>
+<area shape="rect" title="Represents a TCP socket." alt="" coords="5,80,92,107"/>
+<area shape="rect" href="classSocket.html" title="Socket base class." alt="" coords="16,5,81,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -123,30 +122,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a132aa72af141d611f8bad96ba585a79f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classTcpSocket.html" title="Represents a TCP socket.">TcpSocket</a> object.  <a href="classTcpSocket.html#a132aa72af141d611f8bad96ba585a79f">More...</a><br /></td></tr>
 <tr class="separator:a132aa72af141d611f8bad96ba585a79f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c6d246451c51ac4226a9301f6711086"><td class="memItemLeft" align="right" valign="top"><a id="a4c6d246451c51ac4226a9301f6711086"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTcpSocket.html#a4c6d246451c51ac4226a9301f6711086">~TcpSocket</a> ()  throw ()</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTcpSocket.html#a4c6d246451c51ac4226a9301f6711086">~TcpSocket</a> ()</td></tr>
 <tr class="memdesc:a4c6d246451c51ac4226a9301f6711086"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy the <a class="el" href="classTcpSocket.html" title="Represents a TCP socket.">TcpSocket</a> object. <br /></td></tr>
 <tr class="separator:a4c6d246451c51ac4226a9301f6711086"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ca978acb9512ef1564a907197f6a407"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTcpSocket.html#a8ca978acb9512ef1564a907197f6a407">bind</a> (in_port_t port, in_addr_t addr)</td></tr>
-<tr class="memdesc:a8ca978acb9512ef1564a907197f6a407"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind the socket to a port and address.  <a href="classTcpSocket.html#a8ca978acb9512ef1564a907197f6a407">More...</a><br /></td></tr>
-<tr class="separator:a8ca978acb9512ef1564a907197f6a407"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d204a80b7c5dae21ee6c930db12b29d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTcpSocket.html#a7d204a80b7c5dae21ee6c930db12b29d">bind</a> (string addr, int port)</td></tr>
+<tr class="memdesc:a7d204a80b7c5dae21ee6c930db12b29d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind the socket to a port and address.  <a href="classTcpSocket.html#a7d204a80b7c5dae21ee6c930db12b29d">More...</a><br /></td></tr>
+<tr class="separator:a7d204a80b7c5dae21ee6c930db12b29d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecb504049c6d1981223fafa46f2ef40a"><td class="memItemLeft" align="right" valign="top"><a id="aecb504049c6d1981223fafa46f2ef40a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTcpSocket.html#aecb504049c6d1981223fafa46f2ef40a">listen</a> ()</td></tr>
 <tr class="memdesc:aecb504049c6d1981223fafa46f2ef40a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Listen for connections. <br /></td></tr>
 <tr class="separator:aecb504049c6d1981223fafa46f2ef40a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad496c5121ff3b27307a8960733deddb1"><td class="memItemLeft" align="right" valign="top"><a id="ad496c5121ff3b27307a8960733deddb1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTcpSocket.html#ad496c5121ff3b27307a8960733deddb1">accept</a> ()</td></tr>
-<tr class="memdesc:ad496c5121ff3b27307a8960733deddb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accept a connection and connects to it. <br /></td></tr>
-<tr class="separator:ad496c5121ff3b27307a8960733deddb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afff107566386b56fbdb2e8b0a8522378"><td class="memItemLeft" align="right" valign="top"><a id="afff107566386b56fbdb2e8b0a8522378"></a>
+pair&lt; int, <a class="el" href="classSession.html">Session</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTcpSocket.html#afff107566386b56fbdb2e8b0a8522378">accept</a> ()</td></tr>
+<tr class="memdesc:afff107566386b56fbdb2e8b0a8522378"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accept a connection and connects to it. <br /></td></tr>
+<tr class="separator:afff107566386b56fbdb2e8b0a8522378"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68f30d391495a328074eb28f5defdd7d"><td class="memItemLeft" align="right" valign="top"><a id="a68f30d391495a328074eb28f5defdd7d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTcpSocket.html#a68f30d391495a328074eb28f5defdd7d">close</a> ()</td></tr>
 <tr class="memdesc:a68f30d391495a328074eb28f5defdd7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the socket. <br /></td></tr>
 <tr class="separator:a68f30d391495a328074eb28f5defdd7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0ee9da645f2f047e5f8cbd09dfe6936"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936">send</a> (int client, string message) const</td></tr>
-<tr class="memdesc:af0ee9da645f2f047e5f8cbd09dfe6936"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls <a class="el" href="classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936" title="Calls send() on the socket.">send()</a> on the socket.  <a href="classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936">More...</a><br /></td></tr>
-<tr class="separator:af0ee9da645f2f047e5f8cbd09dfe6936"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88e31f9feb0b1f873fc6f4b5e6181afc"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc">recv</a> (int client) const</td></tr>
-<tr class="memdesc:a88e31f9feb0b1f873fc6f4b5e6181afc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls <a class="el" href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc" title="Calls recv() on the socket.">recv()</a> on the socket.  <a href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc">More...</a><br /></td></tr>
-<tr class="separator:a88e31f9feb0b1f873fc6f4b5e6181afc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classSocket"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classSocket')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classSocket.html">Socket</a></td></tr>
 <tr class="memitem:a7b36181d6700fa5c4a51a56114f0942d inherit pub_methods_classSocket"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSocket.html#a7b36181d6700fa5c4a51a56114f0942d">~Socket</a> ()=0</td></tr>
 <tr class="separator:a7b36181d6700fa5c4a51a56114f0942d inherit pub_methods_classSocket"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,13 +151,11 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a7cf176290950fc3ddda59fc43e49f2ed inherit pro_attribs_classSocket"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44059c2711bad07f9ff76ecdd3517dd4 inherit pro_attribs_classSocket"><td class="memItemLeft" align="right" valign="top">struct sockaddr_in&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a></td></tr>
 <tr class="separator:a44059c2711bad07f9ff76ecdd3517dd4 inherit pro_attribs_classSocket"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a256125f9e9cb562c1093f61f3dd86750 inherit pro_attribs_classSocket"><td class="memItemLeft" align="right" valign="top">map&lt; int, <a class="el" href="classSession.html">Session</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSocket.html#a256125f9e9cb562c1093f61f3dd86750">sessions_</a></td></tr>
-<tr class="separator:a256125f9e9cb562c1093f61f3dd86750 inherit pro_attribs_classSocket"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a TCP socket. </p>
 
-<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00074">74</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00083">83</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a132aa72af141d611f8bad96ba585a79f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a132aa72af141d611f8bad96ba585a79f">&#9670;&nbsp;</a></span>TcpSocket()</h2>
@@ -182,25 +173,23 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Construct a new <a class="el" href="classTcpSocket.html" title="Represents a TCP socket.">TcpSocket</a> object. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>flags (isntead of 0) - these should be in setsockopt() SOCK_NONBLOCK? There's no define for it, O_NONBLOCK is a flag for open() SO_DEBUG might be useful SO_REUSEADDR might be useful SO_KEEPALIVE might be useful </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000012">Todo:</a></b></dt><dd>flags (isntead of 0) - these should be in setsockopt() SOCK_NONBLOCK? There's no define for it, O_NONBLOCK is a flag for open() SO_DEBUG might be useful SO_REUSEADDR might be useful SO_KEEPALIVE might be useful </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00019">19</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                     {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="classSocket.html#a256125f9e9cb562c1093f61f3dd86750">sessions_</a> = map&lt;int, Session&gt;();</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="classSocket.html#a7cf176290950fc3ddda59fc43e49f2ed">sockfd_</a> = socket(AF_INET, SOCK_STREAM, 0);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="classSocket.html#a7cf176290950fc3ddda59fc43e49f2ed">sockfd_</a> == -1) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordflow">throw</span> runtime_error(<span class="stringliteral">&quot;Error: Failed to create socket&quot;</span>);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    }</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
-<div class="ttc" id="aclassSocket_html_a256125f9e9cb562c1093f61f3dd86750"><div class="ttname"><a href="classSocket.html#a256125f9e9cb562c1093f61f3dd86750">Socket::sessions_</a></div><div class="ttdeci">map&lt; int, Session &gt; sessions_</div><div class="ttdef"><b>Definition:</b> <a href="socket_8hpp_source.html#l00068">socket.hpp:68</a></div></div>
-<div class="ttc" id="aclassSocket_html_a7cf176290950fc3ddda59fc43e49f2ed"><div class="ttname"><a href="classSocket.html#a7cf176290950fc3ddda59fc43e49f2ed">Socket::sockfd_</a></div><div class="ttdeci">int sockfd_</div><div class="ttdef"><b>Definition:</b> <a href="socket_8hpp_source.html#l00066">socket.hpp:66</a></div></div>
+<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00045">45</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                     {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="classSocket.html#a7cf176290950fc3ddda59fc43e49f2ed">sockfd_</a> = socket(AF_INET, SOCK_STREAM, 0);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="classSocket.html#a7cf176290950fc3ddda59fc43e49f2ed">sockfd_</a> == -1) {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">throw</span> runtime_error(<span class="stringliteral">&quot;Error: Failed to create socket&quot;</span>);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
+<div class="ttc" id="aclassSocket_html_a7cf176290950fc3ddda59fc43e49f2ed"><div class="ttname"><a href="classSocket.html#a7cf176290950fc3ddda59fc43e49f2ed">Socket::sockfd_</a></div><div class="ttdeci">int sockfd_</div><div class="ttdef"><b>Definition:</b> <a href="socket_8hpp_source.html#l00076">socket.hpp:76</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8ca978acb9512ef1564a907197f6a407"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ca978acb9512ef1564a907197f6a407">&#9670;&nbsp;</a></span>bind()</h2>
+<a id="a7d204a80b7c5dae21ee6c930db12b29d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d204a80b7c5dae21ee6c930db12b29d">&#9670;&nbsp;</a></span>bind()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -209,16 +198,16 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void TcpSocket::bind </td>
+          <td class="memname">int TcpSocket::bind </td>
           <td>(</td>
-          <td class="paramtype">in_port_t&#160;</td>
-          <td class="paramname"><em>port</em>, </td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>addr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">in_addr_t&#160;</td>
-          <td class="paramname"><em>addr</em>&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>port</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -236,140 +225,29 @@ Additional Inherited Members</h2></td></tr>
 <p>Bind the socket to a port and address. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">port</td><td>port to bind to </td></tr>
     <tr><td class="paramname">addr</td><td>address to bind to </td></tr>
+    <tr><td class="paramname">port</td><td>port to bind to </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000013">Todo:</a></b></dt><dd>stoi is C++11 </dd></dl>
 
 <p>Implements <a class="el" href="classSocket.html">Socket</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00037">37</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                                                   {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a>.sin_family      = AF_INET;     <span class="comment">// IPv4</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a>.sin_port        = htons(port); <span class="comment">// Port</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a>.sin_addr.s_addr = htonl(addr); <span class="comment">// Address</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">// Binds socket to an address and port</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">if</span> (::<a class="code" href="classTcpSocket.html#a8ca978acb9512ef1564a907197f6a407">bind</a>(<a class="code" href="classSocket.html#a7cf176290950fc3ddda59fc43e49f2ed">sockfd_</a>, (<span class="keyword">struct</span> sockaddr*)&amp;<a class="code" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a>, <span class="keyword">sizeof</span>(<a class="code" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a>)) == -1) {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordflow">throw</span> runtime_error(<span class="stringliteral">&quot;Error: Failed to bind socket&quot;</span>);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
-<div class="ttc" id="aclassSocket_html_a44059c2711bad07f9ff76ecdd3517dd4"><div class="ttname"><a href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">Socket::addr_in_</a></div><div class="ttdeci">struct sockaddr_in addr_in_</div><div class="ttdef"><b>Definition:</b> <a href="socket_8hpp_source.html#l00066">socket.hpp:67</a></div></div>
-<div class="ttc" id="aclassTcpSocket_html_a8ca978acb9512ef1564a907197f6a407"><div class="ttname"><a href="classTcpSocket.html#a8ca978acb9512ef1564a907197f6a407">TcpSocket::bind</a></div><div class="ttdeci">void bind(in_port_t port, in_addr_t addr)</div><div class="ttdoc">Bind the socket to a port and address.</div><div class="ttdef"><b>Definition:</b> <a href="socket_8cpp_source.html#l00037">socket.cpp:37</a></div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a88e31f9feb0b1f873fc6f4b5e6181afc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88e31f9feb0b1f873fc6f4b5e6181afc">&#9670;&nbsp;</a></span>recv()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">string TcpSocket::recv </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>client</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calls <a class="el" href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc" title="Calls recv() on the socket.">recv()</a> on the socket. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">client</td><td>client to receive from </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>string - message received </dd></dl>
-
-<p>Implements <a class="el" href="classSocket.html">Socket</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00083">83</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                                     {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">string</span> buffer_str;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">char</span>   buffer[READ_BUFFER_SIZE];</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">int</span>    bytes_received = <a class="code" href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc">::recv</a>(port, buffer, READ_BUFFER_SIZE, 0);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">while</span> (bytes_received &gt; 0) {</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        buffer_str.append(buffer, bytes_received);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        bytes_received = <a class="code" href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc">::recv</a>(port, buffer, READ_BUFFER_SIZE, 0);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    }</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">if</span> (bytes_received == -1) {</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">throw</span> runtime_error(<span class="stringliteral">&quot;Error: Failed to receive from socket&quot;</span>);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">return</span> buffer_str;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
-<div class="ttc" id="aclassTcpSocket_html_a88e31f9feb0b1f873fc6f4b5e6181afc"><div class="ttname"><a href="classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc">TcpSocket::recv</a></div><div class="ttdeci">string recv(int client) const</div><div class="ttdoc">Calls recv() on the socket.</div><div class="ttdef"><b>Definition:</b> <a href="socket_8cpp_source.html#l00083">socket.cpp:83</a></div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="af0ee9da645f2f047e5f8cbd09dfe6936"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0ee9da645f2f047e5f8cbd09dfe6936">&#9670;&nbsp;</a></span>send()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TcpSocket::send </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>client</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>message</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calls <a class="el" href="classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936" title="Calls send() on the socket.">send()</a> on the socket. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">client</td><td>client to send to </td></tr>
-    <tr><td class="paramname">buffer</td><td>message to send </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="classSocket.html">Socket</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00075">75</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                                                  {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    ssize_t bytes_sent =</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <a class="code" href="classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936">::send</a>(port, buffer.c_str(), buffer.length(), MSG_DONTWAIT);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">if</span> (bytes_sent == -1) {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">throw</span> runtime_error(<span class="stringliteral">&quot;Error: Failed to send to socket&quot;</span>);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;}</div>
-<div class="ttc" id="aclassTcpSocket_html_af0ee9da645f2f047e5f8cbd09dfe6936"><div class="ttname"><a href="classTcpSocket.html#af0ee9da645f2f047e5f8cbd09dfe6936">TcpSocket::send</a></div><div class="ttdeci">void send(int client, string message) const</div><div class="ttdoc">Calls send() on the socket.</div><div class="ttdef"><b>Definition:</b> <a href="socket_8cpp_source.html#l00075">socket.cpp:75</a></div></div>
+<p class="definition">Definition at line <a class="el" href="socket_8cpp_source.html#l00062">62</a> of file <a class="el" href="socket_8cpp_source.html">socket.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                                         {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a>.sin_family      = AF_INET;     <span class="comment">// IPv4</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a>.sin_port        = htons(port); <span class="comment">// Port</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a>.sin_addr.s_addr = htonl(stoi(addr)); <span class="comment">// Addres</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment"></span>    <span class="comment">// Binds socket to an address and port</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">if</span> (::<a class="code" href="classTcpSocket.html#a7d204a80b7c5dae21ee6c930db12b29d">bind</a>(<a class="code" href="classSocket.html#a7cf176290950fc3ddda59fc43e49f2ed">sockfd_</a>, (<span class="keyword">struct</span> sockaddr*)&amp;<a class="code" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a>, <span class="keyword">sizeof</span>(<a class="code" href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">addr_in_</a>)) == -1) {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">throw</span> runtime_error(<span class="stringliteral">&quot;Error: Failed to bind socket&quot;</span>);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSocket.html#a7cf176290950fc3ddda59fc43e49f2ed">sockfd_</a>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
+<div class="ttc" id="aclassSocket_html_a44059c2711bad07f9ff76ecdd3517dd4"><div class="ttname"><a href="classSocket.html#a44059c2711bad07f9ff76ecdd3517dd4">Socket::addr_in_</a></div><div class="ttdeci">struct sockaddr_in addr_in_</div><div class="ttdef"><b>Definition:</b> <a href="socket_8hpp_source.html#l00076">socket.hpp:77</a></div></div>
+<div class="ttc" id="aclassTcpSocket_html_a7d204a80b7c5dae21ee6c930db12b29d"><div class="ttname"><a href="classTcpSocket.html#a7d204a80b7c5dae21ee6c930db12b29d">TcpSocket::bind</a></div><div class="ttdeci">int bind(string addr, int port)</div><div class="ttdoc">Bind the socket to a port and address.</div><div class="ttdef"><b>Definition:</b> <a href="socket_8cpp_source.html#l00062">socket.cpp:62</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

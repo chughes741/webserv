@@ -1,6 +1,6 @@
 var annotated_dup =
 [
-    [ "EventLoop", "classEventLoop.html", "classEventLoop" ],
+    [ "EventListener", "classEventListener.html", "classEventListener" ],
     [ "HttpConfig", "structHttpConfig.html", "structHttpConfig" ],
     [ "HttpServer", "classHttpServer.html", "classHttpServer" ],
     [ "LocationConfig", "structLocationConfig.html", "structLocationConfig" ],
@@ -11,5 +11,6 @@ var annotated_dup =
     [ "ServerConfig", "structServerConfig.html", "structServerConfig" ],
     [ "Session", "classSession.html", "classSession" ],
     [ "Socket", "classSocket.html", "classSocket" ],
-    [ "TcpSocket", "classTcpSocket.html", "classTcpSocket" ]
+    [ "TcpSocket", "classTcpSocket.html", "classTcpSocket" ],
+    [ "Test", "classTest.html", "classTest" ]
 ];

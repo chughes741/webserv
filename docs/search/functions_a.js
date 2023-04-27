@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['_7esocket_113',['~Socket',['../classSocket.html#a7b36181d6700fa5c4a51a56114f0942d',1,'Socket']]],
-  ['_7etcpsocket_114',['~TcpSocket',['../classTcpSocket.html#a4c6d246451c51ac4226a9301f6711086',1,'TcpSocket']]]
+  ['_7esocket_116',['~Socket',['../classSocket.html#a7b36181d6700fa5c4a51a56114f0942d',1,'Socket']]],
+  ['_7etcpsocket_117',['~TcpSocket',['../classTcpSocket.html#a4c6d246451c51ac4226a9301f6711086',1,'TcpSocket']]]
 ];

@@ -6,6 +6,9 @@
 
 #include <fstream>
 #include <sstream>
+#include <cstring>
+
+using std::memset;
 
 bool setBlocking(int fd, bool blocking) {
 	if (fd < 0) {return false;}

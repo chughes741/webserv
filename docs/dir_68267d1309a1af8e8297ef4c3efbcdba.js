@@ -9,6 +9,6 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "ParserHttp.cpp", "ParserHttp_8cpp_source.html", null ],
     [ "ParserLocation.cpp", "ParserLocation_8cpp_source.html", null ],
     [ "ParserServer.cpp", "ParserServer_8cpp_source.html", null ],
-    [ "server.cpp", "server_8cpp.html", null ],
+    [ "server.cpp", "server_8cpp.html", "server_8cpp" ],
     [ "socket.cpp", "socket_8cpp.html", null ]
 ];

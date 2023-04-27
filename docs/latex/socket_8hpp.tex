@@ -5,17 +5,16 @@
 Classes for using sockets as defined in RFC 793.  
 
 
-{\ttfamily \#include $<$iostream$>$}\newline
-{\ttfamily \#include $<$stdio.\+h$>$}\newline
-{\ttfamily \#include $<$unistd.\+h$>$}\newline
 {\ttfamily \#include $<$arpa/inet.\+h$>$}\newline
 {\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
 {\ttfamily \#include $<$sys/socket.\+h$>$}\newline
 {\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
 {\ttfamily \#include \char`\"{}events.\+hpp\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}webserv.\+hpp\char`\"{}}\newline
-Include dependency graph for socket.\+hpp\+:
-\nopagebreak
+Include dependency graph for socket.\+hpp\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -34,7 +33,7 @@ This graph shows which files directly or indirectly include this file\+:
 \begin{DoxyCompactItemize}
 \item 
 class \mbox{\hyperlink{classSession}{Session}}
-\begin{DoxyCompactList}\small\item\em Represents a TCP client connection. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Represents a TCP client session. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classSocket}{Socket}}
 \begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classSocket}{Socket}} base class. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classTcpSocket}{Tcp\+Socket}}

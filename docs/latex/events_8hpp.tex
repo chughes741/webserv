@@ -7,9 +7,9 @@ Declares classes for handling events on sockets using the kqueue or epoll system
 
 {\ttfamily \#include $<$sys/time.\+h$>$}\newline
 {\ttfamily \#include $<$sys/types.\+h$>$}\newline
-{\ttfamily \#include \char`\"{}webserv.\+hpp\char`\"{}}\newline
-Include dependency graph for events.\+hpp\+:
-\nopagebreak
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+Include dependency graph for events.\+hpp\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -27,19 +27,19 @@ This graph shows which files directly or indirectly include this file\+:
 \doxysubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-class \mbox{\hyperlink{classEventLoop}{Event\+Loop}}
+class \mbox{\hyperlink{classEventListener}{Event\+Listener}}
 \begin{DoxyCompactList}\small\item\em Abstract class for handling event. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Declares classes for handling events on sockets using the kqueue or epoll system calls. 
 
-This file contains the declaration of the abstract \mbox{\hyperlink{classEventLoop}{Event\+Loop}} class and its two derived classes, Kqueue\+Event\+Loop and Epoll\+Event\+Loop. The \mbox{\hyperlink{classEventLoop}{Event\+Loop}} class provides an interface for handling events on sockets, such as registering and unregistering sockets for read and write events. The Kqueue\+Event\+Loop and Epoll\+Event\+Loop classes inherit from the \mbox{\hyperlink{classEventLoop}{Event\+Loop}} class and implement the event handling functionality using the kqueue and epoll system calls, respectively.
+This file contains the declaration of the abstract \mbox{\hyperlink{classEventListener}{Event\+Listener}} class and its two derived classes, Kqueue\+Event\+Listener and Epoll\+Event\+Listener. The \mbox{\hyperlink{classEventListener}{Event\+Listener}} class provides an interface for handling events on sockets, such as register\+Eventing and unregister\+Eventing sockets for read and write events. The Kqueue\+Event\+Listener and Epoll\+Event\+Listener classes inherit from the \mbox{\hyperlink{classEventListener}{Event\+Listener}} class and implement the event handling functionality using the kqueue and epoll system calls, respectively.
 
-To use the \mbox{\hyperlink{classEventLoop}{Event\+Loop}} classes, you must create an instance of one of the derived classes, register the sockets you want to monitor using the register\+Socket() method, and then call the start() method to begin monitoring events on the registered sockets. Once you have received an event, you can use the handle\+Event() method to process the event and take appropriate action, such as reading or writing data to the socket.
+To use the \mbox{\hyperlink{classEventListener}{Event\+Listener}} classes, you must create an instance of one of the derived classes, register\+Event the sockets you want to monitor using the register\+Event\+Socket() method, and then call the start() method to begin monitoring events on the register\+Evented sockets. Once you have received an event, you can use the handle\+Event() method to process the event and take appropriate action, such as reading or writing data to the socket.
 
 \begin{DoxyNote}{Note}
-The Kqueue\+Event\+Loop class is used on Mac\+OS, and the Epoll\+Event\+Loop class is used on Linux.
+The Kqueue\+Event\+Listener class is used on Mac\+OS, and the Epoll\+Event\+Listener class is used on Linux.
 
 This code is for educational purposes only and should not be used in production environments without extensive testing and modification.
 \end{DoxyNote}
