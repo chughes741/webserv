@@ -1,3 +1,20 @@
+/**
+ * @file ParserLocation.cpp
+ * @brief Class implementation for parsing the config file
+ *
+ * This file contains the class implementation for parsing the config file.
+ *
+ * @note This code is for educational purposes only and should not be used in
+ * production environments without extensive testing and modification.
+ *
+ * @version 0.1
+ * @date 2021-04-19
+ * @authors
+ *  - Francis L.
+ *  - Marc-André L.
+ *  - Cole H.
+ */
+
 #include "Parser.hpp"
 
 void Parser::setFastCGI(string &uri) {
@@ -31,9 +48,6 @@ string Parser::setLocationUri() {
     return path;
 }
 
-/**
- * @brief 		Set http setting
- */
 bool Parser::setLocationSetting() {
     string List[] = {"path:", "fastcgi:"};
     string uri    = setLocationUri();

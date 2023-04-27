@@ -1,3 +1,20 @@
+/**
+ * @file main.cpp
+ * @brief Main function
+ *
+ * This file contains the main function for the web server. It parses the
+ * configuration file, creates an HttpServer object, and then runs the server.
+ *
+ * @note This code is for educational purposes only and should not be used in
+ * production environments without extensive testing and modification.
+ *
+ * @version 0.1
+ * @date 2023-04-19
+ * @authors
+ *  - Francis L.
+ *  - Marc-André L.
+ *  - Cole H.
+ */
 
 #include <stdlib.h>
 

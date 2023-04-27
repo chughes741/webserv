@@ -1,3 +1,20 @@
+/**
+ * @file ParserGlobal.cpp
+ * @brief Class implementation for parsing the config file
+ *
+ * This file contains the class implementation for parsing the config file.
+ *
+ * @note This code is for educational purposes only and should not be used in
+ * production environments without extensive testing and modification.
+ *
+ * @version 0.1
+ * @date 2021-04-19
+ * @authors
+ *  - Francis L.
+ *  - Marc-André L.
+ *  - Cole H.
+ */
+
 #include "Parser.hpp"
 
 bool setWorkerProcessses(string num) {
@@ -6,10 +23,6 @@ bool setWorkerProcessses(string num) {
     return true;
 }
 
-/**
- * @brief 		Set global context settings
- * @param it	[in,out] Iterator of tokens
- */
 bool Parser::setGlobalSetting() {
     std::cout << "Global: ";
     string List[] = {"worker_processes", "error_log", "pid"};

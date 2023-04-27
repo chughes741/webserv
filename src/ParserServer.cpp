@@ -1,14 +1,25 @@
+/**
+ * @file ParserServer.cpp
+ * @brief Class implementation for parsing the config file
+ *
+ * This file contains the class implementation for parsing the config file.
+ *
+ * @note This code is for educational purposes only and should not be used in
+ * production environments without extensive testing and modification.
+ *
+ * @version 0.1
+ * @date 2021-04-19
+ * @authors
+ *  - Francis L.
+ *  - Marc-André L.
+ *  - Cole H.
+ */
+
 #include "Parser.hpp"
 
 using std::atoi;
 using std::logic_error;
 
-/**
- * @brief validate the value for port setting in listen
- *
- * @param num the port value in string format
- * @return int if port value is all integer
- */
 int Parser::retrievePort(string num) {
     for (size_t i = 0; i < num.length(); ++i) {
         if (!isdigit(num[i])) {
@@ -18,10 +29,6 @@ int Parser::retrievePort(string num) {
     return (atoi(num.c_str()));
 }
 
-/**
- * @brief Transform the token into the listening port of the server
- * @return true or throw an exception
- */
 bool Parser::setListen() {
     validateFirstToken("server_name");
     string num = *it;
@@ -38,11 +45,6 @@ bool Parser::setListen() {
     return (true);
 }
 
-/**
- * @brief Set the server name
- *
- * @return true or throw invalid_argument
- */
 bool Parser::setServerName() {
     validateFirstToken("server_name");
     (httpConfig.servers.back()).server_name = *it;
@@ -68,9 +70,6 @@ bool Parser::setRoot() {
     return (true);
 }
 
-/**
- * @brief 		Set server setting
- */
 bool Parser::setServerSetting() {
     std::cout << "Server: ";
     string List[] = {"listen", "server_name", "access_log", "root", "location"};

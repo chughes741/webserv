@@ -1,11 +1,19 @@
 /**
  * @file socket.cpp
- * @author Francis L.
- * @author Marc-André L.
- * @author Cole H.
- * @version 0.1
- * @date 2023-04-19
  * @brief Class implementations for using sockets as defined in RFC 793
+ *
+ * This file contains the class implementations for using sockets as defined in
+ * RFC 793.
+ *
+ * @note This code is for educational purposes only and should not be used in
+ * production environments without extensive testing and modification.
+ *
+ * @version 0.1
+ * @date 2021-04-19
+ * @authors
+ *  - Francis L.
+ *  - Marc-André L.
+ *  - Cole H.
  */
 
 #include "socket.hpp"

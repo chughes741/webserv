@@ -1,25 +1,26 @@
+/**
+ * @file Parser.cpp
+ * @brief Class implementation for parsing the config file
+ *
+ * This file contains the class implementation for parsing the config file.
+ *
+ * @note This code is for educational purposes only and should not be used in
+ * production environments without extensive testing and modification.
+ *
+ * @version 0.1
+ * @date 2021-04-19
+ * @authors
+ *  - Francis L.
+ *  - Marc-André L.
+ *  - Cole H.
+ */
+
 #include "Parser.hpp"
 
 using std::find;
 
-//**************************************************************************//
-//                              Constructors                                //
-//**************************************************************************//
-
 Parser::Parser(HttpConfig &httpConfig) : context(1), httpConfig(httpConfig) {
 }
-
-//**************************************************************************//
-//                                 Setters                                  //
-//**************************************************************************//
-
-//**************************************************************************//
-//                                 Getters                                  //
-//**************************************************************************//
-
-//**************************************************************************//
-//                             Member functions                             //
-//**************************************************************************//
 
 void Parser::validateFirstToken(string setting) {
     if (*(++it) == ";") {
@@ -34,12 +35,6 @@ void Parser::validateLastToken(string setting) {
     }
 }
 
-/**
- * @brief Call the appropriate context setting function
- *
- * @param context to represent which context
- * @return true or throw logic_error
- */
 bool Parser::contextSwitchCase(int context) {
     switch (context) {
         case GLOBAL:
@@ -56,13 +51,6 @@ bool Parser::contextSwitchCase(int context) {
     return true;
 }
 
-/**
- * @brief Get the Setting object
- *
- * @param settingsList		Array of settings
- * @param size 				Size of settings array
- * @return int				Index of setting in settings array
- */
 int Parser::getSetting(string settingsList[], int size) {
     vector<string>           settings(settingsList, settingsList + size);
     vector<string>::iterator settingIt =
@@ -73,10 +61,6 @@ int Parser::getSetting(string settingsList[], int size) {
     return (settingIt - settings.begin());
 }
 
-/**
- * @brief define in which context the token is
- *
- */
 bool Parser::setContext() {
     string item   = *it;
     string List[] = {"", "events", "http", "server"};
@@ -99,10 +83,6 @@ bool Parser::setContext() {
     return true;
 }
 
-/**
- * @brief  Initialize settings from token vector
- * @param tokens	[in] Vector of tokens
- */
 void Parser::initSettings() {
     it = tokens.begin();
     for (; it != tokens.end(); ++it) {
@@ -124,10 +104,6 @@ void Parser::initSettings() {
     }
 }
 
-/**
- * @brief Tokenize a line of a config file.
- * @param line		[in] Line to tokenize
- */
 void Parser::tokenizeConfig(string line) {
     while (line.size() > 0) {
         size_t pos = line.find_first_not_of(" \t");
@@ -144,26 +120,10 @@ void Parser::tokenizeConfig(string line) {
     }
 }
 
-//**************************************************************************//
-//                           Operators overload                             //
-//**************************************************************************//
-
-//**************************************************************************//
-//                               Destructors                                //
-//**************************************************************************//
-
 Parser::~Parser(void) {
     tokens.clear();
 }
 
-//**************************************************************************//
-//                             Outside Functions                            //
-//**************************************************************************//
-
-/**
- * @brief Parse a config file. Read the file line by line and split into tokens.
- * @param config_file	[in] Path to the config file
- */
 void parseConfig(string config_file, HttpConfig &httpConfig) {
     Parser        parser(httpConfig);
     string        line;
