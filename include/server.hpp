@@ -52,6 +52,8 @@ class Session;
  */
 class Server {
    public:
+    typedef Socket* (*SocketGenerator)(void);
+
     virtual ~Server() = 0;
 
     virtual void start() = 0;
@@ -65,6 +67,7 @@ class Server {
     virtual void     sendResponse(Response response) = 0;
 
    protected:
+    SocketGenerator socket_generator_;  /**< Function ptr to socket generator */
     map<int, Socket*>  server_sockets_; /**< Map of server IDs to sockets */
     map<int, Session*> sessions_;       /**< Map of session IDs to sessions */
     EventListener*     listener_;       /**< Event listener for the server */
@@ -81,7 +84,8 @@ class HttpServer : public Server {
      *
      * @param config Configuration for the server
      */
-    HttpServer(HttpConfig config, EventListener* listener);
+    HttpServer(SocketGenerator socket_generator, HttpConfig config,
+               EventListener* listener);
     ~HttpServer() throw();
 
    private:

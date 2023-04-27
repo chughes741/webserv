@@ -120,3 +120,6 @@ class TcpSocket : public Socket {
      */
     void close();
 };
+
+/** TcpSocket generator function */
+Socket* tcp_socket_generator();

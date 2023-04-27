@@ -57,7 +57,8 @@ int main(int argc, char *argv[]) {
 #endif  // __APPLE__
 
     // Initialize server
-    HttpServer httpServer = HttpServer(httpConfig, listener);
+    HttpServer httpServer =
+        HttpServer(tcp_socket_generator, httpConfig, listener);
 
     // Run server
     while (true) {

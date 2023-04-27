@@ -30,9 +30,11 @@ extern HttpConfig httpConfig;
 Server::~Server() {
 }
 
-HttpServer::HttpServer(HttpConfig httpConfig, EventListener* listener) {
-    config_ = httpConfig;
-    listener_ = listener;
+HttpServer::HttpServer(SocketGenerator socket_generator, HttpConfig httpConfig,
+                       EventListener* listener) {
+    socket_generator_ = socket_generator;
+    config_           = httpConfig;
+    listener_         = listener;
 }
 
 HttpServer::~HttpServer() throw() {
@@ -45,7 +47,7 @@ void HttpServer::start() {
          it != config_.servers.end(); ++it) {
         try {
             // Create a new socket
-            new_socket = new TcpSocket();
+            new_socket = socket_generator_();
 
             // Bind the socket to the address/port
             int server_id =
