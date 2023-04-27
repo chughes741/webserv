@@ -1,17 +1,26 @@
 /**
  * @file socket.cpp
- * @author Francis L.
- * @author Marc-André L.
- * @author Cole H.
- * @version 0.1
- * @date 2023-04-19
  * @brief Class implementations for using sockets as defined in RFC 793
+ *
+ * This file contains the class implementations for using sockets as defined in
+ * RFC 793.
+ *
+ * @note This code is for educational purposes only and should not be used in
+ * production environments without extensive testing and modification.
+ *
+ * @version 0.1
+ * @date 2021-04-19
+ * @authors
+ *  - Francis L.
+ *  - Marc-André L.
+ *  - Cole H.
  */
 
 #include "socket.hpp"
 
-using std::runtime_error;
+using std::atoi;
 using std::make_pair;
+using std::runtime_error;
 
 void Session::send(int port, string buffer) const {
     ssize_t bytes_sent =
@@ -38,9 +47,9 @@ string Session::recv(int port) const {
     return buffer_str;
 }
 
-
 /** Used to make it a pure abstract class */
-Socket::~Socket() {}
+Socket::~Socket() {
+}
 
 TcpSocket::TcpSocket() {
     /**
@@ -54,16 +63,15 @@ TcpSocket::TcpSocket() {
     if (sockfd_ == -1) {
         throw runtime_error("Error: Failed to create socket");
     }
-    
 }
 
-TcpSocket::~TcpSocket() {}
+TcpSocket::~TcpSocket() {
+}
 
 int TcpSocket::bind(string addr, int port) {
-    addr_in_.sin_family      = AF_INET;     // IPv4
-    addr_in_.sin_port        = htons(port); // Port
-    addr_in_.sin_addr.s_addr = htonl(stoi(addr)); // Addres
-    /** @todo stoi is C++11 */
+    addr_in_.sin_family      = AF_INET;                    // IPv4
+    addr_in_.sin_port        = htons(port);                // Port
+    addr_in_.sin_addr.s_addr = htonl(atoi(addr.c_str()));  // Addres
 
     // Binds socket to an address and port
     if (::bind(sockfd_, (struct sockaddr*)&addr_in_, sizeof(addr_in_)) == -1) {

@@ -17,14 +17,14 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <cstdlib>
 #include <iostream>
 
-#include "events.hpp"
 #include "webserv.hpp"
 
 using std::map;
-using std::string;
 using std::pair;
+using std::string;
 
 #define SO_MAX_QUEUE 10
 #define READ_BUFFER_SIZE 1024

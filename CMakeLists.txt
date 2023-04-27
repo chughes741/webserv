@@ -23,12 +23,7 @@ add_executable(webserv
   src/main.cpp
   src/server.cpp
   src/socket.cpp
-  src/Parser.cpp
-  src/ParserEvents.cpp
-  src/ParserGlobal.cpp
-  src/ParserLocation.cpp
-  src/ParserHttp.cpp
-  src/ParserServer.cpp
+  src/parsing.cpp
 )
 target_include_directories(webserv PUBLIC
   ${PROJECT_SOURCE_DIR}/include/

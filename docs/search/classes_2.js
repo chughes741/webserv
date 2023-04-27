@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['locationconfig_74',['LocationConfig',['../structLocationConfig.html',1,'']]]
+  ['locationconfig_78',['LocationConfig',['../structLocationConfig.html',1,'']]]
 ];

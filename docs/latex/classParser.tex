@@ -1,5 +1,14 @@
 \hypertarget{classParser}{}\doxysection{Parser Class Reference}
 \label{classParser}\index{Parser@{Parser}}
+
+
+Parse the config file.  
+
+
+
+
+{\ttfamily \#include $<$parsing.\+hpp$>$}
+
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -16,13 +25,14 @@ void {\bfseries validate\+Last\+Token} (string)
 \item 
 void \mbox{\hyperlink{classParser_ae76473bd7ac12e0671da1354b24e44a0}{init\+Settings}} ()
 \begin{DoxyCompactList}\small\item\em Initialize settings from token vector. \end{DoxyCompactList}\item 
-bool \mbox{\hyperlink{classParser_a01480431569484f652e4a3fb4c38975b}{context\+Switch\+Case}} (int)
+bool \mbox{\hyperlink{classParser_a8d71a164fcae55af0a65720eb8f59852}{context\+Switch\+Case}} (int context)
 \begin{DoxyCompactList}\small\item\em Call the appropriate context setting function. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classParser_aa908b9fa132aae72f9bf9792bc1d7096}\label{classParser_aa908b9fa132aae72f9bf9792bc1d7096}} 
 bool \mbox{\hyperlink{classParser_aa908b9fa132aae72f9bf9792bc1d7096}{set\+Context}} ()
 \begin{DoxyCompactList}\small\item\em define in which context the token is \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{classParser_ac828b8836205819d67edb61f78f0e354}{get\+Setting}} (string settings\+List\mbox{[}$\,$\mbox{]}, int size)
 \begin{DoxyCompactList}\small\item\em Get the Setting object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classParser_afd3f83f8e16969f87e0eaa2d095aa19f}\label{classParser_afd3f83f8e16969f87e0eaa2d095aa19f}} 
 bool \mbox{\hyperlink{classParser_afd3f83f8e16969f87e0eaa2d095aa19f}{set\+Global\+Setting}} ()
 \begin{DoxyCompactList}\small\item\em Set global context settings. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classParser_a2d2ee878d9c527232d73a26ac785625d}\label{classParser_a2d2ee878d9c527232d73a26ac785625d}} 
@@ -37,6 +47,7 @@ bool {\bfseries set\+Worker\+Connections} ()
 \mbox{\Hypertarget{classParser_a9184b6df34f3f6f8a2d4327d28898adc}\label{classParser_a9184b6df34f3f6f8a2d4327d28898adc}} 
 bool {\bfseries set\+Http\+Context} ()
 \item 
+\mbox{\Hypertarget{classParser_a769741a7d07969f22b50401ffa60df0c}\label{classParser_a769741a7d07969f22b50401ffa60df0c}} 
 bool \mbox{\hyperlink{classParser_a769741a7d07969f22b50401ffa60df0c}{set\+Http\+Setting}} ()
 \begin{DoxyCompactList}\small\item\em Set http setting. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classParser_a482ab30645fe445b8384e7d99babacb6}\label{classParser_a482ab30645fe445b8384e7d99babacb6}} 
@@ -72,14 +83,14 @@ void {\bfseries set\+Fast\+CGI} (string \&)
 
 
 \doxysubsection{Detailed Description}
+Parse the config file. 
 
-
-Definition at line 37 of file Parser.\+hpp.
+Definition at line 52 of file parsing.\+hpp.
 
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{classParser_a01480431569484f652e4a3fb4c38975b}\label{classParser_a01480431569484f652e4a3fb4c38975b}} 
+\mbox{\Hypertarget{classParser_a8d71a164fcae55af0a65720eb8f59852}\label{classParser_a8d71a164fcae55af0a65720eb8f59852}} 
 \index{Parser@{Parser}!contextSwitchCase@{contextSwitchCase}}
 \index{contextSwitchCase@{contextSwitchCase}!Parser@{Parser}}
 \doxysubsubsection{\texorpdfstring{contextSwitchCase()}{contextSwitchCase()}}
@@ -99,25 +110,25 @@ true or throw logic\+\_\+error
 \end{DoxyReturn}
 
 
-Definition at line 45 of file Parser.\+cpp.
+Definition at line 98 of file parsing.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{45                                           \{}
-\DoxyCodeLine{46     \textcolor{keywordflow}{switch} (context) \{}
-\DoxyCodeLine{47         \textcolor{keywordflow}{case} GLOBAL:}
-\DoxyCodeLine{48             \textcolor{keywordflow}{return} \mbox{\hyperlink{classParser_afd3f83f8e16969f87e0eaa2d095aa19f}{setGlobalSetting}}();}
-\DoxyCodeLine{49         \textcolor{keywordflow}{case} EVENTS:}
-\DoxyCodeLine{50             \textcolor{keywordflow}{return} setEventsSetting();}
-\DoxyCodeLine{51         \textcolor{keywordflow}{case} HTTP:}
-\DoxyCodeLine{52             \textcolor{keywordflow}{return} \mbox{\hyperlink{classParser_a769741a7d07969f22b50401ffa60df0c}{setHttpSetting}}();}
-\DoxyCodeLine{53         \textcolor{keywordflow}{case} SERVER:}
-\DoxyCodeLine{54             \textcolor{keywordflow}{return} \mbox{\hyperlink{classParser_a3ae2114fadfd138606fabfcf5e89d9e2}{setServerSetting}}();}
-\DoxyCodeLine{55         \textcolor{keywordflow}{default}:}
-\DoxyCodeLine{56             \textcolor{keywordflow}{throw} std::logic\_error(\textcolor{stringliteral}{"{}Invalid context: "{}} + *it);}
-\DoxyCodeLine{57     \}}
-\DoxyCodeLine{58     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
-\DoxyCodeLine{59 \}}
+\DoxyCodeLine{98                                           \{}
+\DoxyCodeLine{99     \textcolor{keywordflow}{switch} (context) \{}
+\DoxyCodeLine{100         \textcolor{keywordflow}{case} GLOBAL:}
+\DoxyCodeLine{101             \textcolor{keywordflow}{return} \mbox{\hyperlink{classParser_afd3f83f8e16969f87e0eaa2d095aa19f}{setGlobalSetting}}();}
+\DoxyCodeLine{102         \textcolor{keywordflow}{case} EVENTS:}
+\DoxyCodeLine{103             \textcolor{keywordflow}{return} setEventsSetting();}
+\DoxyCodeLine{104         \textcolor{keywordflow}{case} HTTP:}
+\DoxyCodeLine{105             \textcolor{keywordflow}{return} \mbox{\hyperlink{classParser_a769741a7d07969f22b50401ffa60df0c}{setHttpSetting}}();}
+\DoxyCodeLine{106         \textcolor{keywordflow}{case} SERVER:}
+\DoxyCodeLine{107             \textcolor{keywordflow}{return} \mbox{\hyperlink{classParser_a3ae2114fadfd138606fabfcf5e89d9e2}{setServerSetting}}();}
+\DoxyCodeLine{108         \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{109             \textcolor{keywordflow}{throw} std::logic\_error(\textcolor{stringliteral}{"{}Invalid context: "{}} + *it);}
+\DoxyCodeLine{110     \}}
+\DoxyCodeLine{111     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{112 \}}
 
 \end{DoxyCode}
 \mbox{\Hypertarget{classParser_ac828b8836205819d67edb61f78f0e354}\label{classParser_ac828b8836205819d67edb61f78f0e354}} 
@@ -142,19 +153,19 @@ int Index of setting in settings array
 \end{DoxyReturn}
 
 
-Definition at line 68 of file Parser.\+cpp.
+Definition at line 136 of file parsing.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{68                                                       \{}
-\DoxyCodeLine{69     vector<string>           settings(settingsList, settingsList + size);}
-\DoxyCodeLine{70     vector<string>::iterator settingIt =}
-\DoxyCodeLine{71         find(settings.begin(), settings.end(), *it);}
-\DoxyCodeLine{72     \textcolor{keywordflow}{if} (settingIt == settings.end()) \{}
-\DoxyCodeLine{73         \textcolor{keywordflow}{return} (-\/1);}
-\DoxyCodeLine{74     \}}
-\DoxyCodeLine{75     \textcolor{keywordflow}{return} (settingIt -\/ settings.begin());}
-\DoxyCodeLine{76 \}}
+\DoxyCodeLine{136                                                       \{}
+\DoxyCodeLine{137     vector<string>           settings(settingsList, settingsList + size);}
+\DoxyCodeLine{138     vector<string>::iterator settingIt =}
+\DoxyCodeLine{139         find(settings.begin(), settings.end(), *it);}
+\DoxyCodeLine{140     \textcolor{keywordflow}{if} (settingIt == settings.end()) \{}
+\DoxyCodeLine{141         \textcolor{keywordflow}{return} (-\/1);}
+\DoxyCodeLine{142     \}}
+\DoxyCodeLine{143     \textcolor{keywordflow}{return} (settingIt -\/ settings.begin());}
+\DoxyCodeLine{144 \}}
 
 \end{DoxyCode}
 \mbox{\Hypertarget{classParser_ae76473bd7ac12e0671da1354b24e44a0}\label{classParser_ae76473bd7ac12e0671da1354b24e44a0}} 
@@ -174,30 +185,30 @@ Initialize settings from token vector.
 \end{DoxyParams}
 
 
-Definition at line 108 of file Parser.\+cpp.
+Definition at line 77 of file parsing.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{108                           \{}
-\DoxyCodeLine{109     it = tokens.begin();}
-\DoxyCodeLine{110     \textcolor{keywordflow}{for} (; it != tokens.end(); ++it) \{}
-\DoxyCodeLine{111         \textcolor{keywordflow}{while} (*it == \textcolor{stringliteral}{"{}\}"{}} \&\& !context.empty()) \{}
-\DoxyCodeLine{112             context.pop\_back();}
-\DoxyCodeLine{113             ++it;}
-\DoxyCodeLine{114         \}}
-\DoxyCodeLine{115         \textcolor{keywordflow}{if} (it == tokens.end()) \{}
-\DoxyCodeLine{116             \textcolor{keywordflow}{break};}
-\DoxyCodeLine{117         \}}
-\DoxyCodeLine{118         \mbox{\hyperlink{classParser_aa908b9fa132aae72f9bf9792bc1d7096}{setContext}}();}
-\DoxyCodeLine{119         \textcolor{keywordflow}{if} (context.back() == -\/1) \{}
-\DoxyCodeLine{120             context.pop\_back();}
-\DoxyCodeLine{121         \}}
-\DoxyCodeLine{122         \mbox{\hyperlink{classParser_a01480431569484f652e4a3fb4c38975b}{contextSwitchCase}}(context.back());}
-\DoxyCodeLine{123     \}}
-\DoxyCodeLine{124     \textcolor{keywordflow}{if} (context.size() != 1) \{}
-\DoxyCodeLine{125         \textcolor{keywordflow}{throw} std::exception();}
-\DoxyCodeLine{126     \}}
-\DoxyCodeLine{127 \}}
+\DoxyCodeLine{77                           \{}
+\DoxyCodeLine{78     it = tokens.begin();}
+\DoxyCodeLine{79     \textcolor{keywordflow}{for} (; it != tokens.end(); ++it) \{}
+\DoxyCodeLine{80         \textcolor{keywordflow}{while} (*it == \textcolor{stringliteral}{"{}\}"{}} \&\& !context.empty()) \{}
+\DoxyCodeLine{81             context.pop\_back();}
+\DoxyCodeLine{82             ++it;}
+\DoxyCodeLine{83         \}}
+\DoxyCodeLine{84         \textcolor{keywordflow}{if} (it == tokens.end()) \{}
+\DoxyCodeLine{85             \textcolor{keywordflow}{break};}
+\DoxyCodeLine{86         \}}
+\DoxyCodeLine{87         \mbox{\hyperlink{classParser_aa908b9fa132aae72f9bf9792bc1d7096}{setContext}}();}
+\DoxyCodeLine{88         \textcolor{keywordflow}{if} (context.back() == -\/1) \{}
+\DoxyCodeLine{89             context.pop\_back();}
+\DoxyCodeLine{90         \}}
+\DoxyCodeLine{91         \mbox{\hyperlink{classParser_a8d71a164fcae55af0a65720eb8f59852}{contextSwitchCase}}(context.back());}
+\DoxyCodeLine{92     \}}
+\DoxyCodeLine{93     \textcolor{keywordflow}{if} (context.size() != 1) \{}
+\DoxyCodeLine{94         \textcolor{keywordflow}{throw} std::exception();}
+\DoxyCodeLine{95     \}}
+\DoxyCodeLine{96 \}}
 
 \end{DoxyCode}
 \mbox{\Hypertarget{classParser_a32db756a819d2d0454071100f469805d}\label{classParser_a32db756a819d2d0454071100f469805d}} 
@@ -218,107 +229,20 @@ validate the value for port setting in listen
 \begin{DoxyReturn}{Returns}
 int if port value is all integer 
 \end{DoxyReturn}
-\begin{DoxyRefDesc}{Todo}
-\item[\mbox{\hyperlink{todo__todo000003}{Todo}}]std\+::stoi is C++11 \end{DoxyRefDesc}
 
 
-Definition at line 9 of file Parser\+Server.\+cpp.
-
-
-\begin{DoxyCode}{0}
-\DoxyCodeLine{9                                    \{}
-\DoxyCodeLine{10     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < num.length(); ++i) \{}
-\DoxyCodeLine{11         \textcolor{keywordflow}{if} (!isdigit(num[i])) \{}
-\DoxyCodeLine{12             \textcolor{keywordflow}{throw} std::logic\_error(\textcolor{stringliteral}{"{}Error: invalid port number for listen: "{}} +}
-\DoxyCodeLine{13                                    num);}
-\DoxyCodeLine{14         \}}
-\DoxyCodeLine{15     \}}
-\DoxyCodeLine{16     \textcolor{keywordflow}{return} (std::stoi(num)); }
-\DoxyCodeLine{17 \}}
-
-\end{DoxyCode}
-\mbox{\Hypertarget{classParser_afd3f83f8e16969f87e0eaa2d095aa19f}\label{classParser_afd3f83f8e16969f87e0eaa2d095aa19f}} 
-\index{Parser@{Parser}!setGlobalSetting@{setGlobalSetting}}
-\index{setGlobalSetting@{setGlobalSetting}!Parser@{Parser}}
-\doxysubsubsection{\texorpdfstring{setGlobalSetting()}{setGlobalSetting()}}
-{\footnotesize\ttfamily bool Parser\+::set\+Global\+Setting (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
-
-
-Set global context settings. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em it} & \mbox{[}in,out\mbox{]} Iterator of tokens \\
-\hline
-\end{DoxyParams}
-
-
-Definition at line 13 of file Parser\+Global.\+cpp.
+Definition at line 280 of file parsing.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{13                               \{}
-\DoxyCodeLine{14     std::cout << \textcolor{stringliteral}{"{}Global: "{}};}
-\DoxyCodeLine{15     \textcolor{keywordtype}{string} List[] = \{\textcolor{stringliteral}{"{}worker\_processes"{}}, \textcolor{stringliteral}{"{}error\_log"{}}, \textcolor{stringliteral}{"{}pid"{}}\};}
-\DoxyCodeLine{16     \textcolor{keywordflow}{switch} (\mbox{\hyperlink{classParser_ac828b8836205819d67edb61f78f0e354}{getSetting}}(List, \textcolor{keyword}{sizeof}(List) / \textcolor{keyword}{sizeof}(List[0]))) \{}
-\DoxyCodeLine{17         \textcolor{keywordflow}{case} WORKER\_PROCESSES:}
-\DoxyCodeLine{18             \textcolor{comment}{// setWorkerProcessses();}}
-\DoxyCodeLine{19             std::cout << \textcolor{stringliteral}{"{}worker\_processes: "{}} << *(++it) << std::endl;}
-\DoxyCodeLine{20             \textcolor{keywordflow}{break};}
-\DoxyCodeLine{21         \textcolor{keywordflow}{case} ERROR\_LOG:}
-\DoxyCodeLine{22             httpConfig.\mbox{\hyperlink{structHttpConfig_ac12ca219699e31e7b7acb25fcb0d4d25}{error\_log}} = *(++it);}
-\DoxyCodeLine{23             std::cout << \textcolor{stringliteral}{"{}error\_log: "{}} << *(it) << std::endl;}
-\DoxyCodeLine{24             \textcolor{keywordflow}{break};}
-\DoxyCodeLine{25         \textcolor{keywordflow}{case} PID:}
-\DoxyCodeLine{26             \textcolor{comment}{// httpConfig.pid\_file = *(++it);}}
-\DoxyCodeLine{27             ++it;}
-\DoxyCodeLine{28             std::cout << \textcolor{stringliteral}{"{}pid: "{}} << *(it) << std::endl;}
-\DoxyCodeLine{29             \textcolor{keywordflow}{break};}
-\DoxyCodeLine{30         \textcolor{keywordflow}{default}:}
-\DoxyCodeLine{31             \textcolor{keywordflow}{throw} std::invalid\_argument(\textcolor{stringliteral}{"{}Invalid setting in global context: "{}} +}
-\DoxyCodeLine{32                                         *it);}
-\DoxyCodeLine{33     \}}
-\DoxyCodeLine{34     ++it;}
-\DoxyCodeLine{35     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
-\DoxyCodeLine{36 \}}
-
-\end{DoxyCode}
-\mbox{\Hypertarget{classParser_a769741a7d07969f22b50401ffa60df0c}\label{classParser_a769741a7d07969f22b50401ffa60df0c}} 
-\index{Parser@{Parser}!setHttpSetting@{setHttpSetting}}
-\index{setHttpSetting@{setHttpSetting}!Parser@{Parser}}
-\doxysubsubsection{\texorpdfstring{setHttpSetting()}{setHttpSetting()}}
-{\footnotesize\ttfamily bool Parser\+::set\+Http\+Setting (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
-
-
-Set http setting. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em it} & \mbox{[}in,out\mbox{]} Iterator of tokens \\
-\hline
-\end{DoxyParams}
-
-
-Definition at line 8 of file Parser\+Http.\+cpp.
-
-
-\begin{DoxyCode}{0}
-\DoxyCodeLine{8                             \{}
-\DoxyCodeLine{9     std::cout << \textcolor{stringliteral}{"{}Http: "{}};}
-\DoxyCodeLine{10     \textcolor{keywordtype}{string} List[] = \{\textcolor{stringliteral}{"{}index"{}}\};}
-\DoxyCodeLine{11     \textcolor{keywordflow}{switch} (\mbox{\hyperlink{classParser_ac828b8836205819d67edb61f78f0e354}{getSetting}}(List, \textcolor{keyword}{sizeof}(List) / \textcolor{keyword}{sizeof}(List[0]))) \{}
-\DoxyCodeLine{12         \textcolor{keywordflow}{case} INDEX:}
-\DoxyCodeLine{13             std::cout << \textcolor{stringliteral}{"{}Index: "{}} << *(++it) << std::endl;}
-\DoxyCodeLine{14             \textcolor{keywordflow}{break};}
-\DoxyCodeLine{15         \textcolor{keywordflow}{default}:}
-\DoxyCodeLine{16             \textcolor{keywordflow}{throw} std::invalid\_argument(\textcolor{stringliteral}{"{}Invalid setting in Http context: "{}} +}
-\DoxyCodeLine{17                                         *it);}
-\DoxyCodeLine{18     \}}
-\DoxyCodeLine{19     ++it;}
-\DoxyCodeLine{20     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
-\DoxyCodeLine{21 \}}
+\DoxyCodeLine{280                                    \{}
+\DoxyCodeLine{281     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{size\_t} i = 0; i < num.length(); ++i) \{}
+\DoxyCodeLine{282         \textcolor{keywordflow}{if} (!isdigit(num[i])) \{}
+\DoxyCodeLine{283             \textcolor{keywordflow}{throw} logic\_error(\textcolor{stringliteral}{"{}Error: invalid port number for listen: "{}} + num);}
+\DoxyCodeLine{284         \}}
+\DoxyCodeLine{285     \}}
+\DoxyCodeLine{286     \textcolor{keywordflow}{return} (atoi(num.c\_str()));}
+\DoxyCodeLine{287 \}}
 
 \end{DoxyCode}
 \mbox{\Hypertarget{classParser_ae2a73f3b789a406d9e7d47854074cf6e}\label{classParser_ae2a73f3b789a406d9e7d47854074cf6e}} 
@@ -336,25 +260,25 @@ true or throw an exception
 \end{DoxyReturn}
 
 
-Definition at line 23 of file Parser\+Server.\+cpp.
+Definition at line 264 of file parsing.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{23                        \{}
-\DoxyCodeLine{24     validateFirstToken(\textcolor{stringliteral}{"{}server\_name"{}});}
-\DoxyCodeLine{25     \textcolor{keywordtype}{string} num = *it;}
-\DoxyCodeLine{26     \textcolor{keywordflow}{if} (num.find(\textcolor{stringliteral}{"{}:"{}}) == num.npos) \{}
-\DoxyCodeLine{27         \textcolor{keywordtype}{int} port                           = \mbox{\hyperlink{classParser_a32db756a819d2d0454071100f469805d}{retrievePort}}(num);}
-\DoxyCodeLine{28         (httpConfig.\mbox{\hyperlink{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}{servers}}.back()).listen = std::make\_pair(\textcolor{stringliteral}{"{}"{}}, port);}
-\DoxyCodeLine{29     \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{30         \textcolor{keywordtype}{string} address                     = num.substr(0, num.find(\textcolor{stringliteral}{"{}:"{}}));}
-\DoxyCodeLine{31         num                                = num.substr(num.find(\textcolor{stringliteral}{"{}:"{}}) + 1);}
-\DoxyCodeLine{32         \textcolor{keywordtype}{int} port                           = \mbox{\hyperlink{classParser_a32db756a819d2d0454071100f469805d}{retrievePort}}(num);}
-\DoxyCodeLine{33         (httpConfig.\mbox{\hyperlink{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}{servers}}.back()).listen = std::make\_pair(address, port);}
-\DoxyCodeLine{34     \}}
-\DoxyCodeLine{35     validateLastToken(\textcolor{stringliteral}{"{}listen"{}});}
-\DoxyCodeLine{36     \textcolor{keywordflow}{return} (\textcolor{keyword}{true});}
-\DoxyCodeLine{37 \}}
+\DoxyCodeLine{264                        \{}
+\DoxyCodeLine{265     validateFirstToken(\textcolor{stringliteral}{"{}server\_name"{}});}
+\DoxyCodeLine{266     \textcolor{keywordtype}{string} num = *it;}
+\DoxyCodeLine{267     \textcolor{keywordflow}{if} (num.find(\textcolor{stringliteral}{"{}:"{}}) == num.npos) \{}
+\DoxyCodeLine{268         \textcolor{keywordtype}{int} port                           = \mbox{\hyperlink{classParser_a32db756a819d2d0454071100f469805d}{retrievePort}}(num);}
+\DoxyCodeLine{269         (httpConfig.\mbox{\hyperlink{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}{servers}}.back()).listen = std::make\_pair(\textcolor{stringliteral}{"{}"{}}, port);}
+\DoxyCodeLine{270     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{271         \textcolor{keywordtype}{string} address                     = num.substr(0, num.find(\textcolor{stringliteral}{"{}:"{}}));}
+\DoxyCodeLine{272         num                                = num.substr(num.find(\textcolor{stringliteral}{"{}:"{}}) + 1);}
+\DoxyCodeLine{273         \textcolor{keywordtype}{int} port                           = \mbox{\hyperlink{classParser_a32db756a819d2d0454071100f469805d}{retrievePort}}(num);}
+\DoxyCodeLine{274         (httpConfig.\mbox{\hyperlink{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}{servers}}.back()).listen = std::make\_pair(address, port);}
+\DoxyCodeLine{275     \}}
+\DoxyCodeLine{276     validateLastToken(\textcolor{stringliteral}{"{}listen"{}});}
+\DoxyCodeLine{277     \textcolor{keywordflow}{return} (\textcolor{keyword}{true});}
+\DoxyCodeLine{278 \}}
 
 \end{DoxyCode}
 \mbox{\Hypertarget{classParser_a2fd377280dd07402810b49b0afbc36a0}\label{classParser_a2fd377280dd07402810b49b0afbc36a0}} 
@@ -372,17 +296,17 @@ true or throw invalid\+\_\+argument
 \end{DoxyReturn}
 
 
-Definition at line 44 of file Parser\+Server.\+cpp.
+Definition at line 289 of file parsing.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{44                            \{}
-\DoxyCodeLine{45     validateFirstToken(\textcolor{stringliteral}{"{}server\_name"{}});}
-\DoxyCodeLine{46     (httpConfig.\mbox{\hyperlink{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}{servers}}.back()).server\_name = *it;}
-\DoxyCodeLine{47     std::cout << \textcolor{stringliteral}{"{}Server\_name: "{}} << *it << std::endl;}
-\DoxyCodeLine{48     validateLastToken(\textcolor{stringliteral}{"{}server\_name"{}});}
-\DoxyCodeLine{49     \textcolor{keywordflow}{return} (\textcolor{keyword}{true});}
-\DoxyCodeLine{50 \}}
+\DoxyCodeLine{289                            \{}
+\DoxyCodeLine{290     validateFirstToken(\textcolor{stringliteral}{"{}server\_name"{}});}
+\DoxyCodeLine{291     (httpConfig.\mbox{\hyperlink{structHttpConfig_af3c802628373bf70e0436c31c3dc2ef3}{servers}}.back()).server\_name = *it;}
+\DoxyCodeLine{292     std::cout << \textcolor{stringliteral}{"{}Server\_name: "{}} << *it << std::endl;}
+\DoxyCodeLine{293     validateLastToken(\textcolor{stringliteral}{"{}server\_name"{}});}
+\DoxyCodeLine{294     \textcolor{keywordflow}{return} (\textcolor{keyword}{true});}
+\DoxyCodeLine{295 \}}
 
 \end{DoxyCode}
 \mbox{\Hypertarget{classParser_a62b7984e1c4b0f3d9d34385d900c9905}\label{classParser_a62b7984e1c4b0f3d9d34385d900c9905}} 
@@ -402,35 +326,30 @@ Tokenize a line of a config file.
 \end{DoxyParams}
 
 
-Definition at line 133 of file Parser.\+cpp.
+Definition at line 48 of file parsing.\+cpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{133                                        \{}
-\DoxyCodeLine{134     \textcolor{keywordflow}{while} (line.size() > 0) \{}
-\DoxyCodeLine{135         \textcolor{keywordtype}{size\_t} pos = line.find\_first\_not\_of(\textcolor{stringliteral}{"{} \(\backslash\)t"{}});}
-\DoxyCodeLine{136         \textcolor{keywordflow}{if} (pos == line.npos || line[pos] == \textcolor{charliteral}{'\#'}) \{}
-\DoxyCodeLine{137             \textcolor{keywordflow}{break};}
-\DoxyCodeLine{138         \}}
-\DoxyCodeLine{139         line = line.substr(pos);}
-\DoxyCodeLine{140         pos  = line.find\_first\_of(\textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)\#\{\}; \(\backslash\)t\(\backslash\)n\(\backslash\)0"{}});}
-\DoxyCodeLine{141         pos == 0 ? pos = 1 : pos;}
-\DoxyCodeLine{142         \textcolor{keywordtype}{string} tmp = line.substr(0, pos);}
-\DoxyCodeLine{143         tokens.push\_back(tmp);}
-\DoxyCodeLine{144         ;}
-\DoxyCodeLine{145         line = line.substr(tmp.size());}
-\DoxyCodeLine{146     \}}
-\DoxyCodeLine{147 \}}
+\DoxyCodeLine{48                                        \{}
+\DoxyCodeLine{49     \textcolor{keywordflow}{while} (line.size() > 0) \{}
+\DoxyCodeLine{50         \textcolor{keywordtype}{size\_t} pos = line.find\_first\_not\_of(\textcolor{stringliteral}{"{} \(\backslash\)t"{}});}
+\DoxyCodeLine{51         \textcolor{keywordflow}{if} (pos == line.npos || line[pos] == \textcolor{charliteral}{'\#'}) \{}
+\DoxyCodeLine{52             \textcolor{keywordflow}{break};}
+\DoxyCodeLine{53         \}}
+\DoxyCodeLine{54         line = line.substr(pos);}
+\DoxyCodeLine{55         pos  = line.find\_first\_of(\textcolor{stringliteral}{"{}\(\backslash\)\(\backslash\)\#\{\}; \(\backslash\)t\(\backslash\)n\(\backslash\)0"{}});}
+\DoxyCodeLine{56         pos == 0 ? pos = 1 : pos;}
+\DoxyCodeLine{57         \textcolor{keywordtype}{string} tmp = line.substr(0, pos);}
+\DoxyCodeLine{58         tokens.push\_back(tmp);}
+\DoxyCodeLine{59         ;}
+\DoxyCodeLine{60         line = line.substr(tmp.size());}
+\DoxyCodeLine{61     \}}
+\DoxyCodeLine{62 \}}
 
 \end{DoxyCode}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/Parser.\+hpp\item 
-src/Parser.\+cpp\item 
-src/Parser\+Events.\+cpp\item 
-src/Parser\+Global.\+cpp\item 
-src/Parser\+Http.\+cpp\item 
-src/Parser\+Location.\+cpp\item 
-src/Parser\+Server.\+cpp\end{DoxyCompactItemize}
+include/parsing.\+hpp\item 
+src/\mbox{\hyperlink{parsing_8cpp}{parsing.\+cpp}}\end{DoxyCompactItemize}
