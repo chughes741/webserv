@@ -31,31 +31,36 @@ set_target_properties(webserv PROPERTIES LINKER_LANGUAGE CXX)
 enable_testing()
 
 add_executable(events_unit_tests test/events_test.cpp)
-target_link_libraries(events_unit_tests PUBLIC GTest::gtest_main)
+target_link_libraries(events_unit_tests PUBLIC GTest::gtest_main
+                                               GTest::gmock_main)
 target_include_directories(events_unit_tests
                            PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 add_test(NAME events_unit_tests COMMAND $<TARGET_FILE:events_unit_tests>)
 
 add_executable(parsing_unit_tests test/parsing_test.cpp)
-target_link_libraries(parsing_unit_tests PUBLIC GTest::gtest_main)
+target_link_libraries(parsing_unit_tests PUBLIC GTest::gtest_main
+                                                GTest::gmock_main)
 target_include_directories(parsing_unit_tests
                            PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 add_test(NAME parsing_unit_tests COMMAND $<TARGET_FILE:parsing_unit_tests>)
 
 add_executable(server_unit_tests test/server_test.cpp)
-target_link_libraries(server_unit_tests PUBLIC GTest::gtest_main)
+target_link_libraries(server_unit_tests PUBLIC GTest::gtest_main
+                                               GTest::gmock_main)
 target_include_directories(server_unit_tests
                            PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 add_test(NAME server_unit_tests COMMAND $<TARGET_FILE:server_unit_tests>)
 
 add_executable(socket_unit_tests test/socket_test.cpp)
-target_link_libraries(socket_unit_tests PUBLIC GTest::gtest_main)
+target_link_libraries(socket_unit_tests PUBLIC GTest::gtest_main
+                                               GTest::gmock_main)
 target_include_directories(socket_unit_tests
                            PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 add_test(NAME socket_unit_tests COMMAND $<TARGET_FILE:socket_unit_tests>)
 
 add_executable(webserv_unit_tests test/webserv_test.cpp)
-target_link_libraries(webserv_unit_tests PUBLIC GTest::gtest_main)
+target_link_libraries(webserv_unit_tests PUBLIC GTest::gtest_main
+                                                GTest::gmock_main)
 target_include_directories(webserv_unit_tests
                            PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 add_test(NAME webserv_unit_tests COMMAND $<TARGET_FILE:webserv_unit_tests>)
