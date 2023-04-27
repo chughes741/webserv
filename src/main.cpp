@@ -1,14 +1,7 @@
 
-#include "Parser.hpp"
-#include "Test.hpp"
-#include "config.hpp"
-#include "server.hpp"
-#include "socket.hpp"
-#include "webserv.hpp"
+#include <stdlib.h>
 
-#ifndef CONFIG_FILE
-#define CONFIG_FILE "config/webserv.conf"
-#endif
+#include "webserv.hpp"
 
 /**
  * @brief Main function

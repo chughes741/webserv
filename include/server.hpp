@@ -42,6 +42,10 @@
 using std::map;
 using std::string;
 
+/** @todo figure out why this aren't working with includes from webserv.hpp */
+class Socket;
+class Session;
+
 /**
  * @brief Base class for servers
  * @pure

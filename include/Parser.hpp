@@ -1,10 +1,13 @@
 #pragma once
 
+#include <algorithm>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
-#include "config.hpp"
+#include "webserv.hpp"
 
 // Context Settings
 #define GLOBAL 0
@@ -31,6 +34,9 @@
 
 using std::string;
 using std::vector;
+
+/** @todo figure out why this aren't working with includes from webserv.hpp */
+struct HttpConfig;
 
 void parseConfig(string, HttpConfig &);
 

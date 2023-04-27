@@ -1,7 +1,5 @@
 #include "Parser.hpp"
 
-#include <algorithm>
-
 using std::find;
 
 //**************************************************************************//
@@ -169,7 +167,7 @@ Parser::~Parser(void) {
 void parseConfig(string config_file, HttpConfig &httpConfig) {
     Parser        parser(httpConfig);
     string        line;
-    std::ifstream file(config_file); /** @todo fix compile issue */
+    std::ifstream file(config_file.c_str());
 
     if (!file.is_open() || file.peek() == std::ifstream::traits_type::eof()) {
         throw std::invalid_argument("File not found:  " + config_file);

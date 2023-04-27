@@ -1,5 +1,8 @@
 #include "Parser.hpp"
 
+using std::atoi;
+using std::logic_error;
+
 /**
  * @brief validate the value for port setting in listen
  *
@@ -9,11 +12,10 @@
 int Parser::retrievePort(string num) {
     for (size_t i = 0; i < num.length(); ++i) {
         if (!isdigit(num[i])) {
-            throw std::logic_error("Error: invalid port number for listen: " +
-                                   num);
+            throw logic_error("Error: invalid port number for listen: " + num);
         }
     }
-    return (std::stoi(num)); /** @todo std::stoi is C++11 */
+    return (atoi(num.c_str()));
 }
 
 /**
