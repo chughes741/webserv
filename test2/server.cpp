@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
     (void) argc;
     (void) argv;
 
-    FILE *file = fopen("index.html", "rb");
+    FILE *file = fopen("Cori.jpeg", "rb");
     if (!file)
     {
         printf("TROUDCUL\n");
@@ -28,10 +28,10 @@ int main(int argc, char const *argv[])
     rewind(file);
     
     // Allocate a buffer to hold the file contents
-    char *file_data = new char[file_size];
+    std::string file_data(file_size, '\0');
     
     // Read the file contents into the buffer
-    size_t bytes_read = fread(file_data, 1, file_size, file);
+    size_t bytes_read = fread(&file_data[0], 1, file_size, file);
     if (static_cast<long>(bytes_read) != file_size) {
         // Handle file read error
     }
@@ -41,15 +41,15 @@ int main(int argc, char const *argv[])
     
     
     //THIS is print test for localhost:8080 in a web browser
-    //const char *data = "HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\n\r\n"; // displays image
-    //const char *data = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";  // displays HTML file
-    const char *data = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"; // displays plain text
+    //std::string data = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"; // displays plain text
+    std::string data = "HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\n\r\n";   // displays the picture
+    //std::string data = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";  // displays the HTML format
 
-    int pictureLen = strlen(data);
+    int pictureLen = data.length();
     int total_response_len = pictureLen + file_size;
 
     // Allocate a buffer to hold the entire HTTP response
-    char *response_data = new char[total_response_len];
+    std::string response_data(total_response_len, '\0');
    
     
     // Creating socket file descriptor
@@ -67,56 +67,53 @@ int main(int argc, char const *argv[])
         exit(EXIT_FAILURE);
     }
 
-    std::unique_ptr<int> hello;
-
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons( PORT );
     
-    memset(address.sin_zero, '\0', sizeof address.sin_zero);
-    
+    std::fill(address.sin_zero, address.sin_zero + sizeof address.sin_zero, 0);
     
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0)
     {
-        perror("In bind");
+        std::cerr << "In bind" << std::endl;
         exit(EXIT_FAILURE);
     }
     if (listen(server_fd, 10) < 0)
     {
-        perror("In listen");
+        std::cerr << "In listen" << std::endl;
         exit(EXIT_FAILURE);
     }
     while(1)
     {
-        printf("\n+++++++ Waiting for new connection ++++++++\n\n");
+        std::cout << std::endl << "******* Waiting for new connection *******" << std::endl << std::endl;
         if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0)
         {
-            perror("In accept");
+            std::cerr << "In accept" << std::endl;
             exit(EXIT_FAILURE);
         }
 
-        char content_length_header[50];
-        snprintf(content_length_header, sizeof(content_length_header), "Content-Length: %ld\r\n", file_size);
+        std::string content_length_header(50, '\0');
+        snprintf(&content_length_header[0], sizeof(content_length_header), "Content-Length: %ld\r\n", file_size);
 
         
-        char buffer[30000] = {0};
-        valread = read( new_socket , buffer, 30000);
-        printf("%s\n",buffer );
+        std::string buffer(30000, '\0');
+        valread = read( new_socket , &buffer[0], 30000);
+        std::cout << buffer << std::endl;
          // Copy the headers to the response buffer
-        memcpy(response_data, data, pictureLen);
+        std::copy(data.begin(), data.begin() + pictureLen, response_data.begin());
 
-        memcpy(response_data + pictureLen, content_length_header, strlen(content_length_header));
-
-        // Copy the file data to the response buffer
-        memcpy(response_data + pictureLen + strlen(content_length_header), file_data, file_size);
-
+        std::copy(file_data.begin(), file_data.begin() + file_size, response_data.begin() + pictureLen);
 
         // Copy the file data to the response buffer
-        memcpy(response_data + pictureLen, file_data, file_size);
+        std::copy(file_data.begin(), file_data.begin() + file_size, response_data.begin() + pictureLen + content_length_header.length());
+
+
+        // Copy the file data to the response buffer
+        std::copy(file_data.begin(), file_data.begin() + file_size, response_data.begin() + pictureLen);
         // Send the entire HTTP response to the client
-        send(new_socket, response_data, total_response_len, 0);
+        send(new_socket, &response_data[0], total_response_len, 0);
         //write(new_socket , picture , strlen(picture));
-        printf("------------------Hello message sent-------------------\n");
+        std::cout << "**********************Hello message sent**********************" << std::endl;
         close(new_socket);
 
          // Free the buffers
@@ -126,116 +123,3 @@ int main(int argc, char const *argv[])
     fclose(file);
     return 0;
 }
-//Server side C++ program to demonstrate Socket programming
-//#include <cstdio>
-//#include <cstdlib>
-//#include <cstring>
-//#include <sys/socket.h>
-//#include <sys/types.h>
-//#include <netinet/in.h>
-//#include <unistd.h>
-//#include <fcntl.h>
-//
-//#define PORT 8080
-//
-//int main(int argc, char const *argv[])
-//{
-//    (void) argc;
-//    (void) argv;
-//    
-//    int server_fd, new_socket, valread;
-//    struct sockaddr_in address;
-//    int addrlen = sizeof(address);
-//    
-//    FILE *file = fopen("Cori.jpeg", "rb");
-//    if (!file)
-//    {
-//        printf("TROUDCUL\n");
-//        exit(EXIT_FAILURE);
-//    }
-//
-//    // Determine the size of the file
-//    fseek(file, 0, SEEK_END);
-//    long file_size = ftell(file);
-//    rewind(file);
-//    
-//    // Allocate a buffer to hold the file contents
-//    char *file_data = new char[file_size];
-//    
-//    // Read the file contents into the buffer
-//    size_t bytes_read = fread(file_data, 1, file_size, file);
-//    if (static_cast<long>(bytes_read) != file_size) {
-//        // Handle file read error
-//    }
-//    
-//    const char *picture = "HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\n\r\n";
-//    //const char *picture = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\nContent-length: 5\r\n\r\nsalut";
-//    int pictureLen = strlen(picture);
-//    int total_response_len = pictureLen + file_size;
-//
-//    // Allocate a buffer to hold the entire HTTP response
-//    char *response_data = new char[total_response_len];
-//    
-//    // Creating socket file descriptor
-//    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-//    {
-//        perror("In socket");
-//        exit(EXIT_FAILURE);
-//    }
-//
-//    int opt = 1;
-//    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0)
-//    {
-//        perror("setsockopt");
-//        exit(EXIT_FAILURE);
-//    }
-//    
-//    address.sin_family = AF_INET;
-//    address.sin_addr.s_addr = INADDR_ANY;
-//    address.sin_port = htons( PORT );
-//    
-//    memset(address.sin_zero, '\0', sizeof address.sin_zero);
-//    
-//    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0)
-//    {
-//        perror("In bind");
-//        exit(EXIT_FAILURE);
-//    }
-//    if (listen(server_fd, 10) < 0)
-//    {
-//        perror("In listen");
-//        exit(EXIT_FAILURE);
-//    }
-//    while(1)
-//    {
-//        printf("\n+++++++ Waiting for new connection ++++++++\n\n");
-//        if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0)
-//        {
-//            perror("In accept");
-//            exit(EXIT_FAILURE);
-//        }
-//
-//        char content_length_header[50];
-//        snprintf(content_length_header, sizeof(content_length_header), "Content-Length: %ld\r\n", file_size);
-//
-//        char buffer[30000] = {0};
-//        valread = read( new_socket , buffer, 30000);
-//        printf("%s\n",buffer );
-//        
-//        // Copy the headers to the response buffer
-//        memcpy(response_data, picture, pictureLen);
-//
-//        memcpy(response_data + pictureLen, content_length_header, strlen(content_length_header));
-//
-//        // Copy the file data to the response buffer
-//        memcpy(response_data + pictureLen + strlen(content_length_header), file_data, file_size);
-//
-//        // Send the entire HTTP response to the client
-//        send(new_socket, response_data, total_response_len, 0);
-//
-//        printf("------------------Hello message sent-------------------\n");
-//        close(new_socket);
-//    }
-//    //fclose(file);
-//    return 0;
-//}
