@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
     (void) argc;
     (void) argv;
 
-    FILE *file = fopen("Cori.jpeg", "rb");
+    FILE *file = fopen("index.html", "rb");
     if (!file)
     {
         printf("TROUDCUL\n");
@@ -42,8 +42,8 @@ int main(int argc, char const *argv[])
     
     //THIS is print test for localhost:8080 in a web browser
     //std::string data = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"; // displays plain text
-    std::string data = "HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\n\r\n";   // displays the picture
-    //std::string data = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";  // displays the HTML format
+    //std::string data = "HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\n\r\n";   // displays the picture
+    std::string data = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";  // displays the HTML format
 
     int pictureLen = data.length();
     int total_response_len = pictureLen + file_size;
@@ -93,8 +93,7 @@ int main(int argc, char const *argv[])
         }
 
         std::string content_length_header(50, '\0');
-        snprintf(&content_length_header[0], sizeof(content_length_header), "Content-Length: %ld\r\n", file_size);
-
+        content_length_header = "Content-Length: " + std::to_string(file_size) + "\r\n";
         
         std::string buffer(30000, '\0');
         valread = read( new_socket , &buffer[0], 30000);
