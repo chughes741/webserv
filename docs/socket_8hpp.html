@@ -97,32 +97,40 @@ $(document).ready(function(){initNavTree('socket_8hpp.html',''); initResizable()
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;arpa/inet.h&gt;</code><br />
 <code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;sys/socket.h&gt;</code><br />
 <code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;cstdlib&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
 <code>#include &quot;webserv.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for socket.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="socket_8hpp__incl.png" border="0" usemap="#ainclude_2socket_8hpp" alt=""/></div>
 <map name="ainclude_2socket_8hpp" id="ainclude_2socket_8hpp">
-<area shape="rect" title="Classes for using sockets as defined in RFC 793." alt="" coords="521,5,664,32"/>
-<area shape="rect" title=" " alt="" coords="332,80,424,107"/>
-<area shape="rect" title=" " alt="" coords="448,80,511,107"/>
-<area shape="rect" title=" " alt="" coords="5,155,108,181"/>
-<area shape="rect" title=" " alt="" coords="714,80,810,107"/>
-<area shape="rect" href="webserv_8hpp_source.html" title=" " alt="" coords="586,80,690,107"/>
-<area shape="rect" title=" " alt="" coords="133,155,207,181"/>
-<area shape="rect" title=" " alt="" coords="232,155,297,181"/>
-<area shape="rect" title=" " alt="" coords="321,155,408,181"/>
-<area shape="rect" title=" " alt="" coords="432,155,505,181"/>
-<area shape="rect" title=" " alt="" coords="490,229,570,256"/>
-<area shape="rect" title=" " alt="" coords="770,155,821,181"/>
-<area shape="rect" title=" " alt="" coords="706,229,765,256"/>
-<area shape="rect" title=" " alt="" coords="845,155,908,181"/>
-<area shape="rect" href="Exception_8hpp_source.html" title=" " alt="" coords="581,155,695,181"/>
-<area shape="rect" href="config_8hpp.html" title="Configuration options for the HTTP server:" alt="" coords="1008,155,1097,181"/>
-<area shape="rect" href="events_8hpp_source.html" title=" " alt="" coords="911,229,1005,256"/>
-<area shape="rect" title=" " alt="" coords="595,229,681,256"/>
+<area shape="rect" title="Classes for using sockets as defined in RFC 793." alt="" coords="395,5,537,32"/>
+<area shape="rect" title=" " alt="" coords="5,80,97,107"/>
+<area shape="rect" title=" " alt="" coords="121,80,184,107"/>
+<area shape="rect" title=" " alt="" coords="209,80,275,107"/>
+<area shape="rect" title=" " alt="" coords="300,80,403,107"/>
+<area shape="rect" title=" " alt="" coords="1119,229,1215,256"/>
+<area shape="rect" title=" " alt="" coords="1050,80,1125,107"/>
+<area shape="rect" title=" " alt="" coords="243,229,308,256"/>
+<area shape="rect" title=" " alt="" coords="333,229,413,256"/>
+<area shape="rect" href="webserv_8hpp_source.html" title=" " alt="" coords="645,80,749,107"/>
+<area shape="rect" href="parsing_8hpp_source.html" title=" " alt="" coords="529,155,627,181"/>
+<area shape="rect" href="config_8hpp.html" title="Configuration options for the HTTP server:" alt="" coords="885,155,975,181"/>
+<area shape="rect" href="events_8hpp.html" title="Declares classes for handling events on sockets using the kqueue or epoll system calls." alt="" coords="767,155,861,181"/>
+<area shape="rect" href="server_8hpp.html" title="Declares classes for creating web servers that can handle HTTP requests." alt="" coords="651,155,742,181"/>
+<area shape="rect" title=" " alt="" coords="535,229,621,256"/>
+<area shape="rect" title=" " alt="" coords="437,229,511,256"/>
+<area shape="rect" title=" " alt="" coords="645,229,732,256"/>
+<area shape="rect" title=" " alt="" coords="872,229,935,256"/>
+<area shape="rect" title=" " alt="" coords="959,229,1010,256"/>
+<area shape="rect" title=" " alt="" coords="1239,229,1298,256"/>
+<area shape="rect" title=" " alt="" coords="1035,229,1095,256"/>
+<area shape="rect" title=" " alt="" coords="757,229,847,256"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -130,15 +138,16 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="socket_8hpp__dep__incl.png" border="0" usemap="#ainclude_2socket_8hppdep" alt=""/></div>
 <map name="ainclude_2socket_8hppdep" id="ainclude_2socket_8hppdep">
-<area shape="rect" title="Classes for using sockets as defined in RFC 793." alt="" coords="211,5,354,32"/>
-<area shape="rect" href="main_8cpp_source.html" title=" " alt="" coords="264,304,370,331"/>
-<area shape="rect" href="webserv_8hpp_source.html" title=" " alt="" coords="86,80,241,107"/>
-<area shape="rect" href="socket_8cpp.html" title="Class implementations for using sockets as defined in RFC 793." alt="" coords="493,80,608,107"/>
-<area shape="rect" href="config_8hpp.html" title="Configuration options for the HTTP server:" alt="" coords="27,229,167,256"/>
-<area shape="rect" href="events_8hpp_source.html" title=" " alt="" coords="35,155,180,181"/>
-<area shape="rect" href="server_8hpp.html" title="Declares classes for creating web servers that can handle HTTP requests." alt="" coords="256,155,397,181"/>
-<area shape="rect" href="config_8cpp_source.html" title=" " alt="" coords="42,304,152,331"/>
-<area shape="rect" href="server_8cpp.html" title="Defines classes for creating web servers that can handle HTTP requests." alt="" coords="256,229,368,256"/>
+<area shape="rect" title="Classes for using sockets as defined in RFC 793." alt="" coords="307,5,449,32"/>
+<area shape="rect" href="webserv_8hpp_source.html" title=" " alt="" coords="301,80,455,107"/>
+<area shape="rect" href="socket_8cpp.html" title="Class implementations for using sockets as defined in RFC 793." alt="" coords="479,80,594,107"/>
+<area shape="rect" href="main_8cpp.html" title="Main function." alt="" coords="5,155,111,181"/>
+<area shape="rect" href="parsing_8hpp_source.html" title=" " alt="" coords="134,155,283,181"/>
+<area shape="rect" href="server_8hpp.html" title="Declares classes for creating web servers that can handle HTTP requests." alt="" coords="307,155,449,181"/>
+<area shape="rect" href="config_8hpp.html" title="Configuration options for the HTTP server:" alt="" coords="473,155,613,181"/>
+<area shape="rect" href="Test_8hpp_source.html" title=" " alt="" coords="637,155,764,181"/>
+<area shape="rect" href="parsing_8cpp.html" title="Class implementation for parsing the config file." alt="" coords="149,229,269,256"/>
+<area shape="rect" href="server_8cpp.html" title="Defines classes for creating web servers that can handle HTTP requests." alt="" coords="322,229,434,256"/>
 </map>
 </div>
 </div>
@@ -147,7 +156,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSession.html">Session</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a TCP client connection.  <a href="classSession.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a TCP client session.  <a href="classSession.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSocket.html">Socket</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSocket.html" title="Socket base class.">Socket</a> base class.  <a href="classSocket.html#details">More...</a><br /></td></tr>

@@ -113,14 +113,14 @@ Collaboration diagram for Server:</div>
 <div class="dyncontent">
 <div class="center"><img src="classServer__coll__graph.png" border="0" usemap="#aServer_coll__map" alt="Collaboration graph"/></div>
 <map name="aServer_coll__map" id="aServer_coll__map">
-<area shape="rect" title="Base class for servers." alt="" coords="632,79,696,105"/>
-<area shape="rect" href="classSocket.html" title="Socket base class." alt="" coords="445,31,511,57"/>
-<area shape="rect" title=" " alt="" coords="39,5,195,32"/>
-<area shape="rect" href="structServerConfig.html" title="Configuration for a single server block." alt="" coords="425,104,531,131"/>
-<area shape="rect" title=" " alt="" coords="5,56,228,83"/>
-<area shape="rect" title=" " alt="" coords="47,107,186,133"/>
-<area shape="rect" title=" " alt="" coords="87,179,146,205"/>
-<area shape="rect" title=" " alt="" coords="47,229,186,256"/>
+<area shape="rect" title="Base class for servers." alt="" coords="295,213,359,240"/>
+<area shape="rect" title=" " alt="" coords="5,124,165,151"/>
+<area shape="rect" href="classEventListener.html" title="Abstract class for handling event." alt="" coords="190,124,301,151"/>
+<area shape="rect" title=" " alt="" coords="325,124,491,151"/>
+<area shape="rect" href="structHttpConfig.html" title="Configuration for an HTTP server." alt="" coords="516,124,607,151"/>
+<area shape="rect" title=" " alt="" coords="332,5,508,32"/>
+<area shape="rect" title=" " alt="" coords="532,5,591,32"/>
+<area shape="rect" title=" " alt="" coords="672,5,811,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -132,12 +132,12 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> ()=
 <tr class="memitem:a4d30c699c5d1f119cbdd5b7e3bf624e6"><td class="memItemLeft" align="right" valign="top"><a id="a4d30c699c5d1f119cbdd5b7e3bf624e6"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>stop</b> ()=0</td></tr>
 <tr class="separator:a4d30c699c5d1f119cbdd5b7e3bf624e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a146161f39d70e0ad886ba1c0f7d70c"><td class="memItemLeft" align="right" valign="top"><a id="a0a146161f39d70e0ad886ba1c0f7d70c"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>createSocket</b> ()=0</td></tr>
-<tr class="separator:a0a146161f39d70e0ad886ba1c0f7d70c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a2aa16b19aac606e71575c65fc62d065e"><td class="memItemLeft" align="right" valign="top"><a id="a2aa16b19aac606e71575c65fc62d065e"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>run</b> ()=0</td></tr>
+<tr class="separator:a2aa16b19aac606e71575c65fc62d065e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d3fd3a753bd3a1599c28b8413635658"><td class="memItemLeft" align="right" valign="top"><a id="a1d3fd3a753bd3a1599c28b8413635658"></a>
 virtual <a class="el" href="structRequest.html">Request</a>&#160;</td><td class="memItemRight" valign="bottom"><b>receiveRequest</b> ()=0</td></tr>
 <tr class="separator:a1d3fd3a753bd3a1599c28b8413635658"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,18 +150,22 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>sendResponse<
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a2d53ba24cc25644c4eca7aaec319bcf7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSocket.html">Socket</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServer.html#a2d53ba24cc25644c4eca7aaec319bcf7">socket_</a></td></tr>
-<tr class="separator:a2d53ba24cc25644c4eca7aaec319bcf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad44296a781aa84fbc2cffee3407d9a25"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structServerConfig.html">ServerConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServer.html#ad44296a781aa84fbc2cffee3407d9a25">config_</a></td></tr>
-<tr class="separator:ad44296a781aa84fbc2cffee3407d9a25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a646c56c63077a5f7245e266393f50f94"><td class="memItemLeft" align="right" valign="top">map&lt; int, <a class="el" href="classSocket.html">Socket</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServer.html#a646c56c63077a5f7245e266393f50f94">server_sockets_</a></td></tr>
+<tr class="separator:a646c56c63077a5f7245e266393f50f94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71ac5e3efa2f08389aed16ffb0aaf24f"><td class="memItemLeft" align="right" valign="top">map&lt; int, <a class="el" href="classSession.html">Session</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServer.html#a71ac5e3efa2f08389aed16ffb0aaf24f">sessions_</a></td></tr>
+<tr class="separator:a71ac5e3efa2f08389aed16ffb0aaf24f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2be3022c498f7dda8f15a6f4847d2dbf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEventListener.html">EventListener</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServer.html#a2be3022c498f7dda8f15a6f4847d2dbf">listener_</a></td></tr>
+<tr class="separator:a2be3022c498f7dda8f15a6f4847d2dbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a568fb0f3f8c94641b6ca0577c279f4cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structHttpConfig.html">HttpConfig</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServer.html#a568fb0f3f8c94641b6ca0577c279f4cb">config_</a></td></tr>
+<tr class="separator:a568fb0f3f8c94641b6ca0577c279f4cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for servers. </p>
 
-<p class="definition">Definition at line <a class="el" href="server_8hpp_source.html#l00048">48</a> of file <a class="el" href="server_8hpp_source.html">server.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="server_8hpp_source.html#l00053">53</a> of file <a class="el" href="server_8hpp_source.html">server.hpp</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="ad44296a781aa84fbc2cffee3407d9a25"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad44296a781aa84fbc2cffee3407d9a25">&#9670;&nbsp;</a></span>config_</h2>
+<a id="a568fb0f3f8c94641b6ca0577c279f4cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a568fb0f3f8c94641b6ca0577c279f4cb">&#9670;&nbsp;</a></span>config_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -170,7 +174,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structServerConfig.html">ServerConfig</a> Server::config_</td>
+          <td class="memname"><a class="el" href="structHttpConfig.html">HttpConfig</a> Server::config_</td>
         </tr>
       </table>
   </td>
@@ -181,12 +185,12 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Configuration for the server </p>
 
-<p class="definition">Definition at line <a class="el" href="server_8hpp_source.html#l00063">63</a> of file <a class="el" href="server_8hpp_source.html">server.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="server_8hpp_source.html#l00071">71</a> of file <a class="el" href="server_8hpp_source.html">server.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a2d53ba24cc25644c4eca7aaec319bcf7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d53ba24cc25644c4eca7aaec319bcf7">&#9670;&nbsp;</a></span>socket_</h2>
+<a id="a2be3022c498f7dda8f15a6f4847d2dbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2be3022c498f7dda8f15a6f4847d2dbf">&#9670;&nbsp;</a></span>listener_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -195,7 +199,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSocket.html">Socket</a>* Server::socket_</td>
+          <td class="memname"><a class="el" href="classEventListener.html">EventListener</a>* Server::listener_</td>
         </tr>
       </table>
   </td>
@@ -204,9 +208,59 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p><a class="el" href="classSocket.html" title="Socket base class.">Socket</a> used by the server </p>
+<p>Event listener for the server </p>
 
-<p class="definition">Definition at line <a class="el" href="server_8hpp_source.html#l00062">62</a> of file <a class="el" href="server_8hpp_source.html">server.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="server_8hpp_source.html#l00070">70</a> of file <a class="el" href="server_8hpp_source.html">server.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a646c56c63077a5f7245e266393f50f94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a646c56c63077a5f7245e266393f50f94">&#9670;&nbsp;</a></span>server_sockets_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">map&lt;int, <a class="el" href="classSocket.html">Socket</a>*&gt; Server::server_sockets_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Map of server IDs to sockets </p>
+
+<p class="definition">Definition at line <a class="el" href="server_8hpp_source.html#l00068">68</a> of file <a class="el" href="server_8hpp_source.html">server.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a71ac5e3efa2f08389aed16ffb0aaf24f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71ac5e3efa2f08389aed16ffb0aaf24f">&#9670;&nbsp;</a></span>sessions_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">map&lt;int, <a class="el" href="classSession.html">Session</a>*&gt; Server::sessions_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Map of session IDs to sessions </p>
+
+<p class="definition">Definition at line <a class="el" href="server_8hpp_source.html#l00069">69</a> of file <a class="el" href="server_8hpp_source.html">server.hpp</a>.</p>
 
 </div>
 </div>

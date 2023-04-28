@@ -11,8 +11,7 @@ Base class for servers.
 
 
 
-Inheritance diagram for Server\+:
-\nopagebreak
+Inheritance diagram for Server\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -21,8 +20,7 @@ Inheritance diagram for Server\+:
 \end{figure}
 
 
-Collaboration diagram for Server\+:
-\nopagebreak
+Collaboration diagram for Server\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -37,12 +35,12 @@ virtual void {\bfseries start} ()=0
 \item 
 \mbox{\Hypertarget{classServer_a4d30c699c5d1f119cbdd5b7e3bf624e6}\label{classServer_a4d30c699c5d1f119cbdd5b7e3bf624e6}} 
 virtual void {\bfseries stop} ()=0
-\item 
-\mbox{\Hypertarget{classServer_a0a146161f39d70e0ad886ba1c0f7d70c}\label{classServer_a0a146161f39d70e0ad886ba1c0f7d70c}} 
-virtual void {\bfseries create\+Socket} ()=0
 \end{DoxyCompactItemize}
 \doxysubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classServer_a2aa16b19aac606e71575c65fc62d065e}\label{classServer_a2aa16b19aac606e71575c65fc62d065e}} 
+virtual void {\bfseries run} ()=0
 \item 
 \mbox{\Hypertarget{classServer_a1d3fd3a753bd3a1599c28b8413635658}\label{classServer_a1d3fd3a753bd3a1599c28b8413635658}} 
 virtual \mbox{\hyperlink{structRequest}{Request}} {\bfseries receive\+Request} ()=0
@@ -56,39 +54,63 @@ virtual void {\bfseries send\+Response} (\mbox{\hyperlink{structResponse}{Respon
 \doxysubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classSocket}{Socket}} $\ast$ \mbox{\hyperlink{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}{socket\+\_\+}}
+map$<$ int, \mbox{\hyperlink{classSocket}{Socket}} $\ast$ $>$ \mbox{\hyperlink{classServer_a646c56c63077a5f7245e266393f50f94}{server\+\_\+sockets\+\_\+}}
 \item 
-\mbox{\hyperlink{structServerConfig}{Server\+Config}} \mbox{\hyperlink{classServer_ad44296a781aa84fbc2cffee3407d9a25}{config\+\_\+}}
+map$<$ int, \mbox{\hyperlink{classSession}{Session}} $\ast$ $>$ \mbox{\hyperlink{classServer_a71ac5e3efa2f08389aed16ffb0aaf24f}{sessions\+\_\+}}
+\item 
+\mbox{\hyperlink{classEventListener}{Event\+Listener}} $\ast$ \mbox{\hyperlink{classServer_a2be3022c498f7dda8f15a6f4847d2dbf}{listener\+\_\+}}
+\item 
+\mbox{\hyperlink{structHttpConfig}{Http\+Config}} \mbox{\hyperlink{classServer_a568fb0f3f8c94641b6ca0577c279f4cb}{config\+\_\+}}
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Base class for servers. 
 
-Definition at line 48 of file server.\+hpp.
+Definition at line 53 of file server.\+hpp.
 
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{classServer_ad44296a781aa84fbc2cffee3407d9a25}\label{classServer_ad44296a781aa84fbc2cffee3407d9a25}} 
+\mbox{\Hypertarget{classServer_a568fb0f3f8c94641b6ca0577c279f4cb}\label{classServer_a568fb0f3f8c94641b6ca0577c279f4cb}} 
 \index{Server@{Server}!config\_@{config\_}}
 \index{config\_@{config\_}!Server@{Server}}
 \doxysubsubsection{\texorpdfstring{config\_}{config\_}}
-{\footnotesize\ttfamily \mbox{\hyperlink{structServerConfig}{Server\+Config}} Server\+::config\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structHttpConfig}{Http\+Config}} Server\+::config\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
 
 Configuration for the server 
 
-Definition at line 63 of file server.\+hpp.
+Definition at line 71 of file server.\+hpp.
 
-\mbox{\Hypertarget{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}\label{classServer_a2d53ba24cc25644c4eca7aaec319bcf7}} 
-\index{Server@{Server}!socket\_@{socket\_}}
-\index{socket\_@{socket\_}!Server@{Server}}
-\doxysubsubsection{\texorpdfstring{socket\_}{socket\_}}
-{\footnotesize\ttfamily \mbox{\hyperlink{classSocket}{Socket}}$\ast$ Server\+::socket\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+\mbox{\Hypertarget{classServer_a2be3022c498f7dda8f15a6f4847d2dbf}\label{classServer_a2be3022c498f7dda8f15a6f4847d2dbf}} 
+\index{Server@{Server}!listener\_@{listener\_}}
+\index{listener\_@{listener\_}!Server@{Server}}
+\doxysubsubsection{\texorpdfstring{listener\_}{listener\_}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classEventListener}{Event\+Listener}}$\ast$ Server\+::listener\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
 
-\mbox{\hyperlink{classSocket}{Socket}} used by the server 
+Event listener for the server 
 
-Definition at line 62 of file server.\+hpp.
+Definition at line 70 of file server.\+hpp.
+
+\mbox{\Hypertarget{classServer_a646c56c63077a5f7245e266393f50f94}\label{classServer_a646c56c63077a5f7245e266393f50f94}} 
+\index{Server@{Server}!server\_sockets\_@{server\_sockets\_}}
+\index{server\_sockets\_@{server\_sockets\_}!Server@{Server}}
+\doxysubsubsection{\texorpdfstring{server\_sockets\_}{server\_sockets\_}}
+{\footnotesize\ttfamily map$<$int, \mbox{\hyperlink{classSocket}{Socket}}$\ast$$>$ Server\+::server\+\_\+sockets\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+Map of server IDs to sockets 
+
+Definition at line 68 of file server.\+hpp.
+
+\mbox{\Hypertarget{classServer_a71ac5e3efa2f08389aed16ffb0aaf24f}\label{classServer_a71ac5e3efa2f08389aed16ffb0aaf24f}} 
+\index{Server@{Server}!sessions\_@{sessions\_}}
+\index{sessions\_@{sessions\_}!Server@{Server}}
+\doxysubsubsection{\texorpdfstring{sessions\_}{sessions\_}}
+{\footnotesize\ttfamily map$<$int, \mbox{\hyperlink{classSession}{Session}}$\ast$$>$ Server\+::sessions\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+Map of session IDs to sessions 
+
+Definition at line 69 of file server.\+hpp.
 
 
 

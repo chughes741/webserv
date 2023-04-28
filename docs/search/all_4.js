@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['fileerror_14',['FileError',['../classFileError.html',1,'FileError'],['../classWebExcep_1_1FileError.html',1,'WebExcep::FileError']]]
+  ['getsetting_17',['getSetting',['../classParser.html#ac828b8836205819d67edb61f78f0e354',1,'Parser']]]
 ];

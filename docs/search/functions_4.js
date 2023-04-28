@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['listen_88',['listen',['../classTcpSocket.html#aecb504049c6d1981223fafa46f2ef40a',1,'TcpSocket']]],
-  ['locationconfig_89',['LocationConfig',['../structLocationConfig.html#a4d9d9ff50c98b379a1cbcc834abc115e',1,'LocationConfig']]]
+  ['httpconfig_103',['HttpConfig',['../structHttpConfig.html#ad9fe0c4fa82845bcc472720d89b2d22f',1,'HttpConfig']]],
+  ['httpserver_104',['HttpServer',['../classHttpServer.html#ad230925b8e49bffbb4c43b11db3e1525',1,'HttpServer']]]
 ];

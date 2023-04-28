@@ -5,7 +5,10 @@
 Configuration options for the HTTP server\+:  
 
 
-{\ttfamily \#include \char`\"{}events.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$utility$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
 {\ttfamily \#include \char`\"{}webserv.\+hpp\char`\"{}}\newline
 Include dependency graph for config.\+hpp\+:
 \nopagebreak
@@ -26,17 +29,72 @@ This graph shows which files directly or indirectly include this file\+:
 \doxysubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
+struct \mbox{\hyperlink{structRequest}{Request}}
+\begin{DoxyCompactList}\small\item\em Represents an HTTP request. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structResponse}{Response}}
+\begin{DoxyCompactList}\small\item\em Represents an HTTP response. \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structLocationConfig}{Location\+Config}}
 \begin{DoxyCompactList}\small\item\em Configuration options for a single location block. \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structServerConfig}{Server\+Config}}
 \begin{DoxyCompactList}\small\item\em Configuration for a single server block. \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structHttpConfig}{Http\+Config}}
 \begin{DoxyCompactList}\small\item\em Configuration for an HTTP server. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{config_8hpp_aa48d7d115d01a5f1434c40b8532d5100}\label{config_8hpp_aa48d7d115d01a5f1434c40b8532d5100}} 
-void {\bfseries parse\+Config} (string)
+\#define \mbox{\hyperlink{config_8hpp_aaa567395088118b7a0aec48af9278fa1}{POST}}~0x01
+\item 
+\mbox{\Hypertarget{config_8hpp_a982a66f513611f7f83ebfa4b4ecf1df9}\label{config_8hpp_a982a66f513611f7f83ebfa4b4ecf1df9}} 
+\#define {\bfseries GET}~0x02
+\item 
+\mbox{\Hypertarget{config_8hpp_abbbe5949f3c1f72e439924f8cf503509}\label{config_8hpp_abbbe5949f3c1f72e439924f8cf503509}} 
+\#define {\bfseries DELETE}~0x04
+\item 
+\#define \mbox{\hyperlink{config_8hpp_aba51915c87d64af47fb1cc59348961c9}{OK}}~\char`\"{}200 OK\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_a78f1d1e4bb6450bfc6894a8f38c30370}\label{config_8hpp_a78f1d1e4bb6450bfc6894a8f38c30370}} 
+\#define {\bfseries CREATED}~\char`\"{}201 Created\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_a43005b6b1934800f67a6d169c779c92b}\label{config_8hpp_a43005b6b1934800f67a6d169c779c92b}} 
+\#define {\bfseries ACCEPTED}~\char`\"{}202 Accepted\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_a87ed98446928d560ffd66539098a4849}\label{config_8hpp_a87ed98446928d560ffd66539098a4849}} 
+\#define {\bfseries NO\+\_\+\+CONTENT}~\char`\"{}204 No Content\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_a1e56260b9ce7893c64ce27ca8fef7fc3}\label{config_8hpp_a1e56260b9ce7893c64ce27ca8fef7fc3}} 
+\#define {\bfseries MOVED\+\_\+\+PERMANENTLY}~\char`\"{}301 Moved Permanently\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_a841b291dedf074d07299e089dc0722e6}\label{config_8hpp_a841b291dedf074d07299e089dc0722e6}} 
+\#define {\bfseries FOUND}~\char`\"{}302 Found\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_a61b9079b8b3b49ba34232cd7d61f64b0}\label{config_8hpp_a61b9079b8b3b49ba34232cd7d61f64b0}} 
+\#define {\bfseries NOT\+\_\+\+MODIFIED}~\char`\"{}304 Not Modified\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_ad037b25feaa1b40af8a97d63526c82b0}\label{config_8hpp_ad037b25feaa1b40af8a97d63526c82b0}} 
+\#define {\bfseries BAD\+\_\+\+REQUEST}~\char`\"{}400 Bad \mbox{\hyperlink{structRequest}{Request}}\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_a33bfc1f995233887a0414369c36936b8}\label{config_8hpp_a33bfc1f995233887a0414369c36936b8}} 
+\#define {\bfseries NOT\+\_\+\+FOUND}~\char`\"{}404 Not Found\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_a2d6fab92d183406b1baf59ca47c8b8e8}\label{config_8hpp_a2d6fab92d183406b1baf59ca47c8b8e8}} 
+\#define {\bfseries METHOD\+\_\+\+NOT\+\_\+\+ALLOWED}~\char`\"{}405 Method Not Allowed\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_a405118b62c914638cafa7b2ea8a32cd2}\label{config_8hpp_a405118b62c914638cafa7b2ea8a32cd2}} 
+\#define {\bfseries IM\+\_\+\+A\+\_\+\+TEAPOT}~\char`\"{}418 I\textquotesingle{}m a teapot\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_abbcb64a4f71ba470ccd4a8c25496772e}\label{config_8hpp_abbcb64a4f71ba470ccd4a8c25496772e}} 
+\#define {\bfseries INTERNAL\+\_\+\+SERVER\+\_\+\+ERROR}~\char`\"{}500 Internal \mbox{\hyperlink{classServer}{Server}} Error\char`\"{}
+\item 
+\mbox{\Hypertarget{config_8hpp_a1f2268a7ea29fa0b2d64b59613aadee8}\label{config_8hpp_a1f2268a7ea29fa0b2d64b59613aadee8}} 
+\#define {\bfseries BAD\+\_\+\+GATEWAY}~\char`\"{}502 Bad Gateway\char`\"{}
+\item 
+\#define \mbox{\hyperlink{config_8hpp_a8bb9017f30ff8959b7916f558c82d306}{HTTP\+\_\+\+VERSION}}~\char`\"{}HTTP/1.\+1\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{config_8hpp_a0f7c21c84382fa32de57f78ea0311931}\label{config_8hpp_a0f7c21c84382fa32de57f78ea0311931}} 
+\mbox{\hyperlink{structHttpConfig}{Http\+Config}} {\bfseries http\+Config}
 \end{DoxyCompactItemize}
 
 
@@ -58,19 +116,19 @@ Cole H.
 \end{DoxyDate}
 
 \begin{DoxyItemize}
-\item syntax\+: http \{ ... \}
+\item syntax\+: http \{ ... \} ok
 \item default\+:
 \item context\+: global
-\item syntax\+: server \{ ... \}
+\item syntax\+: server \{ ... \} ok
 \item default\+:
 \item context\+: http
-\item syntax\+: server\+\_\+name name ...;
+\item syntax\+: server\+\_\+name name ...; ok
 \item default\+: server\+\_\+name \char`\"{}\char`\"{};
 \item context\+: server
-\item syntax\+: listen \mbox{[}address\mbox{]}\mbox{[}\+:port\mbox{]};
+\item syntax\+: listen \mbox{[}address\mbox{]}\mbox{[}\+:port\mbox{]}; ok
 \item default\+: listen $\ast$\+:80;
 \item context\+: server
-\item syntax\+: location uri \{ ... \}
+\item syntax\+: location uri \{ ... \} ok
 \item default\+:
 \item context\+: server
 \item syntax\+: error\+\_\+page code ... uri;
@@ -100,3 +158,35 @@ Potential configuration options\+:
 \item internal (location can only be used for internal requests)
 \item output\+\_\+buffers (number and size of buffers for reading response from disk) 
 \end{DoxyItemize}
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{config_8hpp_a8bb9017f30ff8959b7916f558c82d306}\label{config_8hpp_a8bb9017f30ff8959b7916f558c82d306}} 
+\index{config.hpp@{config.hpp}!HTTP\_VERSION@{HTTP\_VERSION}}
+\index{HTTP\_VERSION@{HTTP\_VERSION}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{HTTP\_VERSION}{HTTP\_VERSION}}
+{\footnotesize\ttfamily \#define HTTP\+\_\+\+VERSION~\char`\"{}HTTP/1.\+1\char`\"{}}
+
+HTTP headers 
+
+Definition at line 96 of file config.\+hpp.
+
+\mbox{\Hypertarget{config_8hpp_aba51915c87d64af47fb1cc59348961c9}\label{config_8hpp_aba51915c87d64af47fb1cc59348961c9}} 
+\index{config.hpp@{config.hpp}!OK@{OK}}
+\index{OK@{OK}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{OK}{OK}}
+{\footnotesize\ttfamily \#define OK~\char`\"{}200 OK\char`\"{}}
+
+HTTP Status codes 
+
+Definition at line 81 of file config.\+hpp.
+
+\mbox{\Hypertarget{config_8hpp_aaa567395088118b7a0aec48af9278fa1}\label{config_8hpp_aaa567395088118b7a0aec48af9278fa1}} 
+\index{config.hpp@{config.hpp}!POST@{POST}}
+\index{POST@{POST}!config.hpp@{config.hpp}}
+\doxysubsubsection{\texorpdfstring{POST}{POST}}
+{\footnotesize\ttfamily \#define POST~0x01}
+
+HTTP methods 
+
+Definition at line 76 of file config.\+hpp.
+

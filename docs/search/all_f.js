@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['_7esocket_57',['~Socket',['../classSocket.html#a7b36181d6700fa5c4a51a56114f0942d',1,'Socket']]],
-  ['_7etcpsocket_58',['~TcpSocket',['../classTcpSocket.html#a4c6d246451c51ac4226a9301f6711086',1,'TcpSocket']]]
+  ['version_71',['version',['../structRequest.html#ad8e430bf47e923f2cb2d24baf06af1f8',1,'Request::version()'],['../structResponse.html#a4f136e7654bc74c626e03b27635c9470',1,'Response::version()']]]
 ];

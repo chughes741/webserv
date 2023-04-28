@@ -11,8 +11,7 @@ Configuration options for a single location block.
 
 
 
-Collaboration diagram for Location\+Config\+:
-\nopagebreak
+Collaboration diagram for Location\+Config\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -46,7 +45,7 @@ string \mbox{\hyperlink{structLocationConfig_a2c60cf964254de1f6130a539950f0386}{
 \doxysubsection{Detailed Description}
 Configuration options for a single location block. 
 
-Definition at line 79 of file config.\+hpp.
+Definition at line 128 of file config.\+hpp.
 
 
 
@@ -59,18 +58,18 @@ Definition at line 79 of file config.\+hpp.
 
 Constructor, initializes to default values 
 
-Definition at line 81 of file config.\+hpp.
+Definition at line 130 of file config.\+hpp.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{82         : \mbox{\hyperlink{structLocationConfig_a0d1c42f145355eaa75c554c7601551db}{client\_max\_body\_size}}(\textcolor{stringliteral}{"{}1m"{}}),}
-\DoxyCodeLine{83           \mbox{\hyperlink{structLocationConfig_a38cac2d5c54e473702acae6cd4955c27}{error\_page}}(404, \textcolor{stringliteral}{"{}"{}}),}
-\DoxyCodeLine{84           \mbox{\hyperlink{structLocationConfig_a13996dc3692eed3eb9e2ecb246f855dd}{root}}(\textcolor{stringliteral}{"{}html"{}}),}
-\DoxyCodeLine{85           \mbox{\hyperlink{structLocationConfig_af598d3a6884a357a9fadbab6d2f57567}{index\_file}}(\textcolor{stringliteral}{"{}index.html"{}}),}
-\DoxyCodeLine{86           \mbox{\hyperlink{structLocationConfig_a5db69f9eb261f6a368a7c8e1acc4abb2}{limit\_except}}(GET | POST | DELETE),}
-\DoxyCodeLine{87           \mbox{\hyperlink{structLocationConfig_aaeaa7cdde7e9cb5d232666ea519d8d56}{cgi\_enabled}}(\textcolor{keyword}{false}),}
-\DoxyCodeLine{88           \mbox{\hyperlink{structLocationConfig_a2c60cf964254de1f6130a539950f0386}{cgi\_path}}(\textcolor{stringliteral}{"{}"{}}) \{}
-\DoxyCodeLine{89     \}}
+\DoxyCodeLine{131         : \mbox{\hyperlink{structLocationConfig_a0d1c42f145355eaa75c554c7601551db}{client\_max\_body\_size}}(\textcolor{stringliteral}{"{}1m"{}}),}
+\DoxyCodeLine{132           \mbox{\hyperlink{structLocationConfig_a38cac2d5c54e473702acae6cd4955c27}{error\_page}}(404, \textcolor{stringliteral}{"{}"{}}),}
+\DoxyCodeLine{133           \mbox{\hyperlink{structLocationConfig_a13996dc3692eed3eb9e2ecb246f855dd}{root}}(\textcolor{stringliteral}{"{}html"{}}),}
+\DoxyCodeLine{134           \mbox{\hyperlink{structLocationConfig_af598d3a6884a357a9fadbab6d2f57567}{index\_file}}(\textcolor{stringliteral}{"{}index.html"{}}),}
+\DoxyCodeLine{135           \mbox{\hyperlink{structLocationConfig_a5db69f9eb261f6a368a7c8e1acc4abb2}{limit\_except}}(GET | \mbox{\hyperlink{config_8hpp_aaa567395088118b7a0aec48af9278fa1}{POST}} | DELETE),}
+\DoxyCodeLine{136           \mbox{\hyperlink{structLocationConfig_aaeaa7cdde7e9cb5d232666ea519d8d56}{cgi\_enabled}}(\textcolor{keyword}{false}),}
+\DoxyCodeLine{137           \mbox{\hyperlink{structLocationConfig_a2c60cf964254de1f6130a539950f0386}{cgi\_path}}(\textcolor{stringliteral}{"{}"{}}) \{}
+\DoxyCodeLine{138     \}}
 
 \end{DoxyCode}
 
@@ -84,7 +83,7 @@ Definition at line 81 of file config.\+hpp.
 
 Enable CGI 
 
-Definition at line 96 of file config.\+hpp.
+Definition at line 145 of file config.\+hpp.
 
 \mbox{\Hypertarget{structLocationConfig_a2c60cf964254de1f6130a539950f0386}\label{structLocationConfig_a2c60cf964254de1f6130a539950f0386}} 
 \index{LocationConfig@{LocationConfig}!cgi\_path@{cgi\_path}}
@@ -94,7 +93,7 @@ Definition at line 96 of file config.\+hpp.
 
 Path to CGI programs 
 
-Definition at line 97 of file config.\+hpp.
+Definition at line 146 of file config.\+hpp.
 
 \mbox{\Hypertarget{structLocationConfig_a0d1c42f145355eaa75c554c7601551db}\label{structLocationConfig_a0d1c42f145355eaa75c554c7601551db}} 
 \index{LocationConfig@{LocationConfig}!client\_max\_body\_size@{client\_max\_body\_size}}
@@ -104,7 +103,7 @@ Definition at line 97 of file config.\+hpp.
 
 Maximum size of a request body 
 
-Definition at line 91 of file config.\+hpp.
+Definition at line 140 of file config.\+hpp.
 
 \mbox{\Hypertarget{structLocationConfig_a38cac2d5c54e473702acae6cd4955c27}\label{structLocationConfig_a38cac2d5c54e473702acae6cd4955c27}} 
 \index{LocationConfig@{LocationConfig}!error\_page@{error\_page}}
@@ -114,7 +113,7 @@ Definition at line 91 of file config.\+hpp.
 
 Default error page 
 
-Definition at line 92 of file config.\+hpp.
+Definition at line 141 of file config.\+hpp.
 
 \mbox{\Hypertarget{structLocationConfig_af598d3a6884a357a9fadbab6d2f57567}\label{structLocationConfig_af598d3a6884a357a9fadbab6d2f57567}} 
 \index{LocationConfig@{LocationConfig}!index\_file@{index\_file}}
@@ -124,7 +123,7 @@ Definition at line 92 of file config.\+hpp.
 
 Name of the index file 
 
-Definition at line 94 of file config.\+hpp.
+Definition at line 143 of file config.\+hpp.
 
 \mbox{\Hypertarget{structLocationConfig_a5db69f9eb261f6a368a7c8e1acc4abb2}\label{structLocationConfig_a5db69f9eb261f6a368a7c8e1acc4abb2}} 
 \index{LocationConfig@{LocationConfig}!limit\_except@{limit\_except}}
@@ -134,7 +133,7 @@ Definition at line 94 of file config.\+hpp.
 
 Allowed methods 
 
-Definition at line 95 of file config.\+hpp.
+Definition at line 144 of file config.\+hpp.
 
 \mbox{\Hypertarget{structLocationConfig_a13996dc3692eed3eb9e2ecb246f855dd}\label{structLocationConfig_a13996dc3692eed3eb9e2ecb246f855dd}} 
 \index{LocationConfig@{LocationConfig}!root@{root}}
@@ -144,7 +143,7 @@ Definition at line 95 of file config.\+hpp.
 
 Root directory for serving files 
 
-Definition at line 93 of file config.\+hpp.
+Definition at line 142 of file config.\+hpp.
 
 
 

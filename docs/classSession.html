@@ -93,7 +93,7 @@ $(document).ready(function(){initNavTree('classSession.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 
-<p>Represents a TCP client connection.  
+<p>Represents a TCP client session.  
  <a href="classSession.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="socket_8hpp_source.html">socket.hpp</a>&gt;</code></p>
@@ -103,6 +103,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acde12b784c8f165b8b46e7f2ad8833b4"><td class="memItemLeft" align="right" valign="top"><a id="acde12b784c8f165b8b46e7f2ad8833b4"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Session</b> (int <a class="el" href="classSession.html#a6647c30a5eccb78c9177a9c3e8ceb007">sockfd</a>, const struct sockaddr *<a class="el" href="classSession.html#a7eb187e0eeac6ae31f444a87244ee806">addr</a>, socklen_t addrlen)</td></tr>
 <tr class="separator:acde12b784c8f165b8b46e7f2ad8833b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0ad9701fa22446025c7085ce8f9f857"><td class="memItemLeft" align="right" valign="top"><a id="ae0ad9701fa22446025c7085ce8f9f857"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>send</b> (int client, string message) const</td></tr>
+<tr class="separator:ae0ad9701fa22446025c7085ce8f9f857"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e582f8db73e1af35a850a61ac3a7273"><td class="memItemLeft" align="right" valign="top"><a id="a0e582f8db73e1af35a850a61ac3a7273"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>recv</b> (int client) const</td></tr>
+<tr class="separator:a0e582f8db73e1af35a850a61ac3a7273"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6647c30a5eccb78c9177a9c3e8ceb007"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSession.html#a6647c30a5eccb78c9177a9c3e8ceb007">sockfd</a> () const</td></tr>
 <tr class="separator:a6647c30a5eccb78c9177a9c3e8ceb007"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7eb187e0eeac6ae31f444a87244ee806"><td class="memItemLeft" align="right" valign="top">const struct sockaddr *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSession.html#a7eb187e0eeac6ae31f444a87244ee806">addr</a> () const</td></tr>
@@ -112,9 +118,9 @@ socklen_t&#160;</td><td class="memItemRight" valign="bottom"><b>addrlen</b> () c
 <tr class="separator:ac6601565d286dae083174e5c6065d278"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Represents a TCP client connection. </p>
+<div class="textblock"><p>Represents a TCP client session. </p>
 
-<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00030">30</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00036">36</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a7eb187e0eeac6ae31f444a87244ee806"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7eb187e0eeac6ae31f444a87244ee806">&#9670;&nbsp;</a></span>addr()</h2>
@@ -140,7 +146,7 @@ socklen_t&#160;</td><td class="memItemRight" valign="bottom"><b>addrlen</b> () c
 </div><div class="memdoc">
 <p>addr_ getter </p>
 
-<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00037">37</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00049">49</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
 
 </div>
 </div>
@@ -168,12 +174,13 @@ socklen_t&#160;</td><td class="memItemRight" valign="bottom"><b>addrlen</b> () c
 </div><div class="memdoc">
 <p>sockfd_ getter </p>
 
-<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00036">36</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="socket_8hpp_source.html#l00046">46</a> of file <a class="el" href="socket_8hpp_source.html">socket.hpp</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/<a class="el" href="socket_8hpp_source.html">socket.hpp</a></li>
+<li>src/<a class="el" href="socket_8cpp_source.html">socket.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

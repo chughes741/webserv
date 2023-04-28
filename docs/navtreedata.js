@@ -25,6 +25,13 @@
 var NAVTREE =
 [
   [ "webserv", "index.html", [
+    [ "Documentation", "index.html#autotoc_md1", null ],
+    [ "Introduction", "index.html#autotoc_md2", null ],
+    [ "Mandatory", "index.html#autotoc_md3", null ],
+    [ "Requirements", "index.html#autotoc_md4", null ],
+    [ "MacOS", "index.html#autotoc_md5", null ],
+    [ "Configuration File", "index.html#autotoc_md6", null ],
+    [ "Installation & Usage", "index.html#autotoc_md7", null ],
     [ "Todo List", "todo.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
@@ -37,14 +44,19 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ]
+      [ "File List", "files.html", "files_dup" ],
+      [ "File Members", "globals.html", [
+        [ "All", "globals.html", null ],
+        [ "Functions", "globals_func.html", null ],
+        [ "Macros", "globals_defs.html", null ]
+      ] ]
     ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"Exception_8cpp_source.html"
+"Test_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -2,7 +2,7 @@
 \label{classSession}\index{Session@{Session}}
 
 
-Represents a TCP client connection.  
+Represents a TCP client session.  
 
 
 
@@ -15,6 +15,12 @@ Represents a TCP client connection.
 \mbox{\Hypertarget{classSession_acde12b784c8f165b8b46e7f2ad8833b4}\label{classSession_acde12b784c8f165b8b46e7f2ad8833b4}} 
 {\bfseries Session} (int \mbox{\hyperlink{classSession_a6647c30a5eccb78c9177a9c3e8ceb007}{sockfd}}, const struct sockaddr $\ast$\mbox{\hyperlink{classSession_a7eb187e0eeac6ae31f444a87244ee806}{addr}}, socklen\+\_\+t addrlen)
 \item 
+\mbox{\Hypertarget{classSession_ae0ad9701fa22446025c7085ce8f9f857}\label{classSession_ae0ad9701fa22446025c7085ce8f9f857}} 
+void {\bfseries send} (int client, string message) const
+\item 
+\mbox{\Hypertarget{classSession_a0e582f8db73e1af35a850a61ac3a7273}\label{classSession_a0e582f8db73e1af35a850a61ac3a7273}} 
+string {\bfseries recv} (int client) const
+\item 
 int \mbox{\hyperlink{classSession_a6647c30a5eccb78c9177a9c3e8ceb007}{sockfd}} () const
 \item 
 const struct sockaddr $\ast$ \mbox{\hyperlink{classSession_a7eb187e0eeac6ae31f444a87244ee806}{addr}} () const
@@ -25,9 +31,9 @@ socklen\+\_\+t {\bfseries addrlen} () const
 
 
 \doxysubsection{Detailed Description}
-Represents a TCP client connection. 
+Represents a TCP client session. 
 
-Definition at line 30 of file socket.\+hpp.
+Definition at line 36 of file socket.\+hpp.
 
 
 
@@ -40,7 +46,7 @@ Definition at line 30 of file socket.\+hpp.
 
 addr\+\_\+ getter 
 
-Definition at line 37 of file socket.\+hpp.
+Definition at line 49 of file socket.\+hpp.
 
 \mbox{\Hypertarget{classSession_a6647c30a5eccb78c9177a9c3e8ceb007}\label{classSession_a6647c30a5eccb78c9177a9c3e8ceb007}} 
 \index{Session@{Session}!sockfd@{sockfd}}
@@ -50,10 +56,11 @@ Definition at line 37 of file socket.\+hpp.
 
 sockfd\+\_\+ getter 
 
-Definition at line 36 of file socket.\+hpp.
+Definition at line 46 of file socket.\+hpp.
 
 
 
-The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/\mbox{\hyperlink{socket_8hpp}{socket.\+hpp}}\end{DoxyCompactItemize}
+include/\mbox{\hyperlink{socket_8hpp}{socket.\+hpp}}\item 
+src/\mbox{\hyperlink{socket_8cpp}{socket.\+cpp}}\end{DoxyCompactItemize}

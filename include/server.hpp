@@ -39,7 +39,12 @@
 
 #include "webserv.hpp"
 
+using std::map;
 using std::string;
+
+/** @todo figure out why this aren't working with includes from webserv.hpp */
+class Socket;
+class Session;
 
 /**
  * @brief Base class for servers
@@ -47,20 +52,26 @@ using std::string;
  */
 class Server {
    public:
+    typedef Socket* (*SocketGenerator)(void);
+
     virtual ~Server() = 0;
 
-    virtual void start()        = 0;
-    virtual void stop()         = 0;
-    virtual void createSocket() = 0;
+    virtual void start(bool) = 0;
+    virtual void stop()  = 0;
 
    protected:
+    virtual void run() = 0;
+
     virtual Request  receiveRequest()                = 0;
     virtual Response handleRequest(Request request)  = 0;
     virtual void     sendResponse(Response response) = 0;
 
    protected:
-    Socket*      socket_; /**< Socket used by the server */
-    ServerConfig config_; /**< Configuration for the server */
+    SocketGenerator socket_generator_;  /**< Function ptr to socket generator */
+    map<int, Socket*>  server_sockets_; /**< Map of server IDs to sockets */
+    map<int, Session*> sessions_;       /**< Map of session IDs to sessions */
+    EventListener*     listener_;       /**< Event listener for the server */
+    HttpConfig         config_;         /**< Configuration for the server */
 };
 
 /**
@@ -73,7 +84,8 @@ class HttpServer : public Server {
      *
      * @param config Configuration for the server
      */
-    HttpServer(const ServerConfig& config);
+    HttpServer(SocketGenerator socket_generator, HttpConfig config,
+               EventListener* listener);
     ~HttpServer() throw();
 
    private:
@@ -84,19 +96,19 @@ class HttpServer : public Server {
     /**
      * @brief Start the server
      */
-    void start();
+    void start(bool run_server = true);
 
     /**
      * @brief Stop the server
      */
     void stop();
 
-    /**
-     * @brief Create a server socket
-     */
-    void createSocket();
-
    private:
+    /**
+     * @brief Run the server
+     */
+    void run();
+
     /**
      * @brief Read a request from the socket
      *

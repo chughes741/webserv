@@ -1,0 +1,41 @@
+\hypertarget{events_8cpp}{}\doxysection{src/events.cpp File Reference}
+\label{events_8cpp}\index{src/events.cpp@{src/events.cpp}}
+
+
+Defines classes for handling events.  
+
+
+{\ttfamily \#include \char`\"{}events.\+hpp\char`\"{}}\newline
+Include dependency graph for events.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{events_8cpp__incl}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Detailed Description}
+Defines classes for handling events. 
+
+This file contains the implementation of the \mbox{\hyperlink{classEventListener}{Event\+Listener}}, Kqueue\+Event\+Listener, and Epoll\+Event\+Listener classes. The \mbox{\hyperlink{classEventListener}{Event\+Listener}} class is an abstract base class that provides an interface for creating event loops. The Kqueue\+Event\+Listener class inherits from the \mbox{\hyperlink{classEventListener}{Event\+Listener}} class and implements an event loop that uses the kqueue system call. The Epoll\+Event\+Listener class inherits from the \mbox{\hyperlink{classEventListener}{Event\+Listener}} class and implements an event loop that uses the epoll system call.
+
+\begin{DoxyNote}{Note}
+The Kqueue\+Event\+Listener class is only available on Mac\+OS and the Epoll\+Event\+Listener class is only available on Linux.
+
+This code is for educational purposes only and should not be used in production environments without extensive testing and modification.
+\end{DoxyNote}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2023-\/04-\/24 
+\end{DoxyDate}
+\begin{DoxyAuthor}{Authors}
+
+\begin{DoxyItemize}
+\item Francis L.
+\item Marc-\/\+André L.
+\item Cole H. 
+\end{DoxyItemize}
+\end{DoxyAuthor}

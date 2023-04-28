@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['unknowndirective_71',['UnknownDirective',['../classWebExcep_1_1UnknownDirective.html',1,'WebExcep']]]
+  ['tcpsocket_86',['TcpSocket',['../classTcpSocket.html',1,'']]],
+  ['test_87',['Test',['../classTest.html',1,'']]]
 ];

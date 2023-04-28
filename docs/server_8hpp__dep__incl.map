@@ -1,5 +1,12 @@
 <map id="include/server.hpp" name="include/server.hpp">
-<area shape="rect" id="node1" title="Declares classes for creating web servers that can handle HTTP requests." alt="" coords="53,5,194,32"/>
-<area shape="rect" id="node2" href="$main_8cpp_source.html" title=" " alt="" coords="5,80,111,107"/>
-<area shape="rect" id="node3" href="$server_8cpp.html" title="Defines classes for creating web servers that can handle HTTP requests." alt="" coords="134,80,246,107"/>
+<area shape="rect" id="node1" title="Declares classes for creating web servers that can handle HTTP requests." alt="" coords="309,5,450,32"/>
+<area shape="rect" id="node2" href="$webserv_8hpp_source.html" title=" " alt="" coords="302,80,457,107"/>
+<area shape="rect" id="node10" href="$server_8cpp.html" title="Defines classes for creating web servers that can handle HTTP requests." alt="" coords="481,80,593,107"/>
+<area shape="rect" id="node3" href="$main_8cpp.html" title="Main function." alt="" coords="5,155,111,181"/>
+<area shape="rect" id="node4" href="$parsing_8hpp_source.html" title=" " alt="" coords="134,155,283,181"/>
+<area shape="rect" id="node6" href="$socket_8hpp.html" title="Classes for using sockets as defined in RFC 793." alt="" coords="308,155,451,181"/>
+<area shape="rect" id="node8" href="$config_8hpp.html" title="Configuration options for the HTTP server:" alt="" coords="475,155,615,181"/>
+<area shape="rect" id="node9" href="$Test_8hpp_source.html" title=" " alt="" coords="639,155,765,181"/>
+<area shape="rect" id="node5" href="$parsing_8cpp.html" title="Class implementation for parsing the config file." alt="" coords="149,229,269,256"/>
+<area shape="rect" id="node7" href="$socket_8cpp.html" title="Class implementations for using sockets as defined in RFC 793." alt="" coords="322,229,437,256"/>
 </map>

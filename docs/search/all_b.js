@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['tcpsocket_48',['TcpSocket',['../classTcpSocket.html',1,'TcpSocket'],['../classTcpSocket.html#a132aa72af141d611f8bad96ba585a79f',1,'TcpSocket::TcpSocket()']]],
-  ['todo_20list_49',['Todo List',['../todo.html',1,'']]]
+  ['request_37',['Request',['../structRequest.html',1,'']]],
+  ['response_38',['Response',['../structResponse.html',1,'']]],
+  ['retrieveport_39',['retrievePort',['../classParser.html#a32db756a819d2d0454071100f469805d',1,'Parser']]],
+  ['root_40',['root',['../structLocationConfig.html#a13996dc3692eed3eb9e2ecb246f855dd',1,'LocationConfig::root()'],['../structServerConfig.html#a1fee7993152e01acfbd4ea07ef0e8ff5',1,'ServerConfig::root()'],['../structHttpConfig.html#a951bc94c535f7b4d482e3dc3c53bf1f4',1,'HttpConfig::root()']]]
 ];

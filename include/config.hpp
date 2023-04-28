@@ -65,11 +65,12 @@
 
 #pragma once
 
-#include "webserv.hpp"
+#include <map>
+#include <string>
+#include <utility>
+#include <vector>
 
-#ifndef CONFIG_FILE
-# define CONFIG_FILE "./config/server.conf"
-#endif
+#include "webserv.hpp"
 
 /** HTTP methods */
 #define POST 0x01
@@ -159,11 +160,12 @@ struct ServerConfig {
           locations() {
     }
 
-    string            server_name; /**< Server name */ /*TODO Nginx can take multiple domains, can we?*/
-    pair<string, int> listen;      /**< Address and port to listen on */
-    string            root;        /**< Root directory for serving files */
-    pair<int, string> error_page;  /**< Default error page */
-    string client_max_body_size;   /**< Maximum size of a request body */
+    string server_name;
+    /**< Server name */       /*TODO Nginx can take multiple domains, can we?*/
+    pair<string, int> listen; /**< Address and port to listen on */
+    string            root;   /**< Root directory for serving files */
+    pair<int, string> error_page; /**< Default error page */
+    string client_max_body_size;  /**< Maximum size of a request body */
     map<string, LocationConfig>
         locations; /**< List of locations (path, location)*/
 };
@@ -174,7 +176,7 @@ struct ServerConfig {
 struct HttpConfig {
     /** Constructor, initializes to default values */
     HttpConfig()
-        : servers(),
+        : servers(1),
           error_page(404, ""),
           error_log("error.log"),
           root("html"),
@@ -189,7 +191,6 @@ struct HttpConfig {
 };
 
 extern HttpConfig httpConfig;
-
 
 // void parseConfig(string);
 

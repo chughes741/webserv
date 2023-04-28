@@ -1,0 +1,59 @@
+\hypertarget{events_8hpp}{}\doxysection{include/events.hpp File Reference}
+\label{events_8hpp}\index{include/events.hpp@{include/events.hpp}}
+
+
+Declares classes for handling events on sockets using the kqueue or epoll system calls.  
+
+
+{\ttfamily \#include $<$sys/time.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+Include dependency graph for events.\+hpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{events_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{events_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classEventListener}{Event\+Listener}}
+\begin{DoxyCompactList}\small\item\em Abstract class for handling event. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Declares classes for handling events on sockets using the kqueue or epoll system calls. 
+
+This file contains the declaration of the abstract \mbox{\hyperlink{classEventListener}{Event\+Listener}} class and its two derived classes, Kqueue\+Event\+Listener and Epoll\+Event\+Listener. The \mbox{\hyperlink{classEventListener}{Event\+Listener}} class provides an interface for handling events on sockets, such as register\+Eventing and unregister\+Eventing sockets for read and write events. The Kqueue\+Event\+Listener and Epoll\+Event\+Listener classes inherit from the \mbox{\hyperlink{classEventListener}{Event\+Listener}} class and implement the event handling functionality using the kqueue and epoll system calls, respectively.
+
+To use the \mbox{\hyperlink{classEventListener}{Event\+Listener}} classes, you must create an instance of one of the derived classes, register\+Event the sockets you want to monitor using the register\+Event\+Socket() method, and then call the start() method to begin monitoring events on the register\+Evented sockets. Once you have received an event, you can use the handle\+Event() method to process the event and take appropriate action, such as reading or writing data to the socket.
+
+\begin{DoxyNote}{Note}
+The Kqueue\+Event\+Listener class is used on Mac\+OS, and the Epoll\+Event\+Listener class is used on Linux.
+
+This code is for educational purposes only and should not be used in production environments without extensive testing and modification.
+\end{DoxyNote}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2023-\/04-\/24 
+\end{DoxyDate}
+\begin{DoxyAuthor}{Authors}
+
+\begin{DoxyItemize}
+\item Francis L.
+\item Marc-\/\+André L.
+\item Cole H. 
+\end{DoxyItemize}
+\end{DoxyAuthor}

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['recv_90',['recv',['../classTcpSocket.html#a88e31f9feb0b1f873fc6f4b5e6181afc',1,'TcpSocket']]]
+  ['initsettings_105',['initSettings',['../classParser.html#ae76473bd7ac12e0671da1354b24e44a0',1,'Parser']]]
 ];
