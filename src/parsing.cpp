@@ -143,35 +143,31 @@ int Parser::getSetting(string settingsList[], int size) {
     return (settingIt - settings.begin());
 }
 
-bool setWorkerProcessses(string num) {
-    if (num == "auto") {
-    }
+bool Parser::setErrorLog() {
+    validateFirstToken("error_log");
+    httpConfig.error_log = *it;
+    validateLastToken("error_log");
+    return true;
+}
+
+bool Parser::setPid() {
+    validateFirstToken("error_log");
+    // httpConfig.pid = *it;
+    validateLastToken("error_log");
     return true;
 }
 
 bool Parser::setGlobalSetting() {
-    std::cout << "Global: ";
-    string List[] = {"worker_processes", "error_log", "pid"};
+    string List[] = {"error_log", "pid"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
-        case WORKER_PROCESSES:
-            // setWorkerProcessses();
-            std::cout << "worker_processes: " << *(++it) << std::endl;
-            break;
         case ERROR_LOG:
-            httpConfig.error_log = *(++it);
-            std::cout << "error_log: " << *(it) << std::endl;
-            break;
+            return setErrorLog();
         case PID:
-            // httpConfig.pid_file = *(++it);
-            ++it;
-            std::cout << "pid: " << *(it) << std::endl;
-            break;
+            return setPid();
         default:
             throw std::invalid_argument("Invalid setting in global context: " +
                                         *it);
     }
-    ++it;
-    return true;
 }
 
 bool Parser::setEventsContext() {
@@ -184,7 +180,6 @@ bool Parser::setEventsContext() {
 }
 
 bool Parser::setEventsSetting() {
-    std::cout << "Events: ";
     string List[] = {"worker_connections"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case WORKER_CONNECTIONS:
@@ -195,11 +190,20 @@ bool Parser::setEventsSetting() {
 }
 
 bool Parser::setWorkerConnections() {
-    std::cout << "worker_connections: " << *(++it) << std::endl;
-    if (*(++it) != ";") {
-        throw std::invalid_argument("Invalid value after Worker_Connections: " +
+    validateFirstToken("worker_connections");
+    int size = (*it).length();
+    for (int i = 0; i < size; i++) {
+        if (!isdigit((*it)[i]) || size > 10) {
+            throw std::invalid_argument("Invalid worker_connections: " + *it);
+        }
+    }
+    int num = stoi(*it);
+    if (num > OPEN_MAX) {
+        throw std::invalid_argument("worker_connections value over limit: " +
                                     *it);
     }
+    // httpConfig.worker_connections = num;
+    validateLastToken("worker_connections");
     return true;
 }
 

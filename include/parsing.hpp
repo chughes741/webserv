@@ -15,9 +15,8 @@
 #define HTTP 2
 #define SERVER 3
 // Global Settings
-#define WORKER_PROCESSES 0
-#define ERROR_LOG 1
-#define PID 2
+#define ERROR_LOG 0
+#define PID 1
 // Events Settings
 #define WORKER_CONNECTIONS 0
 // Http Settings
@@ -42,7 +41,7 @@ struct HttpConfig;
  * @brief Parse a config file. Read the file line by line and split into tokens.
  *
  * @param config_file	[in] Path to the config file
- * @param httpConfig	[out] Struct to store the config settings
+ * @param httpConfig	[in][out] Struct to store the config settings
  */
 void parseConfig(string config_file, HttpConfig &httpConfig);
 
@@ -60,13 +59,17 @@ class Parser {
      * @param line		[in] Line to tokenize
      */
     void tokenizeConfig(string);
+    /**
+     * @brief 	 Increment iterator and validate first token of settings (not ;)
+     */
     void validateFirstToken(string);
+    /**
+     * @brief 	 Increment iterator and validate last token of settings (is ;)
+     */
     void validateLastToken(string);
 
     /**
      * @brief Initialize settings from token vector
-     *
-     * @param tokens [in] Vector of tokens
      */
     void initSettings();
 
@@ -79,7 +82,7 @@ class Parser {
     bool contextSwitchCase(int context);
 
     /**
-     * @brief define in which context the token is
+     * @brief define in which context the token is and initialize the context
      */
     bool setContext();
 
@@ -93,13 +96,39 @@ class Parser {
     int getSetting(string settingsList[], int size);
 
     /**
-     * @brief Set global context settings
+     * @brief Set global context setting through a switch case of available
+     * settings
      */
     bool setGlobalSetting();
+
+    /**
+     * @brief Set the error log setting for any setting
+     */
+    bool setErrorLog();
+
+	/** @todo determine if we accept/need a pid value in global context */
+    bool setPid();
+
+	/**
+	 * @brief Set the Events Context and increment the token iterator
+	 */
     bool setEventsContext();
+
+	/**
+	 * @brief Calls the approriate setter depending on the setting
+	 */
     bool setEventsSetting();
+
+	/** @todo determine where we put the worker connections setting
+	 * @brief Set the Worker Connections object
+	 */
     bool setWorkerConnections();
+
+	
     bool setHttpContext();
+    /**
+     * @brief Set Events settings
+     */
 
     /**
      * @brief Set http setting
