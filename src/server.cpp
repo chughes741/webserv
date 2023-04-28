@@ -30,30 +30,24 @@ extern HttpConfig httpConfig;
 Server::~Server() {
 }
 
-HttpServer::HttpServer(HttpConfig httpConfig) {
-    config_ = httpConfig;
-
-    // Create a listener
-#ifdef __APPLE__
-    listener_ = new KqueueEventListener();
-#elif __linux__
-    listener_ = new EpollEventListener();
-#else
-#error "Unsupported platform"
-#endif  // __APPLE__
+HttpServer::HttpServer(SocketGenerator socket_generator, HttpConfig httpConfig,
+                       EventListener* listener) {
+    socket_generator_ = socket_generator;
+    config_           = httpConfig;
+    listener_         = listener;
 }
 
 HttpServer::~HttpServer() throw() {
 }
 
-void HttpServer::start() {
+void HttpServer::start(bool run_server) {
     // Create a socket for each server in the config
     Socket* new_socket;
     for (vector<ServerConfig>::iterator it = config_.servers.begin();
          it != config_.servers.end(); ++it) {
         try {
             // Create a new socket
-            new_socket = new TcpSocket();
+            new_socket = socket_generator_();
 
             // Bind the socket to the address/port
             int server_id =
@@ -76,7 +70,8 @@ void HttpServer::start() {
     }
 
     // Run the server
-    run();
+    if (run_server == true)
+        run();
 }
 
 void HttpServer::stop() {

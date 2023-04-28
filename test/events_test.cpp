@@ -3,6 +3,6 @@
 
 #include "webserv.hpp"
 
-TEST(webservTest, BasicAssertions) {
-	EXPECT_TRUE(true);
+TEST(eventsTest, BasicAssertions) {
+    EXPECT_TRUE(true);
 }

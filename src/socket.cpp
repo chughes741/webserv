@@ -107,3 +107,7 @@ void TcpSocket::close() {
         throw runtime_error("Error: Failed to close socket");
     }
 }
+
+Socket* tcp_socket_generator() {
+    return new TcpSocket();
+}
