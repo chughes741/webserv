@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
     FILE *file = fopen("index.html", "rb");
     if (!file)
     {
-        printf("TROUDCUL\n");
+        std::cerr << "Error - File not found" << std::endl;
         exit(EXIT_FAILURE);
     }
 
