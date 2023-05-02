@@ -86,7 +86,7 @@ int main(int argc, char const *argv[])
     while(1)
     {
         std::cout << std::endl << "******* Waiting for new connection *******" << std::endl << std::endl;
-        if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0)
+        if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0)
         {
             std::cerr << "In accept" << std::endl;
             exit(EXIT_FAILURE);
