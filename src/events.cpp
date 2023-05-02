@@ -33,6 +33,10 @@ EventListener::~EventListener() {
 
 KqueueEventListener::KqueueEventListener() {
     // Create a new kqueue
+    KqueueEventMap[EVFILT_READ] = READABLE;
+    KqueueEventMap[EVFILT_WRITE] = WRITABLE;
+    KqueueEventMap[EVFILT_EXCEPT] = ERROR_EVENT;
+    
     queue_fd_        = kqueue();
     timeout_.tv_sec  = 0;
     timeout_.tv_nsec = 0;
