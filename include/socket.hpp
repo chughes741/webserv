@@ -31,33 +31,36 @@ using std::string;
 #define CRLF "\r\n"
 
 /**
- * @brief Represents a TCP client session
+ * @brief Pure abstract class representing a socket session
  */
 class Session {
    public:
-    Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
-        : sockfd_(sockfd), addr_(addr), addrlen_(addrlen) {
-    }
+    Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
+    virtual ~Session() = 0;
 
-    void   send(int client, string message) const;
-    string recv(int client) const;
+    virtual void   send(int client, string message) const = 0;
+    virtual string recv(int client) const                 = 0;
 
-   public:
-    int sockfd() const {
-        return sockfd_;
-    } /**< sockfd_ getter */
-    const struct sockaddr* addr() const {
-        return addr_;
-    } /**< addr_ getter */
-    socklen_t addrlen() const {
-        return addrlen_;
-    } /** addrlen_ getter*/
-
-   private:
+   protected:
     int                    sockfd_;  /**< Session socket file descriptor */
     const struct sockaddr* addr_;    /**< Session socket address */
     socklen_t              addrlen_; /**< Session socket address length */
 };
+
+/**
+ * @brief Represents a TCP session
+ */
+class TcpSession : public Session {
+   public:
+    TcpSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
+
+    void   send(int client, string message) const;
+    string recv(int client) const;
+};
+
+/** TcpSession generator function */
+Session* tcp_session_generator(int sockfd, const struct sockaddr* addr,
+                               socklen_t addrlen);
 
 /**
  * @brief Socket base class
@@ -65,16 +68,23 @@ class Session {
  */
 class Socket {
    public:
-    virtual ~Socket()                                      = 0;
-    virtual int                bind(string addr, int port) = 0;
-    virtual void               listen()                    = 0;
-    virtual pair<int, Session> accept()                    = 0;
-    virtual void               close()                     = 0;
+    typedef Session* (*SessionGenerator)(int                    sockfd,
+                                         const struct sockaddr* addr,
+                                         socklen_t              addrlen);
+
+    Socket(SessionGenerator session_generator);
+    virtual ~Socket() = 0;
+
+    virtual int      bind(string addr, int port) = 0;
+    virtual void     listen()                    = 0;
+    virtual Session* accept()                    = 0;
+    virtual void     close()                     = 0;
     // virtual void setsockopt() = 0;
 
    protected:
-    int                sockfd_;  /**< Server socket file descriptor */
-    struct sockaddr_in addr_in_; /**< Server address */
+    int                sockfd_;            /**< Server socket file descriptor */
+    struct sockaddr_in addr_in_;           /**< Server address */
+    SessionGenerator   session_generator_; /**< Session generator function */
 };
 
 /**
@@ -85,7 +95,7 @@ class TcpSocket : public Socket {
     /**
      * @brief Construct a new TcpSocket object
      */
-    TcpSocket();
+    TcpSocket(SessionGenerator session_generator);
 
    private:
     // TcpSocket(const TcpSocket& other);
@@ -113,7 +123,7 @@ class TcpSocket : public Socket {
     /**
      * @brief Accept a connection and connects to it
      */
-    pair<int, Session> accept();
+    Session* accept();
 
     /**
      * @brief Close the socket
