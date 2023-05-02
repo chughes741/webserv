@@ -77,11 +77,6 @@ class EventListener {
 #ifdef __APPLE__
 
 /** Event map to convert KqueueEvents to internal events */
-const map<KqueueEvent, InternalEvent> KqueueEventMap = {
-    {EVFILT_READ, READABLE},
-    {EVFILT_WRITE, WRITABLE},
-    {EVFILT_EXCEPT, ERROR_EVENT},
-};
 
 /**
  * @brief KqueueEventListener class for handling events, used on MacOS
@@ -101,6 +96,7 @@ class KqueueEventListener : public EventListener {
     int                     queue_fd_; /**< kqueue file descriptor */
     struct timespec         timeout_;  /**< timeout for kevent */
     map<int, struct kevent> events_;   /**< ident, event parameters */
+    map<KqueueEvent, InternalEvent> KqueueEventMap;
 };
 
 #elif __linux__
