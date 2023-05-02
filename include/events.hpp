@@ -39,14 +39,28 @@
 #elif __linux__
 #include <sys/epoll.h>
 #endif  // __APPLE__
+#include <stdint.h>
 #include <sys/time.h>
 #include <sys/types.h>
 
-#include <stdexcept>
 #include <map>
+#include <stdexcept>
+#include <utility>
 
+#define READABLE 1
+#define WRITABLE 2
+#define ERROR_EVENT 3
+#define CONNECT_EVENT 4
+#define DISCONNECT_EVENT 5
+
+using std::make_pair;
 using std::map;
+using std::pair;
 using std::runtime_error;
+
+typedef uint32_t KqueueEvent;
+typedef uint32_t EpollEvent;
+typedef uint32_t InternalEvent;
 
 /**
  * @brief Abstract class for handling event
@@ -55,14 +69,21 @@ class EventListener {
    public:
     virtual ~EventListener();
 
-    virtual int  listen()                          = 0;
-    virtual void registerEvent(int fd, int events) = 0;
-    virtual void unregisterEvent(int fd)           = 0;
+    virtual pair<int, InternalEvent> listen()                          = 0;
+    virtual void                     registerEvent(int fd, int events) = 0;
+    virtual void                     unregisterEvent(int fd)           = 0;
 
    protected:
 };
 
 #ifdef __APPLE__
+
+map<KqueueEvent, InternalEvent> KqueueEventMap = {
+    {EVFILT_READ, READABLE},
+    {EVFILT_WRITE, WRITABLE},
+    {EVFILT_EXCEPT, ERROR_EVENT},
+};
+
 /**
  * @brief KqueueEventListener class for handling events, used on MacOS
  *
@@ -73,16 +94,26 @@ class KqueueEventListener : public EventListener {
    public:
     KqueueEventListener();
 
-    int  listen();
-    void registerEvent(int fd, int events);
-    void unregisterEvent(int fd);
+    pair<int, InternalEvent> listen();
+    void                     registerEvent(int fd, int events);
+    void                     unregisterEvent(int fd);
 
    private:
     int                     queue_fd_; /**< kqueue file descriptor */
     struct timespec         timeout_;  /**< timeout for kevent */
     map<int, struct kevent> events_;   /**< ident, event parameters */
 };
+
 #elif __linux__
+
+map<EpollEvent, InternalEvent> EpollEventMap = {
+    {EPOLLIN, READABLE},
+    {EPOLLOUT, WRITABLE},
+    {EPOLLERR, ERROR_EVENT},
+    {EPOLLHUP, DISCONNECT_EVENT},
+    {EPOLLRDHUP, DISCONNECT_EVENT},
+};
+
 /**
  * @brief Epoll class for handling events, used on Linux
  *
@@ -93,9 +124,9 @@ class EpollEventListener : public EventListener {
    public:
     EpollEventListener();
 
-    int  listen();
-    void registerEvent(int fd, int events);
-    void unregisterEvent(int fd);
+    pair<int, InternalEvent> listen();
+    void                     registerEvent(int fd, int events);
+    void                     unregisterEvent(int fd);
 
    private:
     int                          epoll_fd_; /**< epoll file descriptor */

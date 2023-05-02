@@ -2,12 +2,13 @@
  * @file events.cpp
  * @brief Defines classes for handling events
  *
- * This file contains the implementation of the EventListener, KqueueEventListener, and
- * EpollEventListener classes. The EventListener class is an abstract base class that
- * provides an interface for creating event loops. The KqueueEventListener class
- * inherits from the EventListener class and implements an event loop that uses the
- * kqueue system call. The EpollEventListener class inherits from the EventListener
- * class and implements an event loop that uses the epoll system call.
+ * This file contains the implementation of the EventListener,
+ * KqueueEventListener, and EpollEventListener classes. The EventListener class
+ * is an abstract base class that provides an interface for creating event
+ * loops. The KqueueEventListener class inherits from the EventListener class
+ * and implements an event loop that uses the kqueue system call. The
+ * EpollEventListener class inherits from the EventListener class and implements
+ * an event loop that uses the epoll system call.
  *
  * @note The KqueueEventListener class is only available on MacOS and the
  * EpollEventListener class is only available on Linux.
@@ -32,8 +33,8 @@ EventListener::~EventListener() {
 
 KqueueEventListener::KqueueEventListener() {
     // Create a new kqueue
-    queue_fd_ = kqueue();
-    timeout_.tv_sec = 0;
+    queue_fd_        = kqueue();
+    timeout_.tv_sec  = 0;
     timeout_.tv_nsec = 0;
 
     // Check if kqueue was created successfully
@@ -42,23 +43,27 @@ KqueueEventListener::KqueueEventListener() {
     }
 }
 
-int KqueueEventListener::listen() {
+pair<int, InternalEvent> KqueueEventListener::listen() {
     // Wait for events on the kqueue.
-    struct kevent event;
-    int           ret = kevent(queue_fd_, NULL, 0, &event, 1, &timeout_);
+    struct kevent kevent;
+    int           ret = kevent(queue_fd_, NULL, 0, &kevent, 1, &timeout_);
 
     // Check if event was received successfully
     if (ret == -1) {
         throw runtime_error("eventListen() failed");
     }
 
-    return event.ident;
+    // Handle conversion from kqueue events to internal events
+    InternalEvent event = 0;
+
+    // Return fd and event
+    return make_pair(event.ident, event);
 }
 
 void KqueueEventListener::registerEvent(int fd, int events) {
     struct kevent event;
 
-    // Handle conversion from events to kqueue events
+    // Handle conversion from internal events to kqueue events
     (void)events;
 
     // Initialize kevent structure.
@@ -112,7 +117,7 @@ EpollEventListener::EpollEventListener() {
     }
 }
 
-int EpollEventListener::listen() {
+pair<int, InternalEvent> EpollEventListener::listen() {
     // Get an event from epoll
     struct epoll_event events[1];
     int                ret = epoll_wait(epoll_fd_, events, 1, -1);
@@ -122,18 +127,32 @@ int EpollEventListener::listen() {
         throw runtime_error("epoll_wait() failed");
     }
 
-    return events[0].data.fd;
+    // Handle conversion from epoll events to internal events
+    InternalEvent event = 0;
+    for (map<EpollEvent, InternalEvent>::iterator it = EpollEventMap.begin();
+         it != EpollEventMap.end(); ++it) {
+        if (it->first & events[0].events) {
+            event |= it->second;
+        }
+    }
+
+    // Return fd and event
+    return make_pair(events[0].data.fd, event);
 }
 
 void EpollEventListener::registerEvent(int fd, int events) {
-    struct epoll_event event;
-
-    // Handle conversion from events to epoll events
-    (void)events;
+    struct epoll_event event; /** @todo does this need to be 0ed */
 
     // Initialize epoll_event structure.
-    event.events  = events;
     event.data.fd = fd;
+
+    // Handle conversion from internal events to epoll events
+    for (map<EpollEvent, InternalEvent>::iterator it = EpollEventMap.begin();
+         it != EpollEventMap.end(); ++it) {
+        if (it->second & events) {
+            events |= it->first;
+        }
+    }
 
     // Add event to the epoll.
     int ret = epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, fd, &event);
