@@ -95,7 +95,7 @@ class TcpSocket : public Socket {
     /**
      * @brief Construct a new TcpSocket object
      */
-    TcpSocket(SessionGenerator session_generator);
+    TcpSocket(SessionGenerator session_generator = tcp_session_generator);
 
    private:
     // TcpSocket(const TcpSocket& other);

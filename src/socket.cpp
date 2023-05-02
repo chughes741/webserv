@@ -72,7 +72,7 @@ Socket::Socket(SessionGenerator session_generator)
 Socket::~Socket() {
 }
 
-TcpSocket::TcpSocket(SessionGenerator session_generator = tcp_session_generator)
+TcpSocket::TcpSocket(SessionGenerator session_generator)
     : Socket(session_generator) {
     /**
      * @todo flags (isntead of 0) - these should be in setsockopt()
