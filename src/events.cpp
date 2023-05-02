@@ -45,8 +45,8 @@ KqueueEventListener::KqueueEventListener() {
 
 pair<int, InternalEvent> KqueueEventListener::listen() {
     // Wait for events on the kqueue.
-    struct kevent kevent;
-    int           ret = kevent(queue_fd_, NULL, 0, &kevent, 1, &timeout_);
+    struct kevent eventlist[1];
+    int           ret = kevent(queue_fd_, NULL, 0, eventlist, 1, &timeout_);
 
     // Check if event was received successfully
     if (ret == -1) {
@@ -55,19 +55,43 @@ pair<int, InternalEvent> KqueueEventListener::listen() {
 
     // Handle conversion from kqueue events to internal events
     InternalEvent event = 0;
+    for (map<KqueueEvent, InternalEvent>::const_iterator it =
+             KqueueEventMap.begin();
+         it != KqueueEventMap.end(); ++it) {
+        if (eventlist[0].filter & it->first) {
+            event |= it->second;
+            break;
+        }
+    }
+
+    /** @todo check if any other information needs to be returned */
+
+    // EVFILT_WRITE returns when it's possible to write, data will contain the
+    // amount of space left in the write buffer
 
     // Return fd and event
-    return make_pair(event.ident, event);
+    return make_pair(eventlist[0].ident, event);
 }
 
 void KqueueEventListener::registerEvent(int fd, int events) {
-    struct kevent event;
+    // Handle conversion from internal events to kqueue filter
+    KqueueEvent filter = 0;
+    for (map<KqueueEvent, InternalEvent>::const_iterator it =
+             KqueueEventMap.begin();
+         it != KqueueEventMap.end(); ++it) {
+        if (events & it->second) {
+            filter |= it->first;
+        }
+    }
 
-    // Handle conversion from internal events to kqueue events
-    (void)events;
+    // Set flags and fflags
+    struct kevent event;
+    u_short       flags  = EV_ADD | EV_CLEAR;
+    u_int         fflags = 0;  /** @todo check if we need EVFILT_VNODE */
+    int64_t       data   = 0;  // Shouldn't be needed
 
     // Initialize kevent structure.
-    EV_SET(&event, fd, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, NULL);
+    EV_SET(&event, fd, filter, flags, fflags, data, NULL);
 
     // Add event to the kqueue.
     int ret = kevent(queue_fd_, &event, 1, NULL, 0, NULL);
@@ -88,10 +112,14 @@ void KqueueEventListener::unregisterEvent(int fd) {
     }
 
     // Get event from the map of events.
-    struct kevent event = events_[fd];
+    struct kevent event  = events_[fd];
+    KqueueEvent   filter = event.filter;
+    u_short       flags  = EV_DELETE;
+    u_int         fflags = 0;
+    int64_t       data   = 0;
 
     // Edit event.
-    EV_SET(&event, fd, EVFILT_READ, EV_DELETE, 0, 0, NULL);
+    EV_SET(&event, fd, filter, flags, fflags, data, NULL);
 
     // Delete event from the kqueue.
     int ret = kevent(queue_fd_, &event, 1, NULL, 0, NULL);
@@ -129,7 +157,8 @@ pair<int, InternalEvent> EpollEventListener::listen() {
 
     // Handle conversion from epoll events to internal events
     InternalEvent event = 0;
-    for (map<EpollEvent, InternalEvent>::iterator it = EpollEventMap.begin();
+    for (map<EpollEvent, InternalEvent>::const_iterator it =
+             EpollEventMap.begin();
          it != EpollEventMap.end(); ++it) {
         if (it->first & events[0].events) {
             event |= it->second;
@@ -147,7 +176,8 @@ void EpollEventListener::registerEvent(int fd, int events) {
     event.data.fd = fd;
 
     // Handle conversion from internal events to epoll events
-    for (map<EpollEvent, InternalEvent>::iterator it = EpollEventMap.begin();
+    for (map<EpollEvent, InternalEvent>::const_iterator it =
+             EpollEventMap.begin();
          it != EpollEventMap.end(); ++it) {
         if (it->second & events) {
             events |= it->first;
