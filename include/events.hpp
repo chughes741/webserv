@@ -49,9 +49,9 @@
 
 #define READABLE 1
 #define WRITABLE 2
-#define ERROR_EVENT 3
-#define CONNECT_EVENT 4
-#define DISCONNECT_EVENT 5
+#define ERROR_EVENT 4
+#define CONNECT_EVENT 8
+#define DISCONNECT_EVENT 16
 
 using std::make_pair;
 using std::map;
@@ -72,13 +72,12 @@ class EventListener {
     virtual pair<int, InternalEvent> listen()                          = 0;
     virtual void                     registerEvent(int fd, int events) = 0;
     virtual void                     unregisterEvent(int fd)           = 0;
-
-   protected:
 };
 
 #ifdef __APPLE__
 
-map<KqueueEvent, InternalEvent> KqueueEventMap = {
+/** Event map to convert KqueueEvents to internal events */
+const map<KqueueEvent, InternalEvent> KqueueEventMap = {
     {EVFILT_READ, READABLE},
     {EVFILT_WRITE, WRITABLE},
     {EVFILT_EXCEPT, ERROR_EVENT},
@@ -106,7 +105,8 @@ class KqueueEventListener : public EventListener {
 
 #elif __linux__
 
-map<EpollEvent, InternalEvent> EpollEventMap = {
+/** Event map to convert EpollEvents to internal events */
+const map<EpollEvent, InternalEvent> EpollEventMap = {
     {EPOLLIN, READABLE},
     {EPOLLOUT, WRITABLE},
     {EPOLLERR, ERROR_EVENT},

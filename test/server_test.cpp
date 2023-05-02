@@ -41,8 +41,10 @@ class MockSocket : public Socket {
 };
 
 class MockEventListener : public EventListener {
+    typedef pair<int, InternalEvent> Event;
+
    public:
-    MOCK_METHOD(int, listen, (), (override));
+    MOCK_METHOD(Event, listen, (), (override));
     MOCK_METHOD(void, registerEvent, (int fd, int events), (override));
     MOCK_METHOD(void, unregisterEvent, (int fd), (override));
 };
