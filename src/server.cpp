@@ -27,17 +27,22 @@ using std::endl;
 
 extern HttpConfig httpConfig;
 
+Server::Server(HttpConfig config, EventListener* listener,
+               SocketGenerator socket_generator)
+    : socket_generator_(socket_generator),
+      listener_(listener),
+      config_(config) {
+}
+
 Server::~Server() {
 }
 
-HttpServer::HttpServer(SocketGenerator socket_generator, HttpConfig httpConfig,
-                       EventListener* listener) {
-    socket_generator_ = socket_generator;
-    config_           = httpConfig;
-    listener_         = listener;
+HttpServer::HttpServer(HttpConfig httpConfig, EventListener* listener,
+                       SocketGenerator socket_generator)
+    : Server(httpConfig, listener, socket_generator) {
 }
 
-HttpServer::~HttpServer() throw() {
+HttpServer::~HttpServer() {
 }
 
 void HttpServer::start(bool run_server) {
@@ -54,6 +59,7 @@ void HttpServer::start(bool run_server) {
                 new_socket->bind(it->listen.first, it->listen.second);
 
             // Listen for connections
+            /** @todo poll needs to be called before listen */
             new_socket->listen();
 
             // Add the socket to the map
@@ -70,8 +76,7 @@ void HttpServer::start(bool run_server) {
     }
 
     // Run the server
-    if (run_server == true)
-        run();
+    if (run_server == true) run();
 }
 
 void HttpServer::stop() {

@@ -45,6 +45,7 @@ using std::string;
 /** @todo figure out why this aren't working with includes from webserv.hpp */
 class Socket;
 class Session;
+Socket* tcp_socket_generator();
 
 /**
  * @brief Base class for servers
@@ -54,10 +55,12 @@ class Server {
    public:
     typedef Socket* (*SocketGenerator)(void);
 
+    Server(HttpConfig config, EventListener* listener,
+           SocketGenerator socket_generator);
     virtual ~Server() = 0;
 
     virtual void start(bool) = 0;
-    virtual void stop()  = 0;
+    virtual void stop()      = 0;
 
    protected:
     virtual void run() = 0;
@@ -84,9 +87,9 @@ class HttpServer : public Server {
      *
      * @param config Configuration for the server
      */
-    HttpServer(SocketGenerator socket_generator, HttpConfig config,
-               EventListener* listener);
-    ~HttpServer() throw();
+    HttpServer(HttpConfig config, EventListener* listener,
+               SocketGenerator socket_generator = tcp_socket_generator);
+    ~HttpServer();
 
    private:
     // HttpServer(const HttpServer& other) {}

@@ -22,7 +22,19 @@ using std::atoi;
 using std::make_pair;
 using std::runtime_error;
 
-void Session::send(int port, string buffer) const {
+Session::Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
+    : sockfd_(sockfd), addr_(addr), addrlen_(addrlen) {
+}
+
+Session::~Session() {
+}
+
+TcpSession::TcpSession(int sockfd, const struct sockaddr* addr,
+                       socklen_t addrlen)
+    : Session(sockfd, addr, addrlen) {
+}
+
+void TcpSession::send(int port, string buffer) const {
     ssize_t bytes_sent =
         ::send(port, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
     if (bytes_sent == -1) {
@@ -30,7 +42,7 @@ void Session::send(int port, string buffer) const {
     }
 }
 
-string Session::recv(int port) const {
+string TcpSession::recv(int port) const {
     string buffer_str;
     char   buffer[READ_BUFFER_SIZE];
     int    bytes_received = ::recv(port, buffer, READ_BUFFER_SIZE, 0);
@@ -47,11 +59,21 @@ string Session::recv(int port) const {
     return buffer_str;
 }
 
+Session* tcp_session_generator(int sockfd, const struct sockaddr* addr,
+                               socklen_t addrlen) {
+    return new TcpSession(sockfd, addr, addrlen);
+}
+
+Socket::Socket(SessionGenerator session_generator)
+    : session_generator_(session_generator) {
+}
+
 /** Used to make it a pure abstract class */
 Socket::~Socket() {
 }
 
-TcpSocket::TcpSocket() {
+TcpSocket::TcpSocket(SessionGenerator session_generator)
+    : Socket(session_generator) {
     /**
      * @todo flags (isntead of 0) - these should be in setsockopt()
      *  SOCK_NONBLOCK? There's no define for it, O_NONBLOCK is a flag for open()
@@ -88,7 +110,7 @@ void TcpSocket::listen() {
     }
 }
 
-pair<int, Session> TcpSocket::accept() {
+Session* TcpSocket::accept() {
     struct sockaddr* client_addr     = new struct sockaddr;
     socklen_t        client_addr_len = sizeof(sockaddr);
 
@@ -98,8 +120,7 @@ pair<int, Session> TcpSocket::accept() {
         throw runtime_error("Error: Failed to accept connection");
     }
 
-    Session session(client_sockfd, client_addr, client_addr_len);
-    return make_pair(client_sockfd, session);
+    return session_generator_(client_sockfd, client_addr, client_addr_len);
 }
 
 void TcpSocket::close() {
