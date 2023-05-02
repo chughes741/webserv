@@ -17,9 +17,6 @@ ARG =
 #                                VARIABLES                                     #
 #------------------------------------------------------------------------------#
 
-# Retrieve the number of CPU cores
-NUM_CORES := $(shell nproc)
-
 # Compiler and flags
 CC		=	c++
 CFLAGS	=	-Wall -Werror -Wextra -g -std=c++98 -I$I -DCONFIG_FILE="\"./config/server.conf\""

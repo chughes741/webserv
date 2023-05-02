@@ -22,6 +22,7 @@
 
 #include "server.hpp"
 
+using std::pair;
 using std::cerr;
 using std::endl;
 
@@ -99,10 +100,10 @@ void HttpServer::run() {
     // Loop forever
     while (true) {
         // Wait for an event
-        int event = listener_->listen();
+        pair<int, uint32_t> event = listener_->listen();
 
         // Handle event
-        switch (event) {
+        switch (event.second) {
             case 0: /** @todo add event macros */
                 /** @todo write error handler */
                 break;
