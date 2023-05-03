@@ -73,7 +73,7 @@ int main(int argc, char const *argv[])
     
     std::fill(address.sin_zero, address.sin_zero + sizeof address.sin_zero, 0);
     
-    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0)
+    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0)
     {
         std::cerr << "In bind" << std::endl;
         exit(EXIT_FAILURE);
