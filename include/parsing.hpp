@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <regex>
 #include <vector>
 
 #include "webserv.hpp"
@@ -17,6 +18,7 @@
 // Global Settings
 #define ERROR_LOG 0
 #define PID 1
+#define WORKER_PROCESSES 2
 // Events Settings
 #define WORKER_CONNECTIONS 0
 // Http Settings
@@ -101,6 +103,11 @@ class Parser {
      */
     bool setGlobalSetting();
 
+	/**
+	 * @brief Set the Worker Processes setting
+	 */
+	bool setWorkerProcesses();
+
     /**
      * @brief Set the error log setting for any setting
      */
@@ -123,17 +130,25 @@ class Parser {
 	 * @brief Set the Worker Connections object
 	 */
     bool setWorkerConnections();
-
 	
-    bool setHttpContext();
     /**
-     * @brief Set Events settings
+     * @brief Set http context and increment the token iterator
      */
+    bool setHttpContext();
 
     /**
      * @brief Set http setting
      */
     bool setHttpSetting();
+
+	/** @todo determine where we put the index setting
+	 * @brief Set the index pages of the server
+	 */
+	bool setIndex();
+
+	/**
+	 * @brief Set the Server Context and increment the token iterator
+	 */
     bool setServerContext();
 
     /**
@@ -143,27 +158,32 @@ class Parser {
 
     /**
      * @brief Transform the token into the listening port of the server
-     *
      * @return true or throw an exception
      */
     bool setListen();
 
     /**
      * @brief validate the value for port setting in listen
-     *
-     * @param num the port value in string format
-     * @return int if port value is all integer
      */
     int retrievePort(string);
 
+	/**
+	 * @brief validate the ip address for listen
+	 * @param ip the ip address to validate in string format
+	 */
+	bool isValidIPAddress(const std::string& ip);
+
     /**
      * @brief Set the server name
-     *
      * @return true or throw invalid_argument
      */
     bool setServerName();
 
     bool setAccessLog();
+
+	/**
+	 * @brief Set the Root setting for the server context
+	 */
     bool setRoot();
 
     /**
