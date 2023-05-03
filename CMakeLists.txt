@@ -37,7 +37,7 @@ target_include_directories(events_unit_tests
                            PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 add_test(NAME events_unit_tests COMMAND $<TARGET_FILE:events_unit_tests>)
 
-add_executable(parsing_unit_tests test/parsing_test.cpp)
+add_executable(parsing_unit_tests test/parsing_test.cpp src/parsing.cpp)
 target_link_libraries(parsing_unit_tests PUBLIC GTest::gtest_main
                                                 GTest::gmock_main)
 target_include_directories(parsing_unit_tests

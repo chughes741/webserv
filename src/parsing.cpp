@@ -143,35 +143,49 @@ int Parser::getSetting(string settingsList[], int size) {
     return (settingIt - settings.begin());
 }
 
-bool setWorkerProcessses(string num) {
-    if (num == "auto") {
+bool Parser::setErrorLog() {
+    validateFirstToken("error_log");
+    httpConfig.error_log = *it;
+    validateLastToken("error_log");
+    return true;
+}
+
+bool Parser::setPid() {
+    validateFirstToken("error_log");
+    // httpConfig.pid = *it;
+    validateLastToken("error_log");
+    return true;
+}
+
+bool Parser::setWorkerProcesses() {
+    validateFirstToken("worker_processes");
+    string num = *it;
+    for (size_t i = 0; i < num.length(); i++) {
+        if (!isdigit(num[i]) || num.length() > 10) {
+            throw std::invalid_argument("Invalid worker_processes: " + num);
+        }
     }
+    if (stoi(num) != 1) {
+        throw std::invalid_argument(
+            "Invalid worker_processes: this webserv is not multi threaded");
+    }
+    validateLastToken("worker_processes");
     return true;
 }
 
 bool Parser::setGlobalSetting() {
-    std::cout << "Global: ";
-    string List[] = {"worker_processes", "error_log", "pid"};
+    string List[] = {"error_log", "pid"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
-        case WORKER_PROCESSES:
-            // setWorkerProcessses();
-            std::cout << "worker_processes: " << *(++it) << std::endl;
-            break;
         case ERROR_LOG:
-            httpConfig.error_log = *(++it);
-            std::cout << "error_log: " << *(it) << std::endl;
-            break;
+            return setErrorLog();
         case PID:
-            // httpConfig.pid_file = *(++it);
-            ++it;
-            std::cout << "pid: " << *(it) << std::endl;
-            break;
+            return setPid();
+        case WORKER_PROCESSES:
+            return setWorkerProcesses();
         default:
             throw std::invalid_argument("Invalid setting in global context: " +
                                         *it);
     }
-    ++it;
-    return true;
 }
 
 bool Parser::setEventsContext() {
@@ -184,7 +198,6 @@ bool Parser::setEventsContext() {
 }
 
 bool Parser::setEventsSetting() {
-    std::cout << "Events: ";
     string List[] = {"worker_connections"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case WORKER_CONNECTIONS:
@@ -195,11 +208,20 @@ bool Parser::setEventsSetting() {
 }
 
 bool Parser::setWorkerConnections() {
-    std::cout << "worker_connections: " << *(++it) << std::endl;
-    if (*(++it) != ";") {
-        throw std::invalid_argument("Invalid value after Worker_Connections: " +
+    validateFirstToken("worker_connections");
+    int size = (*it).length();
+    for (int i = 0; i < size; i++) {
+        if (!isdigit((*it)[i]) || size > 10) {
+            throw std::invalid_argument("Invalid worker_connections: " + *it);
+        }
+    }
+    int num = stoi(*it);
+    if (num > OPEN_MAX) {
+        throw std::invalid_argument("worker_connections value over limit: " +
                                     *it);
     }
+    // httpConfig.worker_connections = num;
+    validateLastToken("worker_connections");
     return true;
 }
 
@@ -214,19 +236,22 @@ bool Parser::setHttpContext() {
     return true;
 }
 
+bool Parser::setIndex() {
+    validateFirstToken("index");
+    // httpConfig.index = *it;
+    validateLastToken("index");
+    return true;
+}
+
 bool Parser::setHttpSetting() {
-    std::cout << "Http: ";
     string List[] = {"index"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case INDEX:
-            std::cout << "Index: " << *(++it) << std::endl;
-            break;
+            return setIndex();
         default:
             throw std::invalid_argument("Invalid setting in Http context: " +
                                         *it);
     }
-    ++it;
-    return true;
 }
 
 bool Parser::setServerContext() {
@@ -241,7 +266,6 @@ bool Parser::setServerContext() {
 }
 
 bool Parser::setServerSetting() {
-    std::cout << "Server: ";
     string List[] = {"listen", "server_name", "access_log", "root", "location"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case LISTEN:
@@ -258,23 +282,36 @@ bool Parser::setServerSetting() {
             throw std::invalid_argument("Invalid setting in server context: " +
                                         *it);
     }
-    return (true);
 }
 
 bool Parser::setListen() {
     validateFirstToken("server_name");
     string num = *it;
     if (num.find(":") == num.npos) {
-        int port                           = retrievePort(num);
-        (httpConfig.servers.back()).listen = std::make_pair("", port);
+        (httpConfig.servers.back()).listen =
+            std::make_pair("", retrievePort(num));
     } else {
-        string address                     = num.substr(0, num.find(":"));
-        num                                = num.substr(num.find(":") + 1);
-        int port                           = retrievePort(num);
-        (httpConfig.servers.back()).listen = std::make_pair(address, port);
+        string address = num.substr(0, num.find(":"));
+        if (!isValidIPAddress(address)) {
+            throw logic_error("Error: invalid IP address for listen: " +
+                              address);
+        }
+        num = num.substr(num.find(":") + 1);
+        (httpConfig.servers.back()).listen =
+            std::make_pair(address, retrievePort(num));
     }
     validateLastToken("listen");
     return (true);
+}
+
+bool Parser::isValidIPAddress(const std::string &ip) {
+    std::regex pattern(
+        "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
+
+    return std::regex_match(ip, pattern);
 }
 
 int Parser::retrievePort(string num) {
@@ -289,25 +326,23 @@ int Parser::retrievePort(string num) {
 bool Parser::setServerName() {
     validateFirstToken("server_name");
     (httpConfig.servers.back()).server_name = *it;
-    std::cout << "Server_name: " << *it << std::endl;
     validateLastToken("server_name");
     return (true);
 }
 
 bool Parser::setAccessLog() {
     validateFirstToken("access_log");
-    std::cout << "Access_log: ";
     while (*it != ";") {
-        std::cout << *it << " ";
+        // std::cout << *it << " ";
         ++it;
     }
-    std::cout << std::endl;
     return true;
 }
 
 bool Parser::setRoot() {
-    std::cout << "Root: " << *(++it) << std::endl;
-    ++it;
+	validateFirstToken("root");
+	//
+    validateLastToken("root");
     return (true);
 }
 
@@ -332,32 +367,25 @@ bool Parser::setLocationSetting() {
 }
 
 string Parser::setLocationUri() {
-    string path = *(++it);
+	validateFirstToken("location");
+    string uri = *it;
     if (*(++it) != "{") {
         throw std::logic_error("Invalid syntax for location: " + *it);
     }
-    (httpConfig.servers.back()).locations[path] = LocationConfig();
-    ++it;
-    return path;
+    (httpConfig.servers.back()).locations[uri] = LocationConfig();
+	validateLastToken("location");
+    return uri;
 }
 
 void Parser::setPath(string &uri) {
-    string path = *(++it);
-    std::cout << "Path: " << path << std::endl;
-    if (*(++it) != ";") {
-        throw std::logic_error("Invalid syntax for location after path: " +
-                               *it);
-    }
-    (httpConfig.servers.back()).locations[uri].root = path;
+	validateFirstToken("path");
+    (httpConfig.servers.back()).locations[uri].root = *it;
+	validateLastToken("path");
 }
 
 void Parser::setFastCGI(string &uri) {
-    string path = *(++it);
-    std::cout << "Fastcgi: " << path << std::endl;
-    if (*(++it) != ";") {
-        throw std::logic_error("Invalid syntax for location after fastcgi: " +
-                               *it);
-    }
-    (httpConfig.servers.back()).locations[uri].cgi_path    = path;
+	validateFirstToken("fastcgi");
+    (httpConfig.servers.back()).locations[uri].cgi_path    = *it;
     (httpConfig.servers.back()).locations[uri].cgi_enabled = true;
+	validateLastToken("fastcgi");
 }
