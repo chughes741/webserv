@@ -26,9 +26,9 @@ using std::map;
 using std::pair;
 using std::string;
 
-#define SO_MAX_QUEUE 10
+#define SO_MAX_QUEUE     10
 #define READ_BUFFER_SIZE 1024
-#define CRLF "\r\n"
+#define CRLF             "\r\n"
 
 /**
  * @brief Pure abstract class representing a socket session
@@ -59,8 +59,7 @@ class TcpSession : public Session {
 };
 
 /** TcpSession generator function */
-Session* tcp_session_generator(int sockfd, const struct sockaddr* addr,
-                               socklen_t addrlen);
+Session* tcp_session_generator(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
 
 /**
  * @brief Socket base class
@@ -68,9 +67,8 @@ Session* tcp_session_generator(int sockfd, const struct sockaddr* addr,
  */
 class Socket {
    public:
-    typedef Session* (*SessionGenerator)(int                    sockfd,
-                                         const struct sockaddr* addr,
-                                         socklen_t              addrlen);
+    typedef Session* (*SessionGenerator)(int sockfd, const struct sockaddr* addr,
+                                         socklen_t addrlen);
 
     Socket(SessionGenerator session_generator);
     virtual ~Socket() = 0;

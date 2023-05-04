@@ -1,8 +1,14 @@
-
 Language: Cpp
 BasedOnStyle: Google
+
 AlignConsecutiveDeclarations: Consecutive
 AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveMacros: Consecutive
+
+AllowShortBlocksOnASingleLine: Empty
 AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+
 IndentWidth: 4
-AllowShortFunctionsOnASingleLine: false
+ColumnLimit: 100

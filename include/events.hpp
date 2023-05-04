@@ -47,10 +47,10 @@
 #include <stdexcept>
 #include <utility>
 
-#define READABLE 1
-#define WRITABLE 2
-#define ERROR_EVENT 4
-#define CONNECT_EVENT 8
+#define READABLE         1
+#define WRITABLE         2
+#define ERROR_EVENT      4
+#define CONNECT_EVENT    8
 #define DISCONNECT_EVENT 16
 
 using std::make_pair;
@@ -93,9 +93,9 @@ class KqueueEventListener : public EventListener {
     void                     unregisterEvent(int fd);
 
    private:
-    int                     queue_fd_; /**< kqueue file descriptor */
-    struct timespec         timeout_;  /**< timeout for kevent */
-    map<int, struct kevent> events_;   /**< ident, event parameters */
+    int                             queue_fd_; /**< kqueue file descriptor */
+    struct timespec                 timeout_;  /**< timeout for kevent */
+    map<int, struct kevent>         events_;   /**< ident, event parameters */
     map<KqueueEvent, InternalEvent> KqueueEventMap;
 };
 
@@ -103,11 +103,8 @@ class KqueueEventListener : public EventListener {
 
 /** Event map to convert EpollEvents to internal events */
 const map<EpollEvent, InternalEvent> EpollEventMap = {
-    {EPOLLIN, READABLE},
-    {EPOLLOUT, WRITABLE},
-    {EPOLLERR, ERROR_EVENT},
-    {EPOLLHUP, DISCONNECT_EVENT},
-    {EPOLLRDHUP, DISCONNECT_EVENT},
+    {EPOLLIN, READABLE},          {EPOLLOUT, WRITABLE},           {EPOLLERR, ERROR_EVENT},
+    {EPOLLHUP, DISCONNECT_EVENT}, {EPOLLRDHUP, DISCONNECT_EVENT},
 };
 
 /**

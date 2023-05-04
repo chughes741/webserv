@@ -16,23 +16,20 @@ using ::testing::Return;
 class MockSession : public Session {
    public:
     MockSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
-        : Session(sockfd, addr, addrlen) {
-    }
+        : Session(sockfd, addr, addrlen) {}
 
     MOCK_METHOD(void, send, (int client, string message), (const, override));
     MOCK_METHOD(string, recv, (int client), (const, override));
 };
 
-Session* mock_session_generator(int sockfd, const struct sockaddr* addr,
-                                socklen_t addrlen) {
+Session* mock_session_generator(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
     static Session* mockSocket = new MockSession(sockfd, addr, addrlen);
     return mockSocket;
 }
 
 class MockSocket : public Socket {
    public:
-    MockSocket() : Socket(mock_session_generator) {
-    }
+    MockSocket() : Socket(mock_session_generator) {}
 
     MOCK_METHOD(int, bind, (string addr, int port), (override));
     MOCK_METHOD(void, listen, (), (override));

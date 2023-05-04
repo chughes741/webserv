@@ -26,17 +26,16 @@
 
 #include "events.hpp"
 
-EventListener::~EventListener() {
-}
+EventListener::~EventListener() {}
 
 #ifdef __APPLE__
 
 KqueueEventListener::KqueueEventListener() {
     // Create a new kqueue
-    KqueueEventMap[EVFILT_READ] = READABLE;
-    KqueueEventMap[EVFILT_WRITE] = WRITABLE;
+    KqueueEventMap[EVFILT_READ]   = READABLE;
+    KqueueEventMap[EVFILT_WRITE]  = WRITABLE;
     KqueueEventMap[EVFILT_EXCEPT] = ERROR_EVENT;
-    
+
     queue_fd_        = kqueue();
     timeout_.tv_sec  = 0;
     timeout_.tv_nsec = 0;
@@ -59,8 +58,7 @@ pair<int, InternalEvent> KqueueEventListener::listen() {
 
     // Handle conversion from kqueue events to internal events
     InternalEvent event = 0;
-    for (map<KqueueEvent, InternalEvent>::const_iterator it =
-             KqueueEventMap.begin();
+    for (map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (eventlist[0].filter & it->first) {
             event |= it->second;
@@ -80,8 +78,7 @@ pair<int, InternalEvent> KqueueEventListener::listen() {
 void KqueueEventListener::registerEvent(int fd, int events) {
     // Handle conversion from internal events to kqueue filter
     KqueueEvent filter = 0;
-    for (map<KqueueEvent, InternalEvent>::const_iterator it =
-             KqueueEventMap.begin();
+    for (map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (events & it->second) {
             filter |= it->first;
@@ -161,8 +158,7 @@ pair<int, InternalEvent> EpollEventListener::listen() {
 
     // Handle conversion from epoll events to internal events
     InternalEvent event = 0;
-    for (map<EpollEvent, InternalEvent>::const_iterator it =
-             EpollEventMap.begin();
+    for (map<EpollEvent, InternalEvent>::const_iterator it = EpollEventMap.begin();
          it != EpollEventMap.end(); ++it) {
         if (it->first & events[0].events) {
             event |= it->second;
@@ -180,8 +176,7 @@ void EpollEventListener::registerEvent(int fd, int events) {
     event.data.fd = fd;
 
     // Handle conversion from internal events to epoll events
-    for (map<EpollEvent, InternalEvent>::const_iterator it =
-             EpollEventMap.begin();
+    for (map<EpollEvent, InternalEvent>::const_iterator it = EpollEventMap.begin();
          it != EpollEventMap.end(); ++it) {
         if (it->second & events) {
             events |= it->first;
