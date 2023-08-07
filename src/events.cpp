@@ -29,7 +29,11 @@
 EventListener::~EventListener() {
 }
 
-KqueueEventListener::KqueueEventListener(): timeout_({0, 0}) {
+KqueueEventListener::KqueueEventListener() {
+    // Initialize timeout
+    timeout_.tv_sec  = 0;
+    timeout_.tv_nsec = 0;
+
     // Create a new kqueue
     KqueueEventMap[EVFILT_READ]   = READABLE;
     KqueueEventMap[EVFILT_WRITE]  = WRITABLE;
