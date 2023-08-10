@@ -152,7 +152,7 @@ struct LocationConfig {
 struct ServerConfig {
     /** Constructor, initializes to default values */
     ServerConfig()
-        : server_name(""),
+        : server_names(),
           listen("", 80),
           root("html"),
           error_page(404, ""),
@@ -160,7 +160,7 @@ struct ServerConfig {
           locations() {
     }
 
-    string server_name;
+    vector<string> server_names;
     /**< Server name */       /*TODO Nginx can take multiple domains, can we?*/
     pair<string, int> listen; /**< Address and port to listen on */
     string            root;   /**< Root directory for serving files */
@@ -176,7 +176,7 @@ struct ServerConfig {
 struct HttpConfig {
     /** Constructor, initializes to default values */
     HttpConfig()
-        : servers(1),
+        : servers(),
           error_page(404, ""),
           error_log("error.log"),
           root("html"),
