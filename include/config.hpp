@@ -73,24 +73,24 @@
 #include "webserv.hpp"
 
 /** HTTP methods */
-#define POST 0x01
-#define GET 0x02
+#define POST   0x01
+#define GET    0x02
 #define DELETE 0x04
 
 /** HTTP Status codes */
-#define OK "200 OK"
-#define CREATED "201 Created"
-#define ACCEPTED "202 Accepted"
-#define NO_CONTENT "204 No Content"
-#define MOVED_PERMANENTLY "301 Moved Permanently"
-#define FOUND "302 Found"
-#define NOT_MODIFIED "304 Not Modified"
-#define BAD_REQUEST "400 Bad Request"
-#define NOT_FOUND "404 Not Found"
-#define METHOD_NOT_ALLOWED "405 Method Not Allowed"
-#define IM_A_TEAPOT "418 I'm a teapot"
+#define OK                    "200 OK"
+#define CREATED               "201 Created"
+#define ACCEPTED              "202 Accepted"
+#define NO_CONTENT            "204 No Content"
+#define MOVED_PERMANENTLY     "301 Moved Permanently"
+#define FOUND                 "302 Found"
+#define NOT_MODIFIED          "304 Not Modified"
+#define BAD_REQUEST           "400 Bad Request"
+#define NOT_FOUND             "404 Not Found"
+#define METHOD_NOT_ALLOWED    "405 Method Not Allowed"
+#define IM_A_TEAPOT           "418 I'm a teapot"
 #define INTERNAL_SERVER_ERROR "500 Internal Server Error"
-#define BAD_GATEWAY "502 Bad Gateway"
+#define BAD_GATEWAY           "502 Bad Gateway"
 
 /** HTTP headers */
 #define HTTP_VERSION "HTTP/1.1"
@@ -134,16 +134,15 @@ struct LocationConfig {
           index_file("index.html"),
           limit_except(GET | POST | DELETE),
           cgi_enabled(false),
-          cgi_path("") {
-    }
+          cgi_path("") {}
 
-    string client_max_body_size;    /**< Maximum size of a request body */
-    pair<int, string> error_page;   /**< Default error page */
-    string            root;         /**< Root directory for serving files */
-    string            index_file;   /**< Name of the index file */
-    unsigned short    limit_except; /**< Allowed methods */
-    bool              cgi_enabled;  /**< Enable CGI */
-    string            cgi_path;     /**< Path to CGI programs */
+    string            client_max_body_size; /**< Maximum size of a request body */
+    pair<int, string> error_page;           /**< Default error page */
+    string            root;                 /**< Root directory for serving files */
+    string            index_file;           /**< Name of the index file */
+    unsigned short    limit_except;         /**< Allowed methods */
+    bool              cgi_enabled;          /**< Enable CGI */
+    string            cgi_path;             /**< Path to CGI programs */
 };
 
 /**
@@ -157,17 +156,15 @@ struct ServerConfig {
           root("html"),
           error_page(404, ""),
           client_max_body_size("1m"),
-          locations() {
-    }
+          locations() {}
 
     string server_name;
-    /**< Server name */       /*TODO Nginx can take multiple domains, can we?*/
-    pair<string, int> listen; /**< Address and port to listen on */
-    string            root;   /**< Root directory for serving files */
-    pair<int, string> error_page; /**< Default error page */
-    string client_max_body_size;  /**< Maximum size of a request body */
-    map<string, LocationConfig>
-        locations; /**< List of locations (path, location)*/
+    /**< Server name */                     /*TODO Nginx can take multiple domains, can we?*/
+    pair<string, int>           listen;     /**< Address and port to listen on */
+    string                      root;       /**< Root directory for serving files */
+    pair<int, string>           error_page; /**< Default error page */
+    string                      client_max_body_size; /**< Maximum size of a request body */
+    map<string, LocationConfig> locations;            /**< List of locations (path, location)*/
 };
 
 /**
@@ -180,14 +177,13 @@ struct HttpConfig {
           error_page(404, ""),
           error_log("error.log"),
           root("html"),
-          client_max_body_size("1m") {
-    }
+          client_max_body_size("1m") {}
 
-    vector<ServerConfig> servers;    /**< List of server blocks */
-    pair<int, string>    error_page; /**< Default error page */
-    string               error_log;  /**< Path to the error log file */
-    string               root;       /**< Root directory for serving files */
-    string client_max_body_size;     /**< Maximum size of a request body */
+    vector<ServerConfig> servers;              /**< List of server blocks */
+    pair<int, string>    error_page;           /**< Default error page */
+    string               error_log;            /**< Path to the error log file */
+    string               root;                 /**< Root directory for serving files */
+    string               client_max_body_size; /**< Maximum size of a request body */
 };
 
 extern HttpConfig httpConfig;

@@ -43,10 +43,10 @@
 #include <stdexcept>
 #include <utility>
 
-#define READABLE 1
-#define WRITABLE 2
-#define ERROR_EVENT 4
-#define CONNECT_EVENT 8
+#define READABLE         1
+#define WRITABLE         2
+#define ERROR_EVENT      4
+#define CONNECT_EVENT    8
 #define DISCONNECT_EVENT 16
 
 using std::make_pair;

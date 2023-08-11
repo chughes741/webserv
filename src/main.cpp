@@ -56,8 +56,7 @@ int main(int argc, char *argv[]) {
     while (true) {
         try {
             httpServer.start();
-        } catch (
-            std::exception &e) { /** @todo needs a more specific exception */
+        } catch (std::exception &e) { /** @todo needs a more specific exception */
             std::cerr << e.what() << std::endl;
             httpServer.stop();
         }

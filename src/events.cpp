@@ -26,8 +26,7 @@
 
 #include "events.hpp"
 
-EventListener::~EventListener() {
-}
+EventListener::~EventListener() {}
 
 KqueueEventListener::KqueueEventListener() {
     // Initialize timeout
@@ -59,8 +58,7 @@ pair<int, InternalEvent> KqueueEventListener::listen() {
 
     // Handle conversion from kqueue events to internal events
     InternalEvent event = 0;
-    for (map<KqueueEvent, InternalEvent>::const_iterator it =
-             KqueueEventMap.begin();
+    for (map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (eventlist[0].filter & it->first) {
             event |= it->second;
@@ -80,8 +78,7 @@ pair<int, InternalEvent> KqueueEventListener::listen() {
 void KqueueEventListener::registerEvent(int fd, int events) {
     // Handle conversion from internal events to kqueue filter
     KqueueEvent filter = 0;
-    for (map<KqueueEvent, InternalEvent>::const_iterator it =
-             KqueueEventMap.begin();
+    for (map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (events & it->second) {
             filter |= it->first;
