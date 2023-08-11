@@ -96,17 +96,47 @@ void HttpServer::run() {
 
         // Handle event
         switch (event.second) {
-            case 0: /** @todo add event macros */
-                /** @todo write error handler */
+            case READABLE:
+                readableHandler(event.first);
                 break;
-            case 1:
-                /** @todo write handlers */
+            case WRITABLE:
+                writableHandler(event.first);
                 break;
-            default:
-                /** @todo what should default case be */
+            case ERROR_EVENT:
+                errorHandler(event.first);
+                break;
+            case CONNECT_EVENT:
+                connectHandler(event.first);
                 break;
         }
     }
+}
+
+void HttpServer::readableHandler(int session_id) {
+    return;
+}
+
+void HttpServer::writableHandler(int session_id) {
+    return;
+}
+
+void HttpServer::errorHandler(int session_id) {
+    return;
+}
+
+void HttpServer::connectHandler(int socket_id) {
+    // Accept the connection
+    int session_id = server_sockets_[socket_id]->accept();
+
+    // Create a new session
+    sessions_[session_id] = new Session(session_id, socket_id);
+
+    // Add the session to the listener
+    listener_->registerEvent(session_id, 0); /** @todo event flags */
+}
+
+void HttpServer::disconnectHandler(int session_id) {
+    return;
 }
 
 Request HttpServer::receiveRequest() {

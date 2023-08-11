@@ -38,6 +38,7 @@
 #pragma once
 
 #include "webserv.hpp"
+#include "events.hpp"
 
 using std::map;
 using std::string;
@@ -49,7 +50,6 @@ Socket* tcp_socket_generator();
 
 /**
  * @brief Base class for servers
- * @pure
  */
 class Server {
    public:
@@ -81,11 +81,6 @@ class Server {
  */
 class HttpServer : public Server {
    public:
-    /**
-     * @brief Constructor
-     *
-     * @param config Configuration for the server
-     */
     HttpServer(HttpConfig config, EventListener* listener,
                SocketGenerator socket_generator = tcp_socket_generator);
     ~HttpServer();
@@ -95,42 +90,19 @@ class HttpServer : public Server {
     // HttpServer& operator=(const HttpServer& other) {}
 
    public:
-    /**
-     * @brief Start the server
-     */
     void start(bool run_server = true);
-
-    /**
-     * @brief Stop the server
-     */
     void stop();
 
    private:
-    /**
-     * @brief Run the server
-     */
     void run();
 
-    /**
-     * @brief Read a request from the socket
-     *
-     * @return Request
-     */
+    void readableHandler(int server_id);
+    void writableHandler(int server_id);
+    void errorHandler(int server_id);
+    void connectHandler(int socket_id);
+    void disconnectHandler(int session_id);
 
     Request receiveRequest();
-
-    /**
-     * @brief Handle a request
-     *
-     * @param request Request to handle
-     * @return Response
-     */
     Response handleRequest(Request request);
-
-    /**
-     * @brief Write a response to the socket
-     *
-     * @param response Response to write
-     */
     void sendResponse(Response response);
 };
