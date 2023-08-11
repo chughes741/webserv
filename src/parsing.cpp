@@ -170,7 +170,7 @@ bool Parser::setWorkerProcesses() {
 }
 
 bool Parser::setGlobalSetting() {
-    string List[] = {"error_log", "pid"};
+    string List[] = {"error_log", "pid", "worker_processes"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case ERROR_LOG:
             return setErrorLog();
@@ -269,7 +269,7 @@ bool Parser::setServerSetting() {
         case ROOT:
             return setRoot();
         case LOCATION:
-            return setLocationSetting();
+            return setLocationUri();
         default:
             throw std::invalid_argument("Invalid setting in server context: " + *it);
     }
@@ -279,7 +279,7 @@ bool Parser::setListen() {
     validateFirstToken("server_name");
     string num = *it;
     if (num.find(":") == num.npos) {
-        (httpConfig.servers.back()).listen = std::make_pair("", retrievePort(num));
+        throw logic_error("Error: No address provided for listen");
     } else {
         string address = num.substr(0, num.find(":"));
         if (!isValidIPAddress(address)) {
@@ -298,7 +298,6 @@ bool Parser::isValidIPAddress(const std::string &ip) {
         "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
         "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
         "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
-
     return std::regex_match(ip, pattern);
 }
 
@@ -313,8 +312,9 @@ int Parser::retrievePort(string num) {
 
 bool Parser::setServerName() {
     validateFirstToken("server_name");
-    (httpConfig.servers.back()).server_name = *it;
-    validateLastToken("server_name");
+    while (*it != ";") {
+        (httpConfig.servers.back()).server_names.push_back(*it);
+        ++it;}
     return (true);
 }
 
@@ -334,9 +334,9 @@ bool Parser::setRoot() {
     return (true);
 }
 
-bool Parser::setLocationSetting() {
+bool Parser::setLocationSetting(string uri) {
     string List[] = {"path:", "fastcgi:"};
-    string uri    = setLocationUri();
+    // string uri    = setLocationUri();
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case PATH:
             setPath(uri);
@@ -347,21 +347,26 @@ bool Parser::setLocationSetting() {
         default:
             throw std::logic_error("Invalid setting for location: " + *it);
     }
-    if (*(++it) != "}") {
-        throw std::logic_error("Invalid syntax for location after setting: " + *it);
-    }
+    // if (*(++it) != "}") {
+    //     throw std::logic_error("Invalid syntax for location after setting: " +
+    //                            *it);
+    // }
     return true;
 }
 
-string Parser::setLocationUri() {
-    validateFirstToken("location");
+bool Parser::setLocationUri() {
+	validateFirstToken("location");
     string uri = *it;
     if (*(++it) != "{") {
         throw std::logic_error("Invalid syntax for location: " + *it);
     }
     (httpConfig.servers.back()).locations[uri] = LocationConfig();
-    validateLastToken("location");
-    return uri;
+    while (*++it != "}") {
+        setLocationSetting(uri);
+    }
+
+	// validateLastToken("location");
+    return true;
 }
 
 void Parser::setPath(string &uri) {

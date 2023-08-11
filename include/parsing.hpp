@@ -189,8 +189,8 @@ class Parser {
     /**
      * @brief Set http setting
      */
-    bool   setLocationSetting();
-    string setLocationUri();
+    bool   setLocationSetting(string uri);
+    bool   setLocationUri();
     void   setPath(string &);
     void   setFastCGI(string &);
 

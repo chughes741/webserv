@@ -151,20 +151,21 @@ struct LocationConfig {
 struct ServerConfig {
     /** Constructor, initializes to default values */
     ServerConfig()
-        : server_name(""),
+        : server_names(),
           listen("", 80),
           root("html"),
           error_page(404, ""),
           client_max_body_size("1m"),
           locations() {}
 
-    string server_name;
-    /**< Server name */                     /*TODO Nginx can take multiple domains, can we?*/
-    pair<string, int>           listen;     /**< Address and port to listen on */
-    string                      root;       /**< Root directory for serving files */
-    pair<int, string>           error_page; /**< Default error page */
-    string                      client_max_body_size; /**< Maximum size of a request body */
-    map<string, LocationConfig> locations;            /**< List of locations (path, location)*/
+    vector<string> server_names;
+    /**< Server name */       /*TODO Nginx can take multiple domains, can we?*/
+    pair<string, int> listen; /**< Address and port to listen on */
+    string            root;   /**< Root directory for serving files */
+    pair<int, string> error_page; /**< Default error page */
+    string client_max_body_size;  /**< Maximum size of a request body */
+    map<string, LocationConfig>
+        locations; /**< List of locations (path, location)*/
 };
 
 /**
@@ -173,7 +174,7 @@ struct ServerConfig {
 struct HttpConfig {
     /** Constructor, initializes to default values */
     HttpConfig()
-        : servers(1),
+        : servers(),
           error_page(404, ""),
           error_log("error.log"),
           root("html"),
