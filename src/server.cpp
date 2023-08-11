@@ -22,42 +22,34 @@
 
 #include "server.hpp"
 
-using std::pair;
 using std::cerr;
 using std::endl;
+using std::pair;
 
 extern HttpConfig httpConfig;
 
-Server::Server(HttpConfig config, EventListener* listener,
-               SocketGenerator socket_generator)
-    : socket_generator_(socket_generator),
-      listener_(listener),
-      config_(config) {
-}
+Server::Server(HttpConfig config, EventListener* listener, SocketGenerator socket_generator)
+    : socket_generator_(socket_generator), listener_(listener), config_(config) {}
 
-Server::~Server() {
-}
+Server::~Server() {}
 
 HttpServer::HttpServer(HttpConfig httpConfig, EventListener* listener,
                        SocketGenerator socket_generator)
-    : Server(httpConfig, listener, socket_generator) {
-}
+    : Server(httpConfig, listener, socket_generator) {}
 
-HttpServer::~HttpServer() {
-}
+HttpServer::~HttpServer() {}
 
 void HttpServer::start(bool run_server) {
     // Create a socket for each server in the config
     Socket* new_socket;
-    for (vector<ServerConfig>::iterator it = config_.servers.begin();
-         it != config_.servers.end(); ++it) {
+    for (vector<ServerConfig>::iterator it = config_.servers.begin(); it != config_.servers.end();
+         ++it) {
         try {
             // Create a new socket
             new_socket = socket_generator_();
 
             // Bind the socket to the address/port
-            int server_id =
-                new_socket->bind(it->listen.first, it->listen.second);
+            int server_id = new_socket->bind(it->listen.first, it->listen.second);
 
             // Listen for connections
             /** @todo poll needs to be called before listen */
@@ -82,8 +74,8 @@ void HttpServer::start(bool run_server) {
 
 void HttpServer::stop() {
     // Close all sockets and delete them
-    for (map<int, Socket*>::iterator it = server_sockets_.begin();
-         it != server_sockets_.end(); ++it) {
+    for (map<int, Socket*>::iterator it = server_sockets_.begin(); it != server_sockets_.end();
+         ++it) {
         try {
             it->second->close();
         } catch (runtime_error& e) {
@@ -156,13 +148,13 @@ Response HttpServer::handleRequest(Request request) {
         response.status                  = "200 OK";
         response.server                  = "webserv/0.1";
         response.headers["Content-Type"] = "text/html";
-        response.body = "<html><body><h1>Hello World!</h1></body></html>";
+        response.body                    = "<html><body><h1>Hello World!</h1></body></html>";
     } else {
         response.version                 = "HTTP/1.1";
         response.status                  = "404 Not Found";
         response.server                  = "webserv/0.1";
         response.headers["Content-Type"] = "text/html";
-        response.body = "<html><body><h1>404 Not Found</h1></body></html>";
+        response.body                    = "<html><body><h1>404 Not Found</h1></body></html>";
     }
 
     return response;
@@ -177,8 +169,8 @@ void HttpServer::sendResponse(Response response) {
     buffer.append(response.server + CRLF);
 
     // headers
-    for (map<string, string>::iterator it = response.headers.begin();
-         it != response.headers.end(); ++it) {
+    for (map<string, string>::iterator it = response.headers.begin(); it != response.headers.end();
+         ++it) {
         buffer.append(it->first + ": " + it->second + CRLF);
     }
 
