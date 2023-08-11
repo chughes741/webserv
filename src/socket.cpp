@@ -23,20 +23,15 @@ using std::make_pair;
 using std::runtime_error;
 
 Session::Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
-    : sockfd_(sockfd), addr_(addr), addrlen_(addrlen) {
-}
+    : sockfd_(sockfd), addr_(addr), addrlen_(addrlen) {}
 
-Session::~Session() {
-}
+Session::~Session() {}
 
-TcpSession::TcpSession(int sockfd, const struct sockaddr* addr,
-                       socklen_t addrlen)
-    : Session(sockfd, addr, addrlen) {
-}
+TcpSession::TcpSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
+    : Session(sockfd, addr, addrlen) {}
 
 void TcpSession::send(int port, string buffer) const {
-    ssize_t bytes_sent =
-        ::send(port, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
+    ssize_t bytes_sent = ::send(port, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
     if (bytes_sent == -1) {
         throw runtime_error("Error: Failed to send to socket");
     }
@@ -59,21 +54,16 @@ string TcpSession::recv(int port) const {
     return buffer_str;
 }
 
-Session* tcp_session_generator(int sockfd, const struct sockaddr* addr,
-                               socklen_t addrlen) {
+Session* tcp_session_generator(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
     return new TcpSession(sockfd, addr, addrlen);
 }
 
-Socket::Socket(SessionGenerator session_generator)
-    : session_generator_(session_generator) {
-}
+Socket::Socket(SessionGenerator session_generator) : session_generator_(session_generator) {}
 
 /** Used to make it a pure abstract class */
-Socket::~Socket() {
-}
+Socket::~Socket() {}
 
-TcpSocket::TcpSocket(SessionGenerator session_generator)
-    : Socket(session_generator) {
+TcpSocket::TcpSocket(SessionGenerator session_generator) : Socket(session_generator) {
     /**
      * @todo flags (isntead of 0) - these should be in setsockopt()
      *  SOCK_NONBLOCK? There's no define for it, O_NONBLOCK is a flag for open()
@@ -87,8 +77,7 @@ TcpSocket::TcpSocket(SessionGenerator session_generator)
     }
 }
 
-TcpSocket::~TcpSocket() {
-}
+TcpSocket::~TcpSocket() {}
 
 int TcpSocket::bind(string addr, int port) {
     addr_in_.sin_family      = AF_INET;                    // IPv4

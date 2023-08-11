@@ -38,8 +38,7 @@ class Test {
             exit(EXIT_FAILURE);
         }
         int opt = 1;
-        if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) <
-            0) {
+        if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
             perror("setsockopt");
             exit(EXIT_FAILURE);
         }
@@ -60,15 +59,14 @@ class Test {
         }
         int new_socket;
         while (1) {
-            if ((new_socket = accept(server_fd, (struct sockaddr *)&address,
-                                     (socklen_t *)&addrlen)) < 0) {
+            if ((new_socket =
+                     accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen)) < 0) {
                 perror("In accept");
                 exit(EXIT_FAILURE);
             }
             char buffer[30000] = {0};
             long valread       = read(new_socket, buffer, 30000);
-            if (valread < 0) {
-            }
+            if (valread < 0) {}
             std::cout << buffer << std::endl;
             // open and read the file
             std::string        request(buffer);
@@ -97,8 +95,7 @@ class Test {
             std::string response =
                 "HTTP/1.1 200 OK\r\nContent-Type: "
                 "text/html\r\nContent-Length: " +
-                std::to_string(file_contents.size()) + "\r\n\r\n" +
-                file_contents + "\r\n";
+                std::to_string(file_contents.size()) + "\r\n\r\n" + file_contents + "\r\n";
             // write(new_socket, response.c_str(), response.size());
             send(new_socket, response.c_str(), response.size(), 0);
             // setBlocking(new_socket, false);

@@ -47,14 +47,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Create a listener
-    EventListener *listener;
-#ifdef __APPLE__
-    listener = new KqueueEventListener();
-#elif __linux__
-    listener = new EpollEventListener();
-#else
-#error "Unsupported platform"
-#endif  // __APPLE__
+    EventListener *listener = new KqueueEventListener();
 
     // Initialize server
     HttpServer httpServer(httpConfig, listener);
@@ -63,8 +56,7 @@ int main(int argc, char *argv[]) {
     while (true) {
         try {
             httpServer.start();
-        } catch (
-            std::exception &e) { /** @todo needs a more specific exception */
+        } catch (std::exception &e) { /** @todo needs a more specific exception */
             std::cerr << e.what() << std::endl;
             httpServer.stop();
         }

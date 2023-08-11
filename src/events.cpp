@@ -26,20 +26,19 @@
 
 #include "events.hpp"
 
-EventListener::~EventListener() {
-}
-
-#ifdef __APPLE__
+EventListener::~EventListener() {}
 
 KqueueEventListener::KqueueEventListener() {
-    // Create a new kqueue
-    KqueueEventMap[EVFILT_READ] = READABLE;
-    KqueueEventMap[EVFILT_WRITE] = WRITABLE;
-    KqueueEventMap[EVFILT_EXCEPT] = ERROR_EVENT;
-    
-    queue_fd_        = kqueue();
+    // Initialize timeout
     timeout_.tv_sec  = 0;
     timeout_.tv_nsec = 0;
+
+    // Create a new kqueue
+    KqueueEventMap[EVFILT_READ]   = READABLE;
+    KqueueEventMap[EVFILT_WRITE]  = WRITABLE;
+    KqueueEventMap[EVFILT_EXCEPT] = ERROR_EVENT;
+
+    queue_fd_        = kqueue();
 
     // Check if kqueue was created successfully
     if (queue_fd_ == -1) {
@@ -59,8 +58,7 @@ pair<int, InternalEvent> KqueueEventListener::listen() {
 
     // Handle conversion from kqueue events to internal events
     InternalEvent event = 0;
-    for (map<KqueueEvent, InternalEvent>::const_iterator it =
-             KqueueEventMap.begin();
+    for (map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (eventlist[0].filter & it->first) {
             event |= it->second;
@@ -80,8 +78,7 @@ pair<int, InternalEvent> KqueueEventListener::listen() {
 void KqueueEventListener::registerEvent(int fd, int events) {
     // Handle conversion from internal events to kqueue filter
     KqueueEvent filter = 0;
-    for (map<KqueueEvent, InternalEvent>::const_iterator it =
-             KqueueEventMap.begin();
+    for (map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (events & it->second) {
             filter |= it->first;
@@ -136,86 +133,3 @@ void KqueueEventListener::unregisterEvent(int fd) {
     // Delete event from the map of events.
     events_.erase(fd);
 }
-
-#elif __linux__
-
-EpollEventListener::EpollEventListener() {
-    // Create a new epoll
-    epoll_fd_ = epoll_create(1);  // 1 is ignored, can't be 0
-
-    // Check if epoll was created successfully
-    if (epoll_fd_ == -1) {
-        throw runtime_error("creating epoll failed");
-    }
-}
-
-pair<int, InternalEvent> EpollEventListener::listen() {
-    // Get an event from epoll
-    struct epoll_event events[1];
-    int                ret = epoll_wait(epoll_fd_, events, 1, -1);
-
-    // Check if events were received successfully
-    if (ret == -1) {
-        throw runtime_error("epoll_wait() failed");
-    }
-
-    // Handle conversion from epoll events to internal events
-    InternalEvent event = 0;
-    for (map<EpollEvent, InternalEvent>::const_iterator it =
-             EpollEventMap.begin();
-         it != EpollEventMap.end(); ++it) {
-        if (it->first & events[0].events) {
-            event |= it->second;
-        }
-    }
-
-    // Return fd and event
-    return make_pair(events[0].data.fd, event);
-}
-
-void EpollEventListener::registerEvent(int fd, int events) {
-    struct epoll_event event; /** @todo does this need to be 0ed */
-
-    // Initialize epoll_event structure.
-    event.data.fd = fd;
-
-    // Handle conversion from internal events to epoll events
-    for (map<EpollEvent, InternalEvent>::const_iterator it =
-             EpollEventMap.begin();
-         it != EpollEventMap.end(); ++it) {
-        if (it->second & events) {
-            events |= it->first;
-        }
-    }
-
-    // Add event to the epoll.
-    int ret = epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, fd, &event);
-
-    // Check if event was added successfully
-    if (ret == -1) {
-        throw runtime_error("registerEvent() failed");
-    }
-
-    // Add event to the map of events.
-    events_[fd] = event;
-}
-
-void EpollEventListener::unregisterEvent(int fd) {
-    // Check if event exists.
-    if (events_.find(fd) == events_.end()) {
-        throw runtime_error("unregisterEvent() failed");
-    }
-
-    // Delete event from the epoll.
-    int ret = epoll_ctl(epoll_fd_, EPOLL_CTL_DEL, fd, NULL);
-
-    // Check if event was deleted successfully
-    if (ret == -1) {
-        throw runtime_error("unregisterEvent() failed");
-    }
-
-    // Delete event from the map of events.
-    events_.erase(fd);
-}
-
-#endif  // __APPLE__

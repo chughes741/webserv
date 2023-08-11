@@ -38,8 +38,7 @@ void parseConfig(string config_file, HttpConfig &httpConfig) {
     parser.initSettings();
 }
 
-Parser::Parser(HttpConfig &httpConfig) : context(1), httpConfig(httpConfig) {
-}
+Parser::Parser(HttpConfig &httpConfig) : context(1), httpConfig(httpConfig) {}
 
 Parser::~Parser(void) {
     tokens.clear();
@@ -69,8 +68,7 @@ void Parser::validateFirstToken(string setting) {
 
 void Parser::validateLastToken(string setting) {
     if (*(++it) != ";") {
-        throw std::invalid_argument("Error: too many arguments for " + setting +
-                                    " (" + *it + ")");
+        throw std::invalid_argument("Error: too many arguments for " + setting + " (" + *it + ")");
     }
 }
 
@@ -135,8 +133,7 @@ bool Parser::setContext() {
 
 int Parser::getSetting(string settingsList[], int size) {
     vector<string>           settings(settingsList, settingsList + size);
-    vector<string>::iterator settingIt =
-        find(settings.begin(), settings.end(), *it);
+    vector<string>::iterator settingIt = find(settings.begin(), settings.end(), *it);
     if (settingIt == settings.end()) {
         return (-1);
     }
@@ -166,9 +163,7 @@ bool Parser::setWorkerProcesses() {
         }
     }
     if (stoi(num) != 1) {
-        std::cout << stoi(num);
-        throw std::invalid_argument(
-            "Invalid worker_processes: this webserv is not multi threaded");
+        throw std::invalid_argument("Invalid worker_processes: this webserv is not multi threaded");
     }
     validateLastToken("worker_processes");
     return true;
@@ -184,8 +179,7 @@ bool Parser::setGlobalSetting() {
         case WORKER_PROCESSES:
             return setWorkerProcesses();
         default:
-            throw std::invalid_argument("Invalid setting in global context: " +
-                                        *it);
+            throw std::invalid_argument("Invalid setting in global context: " + *it);
     }
 }
 
@@ -218,8 +212,7 @@ bool Parser::setWorkerConnections() {
     }
     int num = stoi(*it);
     if (num > OPEN_MAX) {
-        throw std::invalid_argument("worker_connections value over limit: " +
-                                    *it);
+        throw std::invalid_argument("worker_connections value over limit: " + *it);
     }
     // httpConfig.worker_connections = num;
     validateLastToken("worker_connections");
@@ -250,15 +243,13 @@ bool Parser::setHttpSetting() {
         case INDEX:
             return setIndex();
         default:
-            throw std::invalid_argument("Invalid setting in Http context: " +
-                                        *it);
+            throw std::invalid_argument("Invalid setting in Http context: " + *it);
     }
 }
 
 bool Parser::setServerContext() {
     if (context.back() != 2) {
-        throw std::logic_error(
-            "Server context needs to be inside http context.");
+        throw std::logic_error("Server context needs to be inside http context.");
     }
     httpConfig.servers.push_back(ServerConfig());
     context.push_back(SERVER);
@@ -280,8 +271,7 @@ bool Parser::setServerSetting() {
         case LOCATION:
             return setLocationUri();
         default:
-            throw std::invalid_argument("Invalid setting in server context: " +
-                                        *it);
+            throw std::invalid_argument("Invalid setting in server context: " + *it);
     }
 }
 
@@ -293,12 +283,10 @@ bool Parser::setListen() {
     } else {
         string address = num.substr(0, num.find(":"));
         if (!isValidIPAddress(address)) {
-            throw logic_error("Error: invalid IP address for listen: " +
-                              address);
+            throw logic_error("Error: invalid IP address for listen: " + address);
         }
-        num = num.substr(num.find(":") + 1);
-        (httpConfig.servers.back()).listen =
-            std::make_pair(address, retrievePort(num));
+        num                                = num.substr(num.find(":") + 1);
+        (httpConfig.servers.back()).listen = std::make_pair(address, retrievePort(num));
     }
     validateLastToken("listen");
     return (true);
@@ -340,8 +328,8 @@ bool Parser::setAccessLog() {
 }
 
 bool Parser::setRoot() {
-	validateFirstToken("root");
-	//
+    validateFirstToken("root");
+    //
     validateLastToken("root");
     return (true);
 }
@@ -382,14 +370,14 @@ bool Parser::setLocationUri() {
 }
 
 void Parser::setPath(string &uri) {
-	validateFirstToken("path");
+    validateFirstToken("path");
     (httpConfig.servers.back()).locations[uri].root = *it;
-	validateLastToken("path");
+    validateLastToken("path");
 }
 
 void Parser::setFastCGI(string &uri) {
-	validateFirstToken("fastcgi");
+    validateFirstToken("fastcgi");
     (httpConfig.servers.back()).locations[uri].cgi_path    = *it;
     (httpConfig.servers.back()).locations[uri].cgi_enabled = true;
-	validateLastToken("fastcgi");
+    validateLastToken("fastcgi");
 }

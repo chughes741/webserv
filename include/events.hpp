@@ -34,12 +34,8 @@
 
 #pragma once
 
-#ifdef __APPLE__
-#include <sys/event.h>
-#elif __linux__
-#include <sys/epoll.h>
-#endif  // __APPLE__
 #include <stdint.h>
+#include <sys/event.h>
 #include <sys/time.h>
 #include <sys/types.h>
 
@@ -47,10 +43,10 @@
 #include <stdexcept>
 #include <utility>
 
-#define READABLE 1
-#define WRITABLE 2
-#define ERROR_EVENT 4
-#define CONNECT_EVENT 8
+#define READABLE         1
+#define WRITABLE         2
+#define ERROR_EVENT      4
+#define CONNECT_EVENT    8
 #define DISCONNECT_EVENT 16
 
 using std::make_pair;
@@ -59,7 +55,6 @@ using std::pair;
 using std::runtime_error;
 
 typedef uint32_t KqueueEvent;
-typedef uint32_t EpollEvent;
 typedef uint32_t InternalEvent;
 
 /**
@@ -73,8 +68,6 @@ class EventListener {
     virtual void                     registerEvent(int fd, int events) = 0;
     virtual void                     unregisterEvent(int fd)           = 0;
 };
-
-#ifdef __APPLE__
 
 /** Event map to convert KqueueEvents to internal events */
 
@@ -93,39 +86,8 @@ class KqueueEventListener : public EventListener {
     void                     unregisterEvent(int fd);
 
    private:
-    int                     queue_fd_; /**< kqueue file descriptor */
-    struct timespec         timeout_;  /**< timeout for kevent */
-    map<int, struct kevent> events_;   /**< ident, event parameters */
+    int                             queue_fd_; /**< kqueue file descriptor */
+    struct timespec                 timeout_;  /**< timeout for kevent */
+    map<int, struct kevent>         events_;   /**< ident, event parameters */
     map<KqueueEvent, InternalEvent> KqueueEventMap;
 };
-
-#elif __linux__
-
-/** Event map to convert EpollEvents to internal events */
-const map<EpollEvent, InternalEvent> EpollEventMap = {
-    {EPOLLIN, READABLE},
-    {EPOLLOUT, WRITABLE},
-    {EPOLLERR, ERROR_EVENT},
-    {EPOLLHUP, DISCONNECT_EVENT},
-    {EPOLLRDHUP, DISCONNECT_EVENT},
-};
-
-/**
- * @brief Epoll class for handling events, used on Linux
- *
- * @details This class wraps around the epoll system call and provides
- * a simple interface for adding and removing sockets from the epoll.
- */
-class EpollEventListener : public EventListener {
-   public:
-    EpollEventListener();
-
-    pair<int, InternalEvent> listen();
-    void                     registerEvent(int fd, int events);
-    void                     unregisterEvent(int fd);
-
-   private:
-    int                          epoll_fd_; /**< epoll file descriptor */
-    map<int, struct epoll_event> events_;   /**< ident, event parameters */
-};
-#endif  // __APPLE__

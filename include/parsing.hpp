@@ -4,8 +4,8 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <stdexcept>
 #include <regex>
+#include <stdexcept>
 #include <vector>
 
 #include "webserv.hpp"
@@ -13,24 +13,24 @@
 // Context Settings
 #define GLOBAL 0
 #define EVENTS 1
-#define HTTP 2
+#define HTTP   2
 #define SERVER 3
 // Global Settings
-#define ERROR_LOG 0
-#define PID 1
+#define ERROR_LOG        0
+#define PID              1
 #define WORKER_PROCESSES 2
 // Events Settings
 #define WORKER_CONNECTIONS 0
 // Http Settings
 #define INDEX 0
 // Server Settings
-#define LISTEN 0
+#define LISTEN      0
 #define SERVER_NAME 1
-#define ACCESS_LOG 2
-#define ROOT 3
-#define LOCATION 4
+#define ACCESS_LOG  2
+#define ROOT        3
+#define LOCATION    4
 // Location Settings
-#define PATH 0
+#define PATH    0
 #define FASTCGI 1
 
 using std::string;
@@ -103,34 +103,34 @@ class Parser {
      */
     bool setGlobalSetting();
 
-	/**
-	 * @brief Set the Worker Processes setting
-	 */
-	bool setWorkerProcesses();
+    /**
+     * @brief Set the Worker Processes setting
+     */
+    bool setWorkerProcesses();
 
     /**
      * @brief Set the error log setting for any setting
      */
     bool setErrorLog();
 
-	/** @todo determine if we accept/need a pid value in global context */
+    /** @todo determine if we accept/need a pid value in global context */
     bool setPid();
 
-	/**
-	 * @brief Set the Events Context and increment the token iterator
-	 */
+    /**
+     * @brief Set the Events Context and increment the token iterator
+     */
     bool setEventsContext();
 
-	/**
-	 * @brief Calls the approriate setter depending on the setting
-	 */
+    /**
+     * @brief Calls the approriate setter depending on the setting
+     */
     bool setEventsSetting();
 
-	/** @todo determine where we put the worker connections setting
-	 * @brief Set the Worker Connections object
-	 */
+    /** @todo determine where we put the worker connections setting
+     * @brief Set the Worker Connections object
+     */
     bool setWorkerConnections();
-	
+
     /**
      * @brief Set http context and increment the token iterator
      */
@@ -141,14 +141,14 @@ class Parser {
      */
     bool setHttpSetting();
 
-	/** @todo determine where we put the index setting
-	 * @brief Set the index pages of the server
-	 */
-	bool setIndex();
+    /** @todo determine where we put the index setting
+     * @brief Set the index pages of the server
+     */
+    bool setIndex();
 
-	/**
-	 * @brief Set the Server Context and increment the token iterator
-	 */
+    /**
+     * @brief Set the Server Context and increment the token iterator
+     */
     bool setServerContext();
 
     /**
@@ -167,11 +167,11 @@ class Parser {
      */
     int retrievePort(string);
 
-	/**
-	 * @brief validate the ip address for listen
-	 * @param ip the ip address to validate in string format
-	 */
-	bool isValidIPAddress(const std::string& ip);
+    /**
+     * @brief validate the ip address for listen
+     * @param ip the ip address to validate in string format
+     */
+    bool isValidIPAddress(const std::string &ip);
 
     /**
      * @brief Set the server name
@@ -181,9 +181,9 @@ class Parser {
 
     bool setAccessLog();
 
-	/**
-	 * @brief Set the Root setting for the server context
-	 */
+    /**
+     * @brief Set the Root setting for the server context
+     */
     bool setRoot();
 
     /**
