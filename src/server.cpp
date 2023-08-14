@@ -1,3 +1,4 @@
+
 /**
  * @file server.cpp
  * @brief Defines classes for creating web servers that can handle HTTP
@@ -113,29 +114,33 @@ void HttpServer::run() {
 }
 
 void HttpServer::readableHandler(int session_id) {
+    (void)session_id;
     return;
 }
 
 void HttpServer::writableHandler(int session_id) {
+    (void)session_id;
     return;
 }
 
 void HttpServer::errorHandler(int session_id) {
+    (void)session_id;
     return;
 }
 
 void HttpServer::connectHandler(int socket_id) {
     // Accept the connection
-    int session_id = server_sockets_[socket_id]->accept();
+    Session* session = server_sockets_[socket_id]->accept();
 
     // Create a new session
-    sessions_[session_id] = new Session(session_id, socket_id);
+    sessions_[session->getSockFd()] = session;
 
     // Add the session to the listener
-    listener_->registerEvent(session_id, 0); /** @todo event flags */
+    listener_->registerEvent(session->getSockFd(), 0); /** @todo event flags */
 }
 
 void HttpServer::disconnectHandler(int session_id) {
+    (void)session_id;
     return;
 }
 

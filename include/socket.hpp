@@ -40,6 +40,7 @@ class Session {
 
     virtual void   send(int client, string message) const = 0;
     virtual string recv(int client) const                 = 0;
+    int    getSockFd() const;
 
    protected:
     int                    sockfd_;  /**< Session socket file descriptor */
