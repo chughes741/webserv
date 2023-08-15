@@ -140,8 +140,17 @@ void HttpServer::connectHandler(int socket_id) {
 }
 
 void HttpServer::disconnectHandler(int session_id) {
-    (void)session_id;
-    return;
+    // Remove the session from the listener
+    listener_->unregisterEvent(session_id);
+
+    // Delete the session
+    delete sessions_[session_id];
+
+    // Remove the session from the map
+    sessions_.erase(session_id);
+
+    // Close the socket
+    close(session_id);
 }
 
 Request HttpServer::receiveRequest() {
