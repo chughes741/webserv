@@ -118,7 +118,7 @@ int TcpSocket::bind(string addr, int port) {
 void TcpSocket::listen() {
     // Sets server to listen passively
     if (::listen(sockfd_, SO_MAX_QUEUE) == -1) {
-        throw runtime_error(string("Error: Failed to listen on socket") + strerror(errno));
+        throw runtime_error(string("Error: Failed to listen on socket: ") + strerror(errno));
     }
 }
 
