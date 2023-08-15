@@ -108,7 +108,7 @@ int TcpSocket::bind(string addr, int port) {
     // Binds socket to an address and port
     if (::bind(sockfd_, (struct sockaddr*)&addr_in_, sizeof(addr_in_)) == -1) {
         freeaddrinfo(res);
-        throw runtime_error("Error: Failed to bind socket");
+        throw runtime_error(string("Error: Failed to bind socket: ") + strerror(errno));
     }
     
     freeaddrinfo(res);
