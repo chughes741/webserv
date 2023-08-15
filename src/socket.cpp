@@ -82,7 +82,9 @@ TcpSocket::~TcpSocket() {}
 int TcpSocket::bind(string addr, int port) {
     addr_in_.sin_family      = AF_INET;                    // IPv4
     addr_in_.sin_port        = htons(port);                // Port
-    addr_in_.sin_addr.s_addr = htonl(atoi(addr.c_str()));  // Addres
+    if (inet_pton(AF_INET, addr.c_str(), &(addr_in_.sin_addr)) == -1) { //Address
+        throw runtime_error("Error: Failed to convert address");
+    }
 
     // Binds socket to an address and port
     if (::bind(sockfd_, (struct sockaddr*)&addr_in_, sizeof(addr_in_)) == -1) {
