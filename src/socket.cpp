@@ -87,22 +87,38 @@ TcpSocket::TcpSocket(SessionGenerator session_generator) : Socket(session_genera
 TcpSocket::~TcpSocket() {}
 
 int TcpSocket::bind(string addr, int port) {
-    addr_in_.sin_family      = AF_INET;                    // IPv4
-    addr_in_.sin_port        = htons(port);                // Port
-    addr_in_.sin_addr.s_addr = htonl(atoi(addr.c_str()));  // Addres
+    struct addrinfo hints, *res;
+    
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET; // AF_INET indicates IPv4
+    hints.ai_socktype = SOCK_STREAM;
 
+    // Convert the port number to a string because getaddrinfo needs it that way
+    char port_str[6];  // max port number is 65535, 5 characters + null terminator
+    snprintf(port_str, sizeof(port_str), "%d", port);
+
+    int status = getaddrinfo(addr.c_str(), port_str, &hints, &res);
+    if (status != 0) {
+        throw runtime_error(string("Error: getaddrinfo failed with error: ") + gai_strerror(status));
+    }
+    
+    // Copy the address information to addr_in_
+    memcpy(&addr_in_, res->ai_addr, sizeof(addr_in_));
+    
     // Binds socket to an address and port
     if (::bind(sockfd_, (struct sockaddr*)&addr_in_, sizeof(addr_in_)) == -1) {
-        throw runtime_error("Error: Failed to bind socket");
+        freeaddrinfo(res);
+        throw runtime_error(string("Error: Failed to bind socket: ") + strerror(errno));
     }
-
+    
+    freeaddrinfo(res);
     return sockfd_;
 }
 
 void TcpSocket::listen() {
     // Sets server to listen passively
     if (::listen(sockfd_, SO_MAX_QUEUE) == -1) {
-        throw runtime_error("Error: Failed to listen on socket");
+        throw runtime_error(string("Error: Failed to listen on socket: ") + strerror(errno));
     }
 }
 
