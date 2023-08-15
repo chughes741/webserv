@@ -60,7 +60,7 @@ void HttpServer::start(bool run_server) {
             server_sockets_[server_id] = new_socket;
 
             // Add the socket to the listener
-            listener_->registerEvent(server_id, 0); /** @todo event flags */
+            listener_->registerEvent(server_id, READABLE); /** @todo event flags */
         } catch (runtime_error& e) {
             cerr << e.what() << endl;
 
