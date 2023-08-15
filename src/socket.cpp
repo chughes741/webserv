@@ -27,6 +27,10 @@ Session::Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
 
 Session::~Session() {}
 
+int Session::getSockFd() const {
+    return sockfd_;
+}
+
 TcpSession::TcpSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
     : Session(sockfd, addr, addrlen) {}
 
