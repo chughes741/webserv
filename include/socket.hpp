@@ -20,6 +20,10 @@
 #include <cstdlib>
 #include <iostream>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
 #include "webserv.hpp"
 
 using std::map;
