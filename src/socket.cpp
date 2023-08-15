@@ -79,6 +79,9 @@ TcpSocket::TcpSocket(SessionGenerator session_generator) : Socket(session_genera
     if (sockfd_ == -1) {
         throw runtime_error("Error: Failed to create socket");
     }
+    if (fcntl(sockfd_, F_SETFL, O_NONBLOCK) == -1) {
+        throw runtime_error("Error: Failed to set socket to non-blocking");
+    }
 }
 
 TcpSocket::~TcpSocket() {}
