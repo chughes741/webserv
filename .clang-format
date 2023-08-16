@@ -10,5 +10,7 @@ AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: WithoutElse
 
+SortIncludes: false
+
 IndentWidth: 4
 ColumnLimit: 100
