@@ -18,10 +18,6 @@
 
 #include "socket.hpp"
 
-using std::atoi;
-using std::make_pair;
-using std::runtime_error;
-
 Session::Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
     : sockfd_(sockfd), addr_(addr), addrlen_(addrlen) {}
 
@@ -34,17 +30,17 @@ int Session::getSockFd() const {
 TcpSession::TcpSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
     : Session(sockfd, addr, addrlen) {}
 
-void TcpSession::send(int port, string buffer) const {
+void TcpSession::send(int port, std::string buffer) const {
     ssize_t bytes_sent = ::send(port, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
     if (bytes_sent == -1) {
-        throw runtime_error("Error: Failed to send to socket");
+        throw std::runtime_error("Error: Failed to send to socket");
     }
 }
 
-string TcpSession::recv(int port) const {
-    string buffer_str;
-    char   buffer[READ_BUFFER_SIZE];
-    int    bytes_received = ::recv(port, buffer, READ_BUFFER_SIZE, 0);
+std::string TcpSession::recv(int port) const {
+    std::string buffer_str;
+    char        buffer[READ_BUFFER_SIZE];
+    int         bytes_received = ::recv(port, buffer, READ_BUFFER_SIZE, 0);
 
     while (bytes_received > 0) {
         buffer_str.append(buffer, bytes_received);
@@ -52,7 +48,7 @@ string TcpSession::recv(int port) const {
     }
 
     if (bytes_received == -1) {
-        throw runtime_error("Error: Failed to receive from socket");
+        throw std::runtime_error("Error: Failed to receive from socket");
     }
 
     return buffer_str;
@@ -77,20 +73,20 @@ TcpSocket::TcpSocket(SessionGenerator session_generator) : Socket(session_genera
      */
     sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd_ == -1) {
-        throw runtime_error("Error: Failed to create socket");
+        throw std::runtime_error("Error: Failed to create socket");
     }
     if (fcntl(sockfd_, F_SETFL, O_NONBLOCK) == -1) {
-        throw runtime_error("Error: Failed to set socket to non-blocking");
+        throw std::runtime_error("Error: Failed to set socket to non-blocking");
     }
 }
 
 TcpSocket::~TcpSocket() {}
 
-int TcpSocket::bind(string addr, int port) {
+int TcpSocket::bind(std::string addr, int port) {
     struct addrinfo hints, *res;
-    
+
     memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_INET; // AF_INET indicates IPv4
+    hints.ai_family   = AF_INET;  // AF_INET indicates IPv4
     hints.ai_socktype = SOCK_STREAM;
 
     // Convert the port number to a string because getaddrinfo needs it that way
@@ -99,18 +95,19 @@ int TcpSocket::bind(string addr, int port) {
 
     int status = getaddrinfo(addr.c_str(), port_str, &hints, &res);
     if (status != 0) {
-        throw runtime_error(string("Error: getaddrinfo failed with error: ") + gai_strerror(status));
+        throw std::runtime_error(std::string("Error: getaddrinfo failed with error: ") +
+                                 gai_strerror(status));
     }
-    
+
     // Copy the address information to addr_in_
     memcpy(&addr_in_, res->ai_addr, sizeof(addr_in_));
-    
+
     // Binds socket to an address and port
     if (::bind(sockfd_, (struct sockaddr*)&addr_in_, sizeof(addr_in_)) == -1) {
         freeaddrinfo(res);
-        throw runtime_error(string("Error: Failed to bind socket: ") + strerror(errno));
+        throw std::runtime_error(string("Error: Failed to bind socket: ") + strerror(errno));
     }
-    
+
     freeaddrinfo(res);
     return sockfd_;
 }
@@ -118,7 +115,8 @@ int TcpSocket::bind(string addr, int port) {
 void TcpSocket::listen() {
     // Sets server to listen passively
     if (::listen(sockfd_, SO_MAX_QUEUE) == -1) {
-        throw runtime_error(string("Error: Failed to listen on socket: ") + strerror(errno));
+        throw std::runtime_error(std::string("Error: Failed to listen on socket: ") +
+                                 strerror(errno));
     }
 }
 
@@ -129,7 +127,7 @@ Session* TcpSocket::accept() {
     int client_sockfd = ::accept(sockfd_, client_addr, &client_addr_len);
     if (client_sockfd == -1) {
         delete client_addr;
-        throw runtime_error("Error: Failed to accept connection");
+        throw std::runtime_error("Error: Failed to accept connection");
     }
 
     return session_generator_(client_sockfd, client_addr, client_addr_len);
@@ -137,7 +135,7 @@ Session* TcpSocket::accept() {
 
 void TcpSocket::close() {
     if (::close(sockfd_) == -1) {
-        throw runtime_error("Error: Failed to close socket");
+        throw std::runtime_error("Error: Failed to close socket");
     }
 }
 
