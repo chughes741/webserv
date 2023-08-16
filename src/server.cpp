@@ -30,7 +30,25 @@ using std::pair;
 extern HttpConfig httpConfig;
 
 Server::Server(HttpConfig config, EventListener* listener, SocketGenerator socket_generator)
-    : socket_generator_(socket_generator), listener_(listener), config_(config) {}
+    : socket_generator_(socket_generator), listener_(listener), config_(config) {
+    http_methods_["GET"]    = GET;
+    http_methods_["POST"]   = POST;
+    http_methods_["DELETE"] = DELETE;
+
+    http_status_[OK]                    = "200 OK";
+    http_status_[CREATED]               = "201 Created";
+    http_status_[ACCEPTED]              = "202 Accepted";
+    http_status_[NO_CONTENT]            = "204 No Content";
+    http_status_[MOVED_PERMANENTLY]     = "301 Moved Permanently";
+    http_status_[FOUND]                 = "302 Found";
+    http_status_[NOT_MODIFIED]          = "304 Not Modified";
+    http_status_[BAD_REQUEST]           = "400 Bad Request";
+    http_status_[NOT_FOUND]             = "404 Not Found";
+    http_status_[METHOD_NOT_ALLOWED]    = "405 Method Not Allowed";
+    http_status_[IM_A_TEAPOT]           = "418 I'm a teapot";
+    http_status_[INTERNAL_SERVER_ERROR] = "500 Internal Server Error";
+    http_status_[BAD_GATEWAY]           = "502 Bad Gateway";
+}
 
 Server::~Server() {}
 
@@ -153,14 +171,24 @@ void HttpServer::disconnectHandler(int session_id) {
     close(session_id);
 }
 
-Request HttpServer::receiveRequest() {
-    Request request;
+HttpRequest HttpServer::receiveRequest() {
+    HttpRequest request;
 
     /** @todo should be client_id not 0 */
-    string buffer = sessions_[0]->recv(0);
+    std::string buffer = sessions_[0]->recv(0);
 
     // start-line
-    request.method = buffer.substr(0, buffer.find(' '));
+    std::string method = buffer.substr(0, buffer.find(' '));
+    buffer.erase(0, buffer.find(' ') + 1);
+
+    // Use the map to convert the string method to its corresponding enum
+    std::map<std::string, HttpMethod>::iterator it = http_methods_.find(method);
+    if (it != http_methods_.end()) {
+        request.method = it->second;
+    } else {
+        throw std::runtime_error("Unknown HTTP method");
+    }
+
     buffer.erase(0, buffer.find(' ') + 1);
     request.uri = buffer.substr(0, buffer.find(' '));
     buffer.erase(0, buffer.find(' ') + 1);
@@ -183,19 +211,19 @@ Request HttpServer::receiveRequest() {
     return request;
 }
 
-Response HttpServer::handleRequest(Request request) {
+HttpResponse HttpServer::handleRequest(HttpRequest request) {
     /** @todo implement */
-    Response response;
+    HttpResponse response;
 
-    if (request.method == "GET" && request.uri == "/") {
+    if (request.method == GET && request.uri == "/") {
         response.version                 = "HTTP/1.1";
-        response.status                  = "200 OK";
+        response.status                  = OK;
         response.server                  = "webserv/0.1";
         response.headers["Content-Type"] = "text/html";
         response.body                    = "<html><body><h1>Hello World!</h1></body></html>";
     } else {
         response.version                 = "HTTP/1.1";
-        response.status                  = "404 Not Found";
+        response.status                  = NOT_FOUND;
         response.server                  = "webserv/0.1";
         response.headers["Content-Type"] = "text/html";
         response.body                    = "<html><body><h1>404 Not Found</h1></body></html>";
@@ -204,12 +232,21 @@ Response HttpServer::handleRequest(Request request) {
     return response;
 }
 
-void HttpServer::sendResponse(Response response) {
+void HttpServer::sendResponse(HttpResponse response) {
     string buffer;
 
     // status-line
     buffer.append(response.version + " ");
-    buffer.append(response.status + " ");
+
+    // Find the status string from the map using the enum value.
+    std::map<HttpStatus, std::string>::iterator statusIt = http_status_.find(response.status);
+    if (statusIt != http_status_.end()) {
+        buffer.append(statusIt->second);
+    } else {
+        buffer.append(http_status_[INTERNAL_SERVER_ERROR]);
+    }
+
+    // Append the server name
     buffer.append(response.server + CRLF);
 
     // headers

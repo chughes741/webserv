@@ -37,8 +37,8 @@
 
 #pragma once
 
-#include "webserv.hpp"
 #include "events.hpp"
+#include "webserv.hpp"
 
 using std::map;
 using std::string;
@@ -64,16 +64,18 @@ class Server {
    protected:
     virtual void run() = 0;
 
-    virtual Request  receiveRequest()                = 0;
-    virtual Response handleRequest(Request request)  = 0;
-    virtual void     sendResponse(Response response) = 0;
+    virtual HttpRequest  receiveRequest()                    = 0;
+    virtual HttpResponse handleRequest(HttpRequest request)  = 0;
+    virtual void         sendResponse(HttpResponse response) = 0;
 
    protected:
-    SocketGenerator    socket_generator_; /**< Function ptr to socket generator */
-    map<int, Socket*>  server_sockets_;   /**< Map of server IDs to sockets */
-    map<int, Session*> sessions_;         /**< Map of session IDs to sessions */
-    EventListener*     listener_;         /**< Event listener for the server */
-    HttpConfig         config_;           /**< Configuration for the server */
+    SocketGenerator                   socket_generator_; /**< Function ptr to socket generator */
+    map<int, Socket*>                 server_sockets_;   /**< Map of server IDs to sockets */
+    map<int, Session*>                sessions_;         /**< Map of session IDs to sessions */
+    EventListener*                    listener_;         /**< Event listener for the server */
+    HttpConfig                        config_;           /**< Configuration for the server */
+    std::map<std::string, HttpMethod> http_methods_;     /**< HTTP methods */
+    std::map<HttpStatus, std::string> http_status_;      /**< HTTP status messages */
 };
 
 /**
@@ -102,7 +104,7 @@ class HttpServer : public Server {
     void connectHandler(int socket_id);
     void disconnectHandler(int session_id);
 
-    Request receiveRequest();
-    Response handleRequest(Request request);
-    void sendResponse(Response response);
+    HttpRequest  receiveRequest();
+    HttpResponse handleRequest(HttpRequest request);
+    void         sendResponse(HttpResponse response);
 };

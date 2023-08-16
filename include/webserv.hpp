@@ -1,5 +1,6 @@
 #pragma once
 
+#include "http.hpp"  // Needs to be included before config.hpp
 #include "config.hpp"
 #include "events.hpp"
 #include "parsing.hpp"
