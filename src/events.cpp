@@ -38,7 +38,7 @@ KqueueEventListener::KqueueEventListener() {
     KqueueEventMap[EVFILT_WRITE]  = WRITABLE;
     KqueueEventMap[EVFILT_EXCEPT] = ERROR_EVENT;
 
-    queue_fd_        = kqueue();
+    queue_fd_ = kqueue();
 
     // Check if kqueue was created successfully
     if (queue_fd_ == -1) {
@@ -46,7 +46,7 @@ KqueueEventListener::KqueueEventListener() {
     }
 }
 
-pair<int, InternalEvent> KqueueEventListener::listen() {
+std::pair<int, InternalEvent> KqueueEventListener::listen() {
     // Wait for events on the kqueue.
     struct kevent eventlist[1];
     int           ret = kevent(queue_fd_, NULL, 0, eventlist, 1, &timeout_);
@@ -58,7 +58,7 @@ pair<int, InternalEvent> KqueueEventListener::listen() {
 
     // Handle conversion from kqueue events to internal events
     InternalEvent event = 0;
-    for (map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
+    for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (eventlist[0].filter & it->first) {
             event |= it->second;
@@ -72,13 +72,13 @@ pair<int, InternalEvent> KqueueEventListener::listen() {
     // amount of space left in the write buffer
 
     // Return fd and event
-    return make_pair(eventlist[0].ident, event);
+    return std::make_pair(eventlist[0].ident, event);
 }
 
 void KqueueEventListener::registerEvent(int fd, int events) {
     // Handle conversion from internal events to kqueue filter
     KqueueEvent filter = 0;
-    for (map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
+    for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (events & it->second) {
             filter |= it->first;
