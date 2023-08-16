@@ -40,9 +40,6 @@
 #include "events.hpp"
 #include "webserv.hpp"
 
-using std::map;
-using std::string;
-
 /** @todo figure out why this aren't working with includes from webserv.hpp */
 class Socket;
 class Session;
@@ -70,8 +67,8 @@ class Server {
 
    protected:
     SocketGenerator                   socket_generator_; /**< Function ptr to socket generator */
-    map<int, Socket*>                 server_sockets_;   /**< Map of server IDs to sockets */
-    map<int, Session*>                sessions_;         /**< Map of session IDs to sessions */
+    std::map<int, Socket*>            server_sockets_;   /**< Map of server IDs to sockets */
+    std::map<int, Session*>           sessions_;         /**< Map of session IDs to sessions */
     EventListener*                    listener_;         /**< Event listener for the server */
     HttpConfig                        config_;           /**< Configuration for the server */
     std::map<std::string, HttpMethod> http_methods_;     /**< HTTP methods */
@@ -108,3 +105,4 @@ class HttpServer : public Server {
     HttpResponse handleRequest(HttpRequest request);
     void         sendResponse(HttpResponse response);
 };
+
