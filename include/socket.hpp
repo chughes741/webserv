@@ -26,10 +26,6 @@
 
 #include "webserv.hpp"
 
-using std::map;
-using std::pair;
-using std::string;
-
 #define SO_MAX_QUEUE     10
 #define READ_BUFFER_SIZE 1024
 #define CRLF             "\r\n"
@@ -42,9 +38,9 @@ class Session {
     Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
     virtual ~Session() = 0;
 
-    virtual void   send(int client, string message) const = 0;
-    virtual string recv(int client) const                 = 0;
-    int    getSockFd() const;
+    virtual void        send(int client, std::string message) const = 0;
+    virtual std::string recv(int client) const                      = 0;
+    int                 getSockFd() const;
 
    protected:
     int                    sockfd_;  /**< Session socket file descriptor */
@@ -59,8 +55,8 @@ class TcpSession : public Session {
    public:
     TcpSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
 
-    void   send(int client, string message) const;
-    string recv(int client) const;
+    void        send(int client, std::string message) const;
+    std::string recv(int client) const;
 };
 
 /** TcpSession generator function */
@@ -78,10 +74,10 @@ class Socket {
     Socket(SessionGenerator session_generator);
     virtual ~Socket() = 0;
 
-    virtual int      bind(string addr, int port) = 0;
-    virtual void     listen()                    = 0;
-    virtual Session* accept()                    = 0;
-    virtual void     close()                     = 0;
+    virtual int      bind(std::string addr, int port) = 0;
+    virtual void     listen()                         = 0;
+    virtual Session* accept()                         = 0;
+    virtual void     close()                          = 0;
     // virtual void setsockopt() = 0;
 
    protected:
@@ -116,7 +112,7 @@ class TcpSocket : public Socket {
      * @param addr address to bind to
      * @param port port to bind to
      */
-    int bind(string addr, int port);
+    int bind(std::string addr, int port);
 
     /**
      * @brief Listen for connections
