@@ -23,10 +23,6 @@
 
 #include "server.hpp"
 
-using std::cerr;
-using std::endl;
-using std::pair;
-
 extern HttpConfig httpConfig;
 
 Server::Server(HttpConfig config, EventListener* listener, SocketGenerator socket_generator)
@@ -61,8 +57,8 @@ HttpServer::~HttpServer() {}
 void HttpServer::start(bool run_server) {
     // Create a socket for each server in the config
     Socket* new_socket;
-    for (vector<ServerConfig>::iterator it = config_.servers.begin(); it != config_.servers.end();
-         ++it) {
+    for (std::vector<ServerConfig>::iterator it = config_.servers.begin();
+         it != config_.servers.end(); ++it) {
         try {
             // Create a new socket
             new_socket = socket_generator_();
@@ -79,8 +75,8 @@ void HttpServer::start(bool run_server) {
 
             // Add the socket to the listener
             listener_->registerEvent(server_id, READABLE); /** @todo event flags */
-        } catch (runtime_error& e) {
-            cerr << e.what() << endl;
+        } catch (std::runtime_error& e) {
+            std::cerr << e.what() << endl;
 
             // Delete the socket, is this safe even if it wasn't constructed?
             delete new_socket;
@@ -93,12 +89,12 @@ void HttpServer::start(bool run_server) {
 
 void HttpServer::stop() {
     // Close all sockets and delete them
-    for (map<int, Socket*>::iterator it = server_sockets_.begin(); it != server_sockets_.end();
+    for (std::map<int, Socket*>::iterator it = server_sockets_.begin(); it != server_sockets_.end();
          ++it) {
         try {
             it->second->close();
-        } catch (runtime_error& e) {
-            cerr << e.what() << endl;
+        } catch (std::runtime_error& e) {
+            std::cerr << e.what() << endl;
         }
         delete it->second;
     }
@@ -111,7 +107,7 @@ void HttpServer::run() {
     // Loop forever
     while (true) {
         // Wait for an event
-        pair<int, uint32_t> event = listener_->listen();
+        std::pair<int, uint32_t> event = listener_->listen();
 
         // Handle event
         switch (event.second) {
@@ -200,10 +196,10 @@ HttpRequest HttpServer::receiveRequest() {
     buffer.erase(buffer.find("\r\n\r\n") + 2);
 
     // headers
-    while (buffer.find(CRLF) != string::npos) {
-        string key = buffer.substr(0, buffer.find(':'));
+    while (buffer.find(CRLF) != std::string::npos) {
+        std::string key = buffer.substr(0, buffer.find(':'));
         buffer.erase(0, buffer.find(':') + 2);
-        string value = buffer.substr(0, buffer.find(CRLF));
+        std::string value = buffer.substr(0, buffer.find(CRLF));
         buffer.erase(0, buffer.find(CRLF) + 2);
         request.headers[key] = value;
     }
@@ -233,7 +229,7 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
 }
 
 void HttpServer::sendResponse(HttpResponse response) {
-    string buffer;
+    std::string buffer;
 
     // status-line
     buffer.append(response.version + " ");
@@ -250,8 +246,8 @@ void HttpServer::sendResponse(HttpResponse response) {
     buffer.append(response.server + CRLF);
 
     // headers
-    for (map<string, string>::iterator it = response.headers.begin(); it != response.headers.end();
-         ++it) {
+    for (std::map<std::string, std::string>::iterator it = response.headers.begin();
+         it != response.headers.end(); ++it) {
         buffer.append(it->first + ": " + it->second + CRLF);
     }
 
