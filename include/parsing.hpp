@@ -33,9 +33,6 @@
 #define PATH    0
 #define FASTCGI 1
 
-using std::string;
-using std::vector;
-
 /** @todo figure out why this aren't working with includes from webserv.hpp */
 struct HttpConfig;
 
@@ -45,7 +42,7 @@ struct HttpConfig;
  * @param config_file	[in] Path to the config file
  * @param httpConfig	[in][out] Struct to store the config settings
  */
-void parseConfig(string config_file, HttpConfig &httpConfig);
+void parseConfig(std::string config_file, HttpConfig &httpConfig);
 
 /**
  * @brief Parse the config file
@@ -60,15 +57,15 @@ class Parser {
      *
      * @param line		[in] Line to tokenize
      */
-    void tokenizeConfig(string);
+    void tokenizeConfig(std::string);
     /**
      * @brief 	 Increment iterator and validate first token of settings (not ;)
      */
-    void validateFirstToken(string);
+    void validateFirstToken(std::string);
     /**
      * @brief 	 Increment iterator and validate last token of settings (is ;)
      */
-    void validateLastToken(string);
+    void validateLastToken(std::string);
 
     /**
      * @brief Initialize settings from token vector
@@ -95,7 +92,7 @@ class Parser {
      * @param size Size of settings array
      * @return int Index of setting in settings array
      */
-    int getSetting(string settingsList[], int size);
+    int getSetting(std::string settingsList[], int size);
 
     /**
      * @brief Set global context setting through a switch case of available
@@ -165,7 +162,7 @@ class Parser {
     /**
      * @brief validate the value for port setting in listen
      */
-    int retrievePort(string);
+    int retrievePort(std::string);
 
     /**
      * @brief validate the ip address for listen
@@ -189,14 +186,15 @@ class Parser {
     /**
      * @brief Set http setting
      */
-    bool   setLocationSetting(string uri);
-    bool   setLocationUri();
-    void   setPath(string &);
-    void   setFastCGI(string &);
+    bool setLocationSetting(std::string uri);
+    bool setLocationUri();
+    void setPath(std::string &);
+    void setFastCGI(std::string &);
 
    private:
-    vector<string>           tokens;
-    vector<int>              context;
-    vector<string>::iterator it;
-    HttpConfig              &httpConfig;
+    std::vector<std::string>           tokens;
+    std::vector<int>                   context;
+    std::vector<std::string>::iterator it;
+    HttpConfig                        &httpConfig;
 };
+
