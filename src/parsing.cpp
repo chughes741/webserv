@@ -19,13 +19,9 @@
 
 #define INDEX 0
 
-using std::atoi;
-using std::find;
-using std::logic_error;
-
-void parseConfig(string config_file, HttpConfig &httpConfig) {
+void parseConfig(std::string config_file, HttpConfig &httpConfig) {
     Parser        parser(httpConfig);
-    string        line;
+    std::string   line;
     std::ifstream file(config_file.c_str());
 
     if (!file.is_open() || file.peek() == std::ifstream::traits_type::eof()) {
@@ -44,7 +40,7 @@ Parser::~Parser(void) {
     tokens.clear();
 }
 
-void Parser::tokenizeConfig(string line) {
+void Parser::tokenizeConfig(std::string line) {
     while (line.size() > 0) {
         size_t pos = line.find_first_not_of(" \t");
         if (pos == line.npos || line[pos] == '#') {
@@ -53,14 +49,14 @@ void Parser::tokenizeConfig(string line) {
         line = line.substr(pos);
         pos  = line.find_first_of("\\#{}; \t\n\0");
         pos == 0 ? pos = 1 : pos;
-        string tmp = line.substr(0, pos);
+        std::string tmp = line.substr(0, pos);
         tokens.push_back(tmp);
         ;
         line = line.substr(tmp.size());
     }
 }
 
-void Parser::validateFirstToken(string setting) {
+void Parser::validateFirstToken(std::string setting) {
     if (*(++it) == ";") {
         throw std::invalid_argument("Error: missing argument for " + setting);
     }
@@ -110,9 +106,9 @@ bool Parser::contextSwitchCase(int context) {
 }
 
 bool Parser::setContext() {
-    string item   = *it;
-    string List[] = {"", "events", "http", "server"};
-    int    tmp    = getSetting(List, sizeof(List) / sizeof(List[0]));
+    std::string item   = *it;
+    std::string List[] = {"", "events", "http", "server"};
+    int         tmp    = getSetting(List, sizeof(List) / sizeof(List[0]));
     if (*(++it) == "{" && tmp != -1) {
         switch (tmp) {
             case EVENTS:
@@ -131,9 +127,9 @@ bool Parser::setContext() {
     return true;
 }
 
-int Parser::getSetting(string settingsList[], int size) {
-    vector<string>           settings(settingsList, settingsList + size);
-    vector<string>::iterator settingIt = find(settings.begin(), settings.end(), *it);
+int Parser::getSetting(std::string settingsList[], int size) {
+    std::vector<string>           settings(settingsList, settingsList + size);
+    std::vector<string>::iterator settingIt = find(settings.begin(), settings.end(), *it);
     if (settingIt == settings.end()) {
         return (-1);
     }
@@ -156,7 +152,7 @@ bool Parser::setPid() {
 
 bool Parser::setWorkerProcesses() {
     validateFirstToken("worker_processes");
-    string num = *it;
+    std::string num = *it;
     for (size_t i = 0; i < num.length(); i++) {
         if (!isdigit(num[i]) || num.length() > 10) {
             throw std::invalid_argument("Invalid worker_processes: " + num);
@@ -170,7 +166,7 @@ bool Parser::setWorkerProcesses() {
 }
 
 bool Parser::setGlobalSetting() {
-    string List[] = {"error_log", "pid", "worker_processes"};
+    std::string List[] = {"error_log", "pid", "worker_processes"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case ERROR_LOG:
             return setErrorLog();
@@ -193,7 +189,7 @@ bool Parser::setEventsContext() {
 }
 
 bool Parser::setEventsSetting() {
-    string List[] = {"worker_connections"};
+    std::string List[] = {"worker_connections"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case WORKER_CONNECTIONS:
             return setWorkerConnections();
@@ -238,7 +234,7 @@ bool Parser::setIndex() {
 }
 
 bool Parser::setHttpSetting() {
-    string List[] = {"index"};
+    std::string List[] = {"index"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case INDEX:
             return setIndex();
@@ -258,7 +254,7 @@ bool Parser::setServerContext() {
 }
 
 bool Parser::setServerSetting() {
-    string List[] = {"listen", "server_name", "access_log", "root", "location"};
+    std::string List[] = {"listen", "server_name", "access_log", "root", "location"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case LISTEN:
             return setListen();
@@ -277,13 +273,13 @@ bool Parser::setServerSetting() {
 
 bool Parser::setListen() {
     validateFirstToken("server_name");
-    string num = *it;
+    std::string num = *it;
     if (num.find(":") == num.npos) {
-        throw logic_error("Error: No address provided for listen");
+        throw std::logic_error("Error: No address provided for listen");
     } else {
-        string address = num.substr(0, num.find(":"));
+        std::string address = num.substr(0, num.find(":"));
         if (!isValidIPAddress(address)) {
-            throw logic_error("Error: invalid IP address for listen: " + address);
+            throw std::logic_error("Error: invalid IP address for listen: " + address);
         }
         num                                = num.substr(num.find(":") + 1);
         (httpConfig.servers.back()).listen = std::make_pair(address, retrievePort(num));
@@ -301,10 +297,10 @@ bool Parser::isValidIPAddress(const std::string &ip) {
     return std::regex_match(ip, pattern);
 }
 
-int Parser::retrievePort(string num) {
+int Parser::retrievePort(std::string num) {
     for (size_t i = 0; i < num.length(); ++i) {
         if (!isdigit(num[i])) {
-            throw logic_error("Error: invalid port number for listen: " + num);
+            throw std::logic_error("Error: invalid port number for listen: " + num);
         }
     }
     return (atoi(num.c_str()));
@@ -314,7 +310,8 @@ bool Parser::setServerName() {
     validateFirstToken("server_name");
     while (*it != ";") {
         (httpConfig.servers.back()).server_names.push_back(*it);
-        ++it;}
+        ++it;
+    }
     return (true);
 }
 
@@ -334,8 +331,8 @@ bool Parser::setRoot() {
     return (true);
 }
 
-bool Parser::setLocationSetting(string uri) {
-    string List[] = {"path:", "fastcgi:"};
+bool Parser::setLocationSetting(std::string uri) {
+    std::string List[] = {"path:", "fastcgi:"};
     // string uri    = setLocationUri();
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case PATH:
@@ -355,8 +352,8 @@ bool Parser::setLocationSetting(string uri) {
 }
 
 bool Parser::setLocationUri() {
-	validateFirstToken("location");
-    string uri = *it;
+    validateFirstToken("location");
+    std::string uri = *it;
     if (*(++it) != "{") {
         throw std::logic_error("Invalid syntax for location: " + *it);
     }
@@ -365,17 +362,17 @@ bool Parser::setLocationUri() {
         setLocationSetting(uri);
     }
 
-	// validateLastToken("location");
+    // validateLastToken("location");
     return true;
 }
 
-void Parser::setPath(string &uri) {
+void Parser::setPath(std::string &uri) {
     validateFirstToken("path");
     (httpConfig.servers.back()).locations[uri].root = *it;
     validateLastToken("path");
 }
 
-void Parser::setFastCGI(string &uri) {
+void Parser::setFastCGI(std::string &uri) {
     validateFirstToken("fastcgi");
     (httpConfig.servers.back()).locations[uri].cgi_path    = *it;
     (httpConfig.servers.back()).locations[uri].cgi_enabled = true;

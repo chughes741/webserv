@@ -49,11 +49,6 @@
 #define CONNECT_EVENT    8
 #define DISCONNECT_EVENT 16
 
-using std::make_pair;
-using std::map;
-using std::pair;
-using std::runtime_error;
-
 typedef uint32_t KqueueEvent;
 typedef uint32_t InternalEvent;
 
@@ -64,9 +59,9 @@ class EventListener {
    public:
     virtual ~EventListener();
 
-    virtual pair<int, InternalEvent> listen()                          = 0;
-    virtual void                     registerEvent(int fd, int events) = 0;
-    virtual void                     unregisterEvent(int fd)           = 0;
+    virtual std::pair<int, InternalEvent> listen()                          = 0;
+    virtual void                          registerEvent(int fd, int events) = 0;
+    virtual void                          unregisterEvent(int fd)           = 0;
 };
 
 /** Event map to convert KqueueEvents to internal events */
@@ -81,13 +76,14 @@ class KqueueEventListener : public EventListener {
    public:
     KqueueEventListener();
 
-    pair<int, InternalEvent> listen();
-    void                     registerEvent(int fd, int events);
-    void                     unregisterEvent(int fd);
+    std::pair<int, InternalEvent> listen();
+    void                          registerEvent(int fd, int events);
+    void                          unregisterEvent(int fd);
 
    private:
-    int                             queue_fd_; /**< kqueue file descriptor */
-    struct timespec                 timeout_;  /**< timeout for kevent */
-    map<int, struct kevent>         events_;   /**< ident, event parameters */
-    map<KqueueEvent, InternalEvent> KqueueEventMap;
+    int                                  queue_fd_; /**< kqueue file descriptor */
+    struct timespec                      timeout_;  /**< timeout for kevent */
+    std::map<int, struct kevent>         events_;   /**< ident, event parameters */
+    std::map<KqueueEvent, InternalEvent> KqueueEventMap;
 };
+
