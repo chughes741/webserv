@@ -62,7 +62,7 @@ void Parser::validateFirstToken(std::string setting) {
     }
 }
 
-void Parser::validateLastToken(string setting) {
+void Parser::validateLastToken(std::string setting) {
     if (*(++it) != ";") {
         throw std::invalid_argument("Error: too many arguments for " + setting + " (" + *it + ")");
     }
@@ -128,8 +128,8 @@ bool Parser::setContext() {
 }
 
 int Parser::getSetting(std::string settingsList[], int size) {
-    std::vector<string>           settings(settingsList, settingsList + size);
-    std::vector<string>::iterator settingIt = find(settings.begin(), settings.end(), *it);
+    std::vector<std::string>           settings(settingsList, settingsList + size);
+    std::vector<std::string>::iterator settingIt = find(settings.begin(), settings.end(), *it);
     if (settingIt == settings.end()) {
         return (-1);
     }
@@ -145,7 +145,6 @@ bool Parser::setErrorLog() {
 
 bool Parser::setPid() {
     validateFirstToken("error_log");
-    // httpConfig.pid = *it;
     validateLastToken("error_log");
     return true;
 }
@@ -210,7 +209,6 @@ bool Parser::setWorkerConnections() {
     if (num > OPEN_MAX) {
         throw std::invalid_argument("worker_connections value over limit: " + *it);
     }
-    // httpConfig.worker_connections = num;
     validateLastToken("worker_connections");
     return true;
 }
@@ -228,19 +226,33 @@ bool Parser::setHttpContext() {
 
 bool Parser::setIndex() {
     validateFirstToken("index");
-    // httpConfig.index = *it;
     validateLastToken("index");
     return true;
 }
 
 bool Parser::setHttpSetting() {
-    std::string List[] = {"index"};
+    std::string List[] = {"index", "error_page"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case INDEX:
             return setIndex();
+        case ERROR_PAGE_H:
+            return setHttpErrorPage();
         default:
             throw std::invalid_argument("Invalid setting in Http context: " + *it);
     }
+}
+
+bool Parser::setHttpErrorPage() {
+    validateFirstToken("error_page");
+    int error = std::stoi(*it);
+    std::string error_file = *++it;
+    if (error_file == ";") {
+        throw std::logic_error("Error: missing file path for error " + std::to_string(error));
+    } else {
+        httpConfig.error_page[error] = error_file;
+    }
+    validateLastToken("error_page");
+    return true;
 }
 
 bool Parser::setServerContext() {
@@ -254,14 +266,14 @@ bool Parser::setServerContext() {
 }
 
 bool Parser::setServerSetting() {
-    std::string List[] = {"listen", "server_name", "access_log", "root", "location"};
+    std::string List[] = {"listen", "server_name", "error_page", "root", "location"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case LISTEN:
             return setListen();
         case SERVER_NAME:
             return setServerName();
-        case ACCESS_LOG:
-            return setAccessLog();
+        case ERROR_PAGE_S:
+            return setServerErrorPage();
         case ROOT:
             return setRoot();
         case LOCATION:
@@ -315,39 +327,39 @@ bool Parser::setServerName() {
     return (true);
 }
 
-bool Parser::setAccessLog() {
-    validateFirstToken("access_log");
-    while (*it != ";") {
-        // std::cout << *it << " ";
-        ++it;
+bool Parser::setServerErrorPage() {
+    validateFirstToken("error_page");
+    int error = std::stoi(*it);
+    std::string error_file = *++it;
+    if (error_file == ";") {
+        throw std::logic_error("Error: missing file path for error " + std::to_string(error));
+    } else {
+        (httpConfig.servers.back()).error_page[error] = error_file;
     }
+    validateLastToken("error_page");
     return true;
 }
 
 bool Parser::setRoot() {
     validateFirstToken("root");
-    //
+    std::string root = *it;
+    (httpConfig.servers.back()).root = root;
     validateLastToken("root");
     return (true);
 }
 
 bool Parser::setLocationSetting(std::string uri) {
-    std::string List[] = {"path:", "fastcgi:"};
-    // string uri    = setLocationUri();
+    std::string List[] = {"path:", "fastcgi:", "error_page"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case PATH:
-            setPath(uri);
-            break;
+            return setPath(uri);
         case FASTCGI:
-            setFastCGI(uri);
-            break;
+            return setFastCGI(uri);
+        case ERROR_PAGE_L:
+            return setLocationErrorPage(uri);
         default:
             throw std::logic_error("Invalid setting for location: " + *it);
     }
-    // if (*(++it) != "}") {
-    //     throw std::logic_error("Invalid syntax for location after setting: " +
-    //                            *it);
-    // }
     return true;
 }
 
@@ -361,20 +373,34 @@ bool Parser::setLocationUri() {
     while (*++it != "}") {
         setLocationSetting(uri);
     }
-
-    // validateLastToken("location");
     return true;
 }
 
-void Parser::setPath(std::string &uri) {
+bool Parser::setPath(std::string &uri) {
     validateFirstToken("path");
-    (httpConfig.servers.back()).locations[uri].root = *it;
+    std::string root = *it;
+    (httpConfig.servers.back()).locations[uri].root = root;
     validateLastToken("path");
+    return true;
 }
 
-void Parser::setFastCGI(std::string &uri) {
+bool Parser::setFastCGI(std::string &uri) {
     validateFirstToken("fastcgi");
     (httpConfig.servers.back()).locations[uri].cgi_path    = *it;
     (httpConfig.servers.back()).locations[uri].cgi_enabled = true;
     validateLastToken("fastcgi");
+    return true;
+}
+
+bool Parser::setLocationErrorPage(std::string &uri) {
+    validateFirstToken("error_page");
+    int error = std::stoi(*it);
+    std::string error_file = *++it;
+    if (error_file == ";") {
+        throw std::logic_error("Error: missing file path for error " + std::to_string(error));
+    } else {
+        (httpConfig.servers.back()).locations[uri].error_page[error] = error_file;
+    }
+    validateLastToken("error_page");
+    return true;
 }
