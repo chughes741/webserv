@@ -76,7 +76,7 @@ void HttpServer::start(bool run_server) {
             // Add the socket to the listener
             listener_->registerEvent(server_id, READABLE); /** @todo event flags */
         } catch (std::runtime_error& e) {
-            std::cerr << e.what() << endl;
+            std::cerr << e.what() << std::endl;
 
             // Delete the socket, is this safe even if it wasn't constructed?
             delete new_socket;
@@ -94,7 +94,7 @@ void HttpServer::stop() {
         try {
             it->second->close();
         } catch (std::runtime_error& e) {
-            std::cerr << e.what() << endl;
+            std::cerr << e.what() << std::endl;
         }
         delete it->second;
     }

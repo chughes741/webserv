@@ -42,7 +42,7 @@ KqueueEventListener::KqueueEventListener() {
 
     // Check if kqueue was created successfully
     if (queue_fd_ == -1) {
-        throw runtime_error("creating kequeue failed");
+        throw std::runtime_error("creating kequeue failed");
     }
 }
 
@@ -53,7 +53,7 @@ std::pair<int, InternalEvent> KqueueEventListener::listen() {
 
     // Check if event was received successfully
     if (ret == -1) {
-        throw runtime_error("eventListen() failed");
+        throw std::runtime_error("eventListen() failed");
     }
 
     // Handle conversion from kqueue events to internal events
@@ -99,7 +99,7 @@ void KqueueEventListener::registerEvent(int fd, int events) {
 
     // Check if event was added successfully
     if (ret == -1) {
-        throw runtime_error("registerEvent() failed");
+        throw std::runtime_error("registerEvent() failed");
     }
 
     // Add event to the map of events.
@@ -109,7 +109,7 @@ void KqueueEventListener::registerEvent(int fd, int events) {
 void KqueueEventListener::unregisterEvent(int fd) {
     // Check if event exists.
     if (events_.find(fd) == events_.end()) {
-        throw runtime_error("unregisterEvent() failed");
+        throw std::runtime_error("unregisterEvent() failed");
     }
 
     // Get event from the map of events.
@@ -127,7 +127,7 @@ void KqueueEventListener::unregisterEvent(int fd) {
 
     // Check if event was deleted successfully
     if (ret == -1) {
-        throw runtime_error("removeSocket() failed");
+        throw std::runtime_error("removeSocket() failed");
     }
 
     // Delete event from the map of events.
