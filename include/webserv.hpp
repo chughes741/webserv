@@ -6,6 +6,7 @@
 #include "parsing.hpp"
 #include "server.hpp"
 #include "socket.hpp"
+#include "logging.hpp"
 
 #define OUT    0
 #define EVENTS 1

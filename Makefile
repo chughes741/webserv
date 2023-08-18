@@ -11,7 +11,7 @@ DEFAULT_GOAL: all
 HIDE = @
 
 # Argument test
-ARG = 
+ARG =
 EXECUTION = ./$(NAME) or ./$(NAME) + configFile
 
 #------------------------------------------------------------------------------#
@@ -35,11 +35,13 @@ SRCS	=	$(wildcard $S*.cpp)
 INC		=	$(wildcard $I*.hpp)
 OBJS	=	$(SRCS:$S%.cpp=$O%.o)
 
+LOG_DIR = logs
+
 #------------------------------------------------------------------------------#
 #                                 TARGETS                                      #
 #------------------------------------------------------------------------------#
 
-all: $(NAME)
+all: $(NAME) | $(LOG_DIR)
 
 # Generates output file
 $(NAME): $(OBJS)
@@ -69,6 +71,10 @@ fclean: clean
 
 # Removes objects and executables and remakes
 re: fclean all
+
+$(LOG_DIR):
+	@mkdir -p $@
+	@echo "\033[0;32mCreated logs directory!\033[0m"
 
 exe: $(NAME)
 	./$(NAME) $(ARG)

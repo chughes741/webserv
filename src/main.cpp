@@ -33,6 +33,9 @@ int main(int argc, char *argv[]) {
         return (EXIT_FAILURE);
     }
 
+    Logger *logger = new ConsoleLogger();
+    // Logger *logger = new FileLogger("logs/" + getCurrentTimestamp() + ".log");
+
     HttpConfig httpConfig;
     // Parse config file
     try {
@@ -62,5 +65,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    delete logger;
     return (EXIT_SUCCESS);
 }
