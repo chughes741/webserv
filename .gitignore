@@ -35,6 +35,7 @@ webserv
 *.app
 
 # Debug files
+logs/
 *.dSYM/
 
 # CMake build
