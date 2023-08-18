@@ -33,9 +33,6 @@ int main(int argc, char *argv[]) {
         return (EXIT_FAILURE);
     }
 
-    Logger *logger = new ConsoleLogger();
-    // Logger *logger = new FileLogger("logs/" + getCurrentTimestamp() + ".log");
-
     HttpConfig httpConfig;
     // Parse config file
     try {
@@ -46,25 +43,27 @@ int main(int argc, char *argv[]) {
         }
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
+        Logger::instance().log("Failed to parse config file");
         return (EXIT_FAILURE);
     }
 
     // Create a listener
     EventListener *listener = new KqueueEventListener();
+    Logger::instance().log("Created listener");
 
     // Initialize server
     HttpServer httpServer(httpConfig, listener);
+    Logger::instance().log("Initialized server");
 
     // Run server
     while (true) {
         try {
             httpServer.start();
         } catch (std::exception &e) { /** @todo needs a more specific exception */
-            std::cerr << e.what() << std::endl;
+            Logger::instance().log("Runtime error" + std::string(e.what()));
             httpServer.stop();
         }
     }
 
-    delete logger;
     return (EXIT_SUCCESS);
 }

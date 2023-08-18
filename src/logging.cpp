@@ -1,5 +1,13 @@
 #include "logging.hpp"
 
+Logger::~Logger() {}
+
+Logger &Logger::instance() {
+    static ConsoleLogger logger_instance;
+    // static FileLogger logger_instance("logs/" + getCurrentTimestamp() + ".log");
+    return logger_instance;
+}
+
 void ConsoleLogger::log(const std::string &message) {
     std::cout << "ConsoleLogger: " << message << std::endl;
 }

@@ -11,8 +11,9 @@
 
 class Logger {
    public:
-    virtual ~Logger()                            = 0;
-    virtual void log(const std::string &message) = 0;
+    virtual ~Logger();
+    virtual void   log(const std::string &message) = 0;
+    static Logger &instance();
 };
 
 class ConsoleLogger : public Logger {
