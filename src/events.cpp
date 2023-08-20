@@ -49,19 +49,21 @@ KqueueEventListener::KqueueEventListener() {
 std::pair<int, InternalEvent> KqueueEventListener::listen() {
     // Wait for events on the kqueue.
     struct kevent eventlist[1];
+    uint32_t filter = 0;
     int           ret = kevent(queue_fd_, NULL, 0, eventlist, 1, &timeout_);
 
     // Check if event was received successfully
     if (ret == -1) {
         throw std::runtime_error("eventListen() failed");
-    }
-
+    }   
+    filter = static_cast<uint32_t>(eventlist[0].filter); // Cast eventlist filter to uint32_t to match KqueueEventMap
     // Handle conversion from kqueue events to internal events
-    InternalEvent event = 0;
-    for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
+    InternalEvent event = 0; // Default is nothing happened I guess
+    for (std::map<KqueueEvent, InternalEvent>::const_iterator it =
+             KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
-        if (eventlist[0].filter & it->first) {
-            event |= it->second;
+        if (!(filter ^ it->first)) {
+            event = it->second;
             break;
         }
     }
