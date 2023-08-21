@@ -63,7 +63,7 @@ class Server {
 
     virtual HttpRequest  receiveRequest(int session_id)      = 0;
     virtual HttpResponse handleRequest(HttpRequest request)  = 0;
-    virtual void         sendResponse(HttpResponse response) = 0;
+    virtual void         sendResponse(int session_id, HttpResponse response) = 0;
 
    protected:
     SocketGenerator                   socket_generator_; /**< Function ptr to socket generator */
@@ -103,6 +103,6 @@ class HttpServer : public Server {
 
     HttpRequest  receiveRequest(int session_id);
     HttpResponse handleRequest(HttpRequest request);
-    void         sendResponse(HttpResponse response);
+    void         sendResponse(int session_id, HttpResponse response);
 };
 

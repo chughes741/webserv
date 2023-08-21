@@ -141,7 +141,7 @@ void HttpServer::readableHandler(int session_id) {
     HttpResponse response = handleRequest(request);
 
     // Send the response
-    sendResponse(response);
+    sendResponse(session_id, response);
 
     // Close the connection
     disconnectHandler(session_id);
@@ -243,7 +243,7 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
     return response;
 }
 
-void HttpServer::sendResponse(HttpResponse response) {
+void HttpServer::sendResponse(int session_id, HttpResponse response) {
     std::string buffer;
 
     // status-line
@@ -270,5 +270,5 @@ void HttpServer::sendResponse(HttpResponse response) {
     buffer.append(CRLF + response.body);
 
     /** @todo should be client_id not 0 */
-    sessions_[0]->send(0, buffer);
+    sessions_[session_id]->send(session_id, buffer);
 }
