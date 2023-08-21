@@ -37,19 +37,23 @@ void TcpSession::send(int port, std::string buffer) const {
     }
 }
 
-std::string TcpSession::recv(int port) const {
+std::string TcpSession::recv(int client) const {
     std::string buffer_str;
     char        buffer[READ_BUFFER_SIZE];
-    int         bytes_received = ::recv(port, buffer, READ_BUFFER_SIZE, 0);
+    int         bytes_received = ::recv(client, buffer, READ_BUFFER_SIZE, 0);
+
+    std::cout << "bytes_received: " << bytes_received << std::endl;
+    std::cout << "buffer: " << buffer << std::endl;
+    std::cout << "errno: " << strerror(errno) << std::endl;
 
     while (bytes_received > 0) {
         buffer_str.append(buffer, bytes_received);
-        bytes_received = ::recv(port, buffer, READ_BUFFER_SIZE, 0);
+        bytes_received = ::recv(client, buffer, READ_BUFFER_SIZE, 0);
     }
 
-    if (bytes_received == -1) {
-        throw std::runtime_error("Error: Failed to receive from socket");
-    }
+    // if (bytes_received == -1) {
+    //     throw std::runtime_error("Error: Failed to receive from socket");
+    // }
 
     return buffer_str;
 }

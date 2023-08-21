@@ -186,7 +186,7 @@ HttpRequest HttpServer::receiveRequest(int session_id) {
     HttpRequest request;
 
     /** @todo should be client_id not 0 */
-    std::string buffer = sessions_[session_id]->recv(this->config_.servers[0].listen.second);
+    std::string buffer = sessions_[session_id]->recv(session_id);
 
     // start-line
     std::string method = buffer.substr(0, buffer.find(' '));
