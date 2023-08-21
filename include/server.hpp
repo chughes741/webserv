@@ -61,7 +61,7 @@ class Server {
    protected:
     virtual void run() = 0;
 
-    virtual HttpRequest  receiveRequest()                    = 0;
+    virtual HttpRequest  receiveRequest(int session_id)      = 0;
     virtual HttpResponse handleRequest(HttpRequest request)  = 0;
     virtual void         sendResponse(HttpResponse response) = 0;
 
@@ -101,7 +101,7 @@ class HttpServer : public Server {
     void connectHandler(int socket_id);
     void disconnectHandler(int session_id);
 
-    HttpRequest  receiveRequest();
+    HttpRequest  receiveRequest(int session_id);
     HttpResponse handleRequest(HttpRequest request);
     void         sendResponse(HttpResponse response);
 };

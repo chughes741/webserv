@@ -110,26 +110,41 @@ void HttpServer::run() {
         std::pair<int, uint32_t> event = listener_->listen();
 
         // Handle event
-        switch (event.second) {
-            case READABLE:
-                readableHandler(event.first);
-                break;
-            case WRITABLE:
-                writableHandler(event.first);
-                break;
-            case ERROR_EVENT:
-                errorHandler(event.first);
-                break;
-            case CONNECT_EVENT:
-                connectHandler(event.first);
-                break;
+        if (server_sockets_.find(event.first) != server_sockets_.end()) {
+            // Event is on a server socket
+            connectHandler(event.first);
+        } else {
+            // Event is on a session socket
+            switch (event.second) {
+                case READABLE:
+                    readableHandler(event.first);
+                    break;
+                case WRITABLE:
+                    writableHandler(event.first);
+                    break;
+                case ERROR_EVENT:
+                    errorHandler(event.first);
+                    break;
+                case DISCONNECT_EVENT:
+                    disconnectHandler(event.first);
+                    break;
+            }
         }
     }
 }
 
 void HttpServer::readableHandler(int session_id) {
-    (void)session_id;
-    return;
+    // Receive the request
+    HttpRequest request = receiveRequest(session_id);
+
+    // Handle the request
+    HttpResponse response = handleRequest(request);
+
+    // Send the response
+    sendResponse(response);
+
+    // Close the connection
+    disconnectHandler(session_id);
 }
 
 void HttpServer::writableHandler(int session_id) {
@@ -150,7 +165,7 @@ void HttpServer::connectHandler(int socket_id) {
     sessions_[session->getSockFd()] = session;
 
     // Add the session to the listener
-    listener_->registerEvent(session->getSockFd(), 0); /** @todo event flags */
+     listener_->registerEvent(session->getSockFd(), READABLE); /** @todo event flags */
 }
 
 void HttpServer::disconnectHandler(int session_id) {
@@ -167,11 +182,11 @@ void HttpServer::disconnectHandler(int session_id) {
     close(session_id);
 }
 
-HttpRequest HttpServer::receiveRequest() {
+HttpRequest HttpServer::receiveRequest(int session_id) {
     HttpRequest request;
 
     /** @todo should be client_id not 0 */
-    std::string buffer = sessions_[0]->recv(0);
+    std::string buffer = sessions_[session_id]->recv(this->config_.servers[0].listen.second);
 
     // start-line
     std::string method = buffer.substr(0, buffer.find(' '));
