@@ -185,9 +185,7 @@ void HttpServer::disconnectHandler(int session_id) {
 HttpRequest HttpServer::receiveRequest(int session_id) {
     HttpRequest request;
 
-    /** @todo should be client_id not 0 */
     std::string buffer = sessions_[session_id]->recv(session_id);
-
     // start-line
     std::string method = buffer.substr(0, buffer.find(' '));
     buffer.erase(0, buffer.find(' ') + 1);
@@ -200,7 +198,6 @@ HttpRequest HttpServer::receiveRequest(int session_id) {
         throw std::runtime_error("Unknown HTTP method");
     }
 
-    buffer.erase(0, buffer.find(' ') + 1);
     request.uri = buffer.substr(0, buffer.find(' '));
     buffer.erase(0, buffer.find(' ') + 1);
     request.version = buffer.substr(0, buffer.find(CRLF));
@@ -222,6 +219,13 @@ HttpRequest HttpServer::receiveRequest(int session_id) {
     return request;
 }
 
+void    HttpServer::buildBody(HttpResponse &response) {
+    std::ifstream in("html/index.html");
+    std::stringstream buffer;
+    buffer << in.rdbuf();
+    response.body = (buffer.str());
+}
+
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     /** @todo implement */
     HttpResponse response;
@@ -231,7 +235,7 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
         response.status                  = OK;
         response.server                  = "webserv/0.1";
         response.headers["Content-Type"] = "text/html";
-        response.body                    = "<html><body><h1>Hello World!</h1></body></html>";
+        buildBody(response);
     } else {
         response.version                 = "HTTP/1.1";
         response.status                  = NOT_FOUND;
