@@ -55,7 +55,7 @@ std::pair<int, InternalEvent> KqueueEventListener::listen() {
     // Check if event was received successfully
     if (ret == -1) {
         throw std::runtime_error("eventListen() failed");
-    }   
+    }
     filter = static_cast<uint32_t>(eventlist[0].filter); // Cast eventlist filter to uint32_t to match KqueueEventMap
     // Handle conversion from kqueue events to internal events
     InternalEvent event = 0; // Default is nothing happened I guess
@@ -77,7 +77,7 @@ std::pair<int, InternalEvent> KqueueEventListener::listen() {
     return std::make_pair(eventlist[0].ident, event);
 }
 
-void KqueueEventListener::registerEvent(int fd, int events) {
+bool KqueueEventListener::registerEvent(int fd, int events) {
     // Handle conversion from internal events to kqueue filter
     KqueueEvent filter = 0;
     for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
@@ -85,6 +85,12 @@ void KqueueEventListener::registerEvent(int fd, int events) {
         if (events & it->second) {
             filter |= it->first;
         }
+    }
+
+    if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
+        Logger::instance().log("Error: Failed to set socket to non-blocking");
+        // throw std::runtime_error("registerEvent() failed");
+        return false;
     }
 
     // Set flags and fflags
@@ -101,11 +107,15 @@ void KqueueEventListener::registerEvent(int fd, int events) {
 
     // Check if event was added successfully
     if (ret == -1) {
-        throw std::runtime_error("registerEvent() failed");
+        Logger::instance().log("Error: Failed to add event to kqueue");
+        // throw std::runtime_error("registerEvent() failed");
+        return false;
     }
 
     // Add event to the map of events.
     events_[fd] = event;
+
+    return true;
 }
 
 void KqueueEventListener::unregisterEvent(int fd) {
