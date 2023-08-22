@@ -104,5 +104,6 @@ class HttpServer : public Server {
     HttpRequest  receiveRequest(int session_id);
     HttpResponse handleRequest(HttpRequest request);
     void         sendResponse(int session_id, HttpResponse response);
+    void         buildBody(HttpResponse &response);
 };
 
