@@ -186,6 +186,7 @@ HttpRequest HttpServer::receiveRequest(int session_id) {
     HttpRequest request;
 
     std::string buffer = sessions_[session_id]->recv(session_id);
+    // Logger::instance().log(buffer); // Prints the request
     // start-line
     std::string method = buffer.substr(0, buffer.find(' '));
     buffer.erase(0, buffer.find(' ') + 1);
@@ -202,6 +203,7 @@ HttpRequest HttpServer::receiveRequest(int session_id) {
     buffer.erase(0, buffer.find(' ') + 1);
     request.version = buffer.substr(0, buffer.find(CRLF));
     buffer.erase(0, buffer.find(CRLF) + 2);
+    
 
     // body
     request.body = buffer.substr(buffer.find("\r\n\r\n") + 4);
@@ -226,18 +228,35 @@ void    HttpServer::buildBody(HttpResponse &response) {
     response.body = (buffer.str());
 }
 
+bool    HttpServer::validateHost(HttpRequest &request) {
+    std::string host = request.headers["Host"];
+    Logger::instance().log(host);
+    std::vector<ServerConfig>::const_iterator serverIt = config_.servers.begin();
+    for (; serverIt != config_.servers.end(); ++serverIt) {
+        std::string serverHost = serverIt->listen.first + ":" + std::to_string(serverIt->listen.second);
+        if (host == serverHost) {
+            return true;
+        }
+    }
+    return false;
+}
+
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     /** @todo implement */
     HttpResponse response;
 
-    if (request.method == GET && request.uri == "/") {
-        response.version                 = "HTTP/1.1";
+    response.version    = "HTTP/1.1";
+    response.server     = "webserv/0.1";
+
+    if (request.version != "HTTP/1.1") {
+        response.status = IM_A_TEAPOT;
+    } else if (!validateHost(request)) {
+        response.status = BAD_GATEWAY;
+    } else if (request.method == GET && request.uri == "/") {
         response.status                  = OK;
-        response.server                  = "webserv/0.1";
         response.headers["Content-Type"] = "text/html";
         buildBody(response);
     } else {
-        response.version                 = "HTTP/1.1";
         response.status                  = NOT_FOUND;
         response.server                  = "webserv/0.1";
         response.headers["Content-Type"] = "text/html";

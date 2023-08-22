@@ -105,5 +105,6 @@ class HttpServer : public Server {
     HttpResponse handleRequest(HttpRequest request);
     void         sendResponse(int session_id, HttpResponse response);
     void         buildBody(HttpResponse &response);
+    bool         validateHost(HttpRequest &request);
 };
 
