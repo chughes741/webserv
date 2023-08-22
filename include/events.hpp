@@ -34,6 +34,7 @@
 
 #pragma once
 
+#include <fcntl.h>
 #include <stdint.h>
 #include <sys/event.h>
 #include <sys/time.h>
@@ -42,6 +43,8 @@
 #include <map>
 #include <stdexcept>
 #include <utility>
+
+#include "logging.hpp"
 
 #define READABLE         1
 #define WRITABLE         2
@@ -60,7 +63,7 @@ class EventListener {
     virtual ~EventListener();
 
     virtual std::pair<int, InternalEvent> listen()                          = 0;
-    virtual void                          registerEvent(int fd, int events) = 0;
+    virtual bool                          registerEvent(int fd, int events) = 0;
     virtual void                          unregisterEvent(int fd)           = 0;
 };
 
@@ -77,7 +80,7 @@ class KqueueEventListener : public EventListener {
     KqueueEventListener();
 
     std::pair<int, InternalEvent> listen();
-    void                          registerEvent(int fd, int events);
+    bool                          registerEvent(int fd, int events);
     void                          unregisterEvent(int fd);
 
    private:
