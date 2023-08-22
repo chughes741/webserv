@@ -221,20 +221,41 @@ HttpRequest HttpServer::receiveRequest(int session_id) {
     return request;
 }
 
-void    HttpServer::buildBody(HttpResponse &response) {
-    std::ifstream in("html/index.html");
-    std::stringstream buffer;
-    buffer << in.rdbuf();
-    response.body = (buffer.str());
+void    HttpServer::readRoot(HttpResponse &response, std::string &root, std::string &uri) {
+    std::ifstream in(root + uri + "index.html");
+    if (in) {
+        std::stringstream buffer;
+        buffer << in.rdbuf();
+        response.body = buffer.str();
+        in.close();
+    } else {
+        response.body = "404 Not Found";
+    }
 }
 
-bool    HttpServer::validateHost(HttpRequest &request) {
-    std::string host = request.headers["Host"];
-    Logger::instance().log(host);
+void    HttpServer::buildBody(HttpRequest &request, HttpResponse &response, const ServerConfig &server) {
+    std::map<std::string, LocationConfig>::const_iterator locationIt = server.locations.begin();
+    const LocationConfig *location = nullptr;
+    for (; locationIt != server.locations.end(); ++locationIt) {
+        if (locationIt->first.compare(0, locationIt->first.size(), request.uri) == 0) {
+            location = &(locationIt->second);
+        }
+    }
+    if (location) {
+        std::string root = location->root.size() > 0 ? location->root : server.root;
+        readRoot(response, root, request.uri);
+    } else {
+        response.body = "404 Not Found";
+    }
+}
+
+bool    HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
+    std::string requestHost = request.headers["Host"];
     std::vector<ServerConfig>::const_iterator serverIt = config_.servers.begin();
     for (; serverIt != config_.servers.end(); ++serverIt) {
         std::string serverHost = serverIt->listen.first + ":" + std::to_string(serverIt->listen.second);
-        if (host == serverHost) {
+        if (requestHost == serverHost) {
+            buildBody(request, response, *serverIt);
             return true;
         }
     }
@@ -250,12 +271,11 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
 
     if (request.version != "HTTP/1.1") {
         response.status = IM_A_TEAPOT;
-    } else if (!validateHost(request)) {
+    } else if (!validateHost(request, response)) {
         response.status = BAD_GATEWAY;
     } else if (request.method == GET && request.uri == "/") {
         response.status                  = OK;
         response.headers["Content-Type"] = "text/html";
-        buildBody(response);
     } else {
         response.status                  = NOT_FOUND;
         response.server                  = "webserv/0.1";
