@@ -24,19 +24,21 @@ KqueueEventListener::KqueueEventListener() {
 
 std::pair<int, InternalEvent> KqueueEventListener::listen() {
     // Wait for events on the kqueue.
-    struct kevent eventlist[1];
-    uint32_t filter = 0;
-    int           ret = kevent(queue_fd_, NULL, 0, eventlist, 1, &timeout_);
+    struct kevent eventlist;
+    KqueueEvent   filter = 0;
+    int           ret    = kevent(queue_fd_, NULL, 0, &eventlist, 1, &timeout_);
 
     // Check if event was received successfully
     if (ret == -1) {
-        throw std::runtime_error("eventListen() failed");
+        Logger::instance().log("Error: Failed to receive event from kqueue");
+        return std::make_pair(-1, NONE);
     }
-    filter = static_cast<uint32_t>(eventlist[0].filter); // Cast eventlist filter to uint32_t to match KqueueEventMap
+
+    filter = static_cast<KqueueEvent>(eventlist.filter);
+
     // Handle conversion from kqueue events to internal events
-    InternalEvent event = 0; // Default is nothing happened I guess
-    for (std::map<KqueueEvent, InternalEvent>::const_iterator it =
-             KqueueEventMap.begin();
+    InternalEvent event = NONE;
+    for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (!(filter ^ it->first)) {
             event = it->second;
@@ -44,13 +46,14 @@ std::pair<int, InternalEvent> KqueueEventListener::listen() {
         }
     }
 
-    /** @todo check if any other information needs to be returned */
+    // TODO check if any other information needs to be returned
+    // TODO check if signal events need to be handled differently
 
     // EVFILT_WRITE returns when it's possible to write, data will contain the
     // amount of space left in the write buffer
 
     // Return fd and event
-    return std::make_pair(eventlist[0].ident, event);
+    return std::make_pair(eventlist.ident, event);
 }
 
 bool KqueueEventListener::registerEvent(int fd, int events) {
