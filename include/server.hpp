@@ -104,6 +104,8 @@ class HttpServer : public Server {
     HttpRequest  receiveRequest(int session_id);
     HttpResponse handleRequest(HttpRequest request);
     void         sendResponse(int session_id, HttpResponse response);
-    void         buildBody(HttpResponse &response);
+    void         buildBody(HttpRequest &request, HttpResponse &response, const ServerConfig &config);
+    bool         validateHost(HttpRequest &request, HttpResponse &response);
+    void         readRoot(HttpResponse &response, std::string &root, std::string &uri);
 };
 
