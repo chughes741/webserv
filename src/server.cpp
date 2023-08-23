@@ -32,6 +32,10 @@ HttpServer::HttpServer(HttpConfig httpConfig, EventListener *listener,
 HttpServer::~HttpServer() {}
 
 void HttpServer::start(bool run_server) {
+    // Set up signal handlers
+    listener_->registerEvent(SIGINT, SIGNAL_EVENT);
+    listener_->registerEvent(SIGTERM, SIGNAL_EVENT);
+
     // Create a socket for each server in the config
     Socket *new_socket;
     for (std::vector<ServerConfig>::iterator it = config_.servers.begin();
@@ -44,18 +48,18 @@ void HttpServer::start(bool run_server) {
             int server_id = new_socket->bind(it->listen.first, it->listen.second);
 
             // Listen for connections
-            /** @todo poll needs to be called before listen */
             new_socket->listen();
 
             // Add the socket to the map
             server_sockets_[server_id] = new_socket;
 
             // Add the socket to the listener
-            listener_->registerEvent(server_id, READABLE); /** @todo event flags */
-        } catch (std::runtime_error& e) {
-            std::cerr << e.what() << std::endl;
+            listener_->registerEvent(server_id, READABLE);
 
-            // Delete the socket, is this safe even if it wasn't constructed?
+        } catch (std::bad_alloc &e) {
+            Logger::instance().log(e.what());
+        } catch (std::exception &e) {
+            Logger::instance().log(e.what());
             delete new_socket;
         }
     }
@@ -92,6 +96,8 @@ void HttpServer::run() {
 
         } else {
             switch (event.second) {
+                case NONE:
+                    break;
                 case READABLE:
                     readableHandler(event.first);
                     break;
@@ -100,6 +106,9 @@ void HttpServer::run() {
                     break;
                 case ERROR_EVENT:
                     errorHandler(event.first);
+                    break;
+                case SIGNAL_EVENT:
+                    signalHandler(event.first);
                     break;
                 case DISCONNECT_EVENT:
                     disconnectHandler(event.first);
@@ -131,6 +140,12 @@ void HttpServer::writableHandler(int session_id) {
 void HttpServer::errorHandler(int session_id) {
     (void)session_id;
     return;
+}
+
+void HttpServer::signalHandler(int signal) {
+    if (signal == SIGINT || signal == SIGTERM) {
+        stop();
+    }
 }
 
 void HttpServer::connectHandler(int socket_id) {
