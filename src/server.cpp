@@ -2,7 +2,7 @@
 
 extern HttpConfig httpConfig;
 
-Server::Server(HttpConfig config, EventListener* listener, SocketGenerator socket_generator)
+Server::Server(HttpConfig config, EventListener *listener, SocketGenerator socket_generator)
     : socket_generator_(socket_generator), listener_(listener), config_(config) {
     http_methods_["GET"]    = GET;
     http_methods_["POST"]   = POST;
@@ -25,7 +25,7 @@ Server::Server(HttpConfig config, EventListener* listener, SocketGenerator socke
 
 Server::~Server() {}
 
-HttpServer::HttpServer(HttpConfig httpConfig, EventListener* listener,
+HttpServer::HttpServer(HttpConfig httpConfig, EventListener *listener,
                        SocketGenerator socket_generator)
     : Server(httpConfig, listener, socket_generator) {}
 
@@ -33,7 +33,7 @@ HttpServer::~HttpServer() {}
 
 void HttpServer::start(bool run_server) {
     // Create a socket for each server in the config
-    Socket* new_socket;
+    Socket *new_socket;
     for (std::vector<ServerConfig>::iterator it = config_.servers.begin();
          it != config_.servers.end(); ++it) {
         try {
@@ -66,12 +66,12 @@ void HttpServer::start(bool run_server) {
 
 void HttpServer::stop() {
     // Close all sockets and delete them
-    for (std::map<int, Socket*>::iterator it = server_sockets_.begin(); it != server_sockets_.end();
-         ++it) {
+    for (std::map<int, Socket *>::iterator it = server_sockets_.begin();
+         it != server_sockets_.end(); ++it) {
         try {
             it->second->close();
-        } catch (std::runtime_error& e) {
-            std::cerr << e.what() << std::endl;
+        } catch (std::runtime_error &e) {
+            Logger::instance().log(e.what());
         }
         delete it->second;
     }
@@ -84,14 +84,13 @@ void HttpServer::run() {
     // Loop forever
     while (true) {
         // Wait for an event
-        std::pair<int, uint32_t> event = listener_->listen();
+        std::pair<int, InternalEvent> event = listener_->listen();
 
         // Handle event
         if (server_sockets_.find(event.first) != server_sockets_.end()) {
-            // Event is on a server socket
             connectHandler(event.first);
+
         } else {
-            // Event is on a session socket
             switch (event.second) {
                 case READABLE:
                     readableHandler(event.first);
@@ -136,13 +135,13 @@ void HttpServer::errorHandler(int session_id) {
 
 void HttpServer::connectHandler(int socket_id) {
     // Accept the connection
-    Session* session = server_sockets_[socket_id]->accept();
+    Session *session = server_sockets_[socket_id]->accept();
 
     // Create a new session
     sessions_[session->getSockFd()] = session;
 
     // Add the session to the listener
-     listener_->registerEvent(session->getSockFd(), READABLE); /** @todo event flags */
+    listener_->registerEvent(session->getSockFd(), READABLE); /** @todo event flags */
 }
 
 void HttpServer::disconnectHandler(int session_id) {
@@ -180,7 +179,6 @@ HttpRequest HttpServer::receiveRequest(int session_id) {
     buffer.erase(0, buffer.find(' ') + 1);
     request.version = buffer.substr(0, buffer.find(CRLF));
     buffer.erase(0, buffer.find(CRLF) + 2);
-    
 
     // body
     request.body = buffer.substr(buffer.find("\r\n\r\n") + 4);
@@ -198,7 +196,7 @@ HttpRequest HttpServer::receiveRequest(int session_id) {
     return request;
 }
 
-void    HttpServer::readRoot(HttpResponse &response, std::string &root, std::string &uri) {
+void HttpServer::readRoot(HttpResponse &response, std::string &root, std::string &uri) {
     std::ifstream in(root + uri + "index.html");
     if (in) {
         std::stringstream buffer;
@@ -210,9 +208,10 @@ void    HttpServer::readRoot(HttpResponse &response, std::string &root, std::str
     }
 }
 
-void    HttpServer::buildBody(HttpRequest &request, HttpResponse &response, const ServerConfig &server) {
+void HttpServer::buildBody(HttpRequest &request, HttpResponse &response,
+                           const ServerConfig &server) {
     std::map<std::string, LocationConfig>::const_iterator locationIt = server.locations.begin();
-    const LocationConfig *location = nullptr;
+    const LocationConfig                                 *location   = NULL;
     for (; locationIt != server.locations.end(); ++locationIt) {
         if (locationIt->first.compare(0, locationIt->first.size(), request.uri) == 0) {
             location = &(locationIt->second);
@@ -226,11 +225,12 @@ void    HttpServer::buildBody(HttpRequest &request, HttpResponse &response, cons
     }
 }
 
-bool    HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
-    std::string requestHost = request.headers["Host"];
-    std::vector<ServerConfig>::const_iterator serverIt = config_.servers.begin();
+bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
+    std::string                               requestHost = request.headers["Host"];
+    std::vector<ServerConfig>::const_iterator serverIt    = config_.servers.begin();
     for (; serverIt != config_.servers.end(); ++serverIt) {
-        std::string serverHost = serverIt->listen.first + ":" + std::to_string(serverIt->listen.second);
+        std::string serverHost =
+            serverIt->listen.first + ":" + std::to_string(serverIt->listen.second);
         if (requestHost == serverHost) {
             buildBody(request, response, *serverIt);
             return true;
@@ -243,8 +243,8 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
     /** @todo implement */
     HttpResponse response;
 
-    response.version    = "HTTP/1.1";
-    response.server     = "webserv/0.1";
+    response.version = "HTTP/1.1";
+    response.server  = "webserv/0.1";
 
     if (request.version != "HTTP/1.1") {
         response.status = IM_A_TEAPOT;
