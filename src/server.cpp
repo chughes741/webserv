@@ -2,8 +2,9 @@
 
 extern HttpConfig httpConfig;
 
-Server::Server(HttpConfig config, EventListener *listener, SocketGenerator socket_generator)
-    : socket_generator_(socket_generator), listener_(listener), config_(config) {
+HttpServer::HttpServer(HttpConfig httpConfig, EventListener *listener,
+                       SocketGenerator socket_generator)
+    : socket_generator_(socket_generator), listener_(listener), config_(httpConfig) {
     http_methods_["GET"]    = GET;
     http_methods_["POST"]   = POST;
     http_methods_["DELETE"] = DELETE;
@@ -22,12 +23,6 @@ Server::Server(HttpConfig config, EventListener *listener, SocketGenerator socke
     http_status_[INTERNAL_SERVER_ERROR] = "500 Internal Server Error";
     http_status_[BAD_GATEWAY]           = "502 Bad Gateway";
 }
-
-Server::~Server() {}
-
-HttpServer::HttpServer(HttpConfig httpConfig, EventListener *listener,
-                       SocketGenerator socket_generator)
-    : Server(httpConfig, listener, socket_generator) {}
 
 HttpServer::~HttpServer() {}
 
