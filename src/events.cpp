@@ -107,7 +107,8 @@ bool KqueueEventListener::registerEvent(int fd, InternalEvent events) {
 void KqueueEventListener::unregisterEvent(int fd) {
     // Check if event exists.
     if (events_.find(fd) == events_.end()) {
-        throw std::runtime_error("unregisterEvent() failed");
+        Logger::instance().log("Error: Event does not exist during unregisterEvent()");
+        return;
     }
 
     // Get event from the map of events.
@@ -125,7 +126,7 @@ void KqueueEventListener::unregisterEvent(int fd) {
 
     // Check if event was deleted successfully
     if (ret == -1) {
-        throw std::runtime_error("removeSocket() failed");
+        Logger::instance().log("Error: Failed to remove event from kqueue");
     }
 
     // Delete event from the map of events.
