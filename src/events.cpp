@@ -56,9 +56,9 @@ std::pair<int, InternalEvent> KqueueEventListener::listen() {
     return std::make_pair(eventlist.ident, event);
 }
 
-bool KqueueEventListener::registerEvent(int fd, int events) {
+bool KqueueEventListener::registerEvent(int fd, InternalEvent events) {
     // Handle conversion from internal events to kqueue filter
-    KqueueEvent filter = 0;
+    KqueueEvent filter = NONE;
     for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (events & it->second) {
@@ -68,7 +68,7 @@ bool KqueueEventListener::registerEvent(int fd, int events) {
 
     if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
         Logger::instance().log("Error: Failed to set socket to non-blocking");
-        // throw std::runtime_error("registerEvent() failed");
+        // TODO remove event from kqueue?
         return false;
     }
 
@@ -79,7 +79,15 @@ bool KqueueEventListener::registerEvent(int fd, int events) {
     int64_t       data   = 0;  // Shouldn't be needed
 
     // Initialize kevent structure.
-    EV_SET(&event, fd, filter, flags, fflags, data, NULL);
+    if (events == 0) {
+        Logger::instance().log("Error: No events specified during registerEvent()");
+        return false;
+    }
+    if (events & SIGNAL_EVENT) {
+        EV_SET(&event, fd, EVFILT_SIGNAL, flags, fflags, data, NULL);
+    } else {
+        EV_SET(&event, fd, filter, flags, fflags, data, NULL);
+    }
 
     // Add event to the kqueue.
     int ret = kevent(queue_fd_, &event, 1, NULL, 0, NULL);
@@ -87,7 +95,6 @@ bool KqueueEventListener::registerEvent(int fd, int events) {
     // Check if event was added successfully
     if (ret == -1) {
         Logger::instance().log("Error: Failed to add event to kqueue");
-        // throw std::runtime_error("registerEvent() failed");
         return false;
     }
 
