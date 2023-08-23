@@ -21,13 +21,13 @@ struct LocationConfig {
           cgi_enabled(false),
           cgi_path("") {}
 
-    std::string                 client_max_body_size; /**< Maximum size of a request body */
-    std::map<int, std::string>  error_page;           /**< Default error page */
-    std::string                 root;                 /**< Root directory for serving files */
-    std::string                 index_file;           /**< Name of the index file */
-    unsigned short              limit_except;         /**< Allowed methods */
-    bool                        cgi_enabled;          /**< Enable CGI */
-    std::string                 cgi_path;             /**< Path to CGI programs */
+    std::string                client_max_body_size; /**< Maximum size of a request body */
+    std::map<int, std::string> error_page;           /**< Default error page */
+    std::string                root;                 /**< Root directory for serving files */
+    std::string                index_file;           /**< Name of the index file */
+    unsigned short             limit_except;         /**< Allowed methods */
+    bool                       cgi_enabled;          /**< Enable CGI */
+    std::string                cgi_path;             /**< Path to CGI programs */
 };
 
 /**
@@ -59,11 +59,11 @@ struct HttpConfig {
           root("html"),
           client_max_body_size("1m") {}
 
-    std::vector<ServerConfig>   servers;              /**< List of server blocks */
+    std::vector<ServerConfig>  servers;              /**< List of server blocks */
     std::map<int, std::string> error_page;           /**< Default error page */
-    std::string                 error_log;            /**< Path to the error log file */
-    std::string                 root;                 /**< Root directory for serving files */
-    std::string                 client_max_body_size; /**< Maximum size of a request body */
+    std::string                error_log;            /**< Path to the error log file */
+    std::string                root;                 /**< Root directory for serving files */
+    std::string                client_max_body_size; /**< Maximum size of a request body */
 };
 
 extern HttpConfig httpConfig;
