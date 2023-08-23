@@ -4,25 +4,7 @@ extern HttpConfig httpConfig;
 
 HttpServer::HttpServer(HttpConfig httpConfig, EventListener *listener,
                        SocketGenerator socket_generator)
-    : socket_generator_(socket_generator), listener_(listener), config_(httpConfig) {
-    http_methods_["GET"]    = GET;
-    http_methods_["POST"]   = POST;
-    http_methods_["DELETE"] = DELETE;
-
-    http_status_[OK]                    = "200 OK";
-    http_status_[CREATED]               = "201 Created";
-    http_status_[ACCEPTED]              = "202 Accepted";
-    http_status_[NO_CONTENT]            = "204 No Content";
-    http_status_[MOVED_PERMANENTLY]     = "301 Moved Permanently";
-    http_status_[FOUND]                 = "302 Found";
-    http_status_[NOT_MODIFIED]          = "304 Not Modified";
-    http_status_[BAD_REQUEST]           = "400 Bad Request";
-    http_status_[NOT_FOUND]             = "404 Not Found";
-    http_status_[METHOD_NOT_ALLOWED]    = "405 Method Not Allowed";
-    http_status_[IM_A_TEAPOT]           = "418 I'm a teapot";
-    http_status_[INTERNAL_SERVER_ERROR] = "500 Internal Server Error";
-    http_status_[BAD_GATEWAY]           = "502 Bad Gateway";
-}
+    : socket_generator_(socket_generator), listener_(listener), config_(httpConfig) {}
 
 HttpServer::~HttpServer() {}
 
@@ -122,8 +104,8 @@ void HttpServer::readableHandler(int session_id) {
     // Handle the request
     HttpResponse response = handleRequest(request.first);
 
-    // Send the response
-    sendResponse(session_id, response);
+    // Add the response to the clients send queue
+    sessions_[session_id]->addSendQueue(response.getMessage());
 }
 
 void HttpServer::writableHandler(int session_id) {
@@ -167,40 +149,9 @@ void HttpServer::disconnectHandler(int session_id) {
 }
 
 std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
-    HttpRequest request;
-
     std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
-    std::string                     buffer      = buffer_pair.first;
-    // Logger::instance().log(buffer); // Prints the request
-    // start-line
-    std::string method = buffer.substr(0, buffer.find(' '));
-    buffer.erase(0, buffer.find(' ') + 1);
 
-    // Use the map to convert the string method to its corresponding enum
-    std::map<std::string, HttpMethod>::iterator it = http_methods_.find(method);
-    if (it != http_methods_.end()) {
-        request.method = it->second;
-    } else {
-        throw std::runtime_error("Unknown HTTP method");
-    }
-
-    request.uri = buffer.substr(0, buffer.find(' '));
-    buffer.erase(0, buffer.find(' ') + 1);
-    request.version = buffer.substr(0, buffer.find(CRLF));
-    buffer.erase(0, buffer.find(CRLF) + 2);
-
-    // body
-    request.body = buffer.substr(buffer.find("\r\n\r\n") + 4);
-    buffer.erase(buffer.find("\r\n\r\n") + 2);
-
-    // headers
-    while (buffer.find(CRLF) != std::string::npos) {
-        std::string key = buffer.substr(0, buffer.find(':'));
-        buffer.erase(0, buffer.find(':') + 2);
-        std::string value = buffer.substr(0, buffer.find(CRLF));
-        buffer.erase(0, buffer.find(CRLF) + 2);
-        request.headers[key] = value;
-    }
+    HttpRequest request(buffer_pair.first);
 
     return std::make_pair(request, buffer_pair.second);
 }
@@ -210,38 +161,39 @@ void HttpServer::readRoot(HttpResponse &response, std::string &root, std::string
     if (in) {
         std::stringstream buffer;
         buffer << in.rdbuf();
-        response.body = buffer.str();
+        response.body_ = buffer.str();
         in.close();
     } else {
-        response.body = "404 Not Found";
+        response.status_ = NOT_FOUND;
     }
 }
 
 void HttpServer::buildBody(HttpRequest &request, HttpResponse &response,
                            const ServerConfig &server) {
-    std::map<std::string, LocationConfig>::const_iterator locationIt = server.locations.begin();
-    const LocationConfig                                 *location   = NULL;
-    for (; locationIt != server.locations.end(); ++locationIt) {
-        if (locationIt->first.compare(0, locationIt->first.size(), request.uri) == 0) {
-            location = &(locationIt->second);
+    const LocationConfig *location = NULL;
+    for (std::map<std::string, LocationConfig>::const_iterator it = server.locations.begin();
+         it != server.locations.end(); ++it) {
+        if (it->first.compare(0, it->first.size(), request.uri_) == 0) {
+            location = &(it->second);
         }
     }
+
     if (location) {
         std::string root = location->root.size() > 0 ? location->root : server.root;
-        readRoot(response, root, request.uri);
+        readRoot(response, root, request.uri_);
     } else {
-        response.body = "404 Not Found";
+        response.status_ = NOT_FOUND;
     }
 }
 
 bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
-    std::string                               requestHost = request.headers["Host"];
-    std::vector<ServerConfig>::const_iterator serverIt    = config_.servers.begin();
-    for (; serverIt != config_.servers.end(); ++serverIt) {
-        std::string serverHost =
-            serverIt->listen.first + ":" + std::to_string(serverIt->listen.second);
+    std::string requestHost = request.headers_["Host"];  // Check if the host is valid
+
+    for (std::vector<ServerConfig>::const_iterator it = config_.servers.begin();
+         it != config_.servers.end(); ++it) {
+        std::string serverHost = it->listen.first + ":" + std::to_string(it->listen.second);
         if (requestHost == serverHost) {
-            buildBody(request, response, *serverIt);
+            buildBody(request, response, *it);
             return true;
         }
     }
@@ -249,55 +201,24 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
 }
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
-    /** @todo implement */
     HttpResponse response;
 
-    response.version = "HTTP/1.1";
-    response.server  = "webserv/0.1";
+    response.version_ = HTTP_VERSION;
+    response.server_  = "webserv/0.1";
 
-    if (request.version != "HTTP/1.1") {
-        response.status = IM_A_TEAPOT;
+    if (request.version_ != "HTTP/1.1") {
+        response.status_ = IM_A_TEAPOT;
     } else if (!validateHost(request, response)) {
-        response.status = BAD_GATEWAY;
-    } else if (request.method == GET && request.uri == "/") {
-        response.status                  = OK;
-        response.headers["Content-Type"] = "text/html";
+        response.status_ = BAD_GATEWAY;
+    } else if (request.method_ == GET && request.uri_ == "/") {
+        response.status_                  = OK;
+        response.headers_["Content-Type"] = "text/html";
     } else {
-        response.status                  = NOT_FOUND;
-        response.server                  = "webserv/0.1";
-        response.headers["Content-Type"] = "text/html";
-        response.body                    = "<html><body><h1>404 Not Found</h1></body></html>";
+        response.status_                  = NOT_FOUND;
+        response.server_                  = "webserv/0.1";
+        response.headers_["Content-Type"] = "text/html";
+        response.body_                    = "<html><body><h1>404 Not Found</h1></body></html>";
     }
 
     return response;
-}
-
-void HttpServer::sendResponse(int session_id, HttpResponse response) {
-    std::string buffer;
-
-    // status-line
-    buffer.append(response.version + " ");
-
-    // Find the status string from the map using the enum value.
-    std::map<HttpStatus, std::string>::iterator statusIt = http_status_.find(response.status);
-    if (statusIt != http_status_.end()) {
-        buffer.append(statusIt->second);
-    } else {
-        buffer.append(http_status_[INTERNAL_SERVER_ERROR]);
-    }
-
-    // Append the server name
-    buffer.append(response.server + CRLF);
-
-    // headers
-    for (std::map<std::string, std::string>::iterator it = response.headers.begin();
-         it != response.headers.end(); ++it) {
-        buffer.append(it->first + ": " + it->second + CRLF);
-    }
-
-    // body
-    buffer.append(CRLF + response.body);
-
-    /** @todo should be client_id not 0 */
-    sessions_[session_id]->addSendQueue(buffer);
 }
