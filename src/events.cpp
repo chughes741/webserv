@@ -1,29 +1,3 @@
-/**
- * @file events.cpp
- * @brief Defines classes for handling events
- *
- * This file contains the implementation of the EventListener,
- * KqueueEventListener, and EpollEventListener classes. The EventListener class
- * is an abstract base class that provides an interface for creating event
- * loops. The KqueueEventListener class inherits from the EventListener class
- * and implements an event loop that uses the kqueue system call. The
- * EpollEventListener class inherits from the EventListener class and implements
- * an event loop that uses the epoll system call.
- *
- * @note The KqueueEventListener class is only available on MacOS and the
- * EpollEventListener class is only available on Linux.
- *
- * @note This code is for educational purposes only and should not be used in
- * production environments without extensive testing and modification.
- *
- * @version 0.1
- * @date 2023-04-24
- * @authors
- *  - Francis L.
- *  - Marc-André L.
- *  - Cole H.
- */
-
 #include "events.hpp"
 
 EventListener::~EventListener() {}
