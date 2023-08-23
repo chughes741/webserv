@@ -11,12 +11,14 @@ KqueueEventListener::KqueueEventListener() {
     KqueueEventMap[EVFILT_READ]   = READABLE;
     KqueueEventMap[EVFILT_WRITE]  = WRITABLE;
     KqueueEventMap[EVFILT_EXCEPT] = ERROR_EVENT;
+    KqueueEventMap[EVFILT_SIGNAL] = SIGNAL_EVENT;
 
     queue_fd_ = kqueue();
 
     // Check if kqueue was created successfully
     if (queue_fd_ == -1) {
-        throw std::runtime_error("creating kequeue failed");
+        Logger::instance().log("Error: Failed to create kqueue");
+        throw std::runtime_error("Failed to create kqueue");
     }
 }
 
