@@ -21,9 +21,9 @@ class Server {
    protected:
     virtual void run() = 0;
 
-    virtual HttpRequest  receiveRequest(int session_id)                      = 0;
-    virtual HttpResponse handleRequest(HttpRequest request)                  = 0;
-    virtual void         sendResponse(int session_id, HttpResponse response) = 0;
+    virtual std::pair<HttpRequest, ssize_t> receiveRequest(int session_id)                      = 0;
+    virtual HttpResponse                    handleRequest(HttpRequest request)                  = 0;
+    virtual void                            sendResponse(int session_id, HttpResponse response) = 0;
 
    protected:
     SocketGenerator                   socket_generator_; /**< Function ptr to socket generator */
@@ -60,9 +60,9 @@ class HttpServer : public Server {
     void connectHandler(int socket_id);
     void disconnectHandler(int session_id);
 
-    HttpRequest  receiveRequest(int session_id);
-    HttpResponse handleRequest(HttpRequest request);
-    void         sendResponse(int session_id, HttpResponse response);
+    std::pair<HttpRequest, ssize_t> receiveRequest(int session_id);
+    HttpResponse                    handleRequest(HttpRequest request);
+    void                            sendResponse(int session_id, HttpResponse response);
     void buildBody(HttpRequest &request, HttpResponse &response, const ServerConfig &config);
     bool validateHost(HttpRequest &request, HttpResponse &response);
     void readRoot(HttpResponse &response, std::string &root, std::string &uri);
