@@ -1,29 +1,3 @@
-/**
- * @file events.cpp
- * @brief Defines classes for handling events
- *
- * This file contains the implementation of the EventListener,
- * KqueueEventListener, and EpollEventListener classes. The EventListener class
- * is an abstract base class that provides an interface for creating event
- * loops. The KqueueEventListener class inherits from the EventListener class
- * and implements an event loop that uses the kqueue system call. The
- * EpollEventListener class inherits from the EventListener class and implements
- * an event loop that uses the epoll system call.
- *
- * @note The KqueueEventListener class is only available on MacOS and the
- * EpollEventListener class is only available on Linux.
- *
- * @note This code is for educational purposes only and should not be used in
- * production environments without extensive testing and modification.
- *
- * @version 0.1
- * @date 2023-04-24
- * @authors
- *  - Francis L.
- *  - Marc-André L.
- *  - Cole H.
- */
-
 #include "events.hpp"
 
 EventListener::~EventListener() {}
@@ -37,30 +11,34 @@ KqueueEventListener::KqueueEventListener() {
     KqueueEventMap[EVFILT_READ]   = READABLE;
     KqueueEventMap[EVFILT_WRITE]  = WRITABLE;
     KqueueEventMap[EVFILT_EXCEPT] = ERROR_EVENT;
+    KqueueEventMap[EVFILT_SIGNAL] = SIGNAL_EVENT;
 
     queue_fd_ = kqueue();
 
     // Check if kqueue was created successfully
     if (queue_fd_ == -1) {
-        throw std::runtime_error("creating kequeue failed");
+        Logger::instance().log("Error: Failed to create kqueue");
+        throw std::runtime_error("Failed to create kqueue");
     }
 }
 
 std::pair<int, InternalEvent> KqueueEventListener::listen() {
     // Wait for events on the kqueue.
-    struct kevent eventlist[1];
-    uint32_t filter = 0;
-    int           ret = kevent(queue_fd_, NULL, 0, eventlist, 1, &timeout_);
+    struct kevent eventlist;
+    KqueueEvent   filter = 0;
+    int           ret    = kevent(queue_fd_, NULL, 0, &eventlist, 1, &timeout_);
 
     // Check if event was received successfully
     if (ret == -1) {
-        throw std::runtime_error("eventListen() failed");
-    }   
-    filter = static_cast<uint32_t>(eventlist[0].filter); // Cast eventlist filter to uint32_t to match KqueueEventMap
+        Logger::instance().log("Error: Failed to receive event from kqueue");
+        return std::make_pair(-1, NONE);
+    }
+
+    filter = static_cast<KqueueEvent>(eventlist.filter);
+
     // Handle conversion from kqueue events to internal events
-    InternalEvent event = 0; // Default is nothing happened I guess
-    for (std::map<KqueueEvent, InternalEvent>::const_iterator it =
-             KqueueEventMap.begin();
+    InternalEvent event = NONE;
+    for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (!(filter ^ it->first)) {
             event = it->second;
@@ -68,23 +46,30 @@ std::pair<int, InternalEvent> KqueueEventListener::listen() {
         }
     }
 
-    /** @todo check if any other information needs to be returned */
+    // TODO check if any other information needs to be returned
+    // TODO check if signal events need to be handled differently
 
     // EVFILT_WRITE returns when it's possible to write, data will contain the
     // amount of space left in the write buffer
 
     // Return fd and event
-    return std::make_pair(eventlist[0].ident, event);
+    return std::make_pair(eventlist.ident, event);
 }
 
-void KqueueEventListener::registerEvent(int fd, int events) {
+bool KqueueEventListener::registerEvent(int fd, InternalEvent events) {
     // Handle conversion from internal events to kqueue filter
-    KqueueEvent filter = 0;
+    KqueueEvent filter = NONE;
     for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
          it != KqueueEventMap.end(); ++it) {
         if (events & it->second) {
             filter |= it->first;
         }
+    }
+
+    if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
+        Logger::instance().log("Error: Failed to set socket to non-blocking");
+        // TODO remove event from kqueue?
+        return false;
     }
 
     // Set flags and fflags
@@ -94,24 +79,36 @@ void KqueueEventListener::registerEvent(int fd, int events) {
     int64_t       data   = 0;  // Shouldn't be needed
 
     // Initialize kevent structure.
-    EV_SET(&event, fd, filter, flags, fflags, data, NULL);
+    if (events == 0) {
+        Logger::instance().log("Error: No events specified during registerEvent()");
+        return false;
+    }
+    if (events & SIGNAL_EVENT) {
+        EV_SET(&event, fd, EVFILT_SIGNAL, flags, fflags, data, NULL);
+    } else {
+        EV_SET(&event, fd, filter, flags, fflags, data, NULL);
+    }
 
     // Add event to the kqueue.
     int ret = kevent(queue_fd_, &event, 1, NULL, 0, NULL);
 
     // Check if event was added successfully
     if (ret == -1) {
-        throw std::runtime_error("registerEvent() failed");
+        Logger::instance().log("Error: Failed to add event to kqueue");
+        return false;
     }
 
     // Add event to the map of events.
     events_[fd] = event;
+
+    return true;
 }
 
 void KqueueEventListener::unregisterEvent(int fd) {
     // Check if event exists.
     if (events_.find(fd) == events_.end()) {
-        throw std::runtime_error("unregisterEvent() failed");
+        Logger::instance().log("Error: Event does not exist during unregisterEvent()");
+        return;
     }
 
     // Get event from the map of events.
@@ -129,7 +126,7 @@ void KqueueEventListener::unregisterEvent(int fd) {
 
     // Check if event was deleted successfully
     if (ret == -1) {
-        throw std::runtime_error("removeSocket() failed");
+        Logger::instance().log("Error: Failed to remove event from kqueue");
     }
 
     // Delete event from the map of events.

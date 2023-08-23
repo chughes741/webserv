@@ -1,31 +1,8 @@
-
-/**
- * @file server.cpp
- * @brief Defines classes for creating web servers that can handle HTTP
- * requests.
- *
- * This file contains the implementation of the Server and HttpServer classes.
- * The Server class is an abstract base class that provides an interface for
- * creating servers. The HttpServer class inherits from the Server class and
- * implements an HTTP server that can receive and send HTTP requests and
- * responses.
- *
- * @note This code is for educational purposes only and should not be used in
- * production environments without extensive testing and modification.
- *
- * @version 0.1
- * @date 2023-04-19
- * @authors
- *   - Francis L.
- *   - Marc-André L.
- *   - Cole H.
- */
-
 #include "server.hpp"
 
 extern HttpConfig httpConfig;
 
-Server::Server(HttpConfig config, EventListener* listener, SocketGenerator socket_generator)
+Server::Server(HttpConfig config, EventListener *listener, SocketGenerator socket_generator)
     : socket_generator_(socket_generator), listener_(listener), config_(config) {
     http_methods_["GET"]    = GET;
     http_methods_["POST"]   = POST;
@@ -48,15 +25,19 @@ Server::Server(HttpConfig config, EventListener* listener, SocketGenerator socke
 
 Server::~Server() {}
 
-HttpServer::HttpServer(HttpConfig httpConfig, EventListener* listener,
+HttpServer::HttpServer(HttpConfig httpConfig, EventListener *listener,
                        SocketGenerator socket_generator)
     : Server(httpConfig, listener, socket_generator) {}
 
 HttpServer::~HttpServer() {}
 
 void HttpServer::start(bool run_server) {
+    // Set up signal handlers
+    listener_->registerEvent(SIGINT, SIGNAL_EVENT);
+    listener_->registerEvent(SIGTERM, SIGNAL_EVENT);
+
     // Create a socket for each server in the config
-    Socket* new_socket;
+    Socket *new_socket;
     for (std::vector<ServerConfig>::iterator it = config_.servers.begin();
          it != config_.servers.end(); ++it) {
         try {
@@ -67,18 +48,18 @@ void HttpServer::start(bool run_server) {
             int server_id = new_socket->bind(it->listen.first, it->listen.second);
 
             // Listen for connections
-            /** @todo poll needs to be called before listen */
             new_socket->listen();
 
             // Add the socket to the map
             server_sockets_[server_id] = new_socket;
 
             // Add the socket to the listener
-            listener_->registerEvent(server_id, READABLE); /** @todo event flags */
-        } catch (std::runtime_error& e) {
-            std::cerr << e.what() << std::endl;
+            listener_->registerEvent(server_id, READABLE);
 
-            // Delete the socket, is this safe even if it wasn't constructed?
+        } catch (std::bad_alloc &e) {
+            Logger::instance().log(e.what());
+        } catch (std::exception &e) {
+            Logger::instance().log(e.what());
             delete new_socket;
         }
     }
@@ -89,12 +70,12 @@ void HttpServer::start(bool run_server) {
 
 void HttpServer::stop() {
     // Close all sockets and delete them
-    for (std::map<int, Socket*>::iterator it = server_sockets_.begin(); it != server_sockets_.end();
-         ++it) {
+    for (std::map<int, Socket *>::iterator it = server_sockets_.begin();
+         it != server_sockets_.end(); ++it) {
         try {
             it->second->close();
-        } catch (std::runtime_error& e) {
-            std::cerr << e.what() << std::endl;
+        } catch (std::runtime_error &e) {
+            Logger::instance().log(e.what());
         }
         delete it->second;
     }
@@ -107,15 +88,16 @@ void HttpServer::run() {
     // Loop forever
     while (true) {
         // Wait for an event
-        std::pair<int, uint32_t> event = listener_->listen();
+        std::pair<int, InternalEvent> event = listener_->listen();
 
         // Handle event
         if (server_sockets_.find(event.first) != server_sockets_.end()) {
-            // Event is on a server socket
             connectHandler(event.first);
+
         } else {
-            // Event is on a session socket
             switch (event.second) {
+                case NONE:
+                    break;
                 case READABLE:
                     readableHandler(event.first);
                     break;
@@ -124,6 +106,9 @@ void HttpServer::run() {
                     break;
                 case ERROR_EVENT:
                     errorHandler(event.first);
+                    break;
+                case SIGNAL_EVENT:
+                    signalHandler(event.first);
                     break;
                 case DISCONNECT_EVENT:
                     disconnectHandler(event.first);
@@ -157,15 +142,21 @@ void HttpServer::errorHandler(int session_id) {
     return;
 }
 
+void HttpServer::signalHandler(int signal) {
+    if (signal == SIGINT || signal == SIGTERM) {
+        stop();
+    }
+}
+
 void HttpServer::connectHandler(int socket_id) {
     // Accept the connection
-    Session* session = server_sockets_[socket_id]->accept();
+    Session *session = server_sockets_[socket_id]->accept();
 
     // Create a new session
     sessions_[session->getSockFd()] = session;
 
     // Add the session to the listener
-     listener_->registerEvent(session->getSockFd(), READABLE); /** @todo event flags */
+    listener_->registerEvent(session->getSockFd(), READABLE); /** @todo event flags */
 }
 
 void HttpServer::disconnectHandler(int session_id) {
@@ -185,9 +176,8 @@ void HttpServer::disconnectHandler(int session_id) {
 HttpRequest HttpServer::receiveRequest(int session_id) {
     HttpRequest request;
 
-    /** @todo should be client_id not 0 */
     std::string buffer = sessions_[session_id]->recv(session_id);
-
+    // Logger::instance().log(buffer); // Prints the request
     // start-line
     std::string method = buffer.substr(0, buffer.find(' '));
     buffer.erase(0, buffer.find(' ') + 1);
@@ -200,7 +190,6 @@ HttpRequest HttpServer::receiveRequest(int session_id) {
         throw std::runtime_error("Unknown HTTP method");
     }
 
-    buffer.erase(0, buffer.find(' ') + 1);
     request.uri = buffer.substr(0, buffer.find(' '));
     buffer.erase(0, buffer.find(' ') + 1);
     request.version = buffer.substr(0, buffer.find(CRLF));
@@ -222,18 +211,64 @@ HttpRequest HttpServer::receiveRequest(int session_id) {
     return request;
 }
 
+void HttpServer::readRoot(HttpResponse &response, std::string &root, std::string &uri) {
+    std::ifstream in(root + uri + "index.html");
+    if (in) {
+        std::stringstream buffer;
+        buffer << in.rdbuf();
+        response.body = buffer.str();
+        in.close();
+    } else {
+        response.body = "404 Not Found";
+    }
+}
+
+void HttpServer::buildBody(HttpRequest &request, HttpResponse &response,
+                           const ServerConfig &server) {
+    std::map<std::string, LocationConfig>::const_iterator locationIt = server.locations.begin();
+    const LocationConfig                                 *location   = NULL;
+    for (; locationIt != server.locations.end(); ++locationIt) {
+        if (locationIt->first.compare(0, locationIt->first.size(), request.uri) == 0) {
+            location = &(locationIt->second);
+        }
+    }
+    if (location) {
+        std::string root = location->root.size() > 0 ? location->root : server.root;
+        readRoot(response, root, request.uri);
+    } else {
+        response.body = "404 Not Found";
+    }
+}
+
+bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
+    std::string                               requestHost = request.headers["Host"];
+    std::vector<ServerConfig>::const_iterator serverIt    = config_.servers.begin();
+    for (; serverIt != config_.servers.end(); ++serverIt) {
+        std::string serverHost =
+            serverIt->listen.first + ":" + std::to_string(serverIt->listen.second);
+        if (requestHost == serverHost) {
+            buildBody(request, response, *serverIt);
+            return true;
+        }
+    }
+    return false;
+}
+
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     /** @todo implement */
     HttpResponse response;
 
-    if (request.method == GET && request.uri == "/") {
-        response.version                 = "HTTP/1.1";
+    response.version = "HTTP/1.1";
+    response.server  = "webserv/0.1";
+
+    if (request.version != "HTTP/1.1") {
+        response.status = IM_A_TEAPOT;
+    } else if (!validateHost(request, response)) {
+        response.status = BAD_GATEWAY;
+    } else if (request.method == GET && request.uri == "/") {
         response.status                  = OK;
-        response.server                  = "webserv/0.1";
         response.headers["Content-Type"] = "text/html";
-        response.body                    = "<html><body><h1>Hello World!</h1></body></html>";
     } else {
-        response.version                 = "HTTP/1.1";
         response.status                  = NOT_FOUND;
         response.server                  = "webserv/0.1";
         response.headers["Content-Type"] = "text/html";
