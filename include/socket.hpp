@@ -1,13 +1,3 @@
-/**
- * @file socket.hpp
- * @author Francis L.
- * @author Marc-André L.
- * @author Cole H.
- * @version 0.1
- * @date 2023-04-19
- * @brief Classes for using sockets as defined in RFC 793
- */
-
 #pragma once
 
 #include <arpa/inet.h>
@@ -16,13 +6,12 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <netdb.h>
 
 #include <cstdlib>
 #include <iostream>
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
+#include <queue>
+#include <string>
 
 #include "webserv.hpp"
 
@@ -30,9 +19,7 @@
 #define READ_BUFFER_SIZE 1024
 #define CRLF             "\r\n"
 
-/**
- * @brief Pure abstract class representing a socket session
- */
+// Session abstract base class
 class Session {
    public:
     Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
@@ -48,9 +35,7 @@ class Session {
     socklen_t              addrlen_; /**< Session socket address length */
 };
 
-/**
- * @brief Represents a TCP session
- */
+// TcpSession class
 class TcpSession : public Session {
    public:
     TcpSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
@@ -59,13 +44,10 @@ class TcpSession : public Session {
     std::string recv(int client) const;
 };
 
-/** TcpSession generator function */
+// TcpSession generator function
 Session* tcp_session_generator(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
 
-/**
- * @brief Socket base class
- * @pure
- */
+// Socket abstract base class
 class Socket {
    public:
     typedef Session* (*SessionGenerator)(int sockfd, const struct sockaddr* addr,
@@ -86,14 +68,9 @@ class Socket {
     SessionGenerator   session_generator_; /**< Session generator function */
 };
 
-/**
- * @brief Represents a TCP socket
- */
+// TcpSocket class
 class TcpSocket : public Socket {
    public:
-    /**
-     * @brief Construct a new TcpSocket object
-     */
     TcpSocket(SessionGenerator session_generator = tcp_session_generator);
 
    private:
@@ -101,34 +78,13 @@ class TcpSocket : public Socket {
     // TcpSocket& operator=(const TcpSocket& other);
 
    public:
-    /**
-     * @brief Destroy the TcpSocket object
-     */
     ~TcpSocket();
 
-    /**
-     * @brief Bind the socket to a port and address
-     *
-     * @param addr address to bind to
-     * @param port port to bind to
-     */
-    int bind(std::string addr, int port);
-
-    /**
-     * @brief Listen for connections
-     */
-    void listen();
-
-    /**
-     * @brief Accept a connection and connects to it
-     */
+    int      bind(std::string addr, int port);
+    void     listen();
     Session* accept();
-
-    /**
-     * @brief Close the socket
-     */
-    void close();
+    void     close();
 };
 
-/** TcpSocket generator function */
+// TcpSocket generator function
 Socket* tcp_socket_generator();
