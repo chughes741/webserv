@@ -1,4 +1,12 @@
-#include "webserv.hpp"
+
+#include "parsing.hpp"
+#include "config.hpp"
+#include "logging.hpp"
+#include "server.hpp"
+
+#ifndef CONFIG_FILE
+#define CONFIG_FILE "config/webserv.conf"
+#endif
 
 int main(int argc, char *argv[]) {
     if (argc > 2) {

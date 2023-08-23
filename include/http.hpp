@@ -3,10 +3,9 @@
 #include <map>
 #include <string>
 
-#include "webserv.hpp"
-
 /** HTTP headers */
 #define HTTP_VERSION "HTTP/1.1"
+#define CRLF         "\r\n"
 
 /** HTTP methods */
 enum HttpMethod {

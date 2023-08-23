@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "webserv.hpp"
+#include "http.hpp"
 
 /**
  * @brief Configuration options for a single location block

@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "webserv.hpp"
+#include "config.hpp"
 
 // Context Settings
 #define GLOBAL 0

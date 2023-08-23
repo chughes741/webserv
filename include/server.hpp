@@ -3,7 +3,10 @@
 #include <map>
 #include <string>
 
-#include "webserv.hpp"
+#include "config.hpp"
+#include "http.hpp"
+#include "events.hpp"
+#include "socket.hpp"
 
 class Socket;
 class Session;
