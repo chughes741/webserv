@@ -110,9 +110,6 @@ void HttpServer::run() {
                 case SIGNAL_EVENT:
                     signalHandler(event.first);
                     break;
-                case DISCONNECT_EVENT:
-                    disconnectHandler(event.first);
-                    break;
             }
         }
     }
@@ -120,21 +117,22 @@ void HttpServer::run() {
 
 void HttpServer::readableHandler(int session_id) {
     // Receive the request
-    HttpRequest request = receiveRequest(session_id);
+    std::pair<HttpRequest, ssize_t> request = receiveRequest(session_id);
+
+    if (request.second == 0) {
+        disconnectHandler(session_id);
+        return;
+    }
 
     // Handle the request
-    HttpResponse response = handleRequest(request);
+    HttpResponse response = handleRequest(request.first);
 
     // Send the response
     sendResponse(session_id, response);
-
-    // Close the connection
-    disconnectHandler(session_id);
 }
 
 void HttpServer::writableHandler(int session_id) {
-    (void)session_id;
-    return;
+    sessions_[session_id]->send(session_id);
 }
 
 void HttpServer::errorHandler(int session_id) {
@@ -173,10 +171,11 @@ void HttpServer::disconnectHandler(int session_id) {
     close(session_id);
 }
 
-HttpRequest HttpServer::receiveRequest(int session_id) {
+std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
     HttpRequest request;
 
-    std::string buffer = sessions_[session_id]->recv(session_id);
+    std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
+    std::string                     buffer      = buffer_pair.first;
     // Logger::instance().log(buffer); // Prints the request
     // start-line
     std::string method = buffer.substr(0, buffer.find(' '));
@@ -208,7 +207,7 @@ HttpRequest HttpServer::receiveRequest(int session_id) {
         request.headers[key] = value;
     }
 
-    return request;
+    return std::make_pair(request, buffer_pair.second);
 }
 
 void HttpServer::readRoot(HttpResponse &response, std::string &root, std::string &uri) {
@@ -305,5 +304,5 @@ void HttpServer::sendResponse(int session_id, HttpResponse response) {
     buffer.append(CRLF + response.body);
 
     /** @todo should be client_id not 0 */
-    sessions_[session_id]->send(session_id, buffer);
+    sessions_[session_id]->addSendQueue(buffer);
 }

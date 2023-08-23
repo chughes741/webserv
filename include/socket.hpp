@@ -25,14 +25,16 @@ class Session {
     Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
     virtual ~Session() = 0;
 
-    virtual void        send(int client, std::string message) const = 0;
-    virtual std::string recv(int client) const                      = 0;
-    int                 getSockFd() const;
+    virtual void                            send(int client)       = 0;
+    virtual std::pair<std::string, ssize_t> recv(int client) const = 0;
+    int                                     getSockFd() const;
+    void                                    addSendQueue(const std::string& buffer);
 
    protected:
-    int                    sockfd_;  /**< Session socket file descriptor */
-    const struct sockaddr* addr_;    /**< Session socket address */
-    socklen_t              addrlen_; /**< Session socket address length */
+    int                     sockfd_;     /**< Session socket file descriptor */
+    const struct sockaddr*  addr_;       /**< Session socket address */
+    socklen_t               addrlen_;    /**< Session socket address length */
+    std::queue<std::string> send_queue_; /**< Queue of messages to send */
 };
 
 // TcpSession class
@@ -40,8 +42,8 @@ class TcpSession : public Session {
    public:
     TcpSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
 
-    void        send(int client, std::string message) const;
-    std::string recv(int client) const;
+    void                            send(int client);
+    std::pair<std::string, ssize_t> recv(int client) const;
 };
 
 // TcpSession generator function

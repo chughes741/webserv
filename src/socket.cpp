@@ -9,32 +9,45 @@ int Session::getSockFd() const {
     return sockfd_;
 }
 
+void Session::addSendQueue(const std::string& buffer) {
+    send_queue_.push(buffer);
+}
+
 TcpSession::TcpSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
     : Session(sockfd, addr, addrlen) {}
 
-void TcpSession::send(int port, std::string buffer) const {
-    ssize_t bytes_sent = ::send(port, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
+void TcpSession::send(int client) {
+    if (send_queue_.empty()) {
+        return;
+    }
+
+    std::string buffer     = send_queue_.front();
+    ssize_t     bytes_sent = ::send(client, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
+    send_queue_.pop();
+
     if (bytes_sent == -1) {
         Logger::instance().log("Error: Failed to send to socket");
     }
 }
 
-std::string TcpSession::recv(int client) const {
+std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
     std::string buffer_str;
     char        buffer[READ_BUFFER_SIZE + 1];
     ssize_t     bytes_received;
+    ssize_t     total_bytes_received = 0;
 
     do {
-        bytes_received = ::recv(client, buffer, READ_BUFFER_SIZE, 0);
+        bytes_received         = ::recv(client, buffer, READ_BUFFER_SIZE, 0);
         buffer[bytes_received] = '\0';
         buffer_str.append(buffer, bytes_received);
+        total_bytes_received += bytes_received;
     } while (bytes_received == READ_BUFFER_SIZE);
 
     if (bytes_received == -1) {
         Logger::instance().log("Error: Failed to receive from socket");
     }
 
-    return buffer_str;
+    return std::make_pair(buffer_str, total_bytes_received);
 }
 
 Session* tcp_session_generator(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
