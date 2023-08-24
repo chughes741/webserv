@@ -3,7 +3,10 @@
 #include <map>
 #include <string>
 
-#include "webserv.hpp"
+#include "config.hpp"
+#include "http.hpp"
+#include "events.hpp"
+#include "socket.hpp"
 
 class Socket;
 class Session;
@@ -38,17 +41,14 @@ class HttpServer {
 
     std::pair<HttpRequest, ssize_t> receiveRequest(int session_id);
     HttpResponse                    handleRequest(HttpRequest request);
-    void                            sendResponse(int session_id, HttpResponse response);
     void buildBody(HttpRequest &request, HttpResponse &response, const ServerConfig &config);
     bool validateHost(HttpRequest &request, HttpResponse &response);
     void readRoot(HttpResponse &response, std::string &root, std::string &uri);
 
    private:
-    SocketGenerator                   socket_generator_; /**< Function ptr to socket generator */
-    std::map<int, Socket *>           server_sockets_;   /**< Map of server IDs to sockets */
-    std::map<int, Session *>          sessions_;         /**< Map of session IDs to sessions */
-    EventListener                    *listener_;         /**< Event listener for the server */
-    HttpConfig                        config_;           /**< Configuration for the server */
-    std::map<std::string, HttpMethod> http_methods_;     /**< HTTP methods */
-    std::map<HttpStatus, std::string> http_status_;      /**< HTTP status messages */
+    SocketGenerator          socket_generator_; /**< Function ptr to socket generator */
+    std::map<int, Socket *>  server_sockets_;   /**< Map of server IDs to sockets */
+    std::map<int, Session *> sessions_;         /**< Map of session IDs to sessions */
+    EventListener           *listener_;         /**< Event listener for the server */
+    HttpConfig               config_;           /**< Configuration for the server */
 };

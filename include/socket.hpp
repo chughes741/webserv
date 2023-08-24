@@ -13,11 +13,10 @@
 #include <queue>
 #include <string>
 
-#include "webserv.hpp"
+#include "logging.hpp"
 
 #define SO_MAX_QUEUE     10
 #define READ_BUFFER_SIZE 1024
-#define CRLF             "\r\n"
 
 // Session abstract base class
 class Session {
