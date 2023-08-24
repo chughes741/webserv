@@ -213,11 +213,11 @@ bool Parser::setWorkerProcesses() {
 bool Parser::setGlobalSetting() {
     std::string List[] = {"error_log", "pid", "worker_processes"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
-        case ERROR_LOG:
+        case 0:
             return setErrorLog();
-        case PID:
+        case 1:
             return setPid();
-        case WORKER_PROCESSES:
+        case 2:
             return setWorkerProcesses();
         default:
             throw std::invalid_argument("Invalid setting in global context: " + *it);
@@ -236,7 +236,7 @@ bool Parser::setEventsContext() {
 bool Parser::setEventsSetting() {
     std::string List[] = {"worker_connections"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
-        case WORKER_CONNECTIONS:
+        case 0:
             return setWorkerConnections();
         default:
             throw std::invalid_argument("Invalid setting: " + *it);
@@ -279,9 +279,9 @@ bool Parser::setIndex() {
 bool Parser::setHttpSetting() {
     std::string List[] = {"index", "error_page"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
-        case INDEX:
+        case 0:
             return setIndex();
-        case ERROR_PAGE_H:
+        case 1:
             return setHttpErrorPage();
         default:
             throw std::invalid_argument("Invalid setting in Http context: " + *it);
@@ -314,15 +314,15 @@ bool Parser::setServerContext() {
 bool Parser::setServerSetting() {
     std::string List[] = {"listen", "server_name", "error_page", "root", "location"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
-        case LISTEN:
+        case 0:
             return setListen();
-        case SERVER_NAME:
+        case 1:
             return setServerName();
-        case ERROR_PAGE_S:
+        case 2:
             return setServerErrorPage();
-        case ROOT:
-            return setRoot();
-        case LOCATION:
+        case 3:
+            return setServerRoot();
+        case 4:
             return setLocationUri();
         default:
             throw std::invalid_argument("Invalid setting in server context: " + *it);
@@ -386,7 +386,7 @@ bool Parser::setServerErrorPage() {
     return true;
 }
 
-bool Parser::setRoot() {
+bool Parser::setServerRoot() {
     validateFirstToken("root");
     std::string root = *it;
     (httpConfig.servers.back()).root = root;
@@ -395,13 +395,15 @@ bool Parser::setRoot() {
 }
 
 bool Parser::setLocationSetting(std::string uri) {
-    std::string List[] = {"path:", "fastcgi:", "error_page"};
+    std::string List[] = {"root", "fastcgi:", "autoindex", "error_page"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
-        case PATH:
-            return setPath(uri);
-        case FASTCGI:
+        case 0:
+            return setLocationRoot(uri);
+        case 1:
             return setFastCGI(uri);
-        case ERROR_PAGE_L:
+        case 2:
+            return setAutoIndex(uri);
+        case 3:
             return setLocationErrorPage(uri);
         default:
             throw std::logic_error("Invalid setting for location: " + *it);
@@ -422,11 +424,11 @@ bool Parser::setLocationUri() {
     return true;
 }
 
-bool Parser::setPath(std::string &uri) {
-    validateFirstToken("path");
+bool Parser::setLocationRoot(std::string &uri) {
+    validateFirstToken("root");
     std::string root = *it;
     (httpConfig.servers.back()).locations[uri].root = root;
-    validateLastToken("path");
+    validateLastToken("root");
     return true;
 }
 
@@ -435,6 +437,15 @@ bool Parser::setFastCGI(std::string &uri) {
     (httpConfig.servers.back()).locations[uri].cgi_path    = *it;
     (httpConfig.servers.back()).locations[uri].cgi_enabled = true;
     validateLastToken("fastcgi");
+    return true;
+}
+
+bool Parser::setAutoIndex(std::string &uri) {
+    validateFirstToken("autoindex");
+    if (*it != "on")
+        throw std::logic_error("Error: wrong value for autoindex: " + *it);
+    (httpConfig.servers.back()).locations[uri].autoindex = true;
+    validateLastToken("autoindex");
     return true;
 }
 

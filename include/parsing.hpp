@@ -15,27 +15,7 @@
 #define EVENTS 1
 #define HTTP   2
 #define SERVER 3
-// Global Settings
-#define ERROR_LOG        0
-#define PID              1
-#define WORKER_PROCESSES 2
-// Events Settings
-#define WORKER_CONNECTIONS 0
-// Http Settings
-#define INDEX           0
-#define ERROR_PAGE_H    1
-// Server Settings
-#define LISTEN          0
-#define SERVER_NAME     1
-#define ERROR_PAGE_S    2
-#define ROOT            3
-#define LOCATION        4
-// Location Settings
-#define PATH            0
-#define FASTCGI         1
-#define ERROR_PAGE_L    2
 
-/** @todo figure out why this aren't working with includes from webserv.hpp */
 struct HttpConfig;
 
 /**
@@ -105,12 +85,13 @@ class Parser {
     bool isValidIPAddress(const std::string &ip);
     bool setServerName();
     bool setServerErrorPage();
-    bool setRoot();
+    bool setServerRoot();
 
     bool setLocationSetting(std::string uri);
     bool setLocationUri();
-    bool setPath(std::string &);
+    bool setLocationRoot(std::string &);
     bool setFastCGI(std::string &);
+    bool setAutoIndex(std::string &);
     bool setLocationErrorPage(std::string &);
 
    private:
