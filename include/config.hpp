@@ -18,6 +18,7 @@ struct LocationConfig {
           root("html"),
           index_file("index.html"),
           limit_except(GET | POST | DELETE),
+          autoindex(false),
           cgi_enabled(false),
           cgi_path("") {}
 
@@ -26,6 +27,7 @@ struct LocationConfig {
     std::string                root;                 /**< Root directory for serving files */
     std::string                index_file;           /**< Name of the index file */
     unsigned short             limit_except;         /**< Allowed methods */
+    bool                       autoindex;            /**< Enable autoindex */
     bool                       cgi_enabled;          /**< Enable CGI */
     std::string                cgi_path;             /**< Path to CGI programs */
 };
