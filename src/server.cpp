@@ -76,11 +76,6 @@ void HttpServer::run() {
         // Wait for an event
         std::pair<int, InternalEvent> event = listener_->listen();
 
-        if (event.second != NONE) {
-            Logger::instance().log("Received event: " + std::to_string(event.second) +
-                                   " on fd: " + std::to_string(event.first));
-        }
-
         // Handle event
         if (server_sockets_.find(event.first) != server_sockets_.end()) {
             connectHandler(event.first);
