@@ -28,11 +28,9 @@ int main(int argc, char *argv[]) {
     }
 
     // Initialize server
-    Logger::instance().log("Initializing server");
     HttpServer httpServer(httpConfig);
 
     // Start the server
-    Logger::instance().log("Starting server");
     httpServer.start();
 
     return (EXIT_SUCCESS);

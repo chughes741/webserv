@@ -9,6 +9,8 @@ HttpServer::HttpServer(HttpConfig httpConfig, EventListener *listener,
 HttpServer::~HttpServer() {}
 
 void HttpServer::start(bool run_server) {
+    Logger::instance().log("Starting server");
+
     // Set up signal handlers
     listener_->registerEvent(SIGINT, SIGNAL_EVENT);
     listener_->registerEvent(SIGTERM, SIGNAL_EVENT);
@@ -18,6 +20,9 @@ void HttpServer::start(bool run_server) {
     for (std::vector<ServerConfig>::iterator it = config_.servers.begin();
          it != config_.servers.end(); ++it) {
         try {
+            Logger::instance().log("Creating socket for server: " + it->listen.first + ":" +
+                                   std::to_string(it->listen.second));
+
             // Create a new socket
             new_socket = socket_generator_();
 
@@ -46,6 +51,8 @@ void HttpServer::start(bool run_server) {
 }
 
 void HttpServer::stop() {
+    Logger::instance().log("Stopping server");
+
     // Close all sockets and delete them
     for (std::map<int, Socket *>::iterator it = server_sockets_.begin();
          it != server_sockets_.end(); ++it) {
@@ -62,10 +69,17 @@ void HttpServer::stop() {
 }
 
 void HttpServer::run() {
+    Logger::instance().log("Running server");
+
     // Loop forever
     while (true) {
         // Wait for an event
         std::pair<int, InternalEvent> event = listener_->listen();
+
+        if (event.second != NONE) {
+            Logger::instance().log("Received event: " + std::to_string(event.second) +
+                                   " on fd: " + std::to_string(event.first));
+        }
 
         // Handle event
         if (server_sockets_.find(event.first) != server_sockets_.end()) {
@@ -93,6 +107,8 @@ void HttpServer::run() {
 }
 
 void HttpServer::readableHandler(int session_id) {
+    Logger::instance().log("Received request on fd: " + std::to_string(session_id));
+
     // Receive the request
     std::pair<HttpRequest, ssize_t> request = receiveRequest(session_id);
 
@@ -109,21 +125,27 @@ void HttpServer::readableHandler(int session_id) {
 }
 
 void HttpServer::writableHandler(int session_id) {
+    Logger::instance().log("Sending response on fd: " + std::to_string(session_id));
+
     sessions_[session_id]->send(session_id);
 }
 
 void HttpServer::errorHandler(int session_id) {
-    (void)session_id;
+    Logger::instance().log("Error on fd: " + std::to_string(session_id));
     return;
 }
 
 void HttpServer::signalHandler(int signal) {
+    Logger::instance().log("Received signal: " + std::to_string(signal));
+
     if (signal == SIGINT || signal == SIGTERM) {
         stop();
     }
 }
 
 void HttpServer::connectHandler(int socket_id) {
+    Logger::instance().log("Received connection on fd: " + std::to_string(socket_id));
+
     // Accept the connection
     Session *session = server_sockets_[socket_id]->accept();
 
@@ -135,6 +157,8 @@ void HttpServer::connectHandler(int socket_id) {
 }
 
 void HttpServer::disconnectHandler(int session_id) {
+    Logger::instance().log("Disconnecting fd: " + std::to_string(session_id));
+
     // Remove the session from the listener
     listener_->unregisterEvent(session_id);
 
