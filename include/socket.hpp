@@ -10,7 +10,7 @@
 
 #include <cstdlib>
 #include <iostream>
-#include <queue>
+#include <deque>
 #include <string>
 
 #include "logging.hpp"
@@ -24,7 +24,7 @@ class Session {
     Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
     virtual ~Session() = 0;
 
-    virtual void                            send(int client)       = 0;
+    virtual bool                            send()                 = 0;
     virtual std::pair<std::string, ssize_t> recv(int client) const = 0;
     int                                     getSockFd() const;
     void                                    addSendQueue(const std::string& buffer);
@@ -33,7 +33,7 @@ class Session {
     int                     sockfd_;     /**< Session socket file descriptor */
     const struct sockaddr*  addr_;       /**< Session socket address */
     socklen_t               addrlen_;    /**< Session socket address length */
-    std::queue<std::string> send_queue_; /**< Queue of messages to send */
+    std::deque<std::string> send_queue_; /**< Queue of messages to send */
 };
 
 // TcpSession class
@@ -41,7 +41,7 @@ class TcpSession : public Session {
    public:
     TcpSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
 
-    void                            send(int client);
+    bool                            send();
     std::pair<std::string, ssize_t> recv(int client) const;
 };
 

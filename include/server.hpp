@@ -17,8 +17,7 @@ class HttpServer {
    public:
     typedef Socket *(*SocketGenerator)(void);
 
-    HttpServer(HttpConfig config, EventListener *listener = new KqueueEventListener(),
-               SocketGenerator socket_generator = tcp_socket_generator);
+    HttpServer(HttpConfig config, SocketGenerator socket_generator = tcp_socket_generator);
     ~HttpServer();
 
    private:
@@ -49,6 +48,6 @@ class HttpServer {
     SocketGenerator          socket_generator_; /**< Function ptr to socket generator */
     std::map<int, Socket *>  server_sockets_;   /**< Map of server IDs to sockets */
     std::map<int, Session *> sessions_;         /**< Map of session IDs to sessions */
-    EventListener           *listener_;         /**< Event listener for the server */
+    KqueueEventListener      listener_;         /**< Event listener for the server */
     HttpConfig               config_;           /**< Configuration for the server */
 };
