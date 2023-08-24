@@ -180,11 +180,13 @@ std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
 }
 
 void HttpServer::readRoot(HttpResponse &response, std::string &root, std::string &uri) {
-    std::ifstream in(root + uri + "index.html");
+    Logger::instance().log(root + uri);
+    std::ifstream in(root + uri);
     if (in) {
         std::stringstream buffer;
         buffer << in.rdbuf();
         response.body_ = buffer.str();
+        response.headers_["content-length"] = std::to_string(response.body_.size());
         in.close();
     } else {
         response.status_ = NOT_FOUND;
@@ -200,9 +202,10 @@ void HttpServer::buildBody(HttpRequest &request, HttpResponse &response,
             location = &(it->second);
         }
     }
-
     if (location) {
         std::string root = location->root.size() > 0 ? location->root : server.root;
+        if (location->autoindex)
+            request.uri_ = request.uri_ + location->index_file;
         readRoot(response, root, request.uri_);
     } else {
         response.status_ = NOT_FOUND;
@@ -231,11 +234,11 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
 
     if (request.version_ != "HTTP/1.1") {
         response.status_ = IM_A_TEAPOT;
-    } else if (!validateHost(request, response)) {
-        response.status_ = BAD_GATEWAY;
+    } else if (validateHost(request, response)) {
+        response.status_ = OK;
     } else if (request.method_ == GET && request.uri_ == "/") {
         response.status_                  = OK;
-        response.headers_["Content-Type"] = "text/html";
+        response.headers_["Content-Type"] = "text/html; charset=utf-8";
     } else {
         response.status_                  = NOT_FOUND;
         response.server_                  = "webserv/0.1";
