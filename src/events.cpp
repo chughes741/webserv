@@ -1,7 +1,5 @@
 #include "events.hpp"
 
-EventListener::~EventListener() {}
-
 KqueueEventListener::KqueueEventListener() {
     // Initialize timeout
     timeout_.tv_sec  = 0;
@@ -46,12 +44,6 @@ std::pair<int, InternalEvent> KqueueEventListener::listen() {
         }
     }
 
-    // TODO check if any other information needs to be returned
-    // TODO check if signal events need to be handled differently
-
-    // EVFILT_WRITE returns when it's possible to write, data will contain the
-    // amount of space left in the write buffer
-
     // Return fd and event
     return std::make_pair(eventlist.ident, event);
 }
@@ -75,7 +67,6 @@ bool KqueueEventListener::registerEvent(int fd, InternalEvent events) {
 
     if (events != SIGNAL_EVENT && fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
         Logger::instance().log("Error: Failed to set socket to non-blocking");
-        // TODO remove event from kqueue?
         return false;
     }
 
@@ -108,7 +99,7 @@ bool KqueueEventListener::registerEvent(int fd, InternalEvent events) {
     return true;
 }
 
-void KqueueEventListener::unregisterEvent(int fd) {
+void KqueueEventListener::unregisterEvent(int fd, InternalEvent events) {
     Logger::instance().log("Unregistering events on fd: " + std::to_string(fd));
 
     // Check if event exists.
@@ -117,9 +108,17 @@ void KqueueEventListener::unregisterEvent(int fd) {
         return;
     }
 
+    // Handle conversion from internal events to kqueue filter
+    KqueueEvent filter = NONE;
+    for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
+         it != KqueueEventMap.end(); ++it) {
+        if (events & it->second) {
+            filter |= it->first;
+        }
+    }
+
     // Get event from the map of events.
     struct kevent event  = events_[fd];
-    KqueueEvent   filter = event.filter;
     u_short       flags  = EV_DELETE;
     u_int         fflags = 0;
     int64_t       data   = 0;
@@ -131,7 +130,4 @@ void KqueueEventListener::unregisterEvent(int fd) {
     if (kevent(queue_fd_, &event, 1, NULL, 0, NULL) == -1) {
         Logger::instance().log("Error: Failed to remove event from kqueue");
     }
-
-    // Delete event from the map of events.
-    events_.erase(fd);
 }

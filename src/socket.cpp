@@ -10,24 +10,37 @@ int Session::getSockFd() const {
 }
 
 void Session::addSendQueue(const std::string& buffer) {
-    send_queue_.push(buffer);
+    send_queue_.push_back(buffer);
 }
 
 TcpSession::TcpSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
     : Session(sockfd, addr, addrlen) {}
 
-void TcpSession::send(int client) {
+bool TcpSession::send() {
     if (send_queue_.empty()) {
-        return;
+        return true;
     }
 
     std::string buffer     = send_queue_.front();
-    ssize_t     bytes_sent = ::send(client, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
-    send_queue_.pop();
+    ssize_t     bytes_sent = ::send(sockfd_, buffer.c_str(), buffer.length(), MSG_DONTWAIT);
 
     if (bytes_sent == -1) {
-        Logger::instance().log("Error: Failed to send to socket");
+        Logger::instance().log("ERROR: Failed to send to socket");
+        return false;
     }
+
+    send_queue_.pop_front();
+
+    if (static_cast<size_t>(bytes_sent) != buffer.length()) {
+        send_queue_.push_front(buffer.substr(bytes_sent));
+    }
+
+    if (send_queue_.empty()) {
+        Logger::instance().log("Finished sending");
+        return true;
+    }
+
+    return false;
 }
 
 std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
