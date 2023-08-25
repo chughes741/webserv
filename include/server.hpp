@@ -1,45 +1,23 @@
 #pragma once
 
+#include <map>
+#include <string>
+
+#include "config.hpp"
+#include "http.hpp"
 #include "events.hpp"
-#include "webserv.hpp"
+#include "socket.hpp"
 
 class Socket;
 class Session;
 Socket *tcp_socket_generator();
 
-// Abstract base class for servers
-class Server {
+// HTTP server
+class HttpServer {
    public:
     typedef Socket *(*SocketGenerator)(void);
 
-    Server(HttpConfig config, EventListener *listener, SocketGenerator socket_generator);
-    virtual ~Server() = 0;
-
-    virtual void start(bool) = 0;
-    virtual void stop()      = 0;
-
-   protected:
-    virtual void run() = 0;
-
-    virtual HttpRequest  receiveRequest(int session_id)                      = 0;
-    virtual HttpResponse handleRequest(HttpRequest request)                  = 0;
-    virtual void         sendResponse(int session_id, HttpResponse response) = 0;
-
-   protected:
-    SocketGenerator                   socket_generator_; /**< Function ptr to socket generator */
-    std::map<int, Socket *>           server_sockets_;   /**< Map of server IDs to sockets */
-    std::map<int, Session *>          sessions_;         /**< Map of session IDs to sessions */
-    EventListener                    *listener_;         /**< Event listener for the server */
-    HttpConfig                        config_;           /**< Configuration for the server */
-    std::map<std::string, HttpMethod> http_methods_;     /**< HTTP methods */
-    std::map<HttpStatus, std::string> http_status_;      /**< HTTP status messages */
-};
-
-// HTTP server
-class HttpServer : public Server {
-   public:
-    HttpServer(HttpConfig config, EventListener *listener,
-               SocketGenerator socket_generator = tcp_socket_generator);
+    HttpServer(HttpConfig config, SocketGenerator socket_generator = tcp_socket_generator);
     ~HttpServer();
 
    private:
@@ -60,10 +38,20 @@ class HttpServer : public Server {
     void connectHandler(int socket_id);
     void disconnectHandler(int session_id);
 
-    HttpRequest  receiveRequest(int session_id);
-    HttpResponse handleRequest(HttpRequest request);
-    void         sendResponse(int session_id, HttpResponse response);
-    void buildBody(HttpRequest &request, HttpResponse &response, const ServerConfig &config);
-    bool validateHost(HttpRequest &request, HttpResponse &response);
-    void readRoot(HttpResponse &response, std::string &root, std::string &uri);
+    std::pair<HttpRequest, ssize_t> receiveRequest(int session_id);
+    HttpResponse                    handleRequest(HttpRequest request);
+    bool buildBody(HttpRequest &, HttpResponse &, ServerConfig &);
+    bool readFileToBody(HttpResponse &, std::string &);
+    bool buildNotFound(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
+    bool validateHost(HttpRequest &, HttpResponse &);
+    bool readRoot(HttpRequest &, HttpResponse &, ServerConfig *, LocationConfig *);
+
+    std::string trimHost(const std::string &uri, ServerConfig &server);
+
+   private:
+    SocketGenerator          socket_generator_; /**< Function ptr to socket generator */
+    std::map<int, Socket *>  server_sockets_;   /**< Map of server IDs to sockets */
+    std::map<int, Session *> sessions_;         /**< Map of session IDs to sessions */
+    KqueueEventListener      listener_;         /**< Event listener for the server */
+    HttpConfig               config_;           /**< Configuration for the server */
 };

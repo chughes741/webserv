@@ -25,24 +25,14 @@ enum EventType : InternalEvent {
     DISCONNECT_EVENT = 32
 };
 
-// Abstract base class for event handlers
-class EventListener {
-   public:
-    virtual ~EventListener();
-
-    virtual std::pair<int, InternalEvent> listen()                                    = 0;
-    virtual bool                          registerEvent(int fd, InternalEvent events) = 0;
-    virtual void                          unregisterEvent(int fd)                     = 0;
-};
-
 // Kqueue event handler
-class KqueueEventListener : public EventListener {
+class KqueueEventListener {
    public:
     KqueueEventListener();
 
     std::pair<int, InternalEvent> listen();
     bool                          registerEvent(int fd, InternalEvent events);
-    void                          unregisterEvent(int fd);
+    void                          unregisterEvent(int fd, InternalEvent events);
 
    private:
     int                                  queue_fd_;       // kqueue file descriptor

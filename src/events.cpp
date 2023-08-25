@@ -1,7 +1,5 @@
 #include "events.hpp"
 
-EventListener::~EventListener() {}
-
 KqueueEventListener::KqueueEventListener() {
     // Initialize timeout
     timeout_.tv_sec  = 0;
@@ -46,17 +44,18 @@ std::pair<int, InternalEvent> KqueueEventListener::listen() {
         }
     }
 
-    // TODO check if any other information needs to be returned
-    // TODO check if signal events need to be handled differently
-
-    // EVFILT_WRITE returns when it's possible to write, data will contain the
-    // amount of space left in the write buffer
-
     // Return fd and event
     return std::make_pair(eventlist.ident, event);
 }
 
 bool KqueueEventListener::registerEvent(int fd, InternalEvent events) {
+    if (events == SIGNAL_EVENT) {
+        Logger::instance().log("Registering signal event");
+    } else {
+        Logger::instance().log("Registering event: " + std::to_string(events) +
+                               " on fd: " + std::to_string(fd));
+    }
+
     // Handle conversion from internal events to kqueue filter
     KqueueEvent filter = NONE;
     for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
@@ -66,9 +65,8 @@ bool KqueueEventListener::registerEvent(int fd, InternalEvent events) {
         }
     }
 
-    if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
+    if (events != SIGNAL_EVENT && fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
         Logger::instance().log("Error: Failed to set socket to non-blocking");
-        // TODO remove event from kqueue?
         return false;
     }
 
@@ -90,10 +88,7 @@ bool KqueueEventListener::registerEvent(int fd, InternalEvent events) {
     }
 
     // Add event to the kqueue.
-    int ret = kevent(queue_fd_, &event, 1, NULL, 0, NULL);
-
-    // Check if event was added successfully
-    if (ret == -1) {
+    if (kevent(queue_fd_, &event, 1, NULL, 0, NULL) == -1) {
         Logger::instance().log("Error: Failed to add event to kqueue");
         return false;
     }
@@ -104,16 +99,26 @@ bool KqueueEventListener::registerEvent(int fd, InternalEvent events) {
     return true;
 }
 
-void KqueueEventListener::unregisterEvent(int fd) {
+void KqueueEventListener::unregisterEvent(int fd, InternalEvent events) {
+    Logger::instance().log("Unregistering events on fd: " + std::to_string(fd));
+
     // Check if event exists.
     if (events_.find(fd) == events_.end()) {
         Logger::instance().log("Error: Event does not exist during unregisterEvent()");
         return;
     }
 
+    // Handle conversion from internal events to kqueue filter
+    KqueueEvent filter = NONE;
+    for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
+         it != KqueueEventMap.end(); ++it) {
+        if (events & it->second) {
+            filter |= it->first;
+        }
+    }
+
     // Get event from the map of events.
     struct kevent event  = events_[fd];
-    KqueueEvent   filter = event.filter;
     u_short       flags  = EV_DELETE;
     u_int         fflags = 0;
     int64_t       data   = 0;
@@ -122,13 +127,7 @@ void KqueueEventListener::unregisterEvent(int fd) {
     EV_SET(&event, fd, filter, flags, fflags, data, NULL);
 
     // Delete event from the kqueue.
-    int ret = kevent(queue_fd_, &event, 1, NULL, 0, NULL);
-
-    // Check if event was deleted successfully
-    if (ret == -1) {
+    if (kevent(queue_fd_, &event, 1, NULL, 0, NULL) == -1) {
         Logger::instance().log("Error: Failed to remove event from kqueue");
     }
-
-    // Delete event from the map of events.
-    events_.erase(fd);
 }

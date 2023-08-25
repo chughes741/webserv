@@ -2,45 +2,26 @@
 
 extern HttpConfig httpConfig;
 
-Server::Server(HttpConfig config, EventListener *listener, SocketGenerator socket_generator)
-    : socket_generator_(socket_generator), listener_(listener), config_(config) {
-    http_methods_["GET"]    = GET;
-    http_methods_["POST"]   = POST;
-    http_methods_["DELETE"] = DELETE;
-
-    http_status_[OK]                    = "200 OK";
-    http_status_[CREATED]               = "201 Created";
-    http_status_[ACCEPTED]              = "202 Accepted";
-    http_status_[NO_CONTENT]            = "204 No Content";
-    http_status_[MOVED_PERMANENTLY]     = "301 Moved Permanently";
-    http_status_[FOUND]                 = "302 Found";
-    http_status_[NOT_MODIFIED]          = "304 Not Modified";
-    http_status_[BAD_REQUEST]           = "400 Bad Request";
-    http_status_[NOT_FOUND]             = "404 Not Found";
-    http_status_[METHOD_NOT_ALLOWED]    = "405 Method Not Allowed";
-    http_status_[IM_A_TEAPOT]           = "418 I'm a teapot";
-    http_status_[INTERNAL_SERVER_ERROR] = "500 Internal Server Error";
-    http_status_[BAD_GATEWAY]           = "502 Bad Gateway";
-}
-
-Server::~Server() {}
-
-HttpServer::HttpServer(HttpConfig httpConfig, EventListener *listener,
-                       SocketGenerator socket_generator)
-    : Server(httpConfig, listener, socket_generator) {}
+HttpServer::HttpServer(HttpConfig httpConfig, SocketGenerator socket_generator)
+    : socket_generator_(socket_generator), config_(httpConfig) {}
 
 HttpServer::~HttpServer() {}
 
 void HttpServer::start(bool run_server) {
+    Logger::instance().log("Starting server");
+
     // Set up signal handlers
-    listener_->registerEvent(SIGINT, SIGNAL_EVENT);
-    listener_->registerEvent(SIGTERM, SIGNAL_EVENT);
+    listener_.registerEvent(SIGINT, SIGNAL_EVENT);
+    listener_.registerEvent(SIGTERM, SIGNAL_EVENT);
 
     // Create a socket for each server in the config
     Socket *new_socket;
     for (std::vector<ServerConfig>::iterator it = config_.servers.begin();
          it != config_.servers.end(); ++it) {
         try {
+            Logger::instance().log("Creating socket for server: " + it->listen.first + ":" +
+                                   std::to_string(it->listen.second));
+
             // Create a new socket
             new_socket = socket_generator_();
 
@@ -54,7 +35,7 @@ void HttpServer::start(bool run_server) {
             server_sockets_[server_id] = new_socket;
 
             // Add the socket to the listener
-            listener_->registerEvent(server_id, READABLE);
+            listener_.registerEvent(server_id, READABLE);
 
         } catch (std::bad_alloc &e) {
             Logger::instance().log(e.what());
@@ -69,6 +50,8 @@ void HttpServer::start(bool run_server) {
 }
 
 void HttpServer::stop() {
+    Logger::instance().log("Stopping server");
+
     // Close all sockets and delete them
     for (std::map<int, Socket *>::iterator it = server_sockets_.begin();
          it != server_sockets_.end(); ++it) {
@@ -85,10 +68,12 @@ void HttpServer::stop() {
 }
 
 void HttpServer::run() {
+    Logger::instance().log("Running server");
+
     // Loop forever
     while (true) {
         // Wait for an event
-        std::pair<int, InternalEvent> event = listener_->listen();
+        std::pair<int, InternalEvent> event = listener_.listen();
 
         // Handle event
         if (server_sockets_.find(event.first) != server_sockets_.end()) {
@@ -110,45 +95,56 @@ void HttpServer::run() {
                 case SIGNAL_EVENT:
                     signalHandler(event.first);
                     break;
-                case DISCONNECT_EVENT:
-                    disconnectHandler(event.first);
-                    break;
             }
         }
     }
 }
 
 void HttpServer::readableHandler(int session_id) {
+    Logger::instance().log("Received request on fd: " + std::to_string(session_id));
+
     // Receive the request
-    HttpRequest request = receiveRequest(session_id);
+    std::pair<HttpRequest, ssize_t> request = receiveRequest(session_id);
+
+    if (request.second == 0) {
+        disconnectHandler(session_id);
+        return;
+    }
 
     // Handle the request
-    HttpResponse response = handleRequest(request);
+    HttpResponse response = handleRequest(request.first);
 
-    // Send the response
-    sendResponse(session_id, response);
+    // Add the response to the clients send queue
+    sessions_[session_id]->addSendQueue(response.getMessage());
 
-    // Close the connection
-    disconnectHandler(session_id);
+    // Add the session to the listener
+    listener_.registerEvent(session_id, WRITABLE);
 }
 
 void HttpServer::writableHandler(int session_id) {
-    (void)session_id;
-    return;
+    Logger::instance().log("Sending response on fd: " + std::to_string(session_id));
+
+    if (sessions_[session_id]->send()) {
+        listener_.unregisterEvent(session_id, WRITABLE);
+    }
 }
 
 void HttpServer::errorHandler(int session_id) {
-    (void)session_id;
+    Logger::instance().log("Error on fd: " + std::to_string(session_id));
     return;
 }
 
 void HttpServer::signalHandler(int signal) {
+    Logger::instance().log("Received signal: " + std::to_string(signal));
+
     if (signal == SIGINT || signal == SIGTERM) {
         stop();
     }
 }
 
 void HttpServer::connectHandler(int socket_id) {
+    Logger::instance().log("Received connection on fd: " + std::to_string(socket_id));
+
     // Accept the connection
     Session *session = server_sockets_[socket_id]->accept();
 
@@ -156,12 +152,14 @@ void HttpServer::connectHandler(int socket_id) {
     sessions_[session->getSockFd()] = session;
 
     // Add the session to the listener
-    listener_->registerEvent(session->getSockFd(), READABLE); /** @todo event flags */
+    listener_.registerEvent(session->getSockFd(), READABLE); /** @todo event flags */
 }
 
 void HttpServer::disconnectHandler(int session_id) {
+    Logger::instance().log("Disconnecting fd: " + std::to_string(session_id));
+
     // Remove the session from the listener
-    listener_->unregisterEvent(session_id);
+    listener_.unregisterEvent(session_id, READABLE | WRITABLE);
 
     // Delete the session
     delete sessions_[session_id];
@@ -173,137 +171,129 @@ void HttpServer::disconnectHandler(int session_id) {
     close(session_id);
 }
 
-HttpRequest HttpServer::receiveRequest(int session_id) {
-    HttpRequest request;
+std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
+    std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
 
-    std::string buffer = sessions_[session_id]->recv(session_id);
-    // Logger::instance().log(buffer); // Prints the request
-    // start-line
-    std::string method = buffer.substr(0, buffer.find(' '));
-    buffer.erase(0, buffer.find(' ') + 1);
+    HttpRequest request(buffer_pair.first);
 
-    // Use the map to convert the string method to its corresponding enum
-    std::map<std::string, HttpMethod>::iterator it = http_methods_.find(method);
-    if (it != http_methods_.end()) {
-        request.method = it->second;
-    } else {
-        throw std::runtime_error("Unknown HTTP method");
-    }
-
-    request.uri = buffer.substr(0, buffer.find(' '));
-    buffer.erase(0, buffer.find(' ') + 1);
-    request.version = buffer.substr(0, buffer.find(CRLF));
-    buffer.erase(0, buffer.find(CRLF) + 2);
-
-    // body
-    request.body = buffer.substr(buffer.find("\r\n\r\n") + 4);
-    buffer.erase(buffer.find("\r\n\r\n") + 2);
-
-    // headers
-    while (buffer.find(CRLF) != std::string::npos) {
-        std::string key = buffer.substr(0, buffer.find(':'));
-        buffer.erase(0, buffer.find(':') + 2);
-        std::string value = buffer.substr(0, buffer.find(CRLF));
-        buffer.erase(0, buffer.find(CRLF) + 2);
-        request.headers[key] = value;
-    }
-
-    return request;
+    return std::make_pair(request, buffer_pair.second);
 }
 
-void HttpServer::readRoot(HttpResponse &response, std::string &root, std::string &uri) {
-    std::ifstream in(root + uri + "index.html");
-    if (in) {
-        std::stringstream buffer;
-        buffer << in.rdbuf();
-        response.body = buffer.str();
-        in.close();
-    } else {
-        response.body = "404 Not Found";
+bool isResourceRequest(HttpResponse &response, const std::string &uri) {
+    if (uri.size() >= 4 && uri.substr(uri.size() - 4) == ".css") {
+        response.headers_["Content-Type"] = "text/css";
+        return true;
     }
+    if (uri.size() >= 3 && uri.substr(uri.size() - 3) == ".js") {
+        response.headers_["Content-Type"] = "text/javascript";
+        return true;
+    }
+    return false;
 }
 
-void HttpServer::buildBody(HttpRequest &request, HttpResponse &response,
-                           const ServerConfig &server) {
-    std::map<std::string, LocationConfig>::const_iterator locationIt = server.locations.begin();
-    const LocationConfig                                 *location   = NULL;
-    for (; locationIt != server.locations.end(); ++locationIt) {
-        if (locationIt->first.compare(0, locationIt->first.size(), request.uri) == 0) {
-            location = &(locationIt->second);
+// Build the error page : ToDo -> Make it take the error code
+bool HttpServer::buildNotFound(HttpRequest &request, HttpResponse &response, ServerConfig &server,
+                               LocationConfig *location) {
+    response.status_ = NOT_FOUND;
+    std::string root = location && location->root.size() > 0 ? location->root : server.root;
+    if (isResourceRequest(response, request.uri_)) {
+        std::string resource = root + request.uri_;
+        response.status_ = OK;
+        return readFileToBody(response, resource);
+    }
+    std::string *errorPath = NULL;
+    if (location) {
+        std::map<int, std::string>::iterator it = location->error_page.find(404);
+        if (it != location->error_page.end())
+            errorPath = &it->second;
+    }
+    if (!errorPath) {
+        std::map<int, std::string>::iterator it = server.error_page.find(404);
+        if (it != server.error_page.end())
+            errorPath = &it->second;
+    }
+    if (!errorPath)
+        return false;
+    std::string filepath = root + '/' + *errorPath;
+    return readFileToBody(response, filepath);
+}
+
+// Read a file into the response body
+bool HttpServer::readFileToBody(HttpResponse &response, std::string &filepath) {
+    std::ifstream in(filepath);
+    Logger::instance().log(filepath);
+    if (!in)
+        return false;
+    std::stringstream buffer;
+    buffer << in.rdbuf();
+    response.body_ = buffer.str();
+    in.close();
+    return true;
+}
+
+std::string HttpServer::trimHost(const std::string &uri, ServerConfig &server) {
+    size_t startPos = uri.find(std::to_string(server.listen.second));
+    if (startPos != std::string::npos) {
+        startPos += std::to_string(server.listen.second).size();
+        return uri.substr(startPos);
+    }
+    return uri;
+}
+
+// Find the appropriate location and fill the response body
+bool HttpServer::buildBody(HttpRequest &request, HttpResponse &response,
+                           ServerConfig &server) {
+    LocationConfig *location = NULL;
+    std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
+    for (std::map<std::string, LocationConfig>::iterator it = server.locations.begin();
+         it != server.locations.end(); ++it) {
+        if (it->first.compare(0, it->first.size(), uri) == 0) {
+            location = &(it->second);
         }
     }
-    if (location) {
+    if (location) {            
+        if (!isResourceRequest(response, request.uri_) && location->autoindex)
+            request.uri_ = request.uri_ + location->index_file;
         std::string root = location->root.size() > 0 ? location->root : server.root;
-        readRoot(response, root, request.uri);
-    } else {
-        response.body = "404 Not Found";
+        std::string filepath = isResourceRequest(response, request.uri_) ? request.uri_ : root + request.uri_;
+        if (readFileToBody(response, filepath)) {
+            response.status_ = OK;
+            return true;
+        }
     }
+    return buildNotFound(request, response, server, location);
 }
 
+// Validate the host making the request is in the servers
 bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
-    std::string                               requestHost = request.headers["Host"];
-    std::vector<ServerConfig>::const_iterator serverIt    = config_.servers.begin();
-    for (; serverIt != config_.servers.end(); ++serverIt) {
-        std::string serverHost =
-            serverIt->listen.first + ":" + std::to_string(serverIt->listen.second);
+    std::string requestHost = request.headers_["Host"];  // Check if the host is valid
+
+    for (std::vector<ServerConfig>::iterator it = config_.servers.begin();
+         it != config_.servers.end(); ++it) {
+        std::string serverHost = it->listen.first + ":" + std::to_string(it->listen.second);
         if (requestHost == serverHost) {
-            buildBody(request, response, *serverIt);
-            return true;
+            return buildBody(request, response, *it);
         }
     }
     return false;
 }
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
-    /** @todo implement */
     HttpResponse response;
+    Logger::instance().log(request.printRequest());
 
-    response.version = "HTTP/1.1";
-    response.server  = "webserv/0.1";
+    response.version_ = HTTP_VERSION;
+    response.server_  = "webserv/0.1";
+    response.headers_["Content-Type"] = "text/html; charset=utf-8";
 
-    if (request.version != "HTTP/1.1") {
-        response.status = IM_A_TEAPOT;
+    if (request.version_ != "HTTP/1.1") {
+        response.status_ = IM_A_TEAPOT; // How could this happen? Do we need something else? a body?
     } else if (!validateHost(request, response)) {
-        response.status = BAD_GATEWAY;
-    } else if (request.method == GET && request.uri == "/") {
-        response.status                  = OK;
-        response.headers["Content-Type"] = "text/html";
-    } else {
-        response.status                  = NOT_FOUND;
-        response.server                  = "webserv/0.1";
-        response.headers["Content-Type"] = "text/html";
-        response.body                    = "<html><body><h1>404 Not Found</h1></body></html>";
+        response.status_                  = NOT_FOUND;
+        response.server_                  = "webserv/0.1";
+        response.headers_["Content-Type"] = "text/html";
+        response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
     }
-
+    response.headers_["content-length"] = std::to_string(response.body_.size());
     return response;
-}
-
-void HttpServer::sendResponse(int session_id, HttpResponse response) {
-    std::string buffer;
-
-    // status-line
-    buffer.append(response.version + " ");
-
-    // Find the status string from the map using the enum value.
-    std::map<HttpStatus, std::string>::iterator statusIt = http_status_.find(response.status);
-    if (statusIt != http_status_.end()) {
-        buffer.append(statusIt->second);
-    } else {
-        buffer.append(http_status_[INTERNAL_SERVER_ERROR]);
-    }
-
-    // Append the server name
-    buffer.append(response.server + CRLF);
-
-    // headers
-    for (std::map<std::string, std::string>::iterator it = response.headers.begin();
-         it != response.headers.end(); ++it) {
-        buffer.append(it->first + ": " + it->second + CRLF);
-    }
-
-    // body
-    buffer.append(CRLF + response.body);
-
-    /** @todo should be client_id not 0 */
-    sessions_[session_id]->send(session_id, buffer);
 }

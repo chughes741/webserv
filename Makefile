@@ -89,3 +89,10 @@ segfault: $(OBJ)
 vcpkg:
 	./vcpkg/bootstrap-vcpkg.sh
 	./vcpkg/vcpkg install gtest
+
+
+HOST = 127.0.0.1
+PORT = 9092
+
+curl:
+	curl --config config/curl.conf http://$(HOST):$(PORT)/
