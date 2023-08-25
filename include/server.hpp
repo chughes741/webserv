@@ -40,9 +40,13 @@ class HttpServer {
 
     std::pair<HttpRequest, ssize_t> receiveRequest(int session_id);
     HttpResponse                    handleRequest(HttpRequest request);
-    void buildBody(HttpRequest &request, HttpResponse &response, const ServerConfig &config);
-    bool validateHost(HttpRequest &request, HttpResponse &response);
-    void readRoot(HttpResponse &response, std::string &root, std::string &uri);
+    bool buildBody(HttpRequest &, HttpResponse &, ServerConfig &);
+    bool readFileToBody(HttpResponse &, std::string &);
+    bool buildNotFound(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
+    bool validateHost(HttpRequest &, HttpResponse &);
+    bool readRoot(HttpRequest &, HttpResponse &, ServerConfig *, LocationConfig *);
+
+    std::string trimHost(const std::string &uri, ServerConfig &server);
 
    private:
     SocketGenerator          socket_generator_; /**< Function ptr to socket generator */

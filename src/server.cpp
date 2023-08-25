@@ -179,48 +179,100 @@ std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
     return std::make_pair(request, buffer_pair.second);
 }
 
-void HttpServer::readRoot(HttpResponse &response, std::string &root, std::string &uri) {
-    Logger::instance().log(root + uri);
-    std::ifstream in(root + uri);
-    if (in) {
-        std::stringstream buffer;
-        buffer << in.rdbuf();
-        response.body_ = buffer.str();
-        response.headers_["content-length"] = std::to_string(response.body_.size());
-        in.close();
-    } else {
-        response.status_ = NOT_FOUND;
+bool isResourceRequest(HttpResponse &response, const std::string &uri) {
+    if (uri.size() >= 4 && uri.substr(uri.size() - 4) == ".css") {
+        response.headers_["Content-Type"] = "text/css";
+        return true;
     }
+    if (uri.size() >= 3 && uri.substr(uri.size() - 3) == ".js") {
+        response.headers_["Content-Type"] = "text/javascript";
+        return true;
+    }
+    return false;
 }
 
-void HttpServer::buildBody(HttpRequest &request, HttpResponse &response,
-                           const ServerConfig &server) {
-    const LocationConfig *location = NULL;
-    for (std::map<std::string, LocationConfig>::const_iterator it = server.locations.begin();
+// Build the error page : ToDo -> Make it take the error code
+bool HttpServer::buildNotFound(HttpRequest &request, HttpResponse &response, ServerConfig &server,
+                               LocationConfig *location) {
+    response.status_ = NOT_FOUND;
+    std::string root = location && location->root.size() > 0 ? location->root : server.root;
+    if (isResourceRequest(response, request.uri_)) {
+        std::string resource = root + request.uri_;
+        response.status_ = OK;
+        return readFileToBody(response, resource);
+    }
+    std::string *errorPath = NULL;
+    if (location) {
+        std::map<int, std::string>::iterator it = location->error_page.find(404);
+        if (it != location->error_page.end())
+            errorPath = &it->second;
+    }
+    if (!errorPath) {
+        std::map<int, std::string>::iterator it = server.error_page.find(404);
+        if (it != server.error_page.end())
+            errorPath = &it->second;
+    }
+    if (!errorPath)
+        return false;
+    std::string filepath = root + '/' + *errorPath;
+    return readFileToBody(response, filepath);
+}
+
+// Read a file into the response body
+bool HttpServer::readFileToBody(HttpResponse &response, std::string &filepath) {
+    std::ifstream in(filepath);
+    Logger::instance().log(filepath);
+    if (!in)
+        return false;
+    std::stringstream buffer;
+    buffer << in.rdbuf();
+    response.body_ = buffer.str();
+    in.close();
+    return true;
+}
+
+std::string HttpServer::trimHost(const std::string &uri, ServerConfig &server) {
+    size_t startPos = uri.find(std::to_string(server.listen.second));
+    if (startPos != std::string::npos) {
+        startPos += std::to_string(server.listen.second).size();
+        return uri.substr(startPos);
+    }
+    return uri;
+}
+
+// Find the appropriate location and fill the response body
+bool HttpServer::buildBody(HttpRequest &request, HttpResponse &response,
+                           ServerConfig &server) {
+    LocationConfig *location = NULL;
+    std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
+    for (std::map<std::string, LocationConfig>::iterator it = server.locations.begin();
          it != server.locations.end(); ++it) {
-        if (it->first.compare(0, it->first.size(), request.uri_) == 0) {
+        if (it->first.compare(0, it->first.size(), uri) == 0) {
             location = &(it->second);
         }
     }
-    if (location) {
-        std::string root = location->root.size() > 0 ? location->root : server.root;
-        if (location->autoindex)
+    if (location) {            
+        if (!isResourceRequest(response, request.uri_) && location->autoindex)
             request.uri_ = request.uri_ + location->index_file;
-        readRoot(response, root, request.uri_);
-    } else {
-        response.status_ = NOT_FOUND;
+        std::string root = location->root.size() > 0 ? location->root : server.root;
+        std::string filepath = isResourceRequest(response, request.uri_) ? request.uri_ : root + request.uri_;
+        if (readFileToBody(response, filepath)) {
+            response.status_ = OK;
+            return true;
+        }
     }
+    return buildNotFound(request, response, server, location);
 }
 
+// Validate the host making the request is in the servers
 bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
     std::string requestHost = request.headers_["Host"];  // Check if the host is valid
 
-    for (std::vector<ServerConfig>::const_iterator it = config_.servers.begin();
+    for (std::vector<ServerConfig>::iterator it = config_.servers.begin();
          it != config_.servers.end(); ++it) {
         std::string serverHost = it->listen.first + ":" + std::to_string(it->listen.second);
         if (requestHost == serverHost) {
-            buildBody(request, response, *it);
-            return true;
+            return buildBody(request, response, *it);
         }
     }
     return false;
@@ -228,23 +280,20 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
+    Logger::instance().log(request.printRequest());
 
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";
+    response.headers_["Content-Type"] = "text/html; charset=utf-8";
 
     if (request.version_ != "HTTP/1.1") {
-        response.status_ = IM_A_TEAPOT;
-    } else if (validateHost(request, response)) {
-        response.status_ = OK;
-    } else if (request.method_ == GET && request.uri_ == "/") {
-        response.status_                  = OK;
-        response.headers_["Content-Type"] = "text/html; charset=utf-8";
-    } else {
+        response.status_ = IM_A_TEAPOT; // How could this happen? Do we need something else? a body?
+    } else if (!validateHost(request, response)) {
         response.status_                  = NOT_FOUND;
         response.server_                  = "webserv/0.1";
         response.headers_["Content-Type"] = "text/html";
-        response.body_                    = "<html><body><h1>404 Not Found</h1></body></html>";
+        response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
     }
-
+    response.headers_["content-length"] = std::to_string(response.body_.size());
     return response;
 }
