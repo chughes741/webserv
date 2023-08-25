@@ -2,6 +2,9 @@
 
 #include <map>
 #include <string>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 
 /** HTTP headers */
 #define HTTP_VERSION "HTTP/1.1"
@@ -36,6 +39,7 @@ enum HttpStatus {
 class HttpRequest {
    public:
     HttpRequest(const std::string &request);
+    std::string printRequest() const;
 
    private:
     std::string consumeNextToken(std::string &buffer, const std::string &delimiter);

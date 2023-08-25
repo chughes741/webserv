@@ -112,8 +112,7 @@ int TcpSocket::bind(std::string addr, int port) {
 
     // Binds socket to an address and port
     if (::bind(sockfd_, (struct sockaddr*)&addr_in_, sizeof(addr_in_)) == -1) {
-        freeaddrinfo(res);
-        Logger::instance().log("Error: Failed to bind socket" + std::string(strerror(errno)));
+        Logger::instance().log("Error: Failed to bind socket -> " + std::string(strerror(errno)));
     }
 
     freeaddrinfo(res);
@@ -123,7 +122,7 @@ int TcpSocket::bind(std::string addr, int port) {
 void TcpSocket::listen() {
     // Sets server to listen passively
     if (::listen(sockfd_, SO_MAX_QUEUE) == -1) {
-        Logger::instance().log("Error: Failed to listen on socket" + std::string(strerror(errno)));
+        Logger::instance().log("Error: Failed to listen on socket -> " + std::string(strerror(errno)));
     }
 }
 
@@ -134,7 +133,7 @@ Session* TcpSocket::accept() {
     int client_sockfd = ::accept(sockfd_, client_addr, &client_addr_len);
     if (client_sockfd == -1) {
         delete client_addr;
-        Logger::instance().log("Error: Failed to accept connection" + std::string(strerror(errno)));
+        Logger::instance().log("Error: Failed to accept connection -> " + std::string(strerror(errno)));
     }
 
     return session_generator_(client_sockfd, client_addr, client_addr_len);
@@ -142,7 +141,7 @@ Session* TcpSocket::accept() {
 
 void TcpSocket::close() {
     if (::close(sockfd_) == -1) {
-        Logger::instance().log("Error: Failed to close socket" + std::string(strerror(errno)));
+        Logger::instance().log("Error: Failed to close socket -> " + std::string(strerror(errno)));
     }
 }
 

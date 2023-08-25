@@ -84,3 +84,19 @@ std::string HttpResponse::getMessage() const {
 
     return buffer;
 }
+
+std::string HttpRequest::printRequest() const {
+    std::ostringstream oss;
+
+    oss << "Method: " << method_ << "\n";
+    oss << "URI: " << uri_ << "\n";
+    oss << "Version: " << version_ << "\n";
+    oss << "Headers:\n";
+    for (std::map<std::string, std::string>::const_iterator it = headers_.begin(); it != headers_.end(); ++it) {
+        oss << "  " << it->first << ": " << it->second << "\n";
+    }
+    if (!body_.empty()) {
+        oss << "Body:\n" << body_ << "\n";
+    }
+    return oss.str();
+}
