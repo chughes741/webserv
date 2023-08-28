@@ -221,7 +221,6 @@ bool HttpServer::buildNotFound(HttpRequest &request, HttpResponse &response, Ser
 // Read a file into the response body
 bool HttpServer::readFileToBody(HttpResponse &response, std::string &filepath) {
     std::ifstream in(filepath);
-    Logger::instance().log(filepath);
     if (!in)
         return false;
     std::stringstream buffer;
@@ -245,16 +244,17 @@ bool HttpServer::buildBody(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server) {
     LocationConfig *location = NULL;
     std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
+    Logger::instance().log("uri: " + uri);
     for (std::map<std::string, LocationConfig>::iterator it = server.locations.begin();
-         it != server.locations.end(); ++it) {
-        if (it->first.compare(0, it->first.size(), uri) == 0) {
+     it != server.locations.end(); ++it) {    
+        if (uri.substr(0, it->first.size()) == it->first) {
             location = &(it->second);
         }
     }
-    if (location) {            
+    if (location) {     
         if (!isResourceRequest(response, request.uri_) && location->autoindex)
             request.uri_ = request.uri_ + location->index_file;
-        std::string root = location->root.size() > 0 ? location->root : server.root;
+        std::string root = location->root.length() > 0 ? location->root : server.root;
         std::string filepath = isResourceRequest(response, request.uri_) ? request.uri_ : root + request.uri_;
         if (readFileToBody(response, filepath)) {
             response.status_ = OK;
@@ -280,7 +280,7 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
-    Logger::instance().log(request.printRequest());
+    // Logger::instance().log(request.printRequest());
 
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";
