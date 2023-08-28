@@ -188,6 +188,10 @@ bool isResourceRequest(HttpResponse &response, const std::string &uri) {
         response.headers_["Content-Type"] = "text/javascript";
         return true;
     }
+    if (uri.size() >= 5 && uri.substr(uri.size() - 5) == ".html") {
+        response.headers_["Content-Type"] = "text/html";
+        return true;
+    }
     return false;
 }
 
@@ -294,6 +298,7 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
         response.headers_["Content-Type"] = "text/html";
         response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
     }
+
     response.headers_["content-length"] = std::to_string(response.body_.size());
     return response;
 }
