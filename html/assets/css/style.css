@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+.header {
+    background-color: #34495e;
+    color: #ecf0f1;
+    padding: 15px 15px;
+    text-align: center;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color: #34495e;
+    padding-left: 10%;
+    padding-right: 10%;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2980b9;
+    color: #ecf0f1;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.button:hover {
+    background-color: #2471a3;
+    transform: scale(1.05);
+}
+
+@media screen and (max-width: 400px) {
+    .navbar a {
+        float: none;
+        width: 100%;
+    }
+}
+
+.navbar a.right {
+    float: right;
+}
+
+.navbar a:hover {
+    background-color: #2c3e50;
+}
+
+.navbar a:visited {
+    color: #ecf0f1;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media screen and (max-width: 700px) {
+    .row {
+        flex-direction: column;
+    }
+}
+
+.column-side {
+    flex: 10%;
+    background-color: #34495e;
+    padding: 20px;
+}
+
+.column-main {
+    flex: 80%;
+    background-color: #2c3e50;
+    padding: 20px;
+}
+
+.column-side,
+.column-main {
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.footer {
+    padding: 20px;
+    text-align: center;
+    background: #34495e;
+    color: #ecf0f1;
+    margin-bottom: 20px;
+}
+
+.styled-link {
+    display: inline-block;
+    padding: 8px 15px;
+    margin: 5px;
+    background-color: #34495e;
+    color: #ecf0f1;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+    width: auto;
+    max-width: fit-content;
+}
+
+.styled-link:hover {
+    background-color: #2c3e50;
+    transform: translateY(-2px);
+}
+
+.styled-link:active {
+    transform: translateY(1px);
+}
+
+a {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 5px;
+    border-radius: 3px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+a:visited {
+    color: #0056b3;
+}
+
+a:hover {
+    color: #004085;
+}
+
+a:active {
+    color: #004085;
+}
