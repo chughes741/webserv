@@ -3,8 +3,6 @@
 
 #include <utility>
 
-#include "webserv.hpp"
-
 using std::pair;
 using std::string;
 
