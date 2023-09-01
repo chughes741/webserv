@@ -59,6 +59,7 @@ class Parser {
     bool setGlobalSetting();
     bool setWorkerProcesses();
     bool setErrorLog();
+    bool setUser();
 
     /** @todo determine if we accept/need a pid value in global context */
     bool setPid();
@@ -93,6 +94,7 @@ class Parser {
     bool setFastCGI(std::string &);
     bool setAutoIndex(std::string &);
     bool setLocationErrorPage(std::string &);
+    bool setLocationIndex(std::string &);
 
    private:
     std::vector<std::string>           tokens;

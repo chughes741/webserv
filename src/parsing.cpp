@@ -210,15 +210,24 @@ bool Parser::setWorkerProcesses() {
     return true;
 }
 
+bool Parser::setUser() {
+    validateFirstToken("user");
+    httpConfig.user = *it;
+    validateLastToken("user");
+    return true;
+}
+
 bool Parser::setGlobalSetting() {
-    std::string List[] = {"error_log", "pid", "worker_processes"};
+    std::string List[] = {"worker_processes", "error_log", "pid", "user"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
-            return setErrorLog();
-        case 1:
-            return setPid();
-        case 2:
             return setWorkerProcesses();
+        case 1:
+            return setErrorLog();
+        case 2:
+            return setPid();
+        case 3:
+            return setUser();
         default:
             throw std::invalid_argument("Invalid setting in global context: " + *it);
     }
@@ -255,6 +264,7 @@ bool Parser::setWorkerConnections() {
     if (num > OPEN_MAX) {
         throw std::invalid_argument("worker_connections value over limit: " + *it);
     }
+    httpConfig.worker_connections = num;
     validateLastToken("worker_connections");
     return true;
 }
@@ -277,12 +287,15 @@ bool Parser::setIndex() {
 }
 
 bool Parser::setHttpSetting() {
-    std::string List[] = {"index", "error_page"};
+    std::string List[] = {"index", "error_page", "server"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
             return setIndex();
         case 1:
             return setHttpErrorPage();
+        case 2:
+            *--it;
+            return true;
         default:
             throw std::invalid_argument("Invalid setting in Http context: " + *it);
     }
@@ -333,7 +346,7 @@ bool Parser::setListen() {
     validateFirstToken("server_name");
     std::string num = *it;
     if (num.find(":") == num.npos) {
-        throw std::logic_error("Error: No address provided for listen");
+        (httpConfig.servers.back()).listen = std::make_pair("0.0.0.0", retrievePort(num));
     } else {
         std::string address = num.substr(0, num.find(":"));
         if (!isValidIPAddress(address)) {
@@ -395,7 +408,7 @@ bool Parser::setServerRoot() {
 }
 
 bool Parser::setLocationSetting(std::string uri) {
-    std::string List[] = {"root", "fastcgi:", "autoindex", "error_page"};
+    std::string List[] = {"root", "fastcgi:", "autoindex", "error_page", "index"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
             return setLocationRoot(uri);
@@ -405,6 +418,8 @@ bool Parser::setLocationSetting(std::string uri) {
             return setAutoIndex(uri);
         case 3:
             return setLocationErrorPage(uri);
+        case 4:
+            return setLocationIndex(uri);
         default:
             throw std::logic_error("Invalid setting for location: " + *it);
     }
@@ -413,11 +428,17 @@ bool Parser::setLocationSetting(std::string uri) {
 
 bool Parser::setLocationUri() {
     validateFirstToken("location");
+    bool is_equal = false;
+    if (*it == "=") {
+        is_equal = true;
+        *++it;
+    }
     std::string uri = *it;
     if (*(++it) != "{") {
         throw std::logic_error("Invalid syntax for location: " + *it);
     }
     (httpConfig.servers.back()).locations[uri] = LocationConfig();
+    (httpConfig.servers.back()).locations[uri].is_equal = is_equal; 
     while (*++it != "}") {
         setLocationSetting(uri);
     }
@@ -459,5 +480,15 @@ bool Parser::setLocationErrorPage(std::string &uri) {
         (httpConfig.servers.back()).locations[uri].error_page[error] = error_file;
     }
     validateLastToken("error_page");
+    return true;
+}
+
+bool Parser::setLocationIndex(std::string &uri) {
+    validateFirstToken("index");
+    while(*it != ";") { // Commented version to take multiple index into a vector<std::string>
+        httpConfig.servers.back().locations[uri].index_file = *it;
+        // httpConfig.servers.back().locations[uri].index_file.push_back(*it);
+        *++it;
+    }
     return true;
 }
