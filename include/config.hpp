@@ -20,7 +20,8 @@ struct LocationConfig {
           limit_except(GET | POST | DELETE),
           autoindex(false),
           cgi_enabled(false),
-          cgi_path("") {}
+          cgi_path(""),
+          is_equal(false) {}
 
     std::string                client_max_body_size; /**< Maximum size of a request body */
     std::map<int, std::string> error_page;           /**< Default error page */
@@ -30,6 +31,7 @@ struct LocationConfig {
     bool                       autoindex;            /**< Enable autoindex */
     bool                       cgi_enabled;          /**< Enable CGI */
     std::string                cgi_path;             /**< Path to CGI programs */
+    bool                       is_equal;             /**< URI needs to be equal */
 };
 
 /**
@@ -59,13 +61,20 @@ struct HttpConfig {
           error_page(),
           error_log("error.log"),
           root("html"),
-          client_max_body_size("1m") {}
+          client_max_body_size("1m"),
+          worker_processes(1),
+          worker_connections(1024),
+          user("webserver") {}
 
     std::vector<ServerConfig>  servers;              /**< List of server blocks */
     std::map<int, std::string> error_page;           /**< Default error page */
     std::string                error_log;            /**< Path to the error log file */
     std::string                root;                 /**< Root directory for serving files */
     std::string                client_max_body_size; /**< Maximum size of a request body */
+
+    int                        worker_processes;
+    int                        worker_connections;
+    std::string                user;
 };
 
 extern HttpConfig httpConfig;
