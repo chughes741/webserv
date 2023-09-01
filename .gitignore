@@ -1,6 +1,13 @@
 # Executable
 webserv
 
+# gest deps
+_deps/
+
+# CMakeFiles
+
+CMakeFiles/
+
 # Prerequisites
 *.d
 
@@ -47,3 +54,5 @@ webserv
 
 # Mac files
 .DS_Store
+*.cmake
+CMakeCache.txt
