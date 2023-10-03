@@ -93,6 +93,7 @@ class Parser {
     bool setFastCGI(std::string &);
     bool setAutoIndex(std::string &);
     bool setLocationErrorPage(std::string &);
+    bool setLimitExcept(std::string &);
 
    private:
     std::vector<std::string>           tokens;
