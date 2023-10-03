@@ -239,18 +239,32 @@ std::string HttpServer::trimHost(const std::string &uri, ServerConfig &server) {
     return uri;
 }
 
-// Find the appropriate location and fill the response body
-bool HttpServer::buildBody(HttpRequest &request, HttpResponse &response,
-                           ServerConfig &server) {
-    LocationConfig *location = NULL;
-    std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
-    Logger::instance().log("uri: " + uri);
-    for (std::map<std::string, LocationConfig>::iterator it = server.locations.begin();
-     it != server.locations.end(); ++it) {    
-        if (uri.substr(0, it->first.size()) == it->first) {
-            location = &(it->second);
-        }
-    }
+bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
+                           ServerConfig &server, LocationConfig *location) {
+    (void) request;
+    (void) response;
+    (void) server;
+    (void) location;
+    Logger::instance().log("Delete method activated");
+    response.status_ = OK;
+    return true;
+}
+
+bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response,
+                           ServerConfig &server, LocationConfig *location) {
+    response.headers_["Content-Type"] = "application/json; charset=utf-8";
+    (void) request;
+    (void) response;
+    (void) server;
+    (void) location;
+    Logger::instance().log("Post method activated");
+    response.status_ = CREATED;
+    return true;
+}
+
+bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
+                           ServerConfig &server, LocationConfig *location) {
+    response.headers_["Content-Type"] = "text/html; charset=utf-8";
     if (location) {     
         if (!isResourceRequest(response, request.uri_) && location->autoindex)
             request.uri_ = request.uri_ + location->index_file;
@@ -264,6 +278,36 @@ bool HttpServer::buildBody(HttpRequest &request, HttpResponse &response,
     return buildNotFound(request, response, server, location);
 }
 
+// Find the appropriate location and fill the response body
+bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
+                           ServerConfig &server) {
+    LocationConfig *location = NULL;
+    std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
+    Logger::instance().log("uri: " + uri);
+    for (std::map<std::string, LocationConfig>::iterator it = server.locations.begin();
+     it != server.locations.end(); ++it) {    
+        if (uri.substr(0, it->first.size()) == it->first) {
+            location = &(it->second);
+        }
+    }
+    if (!location) {
+        return buildNotFound(request, response, server, location);
+    } else if (!(location->limit_except & request.method_)) {
+        response.status_ = BAD_REQUEST;
+        return true;
+    }
+    switch (request.method_) {
+        case 1: // Enums for comparisons is C++11...
+            return getMethod(request, response, server, location);
+        case 2: // Enums for comparisons is C++11...
+            return postMethod(request, response, server, location);
+        case 3: // Enums for comparisons is C++11...
+            return deleteMethod(request, response, server, location);
+        default:
+            return false;
+    }
+}
+
 // Validate the host making the request is in the servers
 bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
     std::string requestHost = request.headers_["Host"];  // Check if the host is valid
@@ -272,7 +316,7 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
          it != config_.servers.end(); ++it) {
         std::string serverHost = it->listen.first + ":" + std::to_string(it->listen.second);
         if (requestHost == serverHost) {
-            return buildBody(request, response, *it);
+            return buildResponse(request, response, *it);
         }
     }
     return false;
@@ -284,16 +328,21 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
 
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";
-    response.headers_["Content-Type"] = "text/html; charset=utf-8";
+    response.headers_["Connection"] = "Keep-Alive";
 
     if (request.version_ != "HTTP/1.1") {
-        response.status_ = IM_A_TEAPOT; // How could this happen? Do we need something else? a body?
-    } else if (!validateHost(request, response)) {
+        response.status_ = IM_A_TEAPOT; // If this happen we ignore the request and return an empty answer
+    } 
+    else if (request.method_ == 0){ // Enums for comparisons is C++11...
+        response.status_                  = BAD_REQUEST;
+    }
+    else if (!validateHost(request, response)) {
         response.status_                  = NOT_FOUND;
-        response.server_                  = "webserv/0.1";
         response.headers_["Content-Type"] = "text/html";
         response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
     }
-    response.headers_["content-length"] = std::to_string(response.body_.size());
+    if (response.body_.size() > 0) {
+        response.headers_["content-length"] = std::to_string(response.body_.size());
+    }
     return response;
 }

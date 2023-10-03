@@ -40,7 +40,10 @@ class HttpServer {
 
     std::pair<HttpRequest, ssize_t> receiveRequest(int session_id);
     HttpResponse                    handleRequest(HttpRequest request);
-    bool buildBody(HttpRequest &, HttpResponse &, ServerConfig &);
+    bool buildResponse(HttpRequest &, HttpResponse &, ServerConfig &);
+    bool getMethod(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
+    bool postMethod(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
+    bool deleteMethod(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
     bool readFileToBody(HttpResponse &, std::string &);
     bool buildNotFound(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
     bool validateHost(HttpRequest &, HttpResponse &);
