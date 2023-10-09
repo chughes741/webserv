@@ -395,7 +395,7 @@ bool Parser::setServerRoot() {
 }
 
 bool Parser::setLocationSetting(std::string uri) {
-    std::string List[] = {"root", "fastcgi:", "autoindex", "error_page"};
+    std::string List[] = {"root", "fastcgi:", "autoindex", "error_page", "limit_except"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
             return setLocationRoot(uri);
@@ -405,6 +405,8 @@ bool Parser::setLocationSetting(std::string uri) {
             return setAutoIndex(uri);
         case 3:
             return setLocationErrorPage(uri);
+        case 4:
+            return setLimitExcept(uri);
         default:
             throw std::logic_error("Invalid setting for location: " + *it);
     }
@@ -459,5 +461,26 @@ bool Parser::setLocationErrorPage(std::string &uri) {
         (httpConfig.servers.back()).locations[uri].error_page[error] = error_file;
     }
     validateLastToken("error_page");
+    return true;
+}
+
+bool Parser::setLimitExcept(std::string &uri) {
+validateFirstToken("limit_except");
+    std::vector<std::string> methods;
+    methods.push_back("GET");
+    methods.push_back("POST");
+    methods.push_back("DELETE");
+    std::vector<std::string>::iterator tmp;
+    short binary = 0;
+    while (*it != ";") {
+        tmp = std::find(methods.begin(), methods.end(), *it);
+        if (tmp == methods.end()) {
+            throw std::logic_error("Error: wrong method (" +*it + ") for location " + uri);
+        }
+        binary = binary | tmp - methods.end();
+        (httpConfig.servers.back()).locations[uri].limit_except = binary;
+        *tmp = "";
+        *it++;
+    }
     return true;
 }
