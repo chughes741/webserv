@@ -77,8 +77,16 @@ void HttpServer::run() {
 
         // Handle event
         if (server_sockets_.find(event.first) != server_sockets_.end()) {
-            connectHandler(event.first);
-
+            switch(event.second) {
+                case NONE:
+                    break;
+                case READABLE:
+                    connectHandler(event.first);
+                    break;
+                case ERROR_EVENT:
+                    errorHandler(event.first);
+                    break;
+            }
         } else {
             switch (event.second) {
                 case NONE:
@@ -131,6 +139,7 @@ void HttpServer::writableHandler(int session_id) {
 
 void HttpServer::errorHandler(int session_id) {
     Logger::instance().log("Error on fd: " + std::to_string(session_id));
+    
     return;
 }
 
