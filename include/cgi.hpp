@@ -2,6 +2,7 @@
 #include <string>
 #include <exception>
 #include <iostream>
+#include <stdexcept>
 #include "logging.hpp"
 // #include "../include/config.hpp"
 
@@ -39,7 +40,7 @@ private: //member variables
     class InvalidPath: public std::exception {
     public:
         const char *what() const throw();
-    }
+    };
 
 
 

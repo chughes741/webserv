@@ -58,7 +58,7 @@ void Cgi::handleError(exceptionType type) {
 
             break;
         default:
-            throw std::runtime_error;
+            throw std::runtime_error("Something messed up happened");
             break;
     }
 
