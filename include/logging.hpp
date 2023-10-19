@@ -32,4 +32,5 @@ class FileLogger : public Logger {
     std::ofstream log_file_;
 };
 
+std::string getTime();
 std::string getCurrentTimestamp();

@@ -3,13 +3,13 @@
 Logger::~Logger() {}
 
 Logger &Logger::instance() {
-    static ConsoleLogger logger_instance;
-    // static FileLogger logger_instance("logs/" + getCurrentTimestamp() + ".log");
+    // static ConsoleLogger logger_instance;
+    static FileLogger logger_instance("logs/" + getCurrentTimestamp() + ".log");
     return logger_instance;
 }
 
 void ConsoleLogger::log(const std::string &message) {
-    std::cout << "ConsoleLogger: " << message << std::endl;
+    std::cout << "[" << getTime() << "] " << message << std::endl;
 }
 
 FileLogger::FileLogger(const std::string &filename) {
@@ -27,8 +27,20 @@ FileLogger::~FileLogger() {
 
 void FileLogger::log(const std::string &message) {
     if (log_file_.is_open()) {
-        log_file_ << message << std::endl;
+        log_file_ << "[" << getTime() << "] " << message << std::endl;
     }
+    std::cout << "[" << getTime() << "] " <<  message << std::endl;
+}
+
+std::string getTime() {
+    std::time_t      t   = std::time(0);
+    std::tm         *now = std::localtime(&t);
+    std::stringstream ss;
+
+    ss << std::setfill('0') << std::setw(2) << now->tm_hour << ":" << std::setw(2) << now->tm_min
+       << ":" << std::setw(2) << now->tm_sec;
+
+    return ss.str();
 }
 
 std::string getCurrentTimestamp() {
