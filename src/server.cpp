@@ -315,7 +315,8 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
     for (std::vector<ServerConfig>::iterator it = config_.servers.begin();
          it != config_.servers.end(); ++it) {
         std::string serverHost = it->listen.first + ":" + std::to_string(it->listen.second);
-        if (requestHost == serverHost) {
+        std::string localHost = "localhost:" + std::to_string(it->listen.second);
+        if (requestHost == serverHost || requestHost == localHost) {
             return buildResponse(request, response, *it);
         }
     }
