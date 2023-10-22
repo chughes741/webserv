@@ -1,6 +1,6 @@
 #include "../include/cgi.hpp"
 
-Cgi::Cgi(std::string cgiPath): pathToScript(cgiPath) {
+Cgi::Cgi(std::string cgiPath): envp(nullptr), pathToScript(cgiPath) {
     try
     {
         this->checkForScript();
@@ -35,7 +35,7 @@ void Cgi::performCgi() {
 }
 
 void Cgi::setEnv() {
-
+    (void) this->envp;
 }
 
 void Cgi::handlePipe() {
@@ -43,7 +43,7 @@ void Cgi::handlePipe() {
 }
 
 void Cgi::checkForScript() {
-
+    
 }
 
 void Cgi::handleError(exceptionType type) {
