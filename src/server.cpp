@@ -250,15 +250,46 @@ bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
     return true;
 }
 
-bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response,
-                           ServerConfig &server, LocationConfig *location) {
-    response.headers_["Content-Type"] = "application/json; charset=utf-8";
-    (void) request;
-    (void) response;
-    (void) server;
-    (void) location;
-    Logger::instance().log("Post method activated");
-    response.status_ = CREATED;
+bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, ServerConfig &server,
+                            LocationConfig *location) {
+    (void)server;
+    (void)location;
+
+    if (request.headers_["Content-Type"] == "text/plain") {
+        Logger::instance().log("POST: Creating file with text data");
+        response.headers_["Content-Type"] = "text/plain; charset=utf-8";
+
+        // TODO: Create a file with the body data
+
+        if (true) {  // TODO: Check the return code of the file creation
+            response.status_ = CREATED;
+            response.body_   = "File created successfully";
+
+        } else {
+            response.status_ = INTERNAL_SERVER_ERROR;
+            response.body_   = "Error creating file";
+        }
+
+    } else if (request.headers_["Content-Type"] == "application/x-www-form-urlencoded") {
+        Logger::instance().log("POST: Returning response from form-data");
+        response.headers_["Content-Type"] = "text/html; charset=utf-8";
+
+        // TODO: Call the CGI script
+
+        if (true) {  // TODO: Check the return code of the CGI script
+            response.status_ = OK;
+
+        } else {
+            response.status_ = INTERNAL_SERVER_ERROR;
+        }
+
+    } else {
+        Logger::instance().log("POST: Content-Type not supported");
+        response.status_                  = BAD_REQUEST;
+        response.headers_["Content-Type"] = "text/plain; charset=utf-8";
+        response.body_                    = "Content-Type not supported";
+    }
+
     return true;
 }
 
