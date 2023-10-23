@@ -14,6 +14,7 @@ struct LocationConfig {
     /** Constructor, initializes to default values */
     LocationConfig()
         : client_max_body_size(1024 * 1024),
+          max_body_size(false),
           error_page(),
           root("html"),
           index_file("index.html"),
@@ -23,6 +24,7 @@ struct LocationConfig {
           cgi_path("") {}
 
     size_t                     client_max_body_size; /**< Maximum size of a request body */
+    bool                       max_body_size;        /**< If set by config */
     std::map<int, std::string> error_page;           /**< Default error page */
     std::string                root;                 /**< Root directory for serving files */
     std::string                index_file;           /**< Name of the index file */
@@ -42,6 +44,7 @@ struct ServerConfig {
           root("html"),
           error_page(),
           client_max_body_size(1024 * 1024),
+          max_body_size(false),
           locations() {}
 
     std::vector<std::string>    server_names;         /**< Server name */
@@ -49,6 +52,7 @@ struct ServerConfig {
     std::string                 root;                 /**< Root directory for serving files */
     std::map<int, std::string>  error_page;           /**< Default error page */
     size_t                      client_max_body_size; /**< Maximum size of a request body */
+    bool                        max_body_size;        /**< If set by config */
     std::map<std::string, LocationConfig> locations;  /**< List of locations (path, location)*/
 };
 
@@ -66,6 +70,7 @@ struct HttpConfig {
     std::string                error_log;            /**< Path to the error log file */
     std::string                root;                 /**< Root directory for serving files */
     size_t                     client_max_body_size; /**< Maximum size of a request body */
+    bool                       max_body_size;        /**< If set by config */
 };
 
 extern HttpConfig httpConfig;
