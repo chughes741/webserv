@@ -46,7 +46,9 @@ class HttpServer {
     bool deleteMethod(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
     bool readFileToBody(HttpResponse &, std::string &);
     bool buildNotFound(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
+    bool buildBadRequestBody(HttpResponse &);
     bool validateHost(HttpRequest &, HttpResponse &);
+    bool validateRequestBody(HttpRequest &, ServerConfig &, LocationConfig *);
     bool readRoot(HttpRequest &, HttpResponse &, ServerConfig *, LocationConfig *);
 
     std::string trimHost(const std::string &uri, ServerConfig &server);
