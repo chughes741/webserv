@@ -1,6 +1,6 @@
 #include "../include/cgi.hpp"
 
-Cgi::Cgi(std::string cgiPath): envp(nullptr), pathToScript(cgiPath) {
+Cgi::Cgi(HttpMethod method, std::string cgiPath): method(method), pathToScript(cgiPath), envp(nullptr) {
     try
     {
         this->checkForScript();
@@ -31,7 +31,16 @@ Cgi::Cgi(std::string cgiPath): envp(nullptr), pathToScript(cgiPath) {
 Cgi::~Cgi() { }
 
 void Cgi::performCgi() {
-
+    switch(method) {
+        case GET:
+            performCgiGet();
+            break;
+        case POST:
+            performCgiPost();
+            break;
+        default:
+            throw UnsupportedMethod();
+    }
 }
 
 void Cgi::setEnv() {
@@ -74,4 +83,8 @@ const char *Cgi::ForbiddenFile::what() const throw() {
 
 const char *Cgi::InvalidPath::what() const throw() {
     return "Ressource does not exist";
+}
+
+const char *Cgi::UnsupportedMethod::what() const throw() {
+    return "Unsupported http method";
 }

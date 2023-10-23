@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 #include "logging.hpp"
+#include "http.hpp"
 // #include "../include/config.hpp"
 
 enum exceptionType {
@@ -15,7 +16,7 @@ enum exceptionType {
 
 class Cgi {
 public:
-    Cgi(std::string cgiPath);
+    Cgi(HttpMethod method, std::string cgiPath);
     ~Cgi();
     void performCgi();
 
@@ -24,10 +25,13 @@ private: //private methods
     void handleError(exceptionType type);
     void setEnv();
     void handlePipe();
+    void performCgiGet();
+    void performCgiPost();
 
 private: //member variables
-    char **envp;
+    HttpMethod method;
     std::string pathToScript;
+    char **envp;
     class InternalServerError: public std::exception {
     public:
         const char *what() const throw();
@@ -43,6 +47,9 @@ private: //member variables
         const char *what() const throw();
     };
 
-
+    class UnsupportedMethod: public std::exception {
+    public:
+        const char *what() const throw();
+    };
 
 };
