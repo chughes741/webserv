@@ -309,6 +309,24 @@ bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
     return buildNotFound(request, response, server, location);
 }
 
+bool HttpServer::validateRequestBody(HttpRequest &request, ServerConfig &server, LocationConfig *location) {
+    size_t max = location->client_max_body_size;
+    if (location->max_body_size) {
+        max = location->client_max_body_size;
+    } else if (server.max_body_size) {
+        max = server.client_max_body_size;
+    } else if (this->config_.max_body_size) {
+        max = this->config_.client_max_body_size;
+    }
+    return request.body_.size() <= max;
+}
+
+bool HttpServer::buildBadRequestBody(HttpResponse &response) {
+    response.status_ = CONTENT_TOO_LARGE;
+    response.headers_["Connection"] = "close";
+    return true;
+}
+
 // Find the appropriate location and fill the response body
 bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server) {
@@ -326,7 +344,10 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
     } else if (!(location->limit_except & request.method_)) {
         response.status_ = BAD_REQUEST;
         return true;
+    } else if (!validateRequestBody(request, server, location)) {
+        return buildBadRequestBody(response);
     }
+    // @todo verify if method is allowed on location
     switch (request.method_) {
         case 1: // Enums for comparisons is C++11...
             return getMethod(request, response, server, location);
