@@ -277,12 +277,14 @@ bool Parser::setIndex() {
 }
 
 bool Parser::setHttpSetting() {
-    std::string List[] = {"index", "error_page"};
+    std::string List[] = {"index", "error_page", "client_max_body_size"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
             return setIndex();
         case 1:
             return setHttpErrorPage();
+        case 2:
+            return setHttpClientBodySize();
         default:
             throw std::invalid_argument("Invalid setting in Http context: " + *it);
     }
@@ -301,6 +303,30 @@ bool Parser::setHttpErrorPage() {
     return true;
 }
 
+bool    Parser::setHttpClientBodySize() {
+    validateFirstToken("client_max_body_size");
+    std::string value = *it;
+    size_t end = value.find_first_not_of("0123456789");
+    if (end == value.npos) {
+        httpConfig.client_max_body_size = std::stoi(value);
+    } else if (end == value.size() - 1) {
+        switch(value.at(end)){
+            case 'm': case 'M':
+                httpConfig.client_max_body_size = std::stoi(value) * 1024 * 1024;
+                break;
+            case 'k': case 'K':
+                httpConfig.client_max_body_size = std::stoi(value) * 1024;
+                break;
+            default:
+                throw std::logic_error("Invalid client_max_body_size in http context");
+        }
+    } else {
+        throw std::logic_error("Invalid client_max_body_size in http context");
+    }
+    validateLastToken("client_max_body_size");
+    return true;
+}
+
 bool Parser::setServerContext() {
     if (context.back() != 2) {
         throw std::logic_error("Server context needs to be inside http context.");
@@ -312,7 +338,8 @@ bool Parser::setServerContext() {
 }
 
 bool Parser::setServerSetting() {
-    std::string List[] = {"listen", "server_name", "error_page", "root", "location"};
+    std::string List[] = {"listen", "server_name", "error_page", "root", "location",
+         "client_max_body_size"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
             return setListen();
@@ -324,6 +351,8 @@ bool Parser::setServerSetting() {
             return setServerRoot();
         case 4:
             return setLocationUri();
+        case 5:
+            return setServerClientBodySize();
         default:
             throw std::invalid_argument("Invalid setting in server context: " + *it);
     }
@@ -394,8 +423,33 @@ bool Parser::setServerRoot() {
     return (true);
 }
 
+bool    Parser::setServerClientBodySize() {
+    validateFirstToken("client_max_body_size");
+    std::string value = *it;
+    size_t end = value.find_first_not_of("0123456789");
+    if (end == value.size()) {
+        (httpConfig.servers.back()).client_max_body_size = std::stoi(value);
+    } else if (end == value.size() - 1) {
+        switch(value.at(end)){
+            case 'm': case 'M':
+                (httpConfig.servers.back()).client_max_body_size = std::stoi(value) * 1024 * 1024;
+                break;
+            case 'k': case 'K':
+                (httpConfig.servers.back()).client_max_body_size = std::stoi(value) * 1024;
+                break;
+            default:
+                throw std::logic_error("Invalid client_max_body_size in server context");
+        }
+    } else {
+        throw std::logic_error("Invalid client_max_body_size in server context");
+    }
+    validateLastToken("client_max_body_size");
+    return true;
+}
+
 bool Parser::setLocationSetting(std::string uri) {
-    std::string List[] = {"root", "fastcgi:", "autoindex", "error_page", "limit_except"};
+    std::string List[] = {"root", "fastcgi:", "autoindex", "error_page", "limit_except",
+        "client_max_body_size"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
             return setLocationRoot(uri);
@@ -407,6 +461,8 @@ bool Parser::setLocationSetting(std::string uri) {
             return setLocationErrorPage(uri);
         case 4:
             return setLimitExcept(uri);
+        case 5:
+            return setLocationClientBodySize(uri);
         default:
             throw std::logic_error("Invalid setting for location: " + *it);
     }
@@ -482,5 +538,29 @@ validateFirstToken("limit_except");
         *tmp = "";
         *it++;
     }
+    return true;
+}
+
+bool    Parser::setLocationClientBodySize(std::string &uri) {
+    validateFirstToken("client_max_body_size");
+    std::string value = *it;
+    size_t end = value.find_first_not_of("0123456789");
+    if (end == value.size()) {
+        (httpConfig.servers.back()).locations[uri].client_max_body_size = std::stoi(value);
+    } else if (end == value.size() - 1) {
+        switch(value.at(end)){
+            case 'm': case 'M':
+                (httpConfig.servers.back()).locations[uri].client_max_body_size = std::stoi(value) * 1024 * 1024;
+                break;
+            case 'k': case 'K':
+                (httpConfig.servers.back()).locations[uri].client_max_body_size = std::stoi(value) * 1024;
+                break;
+            default:
+                throw std::logic_error("Invalid client_max_body_size in location context");
+        }
+    } else {
+        throw std::logic_error("Invalid client_max_body_size in location context");
+    }
+    validateLastToken("client_max_body_size");
     return true;
 }

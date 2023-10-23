@@ -72,6 +72,7 @@ class Parser {
     bool setHttpContext();
     bool setHttpSetting();
     bool setHttpErrorPage();
+    bool setHttpClientBodySize();
 
     /** @todo determine where we put the index setting
      * @brief Set the index pages of the server
@@ -86,6 +87,7 @@ class Parser {
     bool setServerName();
     bool setServerErrorPage();
     bool setServerRoot();
+    bool setServerClientBodySize();
 
     bool setLocationSetting(std::string uri);
     bool setLocationUri();
@@ -94,6 +96,7 @@ class Parser {
     bool setAutoIndex(std::string &);
     bool setLocationErrorPage(std::string &);
     bool setLimitExcept(std::string &);
+    bool setLocationClientBodySize(std::string &);
 
    private:
     std::vector<std::string>           tokens;
