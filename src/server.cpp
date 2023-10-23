@@ -291,7 +291,7 @@ bool HttpServer::validateRequestBody(HttpRequest &request, ServerConfig &server,
 }
 
 bool HttpServer::buildBadRequestBody(HttpResponse &response) {
-    response.status_ = HttpStatus::CONTENT_TOO_LARGE;
+    response.status_ = CONTENT_TOO_LARGE;
     response.headers_["Connection"] = "close";
     return true;
 }
