@@ -13,7 +13,7 @@
 struct LocationConfig {
     /** Constructor, initializes to default values */
     LocationConfig()
-        : client_max_body_size("1m"),
+        : client_max_body_size(1024 * 1024),
           error_page(),
           root("html"),
           index_file("index.html"),
@@ -22,7 +22,7 @@ struct LocationConfig {
           cgi_enabled(false),
           cgi_path("") {}
 
-    std::string                client_max_body_size; /**< Maximum size of a request body */
+    size_t                     client_max_body_size; /**< Maximum size of a request body */
     std::map<int, std::string> error_page;           /**< Default error page */
     std::string                root;                 /**< Root directory for serving files */
     std::string                index_file;           /**< Name of the index file */
@@ -41,14 +41,14 @@ struct ServerConfig {
           listen("", 80),
           root("html"),
           error_page(),
-          client_max_body_size("1m"),
+          client_max_body_size(1024 * 1024),
           locations() {}
 
     std::vector<std::string>    server_names;         /**< Server name */
     std::pair<std::string, int> listen;               /**< Address and port to listen on */
     std::string                 root;                 /**< Root directory for serving files */
     std::map<int, std::string>  error_page;           /**< Default error page */
-    std::string                 client_max_body_size; /**< Maximum size of a request body */
+    size_t                      client_max_body_size; /**< Maximum size of a request body */
     std::map<std::string, LocationConfig> locations;  /**< List of locations (path, location)*/
 };
 
@@ -59,13 +59,13 @@ struct HttpConfig {
           error_page(),
           error_log("error.log"),
           root("html"),
-          client_max_body_size("1m") {}
+          client_max_body_size(1024*1024) {}
 
     std::vector<ServerConfig>  servers;              /**< List of server blocks */
     std::map<int, std::string> error_page;           /**< Default error page */
     std::string                error_log;            /**< Path to the error log file */
     std::string                root;                 /**< Root directory for serving files */
-    std::string                client_max_body_size; /**< Maximum size of a request body */
+    size_t                     client_max_body_size; /**< Maximum size of a request body */
 };
 
 extern HttpConfig httpConfig;
