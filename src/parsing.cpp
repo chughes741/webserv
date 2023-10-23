@@ -324,6 +324,7 @@ bool    Parser::setHttpClientBodySize() {
         throw std::logic_error("Invalid client_max_body_size in http context");
     }
     validateLastToken("client_max_body_size");
+    httpConfig.max_body_size = true;
     return true;
 }
 
@@ -444,6 +445,7 @@ bool    Parser::setServerClientBodySize() {
         throw std::logic_error("Invalid client_max_body_size in server context");
     }
     validateLastToken("client_max_body_size");
+    (httpConfig.servers.back()).max_body_size = true;
     return true;
 }
 
@@ -562,5 +564,6 @@ bool    Parser::setLocationClientBodySize(std::string &uri) {
         throw std::logic_error("Invalid client_max_body_size in location context");
     }
     validateLastToken("client_max_body_size");
+    (httpConfig.servers.back()).locations[uri].max_body_size = true;
     return true;
 }
