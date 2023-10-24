@@ -1,6 +1,6 @@
 #include "../include/cgi.hpp"
 
-Cgi::Cgi(HttpMethod method, std::string cgiPath): method(method), pathToScript(cgiPath), envp(nullptr) {
+Cgi::Cgi(HttpRequest request, HttpMethod method, std::string cgiPath): request(request), method(method), pathToScript(cgiPath), envp(nullptr) {
     try
     {
         this->checkForScript();
@@ -41,6 +41,14 @@ void Cgi::performCgi() {
         default:
             throw UnsupportedMethod();
     }
+}
+
+void Cgi::performCgiGet() {
+
+}
+
+void Cgi::performCgiPost() {
+
 }
 
 void Cgi::setEnv() {

@@ -16,7 +16,7 @@ enum exceptionType {
 
 class Cgi {
 public:
-    Cgi(HttpMethod method, std::string cgiPath);
+    Cgi(HttpRequest request, HttpMethod method, std::string cgiPath);
     ~Cgi();
     void performCgi();
 
@@ -29,6 +29,7 @@ private: //private methods
     void performCgiPost();
 
 private: //member variables
+    HttpRequest request;
     HttpMethod method;
     std::string pathToScript;
     char **envp;
