@@ -375,6 +375,52 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
     return false;
 }
 
+//HttpResponse HttpServer::handleRequest(HttpRequest request) {
+//    HttpResponse response;
+//    Logger::instance().log(request.printRequest());
+//
+//    response.version_ = HTTP_VERSION;
+//    response.server_  = "webserv/0.1";
+//    response.headers_["Connection"] = "Keep-Alive";
+//
+//    if (request.version_ != "HTTP/1.1") {
+//        response.status_ = IM_A_TEAPOT; // If this happen we ignore the request and return an empty answer
+//    } 
+//    else if (request.method_ == 0){ // Enums for comparisons is C++11...
+//        response.status_                  = BAD_REQUEST;
+//    }
+//    else if (!validateHost(request, response)) {
+//        response.status_                  = NOT_FOUND;
+//        response.headers_["Content-Type"] = "text/html";
+//        response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
+//    }
+//    if (response.body_.size() > 0) {
+//        response.headers_["content-length"] = std::to_string(response.body_.size());
+//    }
+//    return response;
+//}
+
+std::string readConfigFile() {
+    std::string filePath = "./html/index.html";
+
+    std::ifstream fileStream(filePath.c_str());
+    if (!fileStream) {
+        return "Error: Could not open 'index.html'";
+    }
+
+    std::string content;
+    std::string line;
+
+    while (std::getline(fileStream, line)) {
+        content += line + "/n";
+    }
+
+    fileStream.close();
+
+    return content;
+}
+
+
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
     Logger::instance().log(request.printRequest());
@@ -382,20 +428,41 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";
     response.headers_["Connection"] = "Keep-Alive";
-
     if (request.version_ != "HTTP/1.1") {
         response.status_ = IM_A_TEAPOT; // If this happen we ignore the request and return an empty answer
     } 
-    else if (request.method_ == 0){ // Enums for comparisons is C++11...
-        response.status_                  = BAD_REQUEST;
+    else if (request.method_ == GET && request.uri_ == "/") {
+        std::string content = readConfigFile();
+
+        response.status_ = OK;
+        response.headers_["Content-Type"] = "text/html";
+        response.headers_["Content-Length"] = std::to_string(content.size());
+        response.body_ = content;
+    } 
+    else if (request.method_ == POST) {
+        if (request.body_.empty()) {
+            response.status_ = BAD_REQUEST;
+        } else {
+            std::string userInput;
+            size_t pos = request.body_.find("text_input=");
+            if (pos != std::string::npos) {
+                userInput = request.body_.substr(pos + 10);
+            }
+            response.status_ = OK;
+            response.headers_["Content-Type"] = "text/html";
+            response.body_ = "<html><body>You've entered: " + userInput + "</body></html>";
+            response.headers_["Content-Length"] = std::to_string(response.body_.size());
+        }
     }
-    else if (!validateHost(request, response)) {
-        response.status_                  = NOT_FOUND;
+    else {
+        response.status_ = NOT_FOUND;
         response.headers_["Content-Type"] = "text/html";
         response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
     }
+
     if (response.body_.size() > 0) {
-        response.headers_["content-length"] = std::to_string(response.body_.size());
+        response.headers_["Content-Length"] = std::to_string(response.body_.size());
     }
+
     return response;
 }
