@@ -400,7 +400,7 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
 //    return response;
 //}
 
-std::string readConfigFile() {
+std::string readIndexFile() {
     std::string filePath = "./html/index.html";
 
     std::ifstream fileStream(filePath.c_str());
@@ -412,7 +412,7 @@ std::string readConfigFile() {
     std::string line;
 
     while (std::getline(fileStream, line)) {
-        content += line + "/n";
+        content += line;
     }
 
     fileStream.close();
@@ -423,7 +423,7 @@ std::string readConfigFile() {
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
-    Logger::instance().log(request.printRequest());
+    //Logger::instance().log(request.printRequest());
 
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";
@@ -432,7 +432,7 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
         response.status_ = IM_A_TEAPOT; // If this happen we ignore the request and return an empty answer
     } 
     else if (request.method_ == GET && request.uri_ == "/") {
-        std::string content = readConfigFile();
+        std::string content = readIndexFile();
 
         response.status_ = OK;
         response.headers_["Content-Type"] = "text/html";
@@ -446,11 +446,16 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
             std::string userInput;
             size_t pos = request.body_.find("text_input=");
             if (pos != std::string::npos) {
-                userInput = request.body_.substr(pos + 10);
+                userInput = request.body_.substr(pos + 11);
+                if (userInput.empty()) {
+                    response.body_ = "<html><body>This field cannot be empty</body></html>";
+                }
+                else {
+                    response.body_ = "<html><body>You've entered: " + userInput + "</body></html>";
+                }
             }
             response.status_ = OK;
             response.headers_["Content-Type"] = "text/html";
-            response.body_ = "<html><body>You've entered: " + userInput + "</body></html>";
             response.headers_["Content-Length"] = std::to_string(response.body_.size());
         }
     }
