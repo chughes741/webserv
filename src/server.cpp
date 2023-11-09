@@ -250,10 +250,42 @@ bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
     return true;
 }
 
+std::string ReplaceAll(std::string str, const std::string& from, const std::string& to) {
+    size_t start_pos = 0;
+    while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length();
+    }
+    return str;
+}
+
 bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, ServerConfig &server,
                             LocationConfig *location) {
     (void)server;
     (void)location;
+
+    if (request.body_.empty()) {
+            response.status_ = BAD_REQUEST;
+        } else {
+            std::string userInput;
+            size_t pos = request.body_.find("text_input=");
+            if (pos != std::string::npos) {
+                userInput = request.body_.substr(pos + 11);
+                if (userInput.empty()) {
+                    response.body_ = "<html><body>This field cannot be empty<br><a href='/'>Return home</a></body></html>";
+                }
+                else {
+                    response.body_ = "<html><body>You've entered: " + userInput + "<br><a href='/'>Return Home</a></body></html>";
+                    
+                    //std::string placeholder = "<div id=\"userInputContent\"></div>";
+                    //std::string replacement = "<div id=\"userInputContent\">" + userInput + "</div>";
+                    //response.body_ = ReplaceAll(response.body_, placeholder, replacement);
+                }
+            }
+            response.status_ = OK;
+            response.headers_["Content-Type"] = "text/html";
+            response.headers_["Content-Length"] = std::to_string(response.body_.size());
+        }
 
     if (request.headers_["Content-Type"] == "text/plain") {
         Logger::instance().log("POST: Creating file with text data");
@@ -375,30 +407,30 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
     return false;
 }
 
-//HttpResponse HttpServer::handleRequest(HttpRequest request) {
-//    HttpResponse response;
-//    Logger::instance().log(request.printRequest());
-//
-//    response.version_ = HTTP_VERSION;
-//    response.server_  = "webserv/0.1";
-//    response.headers_["Connection"] = "Keep-Alive";
-//
-//    if (request.version_ != "HTTP/1.1") {
-//        response.status_ = IM_A_TEAPOT; // If this happen we ignore the request and return an empty answer
-//    } 
-//    else if (request.method_ == 0){ // Enums for comparisons is C++11...
-//        response.status_                  = BAD_REQUEST;
-//    }
-//    else if (!validateHost(request, response)) {
-//        response.status_                  = NOT_FOUND;
-//        response.headers_["Content-Type"] = "text/html";
-//        response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
-//    }
-//    if (response.body_.size() > 0) {
-//        response.headers_["content-length"] = std::to_string(response.body_.size());
-//    }
-//    return response;
-//}
+HttpResponse HttpServer::handleRequest(HttpRequest request) {
+    HttpResponse response;
+    Logger::instance().log(request.printRequest());
+
+    response.version_ = HTTP_VERSION;
+    response.server_  = "webserv/0.1";
+    response.headers_["Connection"] = "Keep-Alive";
+
+    if (request.version_ != "HTTP/1.1") {
+        response.status_ = IM_A_TEAPOT; // If this happen we ignore the request and return an empty answer
+    } 
+    else if (request.method_ == 0){ // Enums for comparisons is C++11...
+        response.status_                  = BAD_REQUEST;
+    }
+    else if (!validateHost(request, response)) {
+        response.status_                  = NOT_FOUND;
+        response.headers_["Content-Type"] = "text/html";
+        response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
+    }
+    if (response.body_.size() > 0) {
+        response.headers_["content-length"] = std::to_string(response.body_.size());
+    }
+    return response;
+}
 
 std::string readIndexFile() {
     std::string filePath = "./html/index.html";
@@ -421,53 +453,53 @@ std::string readIndexFile() {
 }
 
 
-HttpResponse HttpServer::handleRequest(HttpRequest request) {
-    HttpResponse response;
-    //Logger::instance().log(request.printRequest());
-
-    response.version_ = HTTP_VERSION;
-    response.server_  = "webserv/0.1";
-    response.headers_["Connection"] = "Keep-Alive";
-    if (request.version_ != "HTTP/1.1") {
-        response.status_ = IM_A_TEAPOT; // If this happen we ignore the request and return an empty answer
-    } 
-    else if (request.method_ == GET && request.uri_ == "/") {
-        std::string content = readIndexFile();
-
-        response.status_ = OK;
-        response.headers_["Content-Type"] = "text/html";
-        response.headers_["Content-Length"] = std::to_string(content.size());
-        response.body_ = content;
-    } 
-    else if (request.method_ == POST) {
-        if (request.body_.empty()) {
-            response.status_ = BAD_REQUEST;
-        } else {
-            std::string userInput;
-            size_t pos = request.body_.find("text_input=");
-            if (pos != std::string::npos) {
-                userInput = request.body_.substr(pos + 11);
-                if (userInput.empty()) {
-                    response.body_ = "<html><body>This field cannot be empty</body></html>";
-                }
-                else {
-                    response.body_ = "<html><body>You've entered: " + userInput + "</body></html>";
-                }
-            }
-            response.status_ = OK;
-            response.headers_["Content-Type"] = "text/html";
-            response.headers_["Content-Length"] = std::to_string(response.body_.size());
-        }
-    }
-    else {
-        response.status_ = NOT_FOUND;
-        response.headers_["Content-Type"] = "text/html";
-        response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
-    }
-
-    if (response.body_.size() > 0) {
-        response.headers_["Content-Length"] = std::to_string(response.body_.size());
-    }
-
-    return response;
-}
+//HttpResponse HttpServer::handleRequest(HttpRequest request) {
+//    HttpResponse response;
+//    //Logger::instance().log(request.printRequest());
+//
+//    response.version_ = HTTP_VERSION;
+//    response.server_  = "webserv/0.1";
+//    response.headers_["Connection"] = "Keep-Alive";
+//    if (request.version_ != "HTTP/1.1") {
+//        response.status_ = IM_A_TEAPOT; // If this happen we ignore the request and return an empty answer
+//    } 
+//    else if (request.method_ == GET && request.uri_ == "/") {
+//        std::string content = readIndexFile();
+//
+//        response.status_ = OK;
+//        response.headers_["Content-Type"] = "text/html";
+//        response.headers_["Content-Length"] = std::to_string(content.size());
+//        response.body_ = content;
+//    } 
+//    else if (request.method_ == POST) {
+//        if (request.body_.empty()) {
+//            response.status_ = BAD_REQUEST;
+//        } else {
+//            std::string userInput;
+//            size_t pos = request.body_.find("text_input=");
+//            if (pos != std::string::npos) {
+//                userInput = request.body_.substr(pos + 11);
+//                if (userInput.empty()) {
+//                    response.body_ = "<html><body>This field cannot be empty</body></html>";
+//                }
+//                else {
+//                    response.body_ = "<html><body>You've entered: " + userInput + "</body></html>";
+//                }
+//            }
+//            response.status_ = OK;
+//            response.headers_["Content-Type"] = "text/html";
+//            response.headers_["Content-Length"] = std::to_string(response.body_.size());
+//        }
+//    }
+//    else {
+//        response.status_ = NOT_FOUND;
+//        response.headers_["Content-Type"] = "text/html";
+//        response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
+//    }
+//
+//    if (response.body_.size() > 0) {
+//        response.headers_["Content-Length"] = std::to_string(response.body_.size());
+//    }
+//
+//    return response;
+//}
