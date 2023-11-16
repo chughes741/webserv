@@ -51,7 +51,9 @@ void printHttpConfig(const HttpConfig& config) {
             std::cout << "  Index File: " << location.index_file << std::endl;
             std::cout << "  Limit Except: " << location.limit_except << std::endl;
             std::cout << "  CGI Enabled: " << (location.cgi_enabled ? "true" : "false") << std::endl;
-            std::cout << "  CGI Path: " << location.cgi_path << std::endl;
+            for (size_t i = 0; i < location.cgi_ext.size(); ++i) {
+                std::cout << "  Cgi_ext " << i << ": " << location.cgi_ext[i] << std::endl; 
+            }
         }
     }
     std::cout << "Error Pages:" << std::endl;
@@ -450,7 +452,7 @@ bool    Parser::setServerClientBodySize() {
 }
 
 bool Parser::setLocationSetting(std::string uri) {
-    std::string List[] = {"root", "fastcgi:", "autoindex", "error_page", "limit_except",
+    std::string List[] = {"root", "cgi:", "autoindex", "error_page", "limit_except",
         "client_max_body_size"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
@@ -494,7 +496,7 @@ bool Parser::setLocationRoot(std::string &uri) {
 
 bool Parser::setFastCGI(std::string &uri) {
     validateFirstToken("fastcgi");
-    (httpConfig.servers.back()).locations[uri].cgi_path    = *it;
+    (httpConfig.servers.back()).locations[uri].cgi_ext.push_back(*it);
     (httpConfig.servers.back()).locations[uri].cgi_enabled = true;
     validateLastToken("fastcgi");
     return true;
