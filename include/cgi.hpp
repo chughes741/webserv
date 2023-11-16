@@ -12,29 +12,34 @@
 enum exceptionType {
     Internal,
     Permission,
-    Access
+    Access,
+    Nonexistant
 };
 
 class Cgi {
 public:
-    Cgi(HttpRequest request, HttpMethod method, std::string cgiPath, HttpConfig config);
+    Cgi(HttpRequest &request, LocationConfig &location, ServerConfig &config);
     ~Cgi();
-    void performCgi();
+    bool exec();
 
 private: //private methods
+    bool performCgi();
     void checkForScript();
     void handleError(exceptionType type);
     void setEnv();
     void handlePipe();
-    void performCgiGet();
-    void performCgiPost();
+    bool performCgiGet();
+    bool performCgiPost();
+    void extractScript();
 
 private: //member variables
-    HttpRequest request;
-    HttpMethod method;
-    std::string pathToScript;
-    HttpConfig config;
-    char **envp;
+
+    HttpRequest request_;
+    LocationConfig location_;
+    ServerConfig config_;
+    char *envp_[256];
+    std::string script_;
+    std::string scriptWithPath_;
     class InternalServerError: public std::exception {
     public:
         const char *what() const throw();
@@ -51,6 +56,11 @@ private: //member variables
     };
 
     class UnsupportedMethod: public std::exception {
+    public:
+        const char *what() const throw();
+    };
+
+    class RessourceDoesNotExist: public std::exception {
     public:
         const char *what() const throw();
     };
