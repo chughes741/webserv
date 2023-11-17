@@ -84,59 +84,93 @@ void Cgi::checkForScript() { //checks for file existence based on the request ur
 	}
 }
 
+static std::string myNtoaCauseFuckYou(struct in_addr in) { //You heard me right
+	std::string buff;
 
-// CONTENT_LENGTH Done?
-// CONTENT_TYPE Done?
-// GATEWAY_INTERFACE Done?
-// PATH_INFO Done?
-// QUERY_STRING Done?
-// REMOTE_ADDR 
-// REMOTE_HOST
-// REMOTE_IDENT
-// REMOTE_USER
-// REQUEST_METHOD
-// SCRIPT_NAME
-// SERVER_PORT
-// SERVER_PROTOCOL
+	unsigned char *bytes = (unsigned char *) &in;
+
+	buff.append(std::to_string((int) bytes[0]));
+	buff.append(".");
+	buff.append(std::to_string((int) bytes[1]));
+	buff.append(".");
+	buff.append(std::to_string((int) bytes[2]));
+	buff.append(".");
+	buff.append(std::to_string((int) bytes[3]));
+
+	return buff;
+}
+
 void Cgi::setEnv() { // A lot of stuff happens here. The beginning of great things or something
 	const struct sockaddr* addr = request_.currentSession->getSockaddr();
 	const struct sockaddr_in *addrIn = (sockaddr_in *) addr;
 
-	std::cout << addrIn->sin_addr.s_addr << std::endl;
-
 	std::string uri = request_.uri_;
 	std::string var;
-	std::vector<std::string> meta_variables;
+	// std::vector<std::string> meta_variables;
 	if (request_.body_.size() > 0) {
 		var.append("CONTENT_LENGTH=");
 		var.append(std::to_string(request_.body_.size()));
-		meta_variables.push_back(var);
+		meta_variables_.push_back(var);
 		var.clear();
 	}
 	std::map<std::string, std::string>::iterator it = request_.headers_.find("Content-Type");
 	if (it != request_.headers_.end()) {
 		var.append("CONTENT_TYPE=");
 		var.append(it->second);
-		meta_variables.push_back(var);
+		meta_variables_.push_back(var);
 		var.clear();
 	}
-	meta_variables.push_back("GATEWAY_INTERFACE=CGI/1.1");
+	meta_variables_.push_back("GATEWAY_INTERFACE=CGI/1.1");
 	var.append("PATH_INFO=");
 	var.append(uri.substr(0, uri.find('?')));
-	meta_variables.push_back(var);
+	meta_variables_.push_back(var);
 	var.clear();
 	if (uri.find('?') == std::string::npos) {
-		meta_variables.push_back("QUERY_STRING=");
+		meta_variables_.push_back("QUERY_STRING=");
 	}
 	else {
 		var.append("QUERY_STRING=");
-		var.append(uri.substr(uri.find('?')));
-		meta_variables.push_back(var);
+		var.append(uri.substr(uri.find('?') + 1));
+		meta_variables_.push_back(var);
 		var.clear();
 	}
+	var.append("REMOTE_ADDR=");
+	var.append(myNtoaCauseFuckYou(addrIn->sin_addr));
+	meta_variables_.push_back(var);
+	var.clear();
+	var.append("REQUEST_METHOD=");
+	switch(request_.method_) {
+		case 0:
+			var.append("UNKNOWN");
+			break;
+		case 1:
+			var.append("GET");
+			break;
+		case 2:
+			var.append("POST");
+			break;
+		case 3:
+			var.append("DELETE");
+			break;
+		default:
+			throw InternalServerError();
+	}
+	meta_variables_.push_back(var);
+	var.clear();
+	var.append("SCRIPT_NAME=");
+	var.append(scriptWithPath_);
+	meta_variables_.push_back(var);
+	var.clear();
+	var.append("SERVER_PORT=");
+	var.append(std::to_string(config_.listen.second));
+	meta_variables_.push_back(var);
+	var.clear();
+	meta_variables_.push_back("SERVER_PROTOCOL=HTTP/1.1");
 
-
-	(void) this->envp_;
+	for (size_t i = 0; i < meta_variables_.size(); ++i) {
+		envp_[i] = &meta_variables_[i][0];
+	}
+	envp_[meta_variables_.size()] = NULL;
 }
 
 bool Cgi::performCgiGet() {

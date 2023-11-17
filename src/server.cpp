@@ -107,7 +107,7 @@ void HttpServer::readableHandler(int session_id) {
     // Receive the request
     std::pair<HttpRequest, ssize_t> request = receiveRequest(session_id);
 
-    Logger::instance().log(request.first.printRequest());
+    // Logger::instance().log(request.first.printRequest());
 
     if (request.second == 0) {
         disconnectHandler(session_id);

@@ -40,6 +40,7 @@ private: //member variables
     char *envp_[256];
     std::string script_;
     std::string scriptWithPath_;
+    std::vector<std::string> meta_variables_;
     class InternalServerError: public std::exception {
     public:
         const char *what() const throw();
