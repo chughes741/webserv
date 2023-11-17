@@ -13,7 +13,7 @@ bool Cgi::exec() {
 		this->extractScript();
 		this->checkForScript();
 		this->setEnv();
-		this->handlePipe();
+		// this->handlePipe(); Might do the dirty deed in performCgi
 		return this->performCgi();
 	}
 	catch(const Cgi::RessourceDoesNotExist& e) {
@@ -40,19 +40,6 @@ bool Cgi::exec() {
 		Logger::instance().log(e.what());
 		this->handleError(Internal);
 		return false;
-	}
-}
-
-bool Cgi::performCgi() {
-	switch(request_.method_) {
-		case GET:
-			return performCgiGet();
-			break;
-		case POST:
-			return performCgiPost();
-			break;
-		default:
-			throw UnsupportedMethod();
 	}
 }
 
@@ -172,7 +159,21 @@ void Cgi::setEnv() { // A lot of stuff happens here. The beginning of great thin
 	envp_[meta_variables_.size()] = NULL;
 }
 
+bool Cgi::performCgi() {
+	switch(request_.method_) {
+		case GET:
+			return performCgiGet();
+			break;
+		case POST:
+			return performCgiPost();
+			break;
+		default:
+			throw UnsupportedMethod();
+	}
+}
+
 bool Cgi::performCgiGet() {
+
 	return true;
 }
 
