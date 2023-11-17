@@ -106,7 +106,6 @@ void Cgi::setEnv() { // A lot of stuff happens here. The beginning of great thin
 
 	std::string uri = request_.uri_;
 	std::string var;
-	// std::vector<std::string> meta_variables;
 	if (request_.body_.size() > 0) {
 		var.append("CONTENT_LENGTH=");
 		var.append(std::to_string(request_.body_.size()));
