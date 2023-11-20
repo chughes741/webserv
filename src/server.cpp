@@ -298,7 +298,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
             response.body_   = "Error creating file";
         }
 
-    } else if (request.headers_["Content-Type"] == "application/x-www-form-urlencoded") {
+    } else if (request.headers_["Content-Type"] == "multipart/form-data") {
         Logger::instance().log("POST: Returning response from form-data");
         response.headers_["Content-Type"] = "text/html; charset=utf-8";
 
