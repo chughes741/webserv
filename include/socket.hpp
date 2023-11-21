@@ -27,7 +27,6 @@ class Session {
     virtual bool                            send()                 = 0;
     virtual std::pair<std::string, ssize_t> recv(int client) const = 0;
     int                                     getSockFd() const;
-    const struct sockaddr*                  getSockaddr() const;
     void                                    addSendQueue(const std::string& buffer);
 
    protected:

@@ -20,7 +20,7 @@ std::string HttpRequest::consumeNextToken(std::string &buffer, const std::string
     return token;
 }
 
-HttpRequest::HttpRequest(const std::string &request, Session *currentSession): currentSession(currentSession) {
+HttpRequest::HttpRequest(const std::string &request) {
     std::string buffer = request;
 
     std::string method = consumeNextToken(buffer, " ");

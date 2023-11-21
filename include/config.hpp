@@ -21,7 +21,7 @@ struct LocationConfig {
           limit_except(GET | POST | DELETE),
           autoindex(false),
           cgi_enabled(false),
-          cgi_ext() {}
+          cgi_path("") {}
 
     size_t                     client_max_body_size; /**< Maximum size of a request body */
     bool                       max_body_size;        /**< If set by config */
@@ -31,7 +31,7 @@ struct LocationConfig {
     unsigned short             limit_except;         /**< Allowed methods */
     bool                       autoindex;            /**< Enable autoindex */
     bool                       cgi_enabled;          /**< Enable CGI */
-    std::vector<std::string>   cgi_ext;              /**< Supported extensions for the location */
+    std::string                cgi_path;             /**< Path to CGI programs */
 };
 
 /**

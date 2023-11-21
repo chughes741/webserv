@@ -9,10 +9,6 @@ int Session::getSockFd() const {
     return sockfd_;
 }
 
-const struct sockaddr* Session::getSockaddr() const {
-    return addr_;
-}
-
 void Session::addSendQueue(const std::string& buffer) {
     send_queue_.push_back(buffer);
 }
