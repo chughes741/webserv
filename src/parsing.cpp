@@ -495,10 +495,10 @@ bool Parser::setLocationRoot(std::string &uri) {
 }
 
 bool Parser::setFastCGI(std::string &uri) {
-    validateFirstToken("fastcgi");
+    validateFirstToken("cgi");
     (httpConfig.servers.back()).locations[uri].cgi_ext.push_back(*it);
     (httpConfig.servers.back()).locations[uri].cgi_enabled = true;
-    validateLastToken("fastcgi");
+    validateLastToken("cgi");
     return true;
 }
 
