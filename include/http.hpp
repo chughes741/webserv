@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include "socket.hpp"
 
 /** HTTP headers */
 #define HTTP_VERSION "HTTP/1.1"
@@ -39,7 +40,7 @@ enum HttpStatus {
 /** Represents an HTTP request */
 class HttpRequest {
    public:
-    HttpRequest(const std::string &request);
+    HttpRequest(const std::string &request, Session *currentSession);
     std::string printRequest() const;
 
    private:
@@ -52,6 +53,7 @@ class HttpRequest {
     std::map<std::string, std::string>       headers_;   /**< Other headers */
     std::string                              body_;      /**< Request body (if any) */
     static std::map<std::string, HttpMethod> methodMap_; /**< Map of HTTP methods */
+    Session                                 *currentSession;
 };
 
 /** Represents an HTTP response */

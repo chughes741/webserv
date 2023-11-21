@@ -5,29 +5,42 @@
 #include <iostream>
 #include <stdexcept>
 #include "logging.hpp"
+#include "http.hpp"
+#include "config.hpp"
 // #include "../include/config.hpp"
 
 enum exceptionType {
     Internal,
     Permission,
-    Access
+    Access,
+    Nonexistant
 };
 
 class Cgi {
 public:
-    Cgi(std::string cgiPath);
+    Cgi(HttpRequest &request, LocationConfig &location, ServerConfig &config);
     ~Cgi();
-    void performCgi();
+    bool exec();
 
 private: //private methods
+    bool performCgi();
     void checkForScript();
     void handleError(exceptionType type);
     void setEnv();
     void handlePipe();
+    bool performCgiGet();
+    bool performCgiPost();
+    void extractScript();
 
 private: //member variables
-    char **envp;
-    std::string pathToScript;
+
+    HttpRequest request_;
+    LocationConfig location_;
+    ServerConfig config_;
+    char *envp_[256];
+    std::string script_;
+    std::string scriptWithPath_;
+    std::vector<std::string> meta_variables_;
     class InternalServerError: public std::exception {
     public:
         const char *what() const throw();
@@ -43,6 +56,14 @@ private: //member variables
         const char *what() const throw();
     };
 
+    class UnsupportedMethod: public std::exception {
+    public:
+        const char *what() const throw();
+    };
 
+    class RessourceDoesNotExist: public std::exception {
+    public:
+        const char *what() const throw();
+    };
 
 };
