@@ -263,10 +263,10 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
             if (pos != std::string::npos) {
                 userInput = request.body_.substr(pos + 11);
                 if (userInput.empty()) {
-                    response.body_ = "<html><body>This field cannot be empty<br><br><a href='/'Return Home</a></body></html>";
+                    response.body_ = "<html><body>This field cannot be empty<br><br><a href='/'>Return Home</a></body></html>";
                 }
                 else {
-                    response.body_ = "<html><body>You've entered: " + userInput + "<br><br><a href='/'Return Home</a></body></html>";
+                    response.body_ = "<html><body>You've entered: " + userInput + "<br><br><a href='/'>Return Home</a></body></html>";
                 }
             }
             response.status_ = OK;
