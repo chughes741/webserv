@@ -259,7 +259,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
             response.status_ = BAD_REQUEST;
         } else {
             std::string userInput;
-            size_t pos = request.body_.find("textinput=");
+            size_t pos = request.body_.find("text_input=");
             if (pos != std::string::npos) {
                 userInput = request.body_.substr(pos + 11);
                 if (userInput.empty()) {
@@ -396,7 +396,7 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
-    // Logger::instance().log(request.printRequest());
+    Logger::instance().log(request.printRequest());
 
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";

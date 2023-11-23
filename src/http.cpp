@@ -37,7 +37,7 @@ HttpRequest::HttpRequest(const std::string &request) {
         std::string value = consumeNextToken(headers, CRLF);
         headers_[key]     = value;
     }
-
+    std::cout << "BUFFER IS " << std::endl;
     body_ = buffer;
 }
 
