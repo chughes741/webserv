@@ -255,6 +255,25 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
     (void)server;
     (void)location;
 
+    if (request.body_.empty()) {
+            response.status_ = BAD_REQUEST;
+        } else {
+            std::string userInput;
+            size_t pos = request.body_.find("textinput=");
+            if (pos != std::string::npos) {
+                userInput = request.body_.substr(pos + 11);
+                if (userInput.empty()) {
+                    response.body_ = "<html><body>This field cannot be empty</body></html>";
+                }
+                else {
+                    response.body_ = "<html><body>You've entered: " + userInput + "</body></html>";
+                }
+            }
+            response.status_ = OK;
+            response.headers_["Content-Type"] = "text/html";
+            response.headers_["Content-Length"] = std::to_string(response.body_.size());
+        }
+
     if (request.headers_["Content-Type"] == "text/plain") {
         Logger::instance().log("POST: Creating file with text data");
         response.headers_["Content-Type"] = "text/plain; charset=utf-8";
