@@ -289,7 +289,13 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
             response.body_   = "Error creating file";
         }
 
-    } else if (request.headers_["Content-Type"] == "application/x-www-form-urlencoded") {
+    } else if (request.headers_["Content-Type"].find("multipart/form-data") != std::string::npos) {
+        //Logger::instance().log("UPLOAD FILE HERE");
+        
+    }
+
+    
+    else if (request.headers_["Content-Type"] == "application/x-www-form-urlencoded") {
         Logger::instance().log("POST: Returning response from form-data");
         response.headers_["Content-Type"] = "text/html; charset=utf-8";
 
