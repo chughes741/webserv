@@ -250,6 +250,14 @@ bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
     return true;
 }
 
+
+//!LOCAL FOR NOW - TESTING IN PROGRESS
+std::string extractValue(const std::string& data, const std::string& start, const std::string& end) {
+    size_t startPos = data.find(start) + start.length();
+    size_t endPos = data.find(end, startPos);
+    return data.substr(startPos, endPos - startPos);
+}
+
 bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, ServerConfig &server,
                             LocationConfig *location) {
     (void)server;
@@ -257,22 +265,22 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
 
     if (request.body_.empty()) {
             response.status_ = BAD_REQUEST;
-        } else {
-            std::string userInput;
-            size_t pos = request.body_.find("text_input=");
-            if (pos != std::string::npos) {
-                userInput = request.body_.substr(pos + 11);
-                if (userInput.empty()) {
-                    response.body_ = "<html><body>This field cannot be empty<br><br><a href='/'>Return Home</a></body></html>";
-                }
-                else {
-                    response.body_ = "<html><body>You've entered: " + userInput + "<br><br><a href='/'>Return Home</a></body></html>";
-                }
+    } else {
+        std::string userInput;
+        size_t pos = request.body_.find("text_input=");
+        if (pos != std::string::npos) {
+            userInput = request.body_.substr(pos + 11);
+            if (userInput.empty()) {
+                response.body_ = "<html><body>This field cannot be empty<br><br><a href='/'>Return Home</a></body></html>";
             }
-            response.status_ = OK;
-            response.headers_["Content-Type"] = "text/html";
-            response.headers_["Content-Length"] = std::to_string(response.body_.size());
+            else {
+                response.body_ = "<html><body>You've entered: " + userInput + "<br><br><a href='/'>Return Home</a></body></html>";
+            }
         }
+        response.status_ = OK;
+        response.headers_["Content-Type"] = "text/html";
+        response.headers_["Content-Length"] = std::to_string(response.body_.size());
+    }
 
     if (request.headers_["Content-Type"] == "text/plain") {
         Logger::instance().log("POST: Creating file with text data");
@@ -290,8 +298,39 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         }
 
     } else if (request.headers_["Content-Type"].find("multipart/form-data") != std::string::npos) {
-        //Logger::instance().log("UPLOAD FILE HERE");
-        
+        Logger::instance().log("OK CHU ICITTE DUMB");
+        //std::cout << "ET APRES ON A CA: " << "BODY= " << request.body_ << std::endl;
+        std::cout << "DANS LE HEADER YA: " << std::endl;
+        //for (std::map<std::string, std::string>::const_iterator it = response.headers_.begin(); it != response.headers_.end(); ++it) {
+        //    std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
+        //}
+        std::string boundary = extractValue(response.headers_["Content-Type"], "boundary=", "");
+        std::cout << "DANS BOUNDARY: " << boundary << std::endl;;
+
+        std::string delimiter = "--" + boundary;
+        std::cout << "DANS DELIMITER: " << delimiter << std::endl;
+        size_t pos = response.body_.find(delimiter);
+        while (pos != std::string::npos) {
+            std::cout << "JE RENTRE DANS LE WHILE" << std::endl;
+            size_t endPos = response.body_.find(delimiter, pos + delimiter.length());
+            std::string part = response.body_.substr(pos, endPos - pos);
+
+            size_t filenamePos = part.find("filename=\"");
+            if (filenamePos != std::string::npos) {
+                std::cout << "JE RENTRE DANS LE IF APRES LE WHILE" << std::endl;
+                std::string filename = extractValue(part, "filename=\"", "\"");
+
+                size_t contentPos = part.find("\r\n\r\n") + 4;
+                std::string content = part.substr(contentPos, part.length() - contentPos - delimiter.length());
+
+                std::ofstream file(filename.c_str(), std::ios::binary);
+                file << content;
+                file.close();
+
+                std::cout << "File '" << filename << "' uploaded successfully." << std::endl; 
+            }
+            pos = response.body_.find(delimiter, endPos);
+        }
     }
 
     
