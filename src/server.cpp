@@ -312,6 +312,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         }
         std::cout << "HEADERS FINI" << std::endl;
         std::cout << "CONTENT-TYPE= " << response.headers_["Content-Type"] << std::endl;
+        //TODO envoyer body au lieu du header ? 
         std::string boundary = extractValue(response.headers_["Content-Type"], "boundary=", "");
         std::cout << "DANS BOUNDARY: " << boundary << std::endl;;
 
