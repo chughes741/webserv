@@ -258,13 +258,12 @@ std::string extractValue(const std::string& data, const std::string& start, cons
     if (end.empty()) {
         endPos = data.length();
     }
-    //std::cout << "DATA= " << data << std::endl;
-    //std::cout << "END= " << end << std::endl;
-    //std::cout << "start should equal boundary=... " << start << std::endl; 
-    //std::cout << "startPos= " << startPos << std::endl;
-    //std::cout << "endPos= " << endPos << std::endl;
-    //std::cout << "result= " << data.substr(startPos, endPos - startPos) << std::endl;
     return data.substr(startPos, endPos - startPos);
+}
+
+bool fileExists(const std::string &filePath) {
+    std::ifstream file(filePath.c_str());
+    return file.good();
 }
 
 bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, ServerConfig &server,
@@ -307,40 +306,36 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         }
 
     } else if (request.headers_["Content-Type"].find("multipart/form-data") != std::string::npos) {
-       //std::cout << "CONTENT-TYPE= " << response.headers_["Content-Type"] << std::endl;
-        std::cout << "BODY IS: " << request.body_ << " FINI" << std::endl;
+        //int fileCounter = 2;
         std::map<std::string, std::string>::iterator it;
-        std::cout << "HEADERS IS: " << std::endl;
         for (it = request.headers_.begin(); it != request.headers_.end(); ++it) {
             std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
         }
-        std::cout << "HEADERS FINI" << std::endl;
-        //TODO envoyer body au lieu du header ? 
         std::string boundary = extractValue(request.headers_["Content-Type"], "boundary=", "");
-        std::cout << "DANS BOUNDARY: " << boundary << std::endl;;
 
         std::string delimiter = "--" + boundary;
-        std::cout << "DANS DELIMITER: " << delimiter << std::endl;
         size_t pos = request.body_.find(delimiter);
         while (pos != std::string::npos) {
-            std::cout << "JE RENTRE DANS LE WHILE" << std::endl;
             size_t endPos = request.body_.find(delimiter, pos + delimiter.length());
             std::string part = request.body_.substr(pos, endPos - pos);
-            std::cout << "Dans PART il y a: " << part << std::endl;
 
             size_t filenamePos = part.find("filename=\"");
             if (filenamePos != std::string::npos) {
-                std::cout << "JE RENTRE DANS LE IF APRES LE WHILE" << std::endl;
+                std::string pathUpload = "uploads/";
                 std::string filename = extractValue(part, "filename=\"", "\"");
-
+                std::string pathFile = pathUpload + filename;
+                //while(fileExists(pathFile)){
+                //    fileCounter++;
+                //    pathFile += std::to_string(fileCounter);
+                //}
                 size_t contentPos = part.find("\r\n\r\n") + 4;
                 std::string content = part.substr(contentPos, part.length() - contentPos - delimiter.length());
 
-                std::ofstream file(filename.c_str(), std::ios::binary);
+                std::ofstream file(pathFile.c_str(), std::ios::binary);
                 file << content;
                 file.close();
 
-                std::cout << "File '" << filename << "' uploaded successfully." << std::endl; 
+                std::cout << "File '" << filename << "' uploaded successfully to " << pathUpload << std::endl; 
             }
             pos = response.body_.find(delimiter, endPos);
         }
