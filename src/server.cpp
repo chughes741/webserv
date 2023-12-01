@@ -253,8 +253,14 @@ bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
 
 //!LOCAL FOR NOW - TESTING IN PROGRESS
 std::string extractValue(const std::string& data, const std::string& start, const std::string& end) {
+    std::cout << "DATA= " << data << std::endl;
+    std::cout << "END= " << end << std::endl;
+    std::cout << "start should equal boundary=... " << start << std::endl; 
     size_t startPos = data.find(start) + start.length();
+    std::cout << "startPos= " << startPos << std::endl;
     size_t endPos = data.find(end, startPos);
+    std::cout << "endPos= " << endPos << std::endl;
+    std::cout << "result= " << data.substr(startPos, endPos - startPos) << std::endl;
     return data.substr(startPos, endPos - startPos);
 }
 
@@ -298,12 +304,14 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         }
 
     } else if (request.headers_["Content-Type"].find("multipart/form-data") != std::string::npos) {
-        Logger::instance().log("OK CHU ICITTE DUMB");
-        //std::cout << "ET APRES ON A CA: " << "BODY= " << request.body_ << std::endl;
-        std::cout << "DANS LE HEADER YA: " << std::endl;
-        //for (std::map<std::string, std::string>::const_iterator it = response.headers_.begin(); it != response.headers_.end(); ++it) {
-        //    std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
-        //}
+        std::cout << "BODY IS: " << request.body_ << " FINI" << std::endl;
+        std::map<std::string, std::string>::iterator it;
+        std::cout << "HEADERS IS: " << std::endl;
+        for (it = request.headers_.begin(); it != request.headers_.end(); ++it) {
+            std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
+        }
+        std::cout << "HEADERS FINI" << std::endl;
+        std::cout << "CONTENT-TYPE= " << response.headers_["Content-Type"] << std::endl;
         std::string boundary = extractValue(response.headers_["Content-Type"], "boundary=", "");
         std::cout << "DANS BOUNDARY: " << boundary << std::endl;;
 
