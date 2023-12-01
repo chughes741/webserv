@@ -253,14 +253,17 @@ bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
 
 //!LOCAL FOR NOW - TESTING IN PROGRESS
 std::string extractValue(const std::string& data, const std::string& start, const std::string& end) {
-    std::cout << "DATA= " << data << std::endl;
-    std::cout << "END= " << end << std::endl;
-    std::cout << "start should equal boundary=... " << start << std::endl; 
     size_t startPos = data.find(start) + start.length();
-    std::cout << "startPos= " << startPos << std::endl;
     size_t endPos = data.find(end, startPos);
-    std::cout << "endPos= " << endPos << std::endl;
-    std::cout << "result= " << data.substr(startPos, endPos - startPos) << std::endl;
+    if (end.empty()) {
+        endPos = data.length();
+    }
+    //std::cout << "DATA= " << data << std::endl;
+    //std::cout << "END= " << end << std::endl;
+    //std::cout << "start should equal boundary=... " << start << std::endl; 
+    //std::cout << "startPos= " << startPos << std::endl;
+    //std::cout << "endPos= " << endPos << std::endl;
+    //std::cout << "result= " << data.substr(startPos, endPos - startPos) << std::endl;
     return data.substr(startPos, endPos - startPos);
 }
 
@@ -304,6 +307,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         }
 
     } else if (request.headers_["Content-Type"].find("multipart/form-data") != std::string::npos) {
+       //std::cout << "CONTENT-TYPE= " << response.headers_["Content-Type"] << std::endl;
         std::cout << "BODY IS: " << request.body_ << " FINI" << std::endl;
         std::map<std::string, std::string>::iterator it;
         std::cout << "HEADERS IS: " << std::endl;
@@ -311,18 +315,18 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
             std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
         }
         std::cout << "HEADERS FINI" << std::endl;
-        std::cout << "CONTENT-TYPE= " << response.headers_["Content-Type"] << std::endl;
         //TODO envoyer body au lieu du header ? 
-        std::string boundary = extractValue(response.headers_["Content-Type"], "boundary=", "");
+        std::string boundary = extractValue(request.headers_["Content-Type"], "boundary=", "");
         std::cout << "DANS BOUNDARY: " << boundary << std::endl;;
 
         std::string delimiter = "--" + boundary;
         std::cout << "DANS DELIMITER: " << delimiter << std::endl;
-        size_t pos = response.body_.find(delimiter);
+        size_t pos = request.body_.find(delimiter);
         while (pos != std::string::npos) {
             std::cout << "JE RENTRE DANS LE WHILE" << std::endl;
-            size_t endPos = response.body_.find(delimiter, pos + delimiter.length());
-            std::string part = response.body_.substr(pos, endPos - pos);
+            size_t endPos = request.body_.find(delimiter, pos + delimiter.length());
+            std::string part = request.body_.substr(pos, endPos - pos);
+            std::cout << "Dans PART il y a: " << part << std::endl;
 
             size_t filenamePos = part.find("filename=\"");
             if (filenamePos != std::string::npos) {
