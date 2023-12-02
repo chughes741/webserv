@@ -1,9 +1,10 @@
 #include "../include/cgi.hpp"
 
-Cgi::Cgi(HttpRequest &request, LocationConfig &location, ServerConfig &config)
+Cgi::Cgi(HttpRequest &request, LocationConfig &location, ServerConfig &config, HttpResponse& response)
 	: request_(request),
 	  location_(location),
-	  config_(config) { }
+	  config_(config),
+	  response_(&response) { }
 
 Cgi::~Cgi() { }
 
@@ -156,7 +157,7 @@ void Cgi::setEnv() { // A lot of stuff happens here. The beginning of great thin
 	for (size_t i = 0; i < meta_variables_.size(); ++i) {
 		envp_[i] = &meta_variables_[i][0];
 	}
-	envp_[meta_variables_.size()] = NULL;
+	envp_[meta_variables_.size()] = nullptr;
 }
 
 bool Cgi::performCgi() {
@@ -173,6 +174,47 @@ bool Cgi::performCgi() {
 }
 
 bool Cgi::performCgiGet() {
+	std::string workingDirectory;
+	char *argv[2];
+
+	argv[0] = &script_[0];
+	argv[1] = nullptr;
+
+	workingDirectory = this->config_.root.append(scriptWithPath_.substr(0, scriptWithPath_.find_last_of('/')));
+
+	int fd[2];
+	int pid;
+	if (pipe(fd) == -1)
+		throw InternalServerError();
+	pid = fork();
+	if (pid == -1)
+		throw InternalServerError();
+	if (pid == 0) {
+		int result = chdir(workingDirectory.c_str());
+		if (result == -1)
+			exit(-1);
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		execve(argv[0], argv, envp_);
+		std::cerr << "Execve did not function: " << strerror(errno) << std::endl;
+		exit(-1);
+	}
+	else {
+		int status = 0;
+		std::string body;
+		close(fd[1]);
+		char buffer[1024];
+		while (read(fd[0], buffer, 1024) > 0) {
+			body.append(buffer);
+			bzero(buffer, 1024);
+		}
+		response_->body_ = body; 
+		std::cout << "Content of buffer: " << buffer << std::endl;
+		waitpid(pid, &status, 0);
+		std::cout << "Exit status of child: " << WEXITSTATUS(status) << std::endl;
+
+	}
 
 	return true;
 }

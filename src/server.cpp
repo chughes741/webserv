@@ -355,7 +355,7 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
     }
     if (location->cgi_enabled) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
         Logger::instance().log(request.printRequest());
-        Cgi newCgi(request, *location, server);
+        Cgi newCgi(request, *location, server, response);
         bool result = newCgi.exec();
         return result;
     }
