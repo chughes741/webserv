@@ -184,11 +184,15 @@ bool Cgi::performCgiGet() {
 
 	int fd[2];
 	int pid;
-	if (pipe(fd) == -1)
+	if (pipe(fd) == -1) {
+		Logger::instance().log("Pipe failed");
 		throw InternalServerError();
+	}
 	pid = fork();
-	if (pid == -1)
+	if (pid == -1) {
+		Logger::instance().log("Fork failed");
 		throw InternalServerError();
+	}
 	if (pid == 0) {
 		int result = chdir(workingDirectory.c_str());
 		if (result == -1)
@@ -197,23 +201,27 @@ bool Cgi::performCgiGet() {
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 		execve(argv[0], argv, envp_);
-		std::cerr << "Execve did not function: " << strerror(errno) << std::endl;
+		std::string error("Execve failed: ");
+		error.append(strerror(errno));
+		Logger::instance().log(error);
 		exit(-1);
 	}
 	else {
 		int status = 0;
-		std::string body;
+		std::string scriptOutput;
 		close(fd[1]);
 		char buffer[1024];
 		while (read(fd[0], buffer, 1024) > 0) {
-			body.append(buffer);
+			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
-		response_->body_ = body; 
-		std::cout << "Content of buffer: " << buffer << std::endl;
+		extractHeaders(scriptOutput);
+		extractBody(scriptOutput);
 		waitpid(pid, &status, 0);
-		std::cout << "Exit status of child: " << WEXITSTATUS(status) << std::endl;
-
+		if (WEXITSTATUS(status) != 0) {
+			Logger::instance().log("Script execution failed");
+			throw InternalServerError();
+		}
 	}
 
 	return true;
@@ -223,8 +231,48 @@ bool Cgi::performCgiPost() {
 	return true;
 }
 
-void Cgi::handlePipe() {
+void Cgi::extractHeaders(std::string scriptOutput) {
+	std::string headerFields;
+	std::size_t boundary = scriptOutput.find("\n\n");
+	std::vector<std::pair<std::string, std::string> > headers;
+	std::string field;
+	std::size_t fieldBoundary;
+	if (boundary == std::string::npos)
+		return;
+	else {
+		headerFields = scriptOutput.substr(0, boundary + 1);
+		while (boundary != std::string::npos) {
+			boundary = headerFields.find('\n');
+			if (boundary == std::string::npos)
+				break;
+			fieldBoundary = headerFields.find(':');
+			if (fieldBoundary == std::string::npos)
+				break;
+			if (fieldBoundary == std::string::npos || (fieldBoundary > boundary)) {
+				headerFields = headerFields.substr(boundary);
+			}
+			else {
+				headers.push_back(std::make_pair(headerFields.substr(0, fieldBoundary), headerFields.substr(fieldBoundary, (boundary - fieldBoundary))));
+				headerFields = headerFields.substr(boundary + 1);
+			}
+		}
+		for (std::size_t i = 0; i < headers.size(); ++i) {
+			response_->headers_[headers[i].first] = headers[i].second;
+		}
+	}
+}
 
+void Cgi::extractBody(std::string scriptOutput) {
+	std::string body;
+	std::size_t boundary = scriptOutput.find("\n\n");
+	if (boundary == std::string::npos) {
+		response_->body_ = scriptOutput;
+		return;
+	}
+	else {
+		std::string body = scriptOutput.substr(boundary);
+		response_->body_ = body;
+	}
 }
 
 void Cgi::handleError(exceptionType type) {

@@ -27,10 +27,11 @@ private: //private methods
     void checkForScript();
     void handleError(exceptionType type);
     void setEnv();
-    void handlePipe();
     bool performCgiGet();
     bool performCgiPost();
     void extractScript();
+    void extractHeaders(std::string scriptOutput);
+    void extractBody(std::string scriptOutput);
 
 private: //member variables
 
