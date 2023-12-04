@@ -14,7 +14,6 @@ bool Cgi::exec() {
 		this->extractScript();
 		this->checkForScript();
 		this->setEnv();
-		// this->handlePipe(); Might do the dirty deed in performCgi
 		return this->performCgi();
 	}
 	catch(const Cgi::RessourceDoesNotExist& e) {
@@ -64,10 +63,10 @@ void Cgi::extractScript() { //prolly need to add more robust checking
 void Cgi::checkForScript() { //checks for file existence based on the request url and the root directive
 	std::string actualPath(location_.root);
 	actualPath.append(scriptWithPath_);
-	if (access(actualPath.c_str(), F_OK)) {
+	if (access(actualPath.c_str(), F_OK) == -1) {
 		throw RessourceDoesNotExist();
 	}
-	if (access(actualPath.c_str(), X_OK)) {
+	if (access(actualPath.c_str(), X_OK) == -1) {
 		throw ForbiddenFile();
 	}
 }
@@ -195,13 +194,15 @@ bool Cgi::performCgiGet() {
 	}
 	if (pid == 0) {
 		int result = chdir(workingDirectory.c_str());
-		if (result == -1)
+		if (result == -1) {
+			Logger::instance().log("From child: Failed to change working directory");
 			exit(-1);
+		}
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 		execve(argv[0], argv, envp_);
-		std::string error("Execve failed: ");
+		std::string error("From child: Execve failed: ");
 		error.append(strerror(errno));
 		Logger::instance().log(error);
 		exit(-1);
@@ -221,6 +222,11 @@ bool Cgi::performCgiGet() {
 		if (WEXITSTATUS(status) != 0) {
 			Logger::instance().log("Script execution failed");
 			throw InternalServerError();
+		}
+		else {
+			if (response_->headers_.find("Status") == response_->headers_.end()) {
+				response_->headers_["Status"] = OK;
+			}
 		}
 	}
 
