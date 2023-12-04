@@ -266,6 +266,30 @@ bool fileExists(const std::string &filePath) {
     return file.good();
 }
 
+std::string generateUniqueFileName(std::string &originalFileName) {
+    std::string newFileName = "uploads/" + originalFileName;
+    std::string nameWithoutExtension;
+    size_t dot_position;
+    bool moreThanOneChange = false;
+    int counter = 1;
+    while(fileExists(newFileName)) {
+        ++counter;
+        if (counter > 2) {
+            moreThanOneChange = true;
+        }
+        dot_position = newFileName.find('.');
+        nameWithoutExtension = newFileName.substr(0, dot_position);
+        if (moreThanOneChange == true) {
+            dot_position = originalFileName.find('.'); 
+            newFileName = "uploads/" + originalFileName.substr(0, dot_position) + "_" + std::to_string(counter) + originalFileName.substr(dot_position);
+        }
+        else
+            newFileName = nameWithoutExtension + "_" + std::to_string(counter) + newFileName.substr(dot_position);
+    }
+    std::cout << "REAL FILE NAME = " << newFileName << std::endl;
+    return (newFileName);
+}
+
 bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, ServerConfig &server,
                             LocationConfig *location) {
     (void)server;
@@ -306,7 +330,6 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         }
 
     } else if (request.headers_["Content-Type"].find("multipart/form-data") != std::string::npos) {
-        //int fileCounter = 2;
         std::map<std::string, std::string>::iterator it;
         for (it = request.headers_.begin(); it != request.headers_.end(); ++it) {
             std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
@@ -321,21 +344,16 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
 
             size_t filenamePos = part.find("filename=\"");
             if (filenamePos != std::string::npos) {
-                std::string pathUpload = "uploads/";
                 std::string filename = extractValue(part, "filename=\"", "\"");
-                std::string pathFile = pathUpload + filename;
-                //while(fileExists(pathFile)){
-                //    fileCounter++;
-                //    pathFile += std::to_string(fileCounter);
-                //}
+                std::string realFileName = generateUniqueFileName(filename);
                 size_t contentPos = part.find("\r\n\r\n") + 4;
                 std::string content = part.substr(contentPos, part.length() - contentPos - delimiter.length());
 
-                std::ofstream file(pathFile.c_str(), std::ios::binary);
+                std::ofstream file(realFileName.c_str(), std::ios::binary);
                 file << content;
                 file.close();
 
-                std::cout << "File '" << filename << "' uploaded successfully to " << pathUpload << std::endl; 
+                std::cout << "File '" << realFileName << "' uploaded successfully to /uploads" << std::endl; 
             }
             pos = response.body_.find(delimiter, endPos);
         }
