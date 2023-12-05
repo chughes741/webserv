@@ -353,22 +353,24 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
     } else if (!validateRequestBody(request, server, location)) {
         return buildBadRequestBody(response);
     }
-    if (location->cgi_enabled) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
+    if (location->cgi_enabled && checkUriForExtension(uri, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
         Logger::instance().log(request.printRequest());
         Cgi newCgi(request, *location, server, response);
         bool result = newCgi.exec();
         return result;
     }
-    // @todo verify if method is allowed on location
-    switch (request.method_) {
-    case 1: // Enums for comparisons is C++11...
-        return getMethod(request, response, server, location);
-    case 2: // Enums for comparisons is C++11...
-        return postMethod(request, response, server, location);
-    case 3: // Enums for comparisons is C++11...
-        return deleteMethod(request, response, server, location);
-    default:
-        return false;
+    else {
+        switch (request.method_) {
+        // @todo verify if method is allowed on location
+        case 1: // Enums for comparisons is C++11...
+            return getMethod(request, response, server, location);
+        case 2: // Enums for comparisons is C++11...
+            return postMethod(request, response, server, location);
+        case 3: // Enums for comparisons is C++11...
+            return deleteMethod(request, response, server, location);
+        default:
+            return false;
+        }
     }
 }
 
@@ -410,4 +412,18 @@ HttpResponse HttpServer::handleRequest(HttpRequest request) {
         response.headers_["content-length"] = std::to_string(response.body_.size());
     }
     return response;
+}
+
+bool HttpServer::checkUriForExtension(std::string& uri, LocationConfig *location) const {
+    std::string ext;
+
+	for (size_t i = 0; i < location->cgi_ext.size(); ++i) {
+		if (uri.find(location->cgi_ext[i]) != std::string::npos) {
+			ext = location->cgi_ext[i];
+		}
+	}
+	if (!ext.size())
+		return false;
+    else
+        return true;
 }
