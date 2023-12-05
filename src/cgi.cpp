@@ -189,6 +189,8 @@ bool Cgi::performCgiGet() {
 	}
 	pid = fork();
 	if (pid == -1) {
+		close(fd[0]);
+		close(fd[1]);
 		Logger::instance().log("Fork failed");
 		throw InternalServerError();
 	}
@@ -196,6 +198,8 @@ bool Cgi::performCgiGet() {
 		int result = chdir(workingDirectory.c_str());
 		if (result == -1) {
 			Logger::instance().log("From child: Failed to change working directory");
+			close(fd[0]);
+			close(fd[1]);
 			exit(-1);
 		}
 		close(fd[0]);
@@ -205,6 +209,8 @@ bool Cgi::performCgiGet() {
 		std::string error("From child: Execve failed: ");
 		error.append(strerror(errno));
 		Logger::instance().log(error);
+		close(fd[0]);
+		close(fd[1]);
 		exit(-1);
 	}
 	else {
@@ -216,6 +222,7 @@ bool Cgi::performCgiGet() {
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
+		close(fd[0]);
 		extractHeaders(scriptOutput);
 		extractBody(scriptOutput);
 		waitpid(pid, &status, 0);
@@ -229,11 +236,69 @@ bool Cgi::performCgiGet() {
 			}
 		}
 	}
-
 	return true;
 }
 
 bool Cgi::performCgiPost() {
+	std::string workingDirectory;
+	char *argv[2];
+
+	argv[0] = &script_[0];
+	argv[1] = nullptr;
+
+	workingDirectory = this->config_.root.append(scriptWithPath_.substr(0, scriptWithPath_.find_last_of('/')));
+
+	int fd[2];
+	int pid;
+	if (pipe(fd) == -1) {
+		Logger::instance().log("Pipe failed");
+		throw InternalServerError();
+	}
+	pid = fork();
+	if (pid == -1) {
+		Logger::instance().log("Fork failed");
+		throw InternalServerError();
+	}
+	if (pid == 0) {
+		int result = chdir(workingDirectory.c_str());
+		if (result == -1) {
+			Logger::instance().log("From child: Failed to change working directory");
+			exit(-1);
+		}
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		execve(argv[0], argv, envp_);
+		std::string error("From child: Execve failed: ");
+		error.append(strerror(errno));
+		Logger::instance().log(error);
+		exit(-1);
+	}
+	else {
+		int status = 0;
+		std::string scriptOutput;
+		write(fd[1], request_.body_.c_str(), request_.body_.size());
+		close(fd[1]);
+		char buffer[1024];
+		while (read(fd[0], buffer, 1024) > 0) {
+			scriptOutput.append(buffer);
+			bzero(buffer, 1024);
+		}
+		close(fd[0]);
+		extractHeaders(scriptOutput);
+		extractBody(scriptOutput);
+		waitpid(pid, &status, 0);
+		if (WEXITSTATUS(status) != 0) {
+			Logger::instance().log("Script execution failed");
+			throw InternalServerError();
+		}
+		else {
+			if (response_->headers_.find("Status") == response_->headers_.end()) {
+				response_->headers_["Status"] = OK;
+			}
+		}
+	}
 	return true;
 }
 
