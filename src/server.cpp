@@ -298,8 +298,10 @@ std::stringstream uploadsFileList() {
     if ((dir = opendir("uploads")) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
             if (ent->d_name[0] != '.') {
-                std::string link = "<a href=\"/display?filename=" + std::string(ent->d_name) + "\">" + ent->d_name + "</a>";
-                fileList << "<li style=\"clear: both;\">" << link << "<input type=\"submit\" value=\"Delete\" style=\"float: right;\">" << "</li>";
+                std::string filename = std::string(ent->d_name);
+                std::string link = "<a href=\"/display?filename=" + filename + + "\">" + filename + "</a>";
+                std::string deleteButton = "<form method=\"post\" action=\"/delete\" style=\"float: right;\"><input type=\"hidden\" name=\"filename\" value=\"" + filename + "\"><input type=\"submit\" value=\"Delete\"></form>";
+                fileList << "<li style=\"clear: both;\">" << link << deleteButton << "</li>";
             }
         }
         closedir(dir);
