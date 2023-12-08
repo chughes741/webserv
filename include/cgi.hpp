@@ -11,9 +11,7 @@
 
 enum exceptionType {
     Internal,
-    Permission,
-    Access,
-    Nonexistant
+    Access
 };
 
 class Cgi {

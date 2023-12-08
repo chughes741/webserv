@@ -18,28 +18,28 @@ bool Cgi::exec() {
 	}
 	catch(const Cgi::RessourceDoesNotExist& e) {
 		Logger::instance().log(e.what());
-		this->handleError(Nonexistant);
-		return false;
+		this->handleError(Access);
+		return true;
 	}
 	catch(const Cgi::InternalServerError& e) {
 		Logger::instance().log(e.what());
 		this->handleError(Internal);
-		return false;
+		return true;
 	}
 	catch(const Cgi::ForbiddenFile& e) {
 		Logger::instance().log(e.what());
-		this->handleError(Permission);
-		return false;
+		this->handleError(Internal);
+		return true;
 	}
 	catch(const Cgi::InvalidPath& e) {
 		Logger::instance().log(e.what());
 		this->handleError(Access);
-		return false;
+		return true;
 	}
 	catch(const std::exception& e) {
 		Logger::instance().log(e.what());
 		this->handleError(Internal);
-		return false;
+		return true;
 	}
 }
 
@@ -248,27 +248,43 @@ bool Cgi::performCgiPost() {
 
 	workingDirectory = this->config_.root.append(scriptWithPath_.substr(0, scriptWithPath_.find_last_of('/')));
 
-	int fd[2];
+	int fdOut[2];
+	int fdIn[2];
 	int pid;
-	if (pipe(fd) == -1) {
-		Logger::instance().log("Pipe failed");
+	if (pipe(fdOut) == -1) {
+		Logger::instance().log("Pipe in failed");
+		throw InternalServerError();
+	}
+	if (pipe(fdIn) == -1) {
+		Logger::instance().log("Pipe out failed");
 		throw InternalServerError();
 	}
 	pid = fork();
 	if (pid == -1) {
+		close(fdOut[0]);
+		close(fdOut[1]);
+		close(fdIn[0]);
+		close(fdIn[1]);
 		Logger::instance().log("Fork failed");
 		throw InternalServerError();
 	}
 	if (pid == 0) {
 		int result = chdir(workingDirectory.c_str());
 		if (result == -1) {
+			close(fdOut[0]);
+			close(fdOut[1]);
+			close(fdIn[0]);
+			close(fdIn[1]);
 			Logger::instance().log("From child: Failed to change working directory");
 			exit(-1);
 		}
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[1]);
+		close(fdIn[1]);
+		dup2(fdIn[0], STDIN_FILENO);
+		close(fdIn[1]);
+
+		close(fdOut[0]);
+		dup2(fdOut[1], STDOUT_FILENO);
+		close(fdOut[1]);
 		execve(argv[0], argv, envp_);
 		std::string error("From child: Execve failed: ");
 		error.append(strerror(errno));
@@ -278,16 +294,26 @@ bool Cgi::performCgiPost() {
 	else {
 		int status = 0;
 		std::string scriptOutput;
-		write(fd[1], request_.body_.c_str(), request_.body_.size());
-		close(fd[1]);
+		close(fdIn[0]);
+		write(fdIn[1], request_.body_.c_str(), request_.body_.size());
+		close(fdIn[1]);
 		char buffer[1024];
-		while (read(fd[0], buffer, 1024) > 0) {
+		std::cerr << "Write successful" << std::endl;
+		close(fdOut[1]);
+		while (read(fdOut[0], buffer, 1024) > 0) {
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
-		close(fd[0]);
+		close(fdOut[0]);
+		std::cerr << "read successful" << std::endl;
 		extractHeaders(scriptOutput);
 		extractBody(scriptOutput);
+		std::cerr << "headers: " << std::endl;
+		for (std::map<std::string, std::string>::iterator it = response_->headers_.begin(); it != response_->headers_.end(); ++it) {
+			std::cerr << it->first << " " << it->second << std::endl;
+		}
+
+		std::cerr << "Body: " << response_->body_ << std::endl;
 		waitpid(pid, &status, 0);
 		if (WEXITSTATUS(status) != 0) {
 			Logger::instance().log("Script execution failed");
@@ -349,16 +375,84 @@ void Cgi::extractBody(std::string scriptOutput) {
 void Cgi::handleError(exceptionType type) {
 	switch(type) {
 		case (Internal):
-
-			break;
-		case (Permission):
+			response_->status_ = INTERNAL_SERVER_ERROR;
+			response_->headers_["Content-Type"] = "text/html";
+			if (location_.error_page.find(INTERNAL_SERVER_ERROR) != location_.error_page.end()) { //location level error page check
+				std::string root;
+				if (location_.root.size() != 0) {
+					root = location_.root;
+					root.append("/");
+				}
+				else {
+					root = config_.root;
+					root.append("/");
+				}
+				root.append(location_.error_page[INTERNAL_SERVER_ERROR]);
+				std::ifstream in(root);
+    			std::stringstream buffer;
+    			buffer << in.rdbuf();
+    			response_->body_ = buffer.str();
+    			in.close();
+			}
+			else if (config_.error_page.find(INTERNAL_SERVER_ERROR) != config_.error_page.end()) { //server level error page check
+				std::string root;
+				if (config_.root.size() != 0) {
+					root = config_.root;
+					root.append("/");
+				}
+				root.append(config_.error_page[INTERNAL_SERVER_ERROR]);
+				std::ifstream in(root);
+    			std::stringstream buffer;
+    			buffer << in.rdbuf();
+    			response_->body_ = buffer.str();
+    			in.close();
+			}
+			else { //default error page
+				response_->body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>500 Internal Server Error</h1></div></body></html>";
+			}
 
 			break;
 		case (Access):
+			response_->status_= NOT_FOUND;
+			response_->headers_["Content-Type"] = "text/html";
 
-			break;
-		case (Nonexistant):
-
+			if (location_.error_page.find(NOT_FOUND) != location_.error_page.end()) { //location level error page check
+				std::string root;
+				if (location_.root.size() != 0) {
+					root = location_.root;
+					root.append("/");
+				}
+				else {
+					root = config_.root;
+					root.append("/");
+				}
+				root.append(location_.error_page[NOT_FOUND]);
+				std::ifstream in(root);
+    			std::stringstream buffer;
+    			buffer << in.rdbuf();
+    			response_->body_ = buffer.str();
+    			in.close();
+				response_->headers_["Content-Length"] = std::to_string(response_->body_.size());
+			}
+			else if (config_.error_page.find(NOT_FOUND) != config_.error_page.end()) { //server level error page check
+				std::string root;
+				if (config_.root.size() != 0) {
+					root = config_.root;
+					root.append("/");
+				}
+				root.append(config_.error_page[NOT_FOUND]);
+				std::ifstream in(root);
+    			std::stringstream buffer;
+    			buffer << in.rdbuf();
+				std::cerr << buffer.str() << std::endl;
+    			response_->body_ = buffer.str();
+    			in.close();
+				response_->headers_["Content-Length"] = std::to_string(response_->body_.size());
+			}
+			else { //default error page
+				response_->body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
+				response_->headers_["Content-Length"] = std::to_string(response_->body_.size());
+			}
 			break;
 		default:
 			throw std::runtime_error("Something messed up happened");
