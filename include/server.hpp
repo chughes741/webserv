@@ -2,6 +2,8 @@
 
 #include <map>
 #include <string>
+#include <sys/types.h>
+#include <dirent.h>
 
 #include "config.hpp"
 #include "http.hpp"

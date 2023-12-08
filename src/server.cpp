@@ -290,14 +290,83 @@ std::string generateUniqueFileName(std::string &originalFileName) {
     return (newFileName);
 }
 
+std::stringstream uploadsFileList() {
+    std::stringstream fileList;
+    
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir("uploads")) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {
+            if (ent->d_name[0] != '.') {
+                std::string link = "<a href=\"/display?filename=" + std::string(ent->d_name) + "\">" + ent->d_name + "</a>";
+                fileList << "<li style=\"clear: both;\">" << link << "<input type=\"submit\" value=\"Delete\" style=\"float: right;\">" << "</li>";
+            }
+        }
+        closedir(dir);
+    }
+    return (fileList);
+}
+
+std::string readFileContent(const std::string& filename) {
+    std::ifstream file(filename.c_str(), std::ios::binary);
+    if (file) {
+        std::stringstream content;
+        content << file.rdbuf();
+        file.close();
+        return content.str();
+    }
+    else {
+        return "Error reading file: " + filename;
+    }
+}
+
+bool displayFile(HttpRequest& request, HttpResponse& response) {
+    std::string filename;
+    std::cout << "REQUEST URI CONTIENT: " << request.uri_ << std::endl;
+    size_t pos = request.uri_.find('?');
+    if (pos != std::string::npos) {
+        filename = request.uri_.substr(pos + 1);
+    }
+
+    std::string filePath = "uploads/" + filename;
+
+    std::ifstream file(filePath.c_str());
+    if (!file.is_open()) {
+        response.status_ = NOT_FOUND;
+        response.body_ = "File not found";
+        return false;
+    }
+    file.close();
+
+    std::string fileContent = readFileContent(filePath);
+
+    response.headers_["Content-Type"] = "application/octet-stream";
+    response.headers_["Content-Disposition"] = "attachment; filename=\"" + filename + "\"";
+
+    response.body_ = fileContent;
+
+    response.status_ = OK;
+    response.headers_["Content-Length"] = std::to_string(response.body_.size());
+
+    return true;
+}
+
+
 bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, ServerConfig &server,
                             LocationConfig *location) {
     (void)server;
     (void)location;
+    std::cout << "DANS POSTMETHOD, REQUESTURI CONTIENT: " << request.uri_ << std::endl;
+
+    if (request.uri_.find("/display") != std::string::npos) {
+        return displayFile(request, response);
+    }
 
     if (request.body_.empty()) {
             response.status_ = BAD_REQUEST;
-    } else {
+    } 
+
+    else {
         std::string userInput;
         size_t pos = request.body_.find("text_input=");
         if (pos != std::string::npos) {
@@ -330,10 +399,10 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         }
 
     } else if (request.headers_["Content-Type"].find("multipart/form-data") != std::string::npos) {
-        std::map<std::string, std::string>::iterator it;
-        for (it = request.headers_.begin(); it != request.headers_.end(); ++it) {
-            std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
-        }
+        //std::map<std::string, std::string>::iterator it;
+        //for (it = request.headers_.begin(); it != request.headers_.end(); ++it) {
+        //    std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
+        //}
         std::string boundary = extractValue(request.headers_["Content-Type"], "boundary=", "");
 
         std::string delimiter = "--" + boundary;
@@ -345,6 +414,9 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
             size_t filenamePos = part.find("filename=\"");
             if (filenamePos != std::string::npos) {
                 std::string filename = extractValue(part, "filename=\"", "\"");
+                if (filename.empty()) {
+                    break;
+                }
                 std::string realFileName = generateUniqueFileName(filename);
                 size_t contentPos = part.find("\r\n\r\n") + 4;
                 std::string content = part.substr(contentPos, part.length() - contentPos - delimiter.length());
@@ -354,6 +426,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                 file.close();
 
                 std::cout << "File '" << realFileName << "' uploaded successfully to /uploads" << std::endl; 
+                
             }
             pos = response.body_.find(delimiter, endPos);
         }
@@ -379,6 +452,13 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         response.headers_["Content-Type"] = "text/plain; charset=utf-8";
         response.body_                    = "Content-Type not supported";
     }
+
+    std::stringstream fileList = uploadsFileList();
+    
+    response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
+    response.status_ = OK;
+    response.headers_["Content-Type"] = "text/html";
+    response.headers_["Content-Length"] = std::to_string(response.body_.size());
 
     return true;
 }
