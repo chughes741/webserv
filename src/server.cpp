@@ -353,8 +353,9 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
     } else if (!validateRequestBody(request, server, location)) {
         return buildBadRequestBody(response);
     }
-    if (location->cgi_enabled && checkUriForExtension(uri, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
+    if (location->cgi_enabled && checkUriForExtension(request.uri_, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
         Logger::instance().log("Enter cgi");
+        Logger::instance().log(request.printRequest());
         Cgi newCgi(request, *location, server, response);
         bool result = newCgi.exec();
         return result;

@@ -14,9 +14,7 @@ print ("""<!DOCTYPE html>
     </style>
 </head>
 <body>
-
 <canvas id="myCanvas" width="1024" height="720"></canvas>
-
 <script>
   var canvas = document.getElementById("myCanvas");
   var ctx = canvas.getContext("2d");
@@ -25,28 +23,23 @@ print ("""<!DOCTYPE html>
   var dx = 4;
   var dy = -4;
   var ballRadius = 10;
-
   // left player paddle
   var leftPaddleHeight = 90;
   var leftPaddleWidth = 15;
   var leftPaddleX = 5;
   var leftPaddleY = canvas.height / 2 - leftPaddleHeight / 2;
-
   // Right player paddle
   var rightPaddleHeight = 90;
   var rightPaddleWidth = 15;
   var rightPaddleX = canvas.width - (rightPaddleWidth + 5);
   var rightPaddleY = canvas.height / 2 - rightPaddleHeight / 2;
-
   // boolean to handle pressed keys
   var leftUpPressed = false;
   var leftDownPressed = false;
   var rightUpPressed = false;
   var rightDownPressed = false;
-
   var leftScore = 0;
   var rightScore = 0;
-
   function keyDownHandler(e) {
       if(e.keyCode == 87) {
           leftUpPressed = true;
@@ -61,7 +54,6 @@ print ("""<!DOCTYPE html>
         rightDownPressed = true;
       }
   }
-
   function keyUpHandler(e) {
       if (e.keyCode == 87) {
           leftUpPressed = false;
@@ -76,7 +68,6 @@ print ("""<!DOCTYPE html>
         rightDownPressed = false;
       }
   }
-
   function drawBall() {
     ctx.beginPath();
     ctx.arc(x, y, ballRadius, 0, Math.PI*2);
@@ -84,14 +75,12 @@ print ("""<!DOCTYPE html>
     ctx.fill();
     ctx.closePath();
   }
-
   function drawScores() {
     ctx.font = "80px Arial";
     ctx.fillStyle = "white";
     ctx.fillText(leftScore, (canvas.width / 2) - 80, 80);
     ctx.fillText(rightScore, (canvas.width / 2) + 40, 80);
   }
-
   function collisionsWithLeftPaddle() {
      if ((x - ballRadius) <= 5 + leftPaddleWidth) {
        if (y > leftPaddleY && y < leftPaddleY + leftPaddleHeight)
@@ -107,7 +96,6 @@ print ("""<!DOCTYPE html>
        }
      }
   }
-
   function collisionsWithRightPaddle() {
     if ((x + ballRadius) >= canvas.width - (rightPaddleWidth + 5)) {
       if (y > rightPaddleY && y < rightPaddleY + rightPaddleHeight)
@@ -123,7 +111,6 @@ print ("""<!DOCTYPE html>
       }
     }
   }
-
   function computeCollisionsWithWallsAndPaddle() {
     collisionsWithLeftPaddle();
     collisionsWithRightPaddle();
@@ -131,7 +118,6 @@ print ("""<!DOCTYPE html>
       dy = -dy;
     }
   }
-
   function drawLeftPaddle() {
     ctx.beginPath();
     ctx.rect(leftPaddleX, leftPaddleY, leftPaddleWidth, leftPaddleHeight);
@@ -145,7 +131,6 @@ print ("""<!DOCTYPE html>
       leftPaddleY -= 7;
     }
   }
-
   function drawRightPaddle() {
     ctx.beginPath();
     ctx.rect(rightPaddleX, rightPaddleY, rightPaddleWidth, rightPaddleHeight);
@@ -159,7 +144,6 @@ print ("""<!DOCTYPE html>
       rightPaddleY -= 7;
     }
   }
-
   function drawScene() {
     ctx.beginPath();
     ctx.rect(canvas.width / 2 - 1, 0, 3, canvas.height);
@@ -167,7 +151,6 @@ print ("""<!DOCTYPE html>
     ctx.fill();
     ctx.closePath();
   }
-
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawScores();
@@ -179,11 +162,9 @@ print ("""<!DOCTYPE html>
     x += dx;
     y += dy;
   }
-
   setInterval(draw, 10);
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
 </script>
-
 </body>
 </html>""")

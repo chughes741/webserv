@@ -221,7 +221,8 @@ bool Cgi::performCgiGet() {
 		std::string scriptOutput;
 		close(fd[1]);
 		char buffer[1024];
-		while (read(fd[0], buffer, 1024) > 0) {
+		bzero(buffer, 1024);
+		while (read(fd[0], buffer, 1023) > 0) {
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
@@ -305,9 +306,10 @@ bool Cgi::performCgiPost() {
 		write(fdIn[1], request_.body_.c_str(), request_.body_.size());
 		close(fdIn[1]);
 		char buffer[1024];
+		bzero(buffer, 1024);
 		std::cerr << "Write successful" << std::endl;
 		close(fdOut[1]);
-		while (read(fdOut[0], buffer, 1024) > 0) {
+		while (read(fdOut[0], buffer, 1023) > 0) {
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
@@ -336,14 +338,19 @@ bool Cgi::performCgiPost() {
 }
 
 void Cgi::extractHeaders(std::string scriptOutput) {
+	Logger::instance().log("Entered extractHeaders");
 	std::string headerFields;
 	std::size_t boundary = scriptOutput.find("\n\n");
 	std::vector<std::pair<std::string, std::string> > headers;
 	std::string field;
 	std::size_t fieldBoundary;
-	if (boundary == std::string::npos)
+	Logger::instance().log("Vars initialized");
+	if (boundary == std::string::npos) {
+		Logger::instance().log("Hit return statement");
 		return;
+	}
 	else {
+		Logger::instance().log("Hit else statement");
 		headerFields = scriptOutput.substr(0, boundary + 1);
 		while (boundary != std::string::npos) {
 			boundary = headerFields.find('\n');
@@ -361,6 +368,7 @@ void Cgi::extractHeaders(std::string scriptOutput) {
 			}
 		}
 		for (std::size_t i = 0; i < headers.size(); ++i) {
+			Logger::instance().log("lol I'm stuck");
 			response_->headers_[headers[i].first] = headers[i].second;
 		}
 	}
@@ -421,7 +429,7 @@ void Cgi::handleError(exceptionType type) {
 			break;
 		case (Access):
 			response_->status_= NOT_FOUND;
-			response_->headers_["Content-Type"] = "text/html";
+			// response_->headers_["Content-Type"] = "text/html";
 
 			if (location_.error_page.find(NOT_FOUND) != location_.error_page.end()) { //location level error page check
 				std::string root;
@@ -439,7 +447,6 @@ void Cgi::handleError(exceptionType type) {
     			buffer << in.rdbuf();
     			response_->body_ = buffer.str();
     			in.close();
-				response_->headers_["Content-Length"] = std::to_string(response_->body_.size());
 			}
 			else if (config_.error_page.find(NOT_FOUND) != config_.error_page.end()) { //server level error page check
 				std::string root;
@@ -453,11 +460,9 @@ void Cgi::handleError(exceptionType type) {
     			buffer << in.rdbuf();
     			response_->body_ = buffer.str();
     			in.close();
-				response_->headers_["Content-Length"] = std::to_string(response_->body_.size());
 			}
 			else { //default error page
 				response_->body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
-				response_->headers_["Content-Length"] = std::to_string(response_->body_.size());
 			}
 			break;
 		default:
