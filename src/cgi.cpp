@@ -160,11 +160,14 @@ void Cgi::setEnv() { // A lot of stuff happens here. The beginning of great thin
 }
 
 bool Cgi::performCgi() {
+	Logger::instance().log(request_.printRequest());
 	switch(request_.method_) {
 		case GET:
+			Logger::instance().log("Enter performcgiGet");
 			return performCgiGet();
 			break;
 		case POST:
+			Logger::instance().log("EnterperformcgiPost");
 			return performCgiPost();
 			break;
 		default:
@@ -222,17 +225,21 @@ bool Cgi::performCgiGet() {
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
+		Logger::instance().log("Finished reading data from child");
 		close(fd[0]);
 		extractHeaders(scriptOutput);
+		Logger::instance().log("Finished extracting headers");
 		extractBody(scriptOutput);
+		Logger::instance().log("Finished extracting body");
 		waitpid(pid, &status, 0);
+		Logger::instance().log("Child has finished executing");
 		if (WEXITSTATUS(status) != 0) {
 			Logger::instance().log("Script execution failed");
 			throw InternalServerError();
 		}
 		else {
 			if (response_->headers_.find("Status") == response_->headers_.end()) {
-				response_->headers_["Status"] = OK;
+				response_->headers_["Status"] = std::to_string(OK);
 			}
 		}
 	}
@@ -321,7 +328,7 @@ bool Cgi::performCgiPost() {
 		}
 		else {
 			if (response_->headers_.find("Status") == response_->headers_.end()) {
-				response_->headers_["Status"] = OK;
+				response_->headers_["Status"] = std::to_string(OK);
 			}
 		}
 	}
@@ -444,7 +451,6 @@ void Cgi::handleError(exceptionType type) {
 				std::ifstream in(root);
     			std::stringstream buffer;
     			buffer << in.rdbuf();
-				std::cerr << buffer.str() << std::endl;
     			response_->body_ = buffer.str();
     			in.close();
 				response_->headers_["Content-Length"] = std::to_string(response_->body_.size());
