@@ -19,7 +19,7 @@ void HttpServer::start(bool run_server) {
     for (std::vector<ServerConfig>::iterator it = config_.servers.begin();
          it != config_.servers.end(); ++it) {
         try {
-            Logger::instance().log("Creating socket for server: " + it->listen.first + ":" +
+            Logger::instance().log("Creating socket for server: http://" + it->listen.first + ":" +
                                    std::to_string(it->listen.second));
 
             // Create a new socket
@@ -358,7 +358,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                             LocationConfig *location) {
     (void)server;
     (void)location;
-    std::cout << "DANS POSTMETHOD, REQUESTURI CONTIENT: " << request.uri_ << std::endl;
+    // std::cout << "DANS POSTMETHOD, REQUESTURI CONTIENT: " << request.uri_ << std::endl;
 
     if (request.uri_.find("/display") != std::string::npos) {
         return displayFile(request, response);
@@ -549,7 +549,7 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
-    Logger::instance().log(request.printRequest());
+    // Logger::instance().log(request.printRequest());
 
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";
