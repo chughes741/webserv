@@ -1,4 +1,5 @@
 #include "server.hpp"
+#include "cgi.hpp"
 
 extern HttpConfig httpConfig;
 
@@ -19,8 +20,8 @@ void HttpServer::start(bool run_server) {
     for (std::vector<ServerConfig>::iterator it = config_.servers.begin();
          it != config_.servers.end(); ++it) {
         try {
-            Logger::instance().log("Creating socket for server: " + it->listen.first + ":" +
-                                   std::to_string(it->listen.second));
+            // Logger::instance().log("Creating socket for server: " + it->listen.first + ":" +
+                                //    std::to_string(it->listen.second));
 
             // Create a new socket
             new_socket = socket_generator_();
@@ -101,10 +102,12 @@ void HttpServer::run() {
 }
 
 void HttpServer::readableHandler(int session_id) {
-    Logger::instance().log("Received request on fd: " + std::to_string(session_id));
+    // Logger::instance().log("Received request on fd: " + std::to_string(session_id));
 
     // Receive the request
     std::pair<HttpRequest, ssize_t> request = receiveRequest(session_id);
+
+    // Logger::instance().log(request.first.printRequest());
 
     if (request.second == 0) {
         disconnectHandler(session_id);
@@ -122,7 +125,7 @@ void HttpServer::readableHandler(int session_id) {
 }
 
 void HttpServer::writableHandler(int session_id) {
-    Logger::instance().log("Sending response on fd: " + std::to_string(session_id));
+    // Logger::instance().log("Sending response on fd: " + std::to_string(session_id));
 
     if (sessions_[session_id]->send()) {
         listener_.unregisterEvent(session_id, WRITABLE);
@@ -135,7 +138,7 @@ void HttpServer::errorHandler(int session_id) {
 }
 
 void HttpServer::signalHandler(int signal) {
-    Logger::instance().log("Received signal: " + std::to_string(signal));
+    // Logger::instance().log("Received signal: " + std::to_string(signal));
 
     if (signal == SIGINT || signal == SIGTERM) {
         stop();
@@ -143,7 +146,7 @@ void HttpServer::signalHandler(int signal) {
 }
 
 void HttpServer::connectHandler(int socket_id) {
-    Logger::instance().log("Received connection on fd: " + std::to_string(socket_id));
+    // Logger::instance().log("Received connection on fd: " + std::to_string(socket_id));
 
     // Accept the connection
     Session *session = server_sockets_[socket_id]->accept();
@@ -156,7 +159,7 @@ void HttpServer::connectHandler(int socket_id) {
 }
 
 void HttpServer::disconnectHandler(int session_id) {
-    Logger::instance().log("Disconnecting fd: " + std::to_string(session_id));
+    // Logger::instance().log("Disconnecting fd: " + std::to_string(session_id));
 
     // Remove the session from the listener
     listener_.unregisterEvent(session_id, READABLE | WRITABLE);
@@ -174,7 +177,7 @@ void HttpServer::disconnectHandler(int session_id) {
 std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
     std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
 
-    HttpRequest request(buffer_pair.first);
+    HttpRequest request(buffer_pair.first, sessions_[session_id]);
 
     return std::make_pair(request, buffer_pair.second);
 }
@@ -276,6 +279,8 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
 
         // TODO: Call the CGI script
 
+
+
         if (true) {  // TODO: Check the return code of the CGI script
             response.status_ = OK;
 
@@ -332,13 +337,14 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server) {
     LocationConfig *location = NULL;
     std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
-    Logger::instance().log("uri: " + uri);
+    // Logger::instance().log("uri: " + uri);
     for (std::map<std::string, LocationConfig>::iterator it = server.locations.begin();
      it != server.locations.end(); ++it) {    
         if (uri.substr(0, it->first.size()) == it->first) {
             location = &(it->second);
         }
     }
+    // Logger::instance().log(request.printRequest());
     if (!location) {
         return buildNotFound(request, response, server, location);
     } else if (!(location->limit_except & request.method_)) {
@@ -347,16 +353,22 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
     } else if (!validateRequestBody(request, server, location)) {
         return buildBadRequestBody(response);
     }
+    if (location->cgi_enabled) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
+        Logger::instance().log(request.printRequest());
+        Cgi newCgi(request, *location, server);
+        bool result = newCgi.exec();
+        return result;
+    }
     // @todo verify if method is allowed on location
     switch (request.method_) {
-        case 1: // Enums for comparisons is C++11...
-            return getMethod(request, response, server, location);
-        case 2: // Enums for comparisons is C++11...
-            return postMethod(request, response, server, location);
-        case 3: // Enums for comparisons is C++11...
-            return deleteMethod(request, response, server, location);
-        default:
-            return false;
+    case 1: // Enums for comparisons is C++11...
+        return getMethod(request, response, server, location);
+    case 2: // Enums for comparisons is C++11...
+        return postMethod(request, response, server, location);
+    case 3: // Enums for comparisons is C++11...
+        return deleteMethod(request, response, server, location);
+    default:
+        return false;
     }
 }
 
