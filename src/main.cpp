@@ -34,8 +34,12 @@ int main(int argc, char *argv[]) {
         // Start the server
         httpServer.start();
     }
+    //THIS is dumbshit that doesn't work and cannot restart the server because address is already in use. Gotta find a better way of not making it crash, while catching the exception.
     catch (std::length_error &e) {
         std::cerr << "THERE IS AN ERROR WITH THE SERVER" << e.what() << std::endl;
+        HttpServer httpServer(httpConfig);
+
+        httpServer.start();
     }
     
 
