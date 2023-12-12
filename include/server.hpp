@@ -52,6 +52,7 @@ class HttpServer {
     bool validateHost(HttpRequest &, HttpResponse &);
     bool validateRequestBody(HttpRequest &, ServerConfig &, LocationConfig *);
     bool readRoot(HttpRequest &, HttpResponse &, ServerConfig *, LocationConfig *);
+    bool checkUriForExtension(std::string &uri, LocationConfig *location) const;
 
     std::string trimHost(const std::string &uri, ServerConfig &server);
 
