@@ -11,14 +11,12 @@
 
 enum exceptionType {
     Internal,
-    Permission,
-    Access,
-    Nonexistant
+    Access
 };
 
 class Cgi {
 public:
-    Cgi(HttpRequest &request, LocationConfig &location, ServerConfig &config);
+    Cgi(HttpRequest &request, LocationConfig &location, ServerConfig &config, HttpResponse& response);
     ~Cgi();
     bool exec();
 
@@ -27,16 +25,18 @@ private: //private methods
     void checkForScript();
     void handleError(exceptionType type);
     void setEnv();
-    void handlePipe();
     bool performCgiGet();
     bool performCgiPost();
     void extractScript();
+    void extractHeaders(std::string scriptOutput);
+    void extractBody(std::string scriptOutput);
 
 private: //member variables
 
     HttpRequest request_;
     LocationConfig location_;
     ServerConfig config_;
+    HttpResponse* response_;
     char *envp_[256];
     std::string script_;
     std::string scriptWithPath_;
