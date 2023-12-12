@@ -3,7 +3,7 @@
 print("Content-Type: text/html\n")
 
 print("<!DOCTYPE html>")
-print("<html>");
+print("""<html>
 <head>
   <title></title>
   <style>
@@ -169,4 +169,4 @@ document.addEventListener('keydown', function(e) {
 requestAnimationFrame(loop);
 </script>
 </body>
-</html>")
+</html>")""")
