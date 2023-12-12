@@ -407,30 +407,34 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         //for (it = request.headers_.begin(); it != request.headers_.end(); ++it) {
         //    std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
         //}
-        try {
 
         std::string boundary = extractValue(request.headers_["Content-Type"], "boundary=", "");
         std::cout << "BOUNDARY = " << boundary << std::endl;
         //std::cout << "MAX VALUE OF SIZE_T = " << std::numeric_limits<std::size_t>::max() << std::endl;
-        const size_t MAX_VALUE = std::numeric_limits<std::size_t>::max();
+        //const size_t MAX_VALUE = std::numeric_limits<std::size_t>::max();
+        const size_t BUFFER_SIZE = 2048;
 
         std::string delimiter = "--" + boundary;
         size_t pos = request.body_.find(delimiter);
         std::cout << "BODY IS: " << request.body_ << std::endl;
         std::cout << "POS = " << pos << std::endl;
-        if (pos >= MAX_VALUE) {
-            std::cerr << "There was an error uploading the file" << std::endl;
-            response.body_ = "<html><body>There was an error uploading the file<br><br><a href='/'>Return Home</a></body></html>";
-            return true;
-        }
-        while (pos != std::string::npos && pos < MAX_VALUE) {
+        //if (pos >= MAX_VALUE) {
+        //    std::cerr << "There was an error uploading the file" << std::endl;
+        //    response.body_ = "<html><body>There was an error uploading the file<br><br><a href='/'>Return Home</a></body></html>";
+        //    return true;
+        //}
+        while (pos != std::string::npos) {
             size_t endPos = request.body_.find(delimiter, pos + delimiter.length());
-            if (endPos >= MAX_VALUE) {
-                std::cerr << "There is an error with endPos" << std::endl;
-            }
+            //if (endPos >= MAX_VALUE) {
+            //    std::cerr << "There is an error with endPos" << std::endl;
+            //    response.body_ = "<html><body>There was an error uploading the file<br><br><a href='/'>Return Home</a></body></html>";
+            //    return true;
+            //}
             
-            //std::cout << "endPos = " << endPos << std::endl;
+            std::cout << "endPos = " << endPos << std::endl;
             std::string part = request.body_.substr(pos, endPos - pos);
+
+            std::cout << "PART IS: " << part << std::endl;
 
             size_t filenamePos = part.find("filename=\"");
             if (filenamePos != std::string::npos) {
@@ -441,7 +445,11 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                 std::string realFileName = generateUniqueFileName(filename);
                 size_t contentPos = part.find("\r\n\r\n") + 4;
                 std::cout << "contentPos vaut: " << contentPos << std::endl;
-                std::string content = part.substr(contentPos, part.length() - contentPos - delimiter.length());
+                std::cout << "PART LENGTH = " << part.length() << std::endl;
+                std::cout << "DELIMITER LENGTH = " << delimiter.length() << std::endl;
+                std::cout << "LONGUEUR DU CONTENT = " << part.length() - contentPos - 2 << std::endl;
+                //TODO insert while loop here for buffer size and put content in file by chunks of BUFFER_SIZE ? 
+                std::string content = part.substr(contentPos, std::min(part.length() - contentPos - 2, BUFFER_SIZE));
                 //std::cout << "CONTENT = " << content << std::endl;
 
                 std::ofstream file(realFileName.c_str(), std::ios::binary);
@@ -452,11 +460,6 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                 
             }
             pos = response.body_.find(delimiter, endPos);
-        }
-        }
-        catch (std::length_error &e) {
-            response.body_ = "<html><body>There was an error uploading the file<br><br><a href='/'>Return Home</a></body></html>";
-            return true;
         }
     }
 
