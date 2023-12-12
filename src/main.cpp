@@ -27,11 +27,17 @@ int main(int argc, char *argv[]) {
         return (EXIT_FAILURE);
     }
 
-    // Initialize server
-    HttpServer httpServer(httpConfig);
+    try {
+        // Initialize server
+        HttpServer httpServer(httpConfig);
 
-    // Start the server
-    httpServer.start();
+        // Start the server
+        httpServer.start();
+    }
+    catch (std::length_error &e) {
+        std::cerr << "THERE IS AN ERROR WITH THE SERVER" << e.what() << std::endl;
+    }
+    
 
     return (EXIT_SUCCESS);
 }

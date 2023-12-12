@@ -375,9 +375,11 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
             userInput = request.body_.substr(pos + 11);
             if (userInput.empty()) {
                 response.body_ = "<html><body>This field cannot be empty<br><br><a href='/'>Return Home</a></body></html>";
+                return true;
             }
             else {
                 response.body_ = "<html><body>You've entered: " + userInput + "<br><br><a href='/'>Return Home</a></body></html>";
+                return true;
             }
         }
         response.status_ = OK;
@@ -405,12 +407,29 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         //for (it = request.headers_.begin(); it != request.headers_.end(); ++it) {
         //    std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
         //}
+        try {
+
         std::string boundary = extractValue(request.headers_["Content-Type"], "boundary=", "");
+        std::cout << "BOUNDARY = " << boundary << std::endl;
+        //std::cout << "MAX VALUE OF SIZE_T = " << std::numeric_limits<std::size_t>::max() << std::endl;
+        const size_t MAX_VALUE = std::numeric_limits<std::size_t>::max();
 
         std::string delimiter = "--" + boundary;
         size_t pos = request.body_.find(delimiter);
-        while (pos != std::string::npos) {
+        std::cout << "BODY IS: " << request.body_ << std::endl;
+        std::cout << "POS = " << pos << std::endl;
+        if (pos >= MAX_VALUE) {
+            std::cerr << "There was an error uploading the file" << std::endl;
+            response.body_ = "<html><body>There was an error uploading the file<br><br><a href='/'>Return Home</a></body></html>";
+            return true;
+        }
+        while (pos != std::string::npos && pos < MAX_VALUE) {
             size_t endPos = request.body_.find(delimiter, pos + delimiter.length());
+            if (endPos >= MAX_VALUE) {
+                std::cerr << "There is an error with endPos" << std::endl;
+            }
+            
+            //std::cout << "endPos = " << endPos << std::endl;
             std::string part = request.body_.substr(pos, endPos - pos);
 
             size_t filenamePos = part.find("filename=\"");
@@ -421,7 +440,9 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                 }
                 std::string realFileName = generateUniqueFileName(filename);
                 size_t contentPos = part.find("\r\n\r\n") + 4;
+                std::cout << "contentPos vaut: " << contentPos << std::endl;
                 std::string content = part.substr(contentPos, part.length() - contentPos - delimiter.length());
+                //std::cout << "CONTENT = " << content << std::endl;
 
                 std::ofstream file(realFileName.c_str(), std::ios::binary);
                 file << content;
@@ -431,6 +452,11 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                 
             }
             pos = response.body_.find(delimiter, endPos);
+        }
+        }
+        catch (std::length_error &e) {
+            response.body_ = "<html><body>There was an error uploading the file<br><br><a href='/'>Return Home</a></body></html>";
+            return true;
         }
     }
 
@@ -520,6 +546,7 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         return buildBadRequestBody(response);
     }
     // @todo verify if method is allowed on location
+
     switch (request.method_) {
         case 1: // Enums for comparisons is C++11...
             return getMethod(request, response, server, location);

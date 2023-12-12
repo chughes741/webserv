@@ -4,6 +4,7 @@
 #include <string>
 #include <sys/types.h>
 #include <dirent.h>
+#include <limits>
 
 #include "config.hpp"
 #include "http.hpp"
