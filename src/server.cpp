@@ -408,22 +408,24 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         //    std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
         //}
 
+        //std::cout << "BODY IS: " << request.body_ << std::endl;
+
         std::string boundary = extractValue(request.headers_["Content-Type"], "boundary=", "");
         if (request.body_.empty()) {
             std::cerr << "Problem uploading the file" << std::endl;
             response.body_ = "<html><body>There was an error uploading the file<br><br><a href='/'>Return Home</a></body></html>";
             return true;
         }
-        std::cout << "BOUNDARY = " << boundary << std::endl;
+        //std::cout << "BOUNDARY = " << boundary << std::endl;
         //std::cout << "MAX VALUE OF SIZE_T = " << std::numeric_limits<std::size_t>::max() << std::endl;
         //const size_t MAX_VALUE = std::numeric_limits<std::size_t>::max();
-        const size_t BUFFER_SIZE = 2048;
+        //const size_t BUFFER_SIZE = 2048;
 
         std::string delimiter = "--" + boundary;
         size_t pos = 0;
         pos = request.body_.find(delimiter);
         //std::cout << "BODY IS: " << request.body_ << std::endl;
-        std::cout << "POS = " << pos << std::endl;
+        //std::cout << "POS = " << pos << std::endl;
         //if (pos >= MAX_VALUE) {
         //    std::cerr << "There was an error uploading the file" << std::endl;
         //    response.body_ = "<html><body>There was an error uploading the file<br><br><a href='/'>Return Home</a></body></html>";
@@ -438,7 +440,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
             //    return true;
             //}
             
-            std::cout << "endPos = " << endPos << std::endl;
+            //std::cout << "endPos = " << endPos << std::endl;
             std::string part = request.body_.substr(pos, endPos - pos);
 
             //std::cout << "PART IS: " << part << std::endl;
@@ -451,28 +453,28 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                 }
                 std::string realFileName = generateUniqueFileName(filename);
                 size_t contentPos = part.find("\r\n\r\n") + 4;
-                std::cout << "contentPos vaut: " << contentPos << std::endl;
-                std::cout << "PART LENGTH = " << part.length() << std::endl;
-                std::cout << "DELIMITER LENGTH = " << delimiter.length() << std::endl;
-                std::cout << "LONGUEUR DU CONTENT = " << part.length() - contentPos - 2 << std::endl;
-                size_t contentLength = part.length() - contentPos - 2; 
+                //std::cout << "contentPos vaut: " << contentPos << std::endl;
+                //std::cout << "PART LENGTH = " << part.length() << std::endl;
+                //std::cout << "DELIMITER LENGTH = " << delimiter.length() << std::endl;
+                //std::cout << "LONGUEUR DU CONTENT = " << part.length() - contentPos - 2 << std::endl;
+                //size_t contentLength = part.length() - contentPos - 2; 
                 //TODO Francis check here and check the cout !
                 std::ofstream file(realFileName.c_str(), std::ios::binary | std::ios::app);
-                size_t needleContent = contentPos;
-                size_t loops = 0;
-                while (needleContent < (contentLength + contentPos)) {
-                    std::string content = part.substr(contentPos, std::min(BUFFER_SIZE, contentLength - (needleContent - contentPos)));
-                    //std::cout << "CONTENT = " << content << std::endl;
-                    needleContent += content.length();
-                    file << content; 
-                    std::cout << "LENGTH OF CHUNK = " << content.length() << std::endl;
-                    ++loops;
-                }
-                //std::string content = part.substr(contentPos, part.length() - contentPos - 2);
+                //size_t needleContent = contentPos;
+                //size_t loops = 0;
+                //while (needleContent < (contentLength + contentPos)) {
+                //    std::string content = part.substr(contentPos, std::min(BUFFER_SIZE, contentLength - (needleContent - contentPos)));
+                //    //std::cout << "CONTENT = " << content << std::endl;
+                //    needleContent += content.length();
+                //    file << content; 
+                //    //std::cout << "LENGTH OF CHUNK = " << content.length() << std::endl;
+                //    //++loops;
+                //}
+                std::string content = part.substr(contentPos, part.length() - contentPos - 2);
                 //std::cout << "CONTENT = " << content << std::endl;
-                //file << content;
+                file << content;
                 file.close();
-                std::cout << "LOOPED " << loops << " TIMES" << std::endl; 
+                //std::cout << "LOOPED " << loops << " TIMES" << std::endl; 
                 std::cout << "File '" << realFileName << "' uploaded successfully to /uploads" << std::endl; 
                 
             }

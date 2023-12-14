@@ -1,4 +1,6 @@
 #include "http.hpp"
+#include <iostream>
+#include <fstream>
 
 std::map<std::string, HttpMethod> initMethodMap() {
     std::map<std::string, HttpMethod> methodMap;
@@ -21,6 +23,7 @@ std::string HttpRequest::consumeNextToken(std::string &buffer, const std::string
 }
 
 HttpRequest::HttpRequest(const std::string &request) {
+    const size_t BUFFER_SIZE = 2048;
     std::string buffer = request;
 
     std::string method = consumeNextToken(buffer, " ");
@@ -37,8 +40,24 @@ HttpRequest::HttpRequest(const std::string &request) {
         std::string value = consumeNextToken(headers, CRLF);
         headers_[key]     = value;
     }
-    //std::cout << "BUFFER IS " << std::endl;
-    body_ = buffer;
+    std::ofstream outputFile("outputBuffer.txt");
+    std::streambuf *original_cout_streambuf = std::cout.rdbuf();
+    std::cout.rdbuf(outputFile.rdbuf());
+    std::cout << "BUFFER IS " << buffer << "---BUFFER ENDS---" << std::endl;
+    std::cout.rdbuf(original_cout_streambuf);
+    size_t prevLength = 0;
+    size_t index = 0;
+    std::cout << "BUFFER LENGTH = " << buffer.length() << std::endl;
+    size_t loops = 0;
+    while (index < buffer.length()) {
+        prevLength = body_.length();
+        body_.append(buffer, index, std::min(BUFFER_SIZE, (buffer.length() - index)));
+        index += (body_.length() - prevLength);
+        std::cout << "LENGTH OF CHUNK = " << body_.length() - prevLength << std::endl;
+        ++loops;
+    }
+    std::cout << "LOOPED " << loops << " times" << std::endl;
+    //std::cout << "BODY IS: " << body_ << "---BODY ENDS---" << std::endl;
 }
 
 std::map<HttpStatus, std::string> initStatusMap() {
