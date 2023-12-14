@@ -430,6 +430,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         //    return true;
         //}
         while (pos != std::string::npos) {
+            //THIS sometimes fuck up...may be just on M1 though.
             size_t endPos = request.body_.find(delimiter, pos + delimiter.length());
             //if (endPos >= MAX_VALUE) {
             //    std::cerr << "There is an error with endPos" << std::endl;
@@ -455,21 +456,23 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                 std::cout << "DELIMITER LENGTH = " << delimiter.length() << std::endl;
                 std::cout << "LONGUEUR DU CONTENT = " << part.length() - contentPos - 2 << std::endl;
                 size_t contentLength = part.length() - contentPos - 2; 
-                //TODO insert while loop here for buffer size and put content in file by chunks of BUFFER_SIZE ?
-                std::ofstream file(realFileName.c_str(), std::ios::binary);
+                //TODO Francis check here and check the cout !
+                std::ofstream file(realFileName.c_str(), std::ios::binary | std::ios::app);
                 size_t needleContent = contentPos;
+                size_t loops = 0;
                 while (needleContent < (contentLength + contentPos)) {
-                    std::string content = part.substr(contentPos, std::min(BUFFER_SIZE, contentLength));
+                    std::string content = part.substr(contentPos, std::min(BUFFER_SIZE, contentLength - (needleContent - contentPos)));
                     //std::cout << "CONTENT = " << content << std::endl;
                     needleContent += content.length();
                     file << content; 
+                    std::cout << "LENGTH OF CHUNK = " << content.length() << std::endl;
+                    ++loops;
                 }
-                //std::string content = part.substr(contentPos, std::min(part.length() - contentPos - 2, BUFFER_SIZE));
+                //std::string content = part.substr(contentPos, part.length() - contentPos - 2);
                 //std::cout << "CONTENT = " << content << std::endl;
-
                 //file << content;
                 file.close();
-
+                std::cout << "LOOPED " << loops << " TIMES" << std::endl; 
                 std::cout << "File '" << realFileName << "' uploaded successfully to /uploads" << std::endl; 
                 
             }
