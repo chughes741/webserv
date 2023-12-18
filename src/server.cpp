@@ -277,11 +277,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         Logger::instance().log("POST: Returning response from form-data");
         response.headers_["Content-Type"] = "text/html; charset=utf-8";
 
-        // TODO: Call the CGI script
-
-
-
-        if (true) {  // TODO: Check the return code of the CGI script
+        if (true) {
             response.status_ = OK;
 
         } else {
@@ -353,12 +349,16 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
     } else if (!validateRequestBody(request, server, location)) {
         return buildBadRequestBody(response);
     }
-    if (location->cgi_enabled && checkUriForExtension(request.uri_, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
+    if (checkIfDirectoryRequest(request, location, server) && location->autoindex) {
+        // handleDirectoryListing(request, response, location);
+        std::cout << "handle shit" << std::endl;
+        return true;
+    }
+    else if (location->cgi_enabled && checkUriForExtension(request.uri_, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
         Logger::instance().log("Enter cgi");
         Logger::instance().log(request.printRequest());
         Cgi newCgi(request, *location, server, response);
-        bool result = newCgi.exec();
-        return result;
+        return newCgi.exec();
     }
     else {
         switch (request.method_) {
@@ -427,4 +427,45 @@ bool HttpServer::checkUriForExtension(std::string& uri, LocationConfig *location
 		return false;
     else
         return true;
+}
+
+void HttpServer::handleDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location) { //if the request is for a directory then it should be handled by this function
+    std::string responseBody;
+
+    if ()
+}
+
+bool HttpServer::checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server) { //used to check if request is simply for a directory
+    std::string tempUri;
+    if (location->root.size()) { //check if root is set at the location level
+        tempUri.append(location->root);
+    }
+    else { //fallback to server root directive
+        tempUri.append(server.root);
+    }
+    tempUri.append(request.uri_);
+
+    DIR *currentDirectory = opendir(tempUri.c_str()); //attempt to open the directory specified. If successful then it means the request was indeed for a directory.
+    if (!currentDirectory) {
+        return (false);
+    }
+    if (closedir(currentDirectory)) { //to prevent leaks. Cause leaks suck
+        std::string error("Call to closedir failed: ");
+        error.append(strerror(errno));
+        Logger::instance().log(error);
+    }
+    return true;
+}
+
+bool HttpServer::checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server) {
+    std::string tempUri;
+    if (location->root.size()) { //check if root is set at the location level
+        tempUri.append(location->root);
+    }
+    else { //fallback to server root directive
+        tempUri.append(server.root);
+    }
+    tempUri.append(request.uri_);
+
+    DIR *currentDirectory = opendir(tempUri.c_str());
 }

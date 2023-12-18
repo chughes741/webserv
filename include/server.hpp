@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include <dirent.h>
 
 #include "config.hpp"
 #include "http.hpp"
@@ -51,6 +52,9 @@ class HttpServer {
     bool validateRequestBody(HttpRequest &, ServerConfig &, LocationConfig *);
     bool readRoot(HttpRequest &, HttpResponse &, ServerConfig *, LocationConfig *);
     bool checkUriForExtension(std::string &uri, LocationConfig *location) const;
+    void handleDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *config);
+    bool checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server);
+    bool checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server);
 
     std::string trimHost(const std::string &uri, ServerConfig &server);
 
