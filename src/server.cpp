@@ -243,6 +243,9 @@ bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server, LocationConfig *location) {
     (void) request;
     (void) response;
+    size_t position = request.uri_.find("=");
+    std::string filename = request.uri_.substr(position + 1, request.uri_.length() - position);
+    std::cout << "FILENAME TO DELETE= " << filename << std::endl;
     (void) server;
     (void) location;
     Logger::instance().log("Delete method activated");
@@ -300,7 +303,7 @@ std::stringstream uploadsFileList() {
             if (ent->d_name[0] != '.') {
                 std::string filename = std::string(ent->d_name);
                 std::string link = "<a href=\"/display?filename=" + filename + + "\">" + filename + "</a>";
-                std::string deleteButton = "<form method=\"post\" action=\"/delete\" style=\"float: right;\"><input type=\"hidden\" name=\"filename\" value=\"" + filename + "\"><input type=\"submit\" value=\"Delete\"></form>";
+                std::string deleteButton = "<form method=\"DELETE\" action=\"/delete\" style=\"float: right;\"><input type=\"hidden\" name=\"filename\" value=\"" + filename + "\"><input type=\"submit\" value=\"Delete\"></form>";
                 fileList << "<li style=\"clear: both;\">" << link << deleteButton << "</li>";
             }
         }
@@ -358,7 +361,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                             LocationConfig *location) {
     (void)server;
     (void)location;
-    // std::cout << "DANS POSTMETHOD, REQUESTURI CONTIENT: " << request.uri_ << std::endl;
+    //std::cout << "DANS POSTMETHOD, REQUESTURI CONTIENT: " << request.uri_ << std::endl;
 
     if (request.uri_.find("/display") != std::string::npos) {
         return displayFile(request, response);
@@ -568,7 +571,7 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         return buildBadRequestBody(response);
     }
     // @todo verify if method is allowed on location
-
+    std::cout << "WHAT IS METHOD: " << request.method_ << std::endl;
     switch (request.method_) {
         case 1: // Enums for comparisons is C++11...
             return getMethod(request, response, server, location);

@@ -25,9 +25,10 @@ std::string HttpRequest::consumeNextToken(std::string &buffer, const std::string
 HttpRequest::HttpRequest(const std::string &request) {
     const size_t BUFFER_SIZE = 2048;
     std::string buffer = request;
-
+    std::cout << "BUFFER IN HTTPREQUEST IS: " << buffer << " ---BUFFER ENDS--- " << std::endl;
     std::string method = consumeNextToken(buffer, " ");
 
+    std::cout << "METHOD IN HTTPREQUEST IS: " << method << std::endl;
     method_ = methodMap_.find(method) != methodMap_.end() ? methodMap_[method] : UNKNOWN;
 
     uri_     = consumeNextToken(buffer, " ");
@@ -40,10 +41,10 @@ HttpRequest::HttpRequest(const std::string &request) {
         std::string value = consumeNextToken(headers, CRLF);
         headers_[key]     = value;
     }
-    std::ofstream outputFile("outputBuffer.txt");
+    std::ofstream outputFile("outputRequest.txt");
     std::streambuf *original_cout_streambuf = std::cout.rdbuf();
     std::cout.rdbuf(outputFile.rdbuf());
-    std::cout << "BUFFER IS " << buffer << "---BUFFER ENDS---" << std::endl;
+    std::cout << "REQUEST IS " << request << "---REQUEST ENDS---" << std::endl;
     std::cout.rdbuf(original_cout_streambuf);
     size_t prevLength = 0;
     size_t index = 0;
