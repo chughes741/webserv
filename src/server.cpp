@@ -239,15 +239,88 @@ std::string HttpServer::trimHost(const std::string &uri, ServerConfig &server) {
     return uri;
 }
 
+bool deleteFile(const std::string &filename) {
+    std::string filePath = "uploads/" + filename;
+    return std::remove(filePath.c_str()) == 0;
+}
+
+std::stringstream uploadsFileList() {
+    std::stringstream fileList;
+
+    fileList << "<script>"
+         << "function handleDeleteButtonClick(filename) {"
+         << "    var currentUrl = window.location.href + 'delete?filename=' + encodeURIComponent(filename);"
+         << "    fetch(currentUrl, {"
+         << "        method: 'DELETE',"
+         << "        headers: { 'Content-Type': 'application/json' },"
+         << "    })"
+         << "    .then(response => {"
+         << "        if (response.ok) {"
+         << "            console.log('DELETE request for ' + filename + ' successful');"
+         << "        } else {"
+         << "            console.error('DELETE request for ' + filename + ' failed');"
+         << "        }"
+         << "    })"
+         << "    .catch(error => {"
+         << "        console.error('Error during DELETE request for ' + filename + ':', error);"
+         << "    });"
+         << "}"
+         << "</script>";
+    
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir("uploads")) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {
+            if (ent->d_name[0] != '.') {
+                std::string filename = std::string(ent->d_name);
+                fileList << "<li style=\"clear: both;\">"
+                         << "<a href=\"/display?filename=" << filename << "\">" << filename << "</a>"
+                         << "<form id=\"deleteForm" << filename << "\" style=\"float: right;\">"
+                         << "<input type=\"hidden\" name=\"filename\" value=\"" << filename << "\">"
+                         << "<input type=\"button\" value=\"Delete\" onclick=\"handleDeleteButtonClick('" << filename << "');\">"
+                         << "</form>"
+                         << "</li>";
+                //std::string link = "<a href=\"/display?filename=" + filename + + "\">" + filename + "</a>";
+                //std::string deleteButton = "<form method=\"DELETE\" action=\"/delete\" style=\"float: right;\"><input type=\"hidden\" name=\"filename\" value=\"" + filename + "\"><input type=\"submit\" value=\"Delete\"></form>";
+                //std::string deleteButton = "<form method=\"DELETE\" action=\"/delete\" style=\"float: right;\" id=\"deleteButton" + filename + "\"><input type=\"hidden\" name=\"filename\" value=\"" + filename + "\"><input type=\"submit\" value=\"Delete\"></form>";
+                //fileList << "<li style=\"clear: both;\">" << link << deleteButton << "</li>";
+            }
+        }
+        closedir(dir);
+    }
+    return (fileList);
+}
+
+//THIS is to avoid the non-deletion of some files with spaces and other special characters in their name
+std::string urlDecode(const std::string& str) {
+    std::stringstream decoded;
+    for (size_t i = 0; i < str.length(); ++i) {
+        if (str[i] == '%' && i + 2 < str.length()) {
+            char decodedChar = static_cast<char>(std::strtoul(str.substr(i + 1, 2).c_str(), nullptr, 16));
+            decoded << decodedChar;
+            i += 2;
+        } else if (str[i] == '+') {
+            decoded << ' ';
+        } else {
+            decoded << str[i];
+        }
+    }
+    return decoded.str();
+}
+
 bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server, LocationConfig *location) {
-    (void) request;
-    (void) response;
-    size_t position = request.uri_.find("=");
-    std::string filename = request.uri_.substr(position + 1, request.uri_.length() - position);
-    std::cout << "FILENAME TO DELETE= " << filename << std::endl;
     (void) server;
     (void) location;
+    
+    size_t position = request.uri_.find("=");
+    std::string encodedFilename = request.uri_.substr(position + 1);
+    std::string filename = urlDecode(encodedFilename);
+    deleteFile(filename);
+    std::stringstream fileList = uploadsFileList();
+    response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
+    //std::cout << "APRES REAFFECTATION: " << response.body_ << std::endl;
+    //std::cout << "FILENAME TO DELETE= " << filename << std::endl;
     Logger::instance().log("Delete method activated");
     response.status_ = OK;
     return true;
@@ -293,24 +366,7 @@ std::string generateUniqueFileName(std::string &originalFileName) {
     return (newFileName);
 }
 
-std::stringstream uploadsFileList() {
-    std::stringstream fileList;
-    
-    DIR *dir;
-    struct dirent *ent;
-    if ((dir = opendir("uploads")) != NULL) {
-        while ((ent = readdir(dir)) != NULL) {
-            if (ent->d_name[0] != '.') {
-                std::string filename = std::string(ent->d_name);
-                std::string link = "<a href=\"/display?filename=" + filename + + "\">" + filename + "</a>";
-                std::string deleteButton = "<form method=\"DELETE\" action=\"/delete\" style=\"float: right;\"><input type=\"hidden\" name=\"filename\" value=\"" + filename + "\"><input type=\"submit\" value=\"Delete\"></form>";
-                fileList << "<li style=\"clear: both;\">" << link << deleteButton << "</li>";
-            }
-        }
-        closedir(dir);
-    }
-    return (fileList);
-}
+
 
 std::string readFileContent(const std::string& filename) {
     std::ifstream file(filename.c_str(), std::ios::binary);
@@ -356,17 +412,12 @@ bool displayFile(HttpRequest& request, HttpResponse& response) {
     return true;
 }
 
-bool deleteFile(const std::string &filename) {
-    std::string filePath = "uploads/" + filename;
-    return std::remove(filePath.c_str()) == 0;
-}
-
 bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, ServerConfig &server,
                             LocationConfig *location) {
     (void)server;
     (void)location;
-    std::cout << "DANS POSTMETHOD, REQUESTURI CONTIENT: " << request.uri_ << std::endl;
-    std::cout << "BODY IS: " << request.body_ << std::endl;
+    //std::cout << "DANS POSTMETHOD, REQUESTURI CONTIENT: " << request.uri_ << std::endl;
+    //std::cout << "BODY IS: " << request.body_ << std::endl;
 
     //if (request.uri_.find("/display") != std::string::npos) {
     //    return displayFile(request, response);
@@ -523,18 +574,18 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
 
 bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server, LocationConfig *location) {
-    if (request.uri_.find("delete") != std::string::npos) {
-        std::string filename;
-        size_t equalPosition = request.uri_.find('=');
-        if (equalPosition != std::string::npos) {
-            filename = request.uri_.substr(equalPosition + 1);
-            deleteFile(filename);
-            std::stringstream fileList = uploadsFileList();
-            response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
-            response.status_ = OK;
-            return true;
-        }
-    }
+    //if (request.uri_.find("delete") != std::string::npos) {
+    //    std::string filename;
+    //    size_t equalPosition = request.uri_.find('=');
+    //    if (equalPosition != std::string::npos) {
+    //        filename = request.uri_.substr(equalPosition + 1);
+    //        deleteFile(filename);
+    //        std::stringstream fileList = uploadsFileList(request);
+    //        response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
+    //        response.status_ = OK;
+    //        return true;
+    //    }
+    //}
     response.headers_["Content-Type"] = "text/html; charset=utf-8";
     if (location) {     
         if (!isResourceRequest(response, request.uri_) && location->autoindex)
@@ -620,7 +671,7 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
-    // Logger::instance().log(request.printRequest());
+    Logger::instance().log(request.printRequest());
 
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";
