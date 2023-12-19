@@ -22,6 +22,7 @@ std::string HttpRequest::consumeNextToken(std::string &buffer, const std::string
     return token;
 }
 
+//!REQUEST IS NOT ALWAYS OK WHEN CONSTRUCTED HERE.
 HttpRequest::HttpRequest(const std::string &request) {
     const size_t BUFFER_SIZE = 2048;
     std::string buffer = request;
@@ -41,11 +42,11 @@ HttpRequest::HttpRequest(const std::string &request) {
         std::string value = consumeNextToken(headers, CRLF);
         headers_[key]     = value;
     }
-    std::ofstream outputFile("outputRequest.txt");
-    std::streambuf *original_cout_streambuf = std::cout.rdbuf();
-    std::cout.rdbuf(outputFile.rdbuf());
-    std::cout << "REQUEST IS " << request << "---REQUEST ENDS---" << std::endl;
-    std::cout.rdbuf(original_cout_streambuf);
+    //std::ofstream outputFile("outputRequest.txt");
+    //std::streambuf *original_cout_streambuf = std::cout.rdbuf();
+    //std::cout.rdbuf(outputFile.rdbuf());
+    //std::cout << "REQUEST IS " << buffer << "---REQUEST ENDS---" << std::endl;
+    //std::cout.rdbuf(original_cout_streambuf);
     size_t prevLength = 0;
     size_t index = 0;
     std::cout << "BUFFER LENGTH = " << buffer.length() << std::endl;
