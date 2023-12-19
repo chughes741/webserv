@@ -349,9 +349,13 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
     } else if (!validateRequestBody(request, server, location)) {
         return buildBadRequestBody(response);
     }
-    if (checkIfDirectoryRequest(request, location, server) && location->autoindex) {
-        // handleDirectoryListing(request, response, location);
-        std::cout << "handle shit" << std::endl;
+    if (checkIfDirectoryRequest(request, location, server)) {
+        if (location->autoindex) {
+            handleDirectoryListing(request, response, location);
+        }
+        else { //if autoindex is disabled and the request is for a directory by default server will return an error 403
+            handleForbidden(response);
+        }
         return true;
     }
     else if (location->cgi_enabled && checkUriForExtension(request.uri_, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
@@ -430,9 +434,23 @@ bool HttpServer::checkUriForExtension(std::string& uri, LocationConfig *location
 }
 
 void HttpServer::handleDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location) { //if the request is for a directory then it should be handled by this function
-    std::string responseBody;
+    (void) request;
+    (void) response;
+    (void) location;
+    // std::string responseBody;
 
-    if ()
+    // if ()
+}
+
+void HttpServer::handleForbidden(HttpResponse &response) {
+    (void) response;
+}
+
+
+
+void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response) {
+    (void) request;
+    (void) response;
 }
 
 bool HttpServer::checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server) { //used to check if request is simply for a directory
@@ -459,6 +477,8 @@ bool HttpServer::checkIfDirectoryRequest(HttpRequest &request, LocationConfig *l
 
 bool HttpServer::checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server) {
     std::string tempUri;
+    std::vector<std::pair<unsigned char, std::string> > files;
+    struct dirent *file;
     if (location->root.size()) { //check if root is set at the location level
         tempUri.append(location->root);
     }
@@ -468,4 +488,24 @@ bool HttpServer::checkForIndexFile(HttpRequest &request, LocationConfig *locatio
     tempUri.append(request.uri_);
 
     DIR *currentDirectory = opendir(tempUri.c_str());
+    do {
+        file = readdir(currentDirectory);
+        if (file != nullptr) {
+            files.push_back(std::make_pair(file->d_type, file->d_name));
+        }
+    }
+    while (file != nullptr);
+    if (closedir(currentDirectory)) {
+        std::string error("Something went wrong with closedir: ");
+        error.append(strerror(errno));
+        Logger::instance().log(error);
+    }
+    for (std::size_t i = 0; i < files.size(); ++i) {
+        if (files[i].second == "index.html") { //checks the name of the file/folder
+            if (files[i].first == DT_REG) { //checks if it is actually a file
+                return true; //yay a file called index.html!
+            }
+        }
+    }
+    return false; //got to generate an html document with the files contained within the requested directory
 }
