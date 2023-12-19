@@ -356,12 +356,17 @@ bool displayFile(HttpRequest& request, HttpResponse& response) {
     return true;
 }
 
+bool deleteFile(const std::string &filename) {
+    std::string filePath = "uploads/" + filename;
+    return std::remove(filePath.c_str()) == 0;
+}
 
 bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, ServerConfig &server,
                             LocationConfig *location) {
     (void)server;
     (void)location;
-    //std::cout << "DANS POSTMETHOD, REQUESTURI CONTIENT: " << request.uri_ << std::endl;
+    std::cout << "DANS POSTMETHOD, REQUESTURI CONTIENT: " << request.uri_ << std::endl;
+    std::cout << "BODY IS: " << request.body_ << std::endl;
 
     //if (request.uri_.find("/display") != std::string::npos) {
     //    return displayFile(request, response);
@@ -518,6 +523,18 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
 
 bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server, LocationConfig *location) {
+    if (request.uri_.find("delete") != std::string::npos) {
+        std::string filename;
+        size_t equalPosition = request.uri_.find('=');
+        if (equalPosition != std::string::npos) {
+            filename = request.uri_.substr(equalPosition + 1);
+            deleteFile(filename);
+            std::stringstream fileList = uploadsFileList();
+            response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
+            response.status_ = OK;
+            return true;
+        }
+    }
     response.headers_["Content-Type"] = "text/html; charset=utf-8";
     if (location) {     
         if (!isResourceRequest(response, request.uri_) && location->autoindex)
@@ -555,6 +572,8 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server) {
     LocationConfig *location = NULL;
     std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
+    //std::cout << "LE REFERER: " << request.headers_["Referer"] << std::endl;
+    //std::cout << "LE URI: " << request.uri_ << std::endl;
     Logger::instance().log("uri: " + uri);
     for (std::map<std::string, LocationConfig>::iterator it = server.locations.begin();
      it != server.locations.end(); ++it) {    

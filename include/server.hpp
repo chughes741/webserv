@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <limits>
+#include <cstdio>
 
 #include "config.hpp"
 #include "http.hpp"
