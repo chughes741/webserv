@@ -354,7 +354,7 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
             handleDirectoryListing(request, response, location, server);
         }
         else { //if autoindex is disabled and the request is for a directory by default server will return an error 403
-            handleForbidden(response);
+            handleForbidden(response, location, server);
         }
         return true;
     }
@@ -442,9 +442,54 @@ void HttpServer::handleDirectoryListing(HttpRequest &request, HttpResponse &resp
     }
 }
 
-void HttpServer::handleForbidden(HttpResponse &response) {
-    std::string responseBody;
-    (void) response;
+void HttpServer::handleForbidden(HttpResponse &response, LocationConfig *location, ServerConfig &server) { //in case requested directory does not have autoindex enabled
+    std::string errorPage;
+    std::string path;
+    std::map<int, std::string>::iterator it;
+
+    if ((it = location->error_page.find(FORBIDDEN)) != location->error_page.end()) { //checks if an error page corresponding to a 403 status code exists at the location level
+        path = it->second;
+        std::string root;
+	    if (location->root.size() != 0) {
+		    root = location->root;
+		    root.append("/");
+	    }
+	    else {
+		    root = config_.root;
+		    root.append("/");
+	    }
+	    root.append(path);
+	    std::ifstream in(root);
+        std::stringstream buffer;
+        buffer << in.rdbuf();
+        errorPage = buffer.str();
+        in.close();
+    }
+    else if ((it = server.error_page.find(FORBIDDEN)) != server.error_page.end()) { //checks if an error page corresponding to a 403 status code exists at the server level
+        path = it->second;
+        std::string root;
+	    if (location->root.size() != 0) {
+		    root = location->root;
+		    root.append("/");
+	    }
+	    else {
+		    root = config_.root;
+		    root.append("/");
+	    }
+	    root.append(path);
+	    std::ifstream in(root);
+        std::stringstream buffer;
+        buffer << in.rdbuf();
+        errorPage = buffer.str();
+        in.close();
+    }
+    else { //default 403 error page
+        errorPage = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>403 Forbidden</h1></div></body></html>";
+    }
+    response.body_ = errorPage;
+    response.status_ = FORBIDDEN;
+    response.headers_["content-type"] = "text/html";
+    response.headers_["content-length"] = std::to_string(response.body_.size());
 }
 
 
@@ -504,9 +549,18 @@ bool HttpServer::checkForIndexFile(HttpRequest &request, LocationConfig *locatio
     for (std::size_t i = 0; i < files.size(); ++i) {
         if (files[i].second == "index.html") { //checks the name of the file/folder
             if (files[i].first == DT_REG) { //checks if it is actually a file
-                return true; //yay a file called index.html!
+                return true; //yay a file called index.html exists!
             }
         }
     }
     return false; //got to generate an html document with the files contained within the requested directory
+}
+
+void HttpServer::generateDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) {
+    std::string responseBody;
+    response.status_ = OK;
+    response.headers_["content-type"] = "text/html";
+    response.body_ = "<!doctype html>\n";
+    response.body_.append("<html lang=\"en\">\n");
+    response.body_.append("")
 }
