@@ -24,9 +24,9 @@ std::string HttpRequest::consumeNextToken(std::string &buffer, const std::string
 
 //!REQUEST IS NOT ALWAYS OK WHEN CONSTRUCTED HERE.
 HttpRequest::HttpRequest(const std::string &request) {
-    const size_t BUFFER_SIZE = 2048;
+    //const size_t BUFFER_SIZE = 2048;
     std::string buffer = request;
-    std::cout << "BUFFER IN HTTPREQUEST IS: " << buffer << " ---BUFFER ENDS--- " << std::endl;
+    //std::cout << "BUFFER IN HTTPREQUEST IS: " << buffer << " ---BUFFER ENDS--- " << std::endl;
     std::string method = consumeNextToken(buffer, " ");
 
     std::cout << "METHOD IN HTTPREQUEST IS: " << method << std::endl;
@@ -47,18 +47,18 @@ HttpRequest::HttpRequest(const std::string &request) {
     //std::cout.rdbuf(outputFile.rdbuf());
     //std::cout << "REQUEST IS " << buffer << "---REQUEST ENDS---" << std::endl;
     //std::cout.rdbuf(original_cout_streambuf);
-    size_t prevLength = 0;
-    size_t index = 0;
-    std::cout << "BUFFER LENGTH = " << buffer.length() << std::endl;
-    size_t loops = 0;
-    while (index < buffer.length()) {
-        prevLength = body_.length();
-        body_.append(buffer, index, std::min(BUFFER_SIZE, (buffer.length() - index)));
-        index += (body_.length() - prevLength);
-        std::cout << "LENGTH OF CHUNK = " << body_.length() - prevLength << std::endl;
-        ++loops;
-    }
-    std::cout << "LOOPED " << loops << " times" << std::endl;
+    //size_t prevLength = 0;
+    //size_t index = 0;
+    //std::cout << "BUFFER LENGTH = " << buffer.length() << std::endl;
+    //size_t loops = 0;
+    //while (index < buffer.length()) {
+    //    prevLength = body_.length();
+    //    body_.append(buffer, index, std::min(BUFFER_SIZE, (buffer.length() - index)));
+    //    index += (body_.length() - prevLength);
+    //    std::cout << "LENGTH OF CHUNK = " << body_.length() - prevLength << std::endl;
+    //    ++loops;
+    //}
+    //std::cout << "LOOPED " << loops << " times" << std::endl;
     //std::cout << "BODY IS: " << body_ << "---BODY ENDS---" << std::endl;
 }
 

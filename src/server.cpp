@@ -363,9 +363,9 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
     (void)location;
     //std::cout << "DANS POSTMETHOD, REQUESTURI CONTIENT: " << request.uri_ << std::endl;
 
-    if (request.uri_.find("/display") != std::string::npos) {
-        return displayFile(request, response);
-    }
+    //if (request.uri_.find("/display") != std::string::npos) {
+    //    return displayFile(request, response);
+    //}
 
     if (request.body_.empty()) {
             response.status_ = BAD_REQUEST;
@@ -571,7 +571,7 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         return buildBadRequestBody(response);
     }
     // @todo verify if method is allowed on location
-    std::cout << "WHAT IS METHOD: " << request.method_ << std::endl;
+    //std::cout << "WHAT IS METHOD: " << request.method_ << std::endl;
     switch (request.method_) {
         case 1: // Enums for comparisons is C++11...
             return getMethod(request, response, server, location);
