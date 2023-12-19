@@ -37,6 +37,7 @@
         <input type="submit" value="Upload"><br><br>
         <small>Clicking on Upload without choosing a file will take you to the Uploads directory.</small>
       </form>
+      <button id="deleteButton">Delete Data</button>
     </div>
 
     <div class="column-side">
@@ -46,6 +47,34 @@
   <div class="footer">
     <h2>Footer</h2>
   </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    function handleDeleteButtonClick() {
+        var currentUrl = window.location.href;
+
+        fetch(currentUrl, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('DELETE request successful');
+            } else {
+                console.error('DELETE request failed');
+            }
+        })
+        .catch(error => {
+            console.error('Error during DELETE request:', error);
+        });
+    }
+    var deleteButton = document.getElementById('deleteButton');
+    deleteButton.addEventListener('click', handleDeleteButtonClick);
+});
+</script>
 </body>
 
 </html>
