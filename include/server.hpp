@@ -52,11 +52,12 @@ class HttpServer {
     bool validateRequestBody(HttpRequest &, ServerConfig &, LocationConfig *);
     bool readRoot(HttpRequest &, HttpResponse &, ServerConfig *, LocationConfig *);
     bool checkUriForExtension(std::string &uri, LocationConfig *location) const;
-    void handleDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *config);
+    void handleDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *config, ServerConfig &server);
     void handleForbidden(HttpResponse &response);
     void handleIndexFile(HttpRequest &request, HttpResponse &response);
     bool checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server);
     bool checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server);
+    void generateDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server);
 
     std::string trimHost(const std::string &uri, ServerConfig &server);
 
