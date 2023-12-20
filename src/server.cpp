@@ -362,7 +362,7 @@ std::string generateUniqueFileName(std::string &originalFileName) {
         else
             newFileName = nameWithoutExtension + "_" + std::to_string(counter) + newFileName.substr(dot_position);
     }
-    std::cout << "REAL FILE NAME = " << newFileName << std::endl;
+    //std::cout << "REAL FILE NAME = " << newFileName << std::endl;
     return (newFileName);
 }
 
@@ -383,7 +383,7 @@ std::string readFileContent(const std::string& filename) {
 
 bool displayFile(HttpRequest& request, HttpResponse& response) {
     std::string filename;
-    std::cout << "REQUEST URI CONTIENT: " << request.uri_ << std::endl;
+    //std::cout << "REQUEST URI CONTIENT: " << request.uri_ << std::endl;
     size_t pos = request.uri_.find('?');
     if (pos != std::string::npos) {
         filename = request.uri_.substr(pos + 1);
@@ -671,7 +671,7 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
-    Logger::instance().log(request.printRequest());
+    //Logger::instance().log(request.printRequest());
 
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";

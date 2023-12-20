@@ -44,24 +44,56 @@ bool TcpSession::send() {
 }
 
 std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
-    std::string buffer_str;
-    char        buffer[READ_BUFFER_SIZE + 1];
-    ssize_t     bytes_received;
-    ssize_t     total_bytes_received = 0;
+    char buffer[READ_BUFFER_SIZE];
+    ssize_t bytes_received;
+    ssize_t total_bytes_received = 0;
+    std::ostringstream buffer_str_stream;
 
-    do {
-        bytes_received         = ::recv(client, buffer, READ_BUFFER_SIZE, 0);
-        buffer[bytes_received] = '\0';
-        buffer_str.append(buffer, bytes_received);
-        total_bytes_received += bytes_received;
-    } while (bytes_received == READ_BUFFER_SIZE);
+    try {
+        do {
+            bytes_received = ::recv(client, buffer, READ_BUFFER_SIZE, 0);
+            if (bytes_received > 0) {
+                buffer_str_stream.write(buffer, bytes_received);
+                total_bytes_received += bytes_received;
+            }
+        } while (bytes_received == READ_BUFFER_SIZE);
+    } catch (std::exception &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
 
     if (bytes_received == -1) {
         Logger::instance().log("Error: Failed to receive from socket");
     }
 
+    std::string buffer_str = buffer_str_stream.str();
+
     return std::make_pair(buffer_str, total_bytes_received);
 }
+
+//std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
+//    std::string buffer_str;
+//    char        buffer[READ_BUFFER_SIZE + 1];
+//    ssize_t     bytes_received;
+//    ssize_t     total_bytes_received = 0;
+//
+//    try {
+//        do {
+//            bytes_received         = ::recv(client, buffer, READ_BUFFER_SIZE, 0);
+//            buffer[bytes_received] = '\0';
+//            buffer_str.append(buffer, bytes_received);
+//            total_bytes_received += bytes_received;
+//        } while (bytes_received == READ_BUFFER_SIZE);
+//    }
+//    catch (std::exception &e) {
+//        std::cerr << "THAT INFAMOUS STRING LENGTH ERROR!" << std::endl;
+//    }
+//
+//    if (bytes_received == -1) {
+//        Logger::instance().log("Error: Failed to receive from socket");
+//    }
+//
+//    return std::make_pair(buffer_str, total_bytes_received);
+//}
 
 Session* tcp_session_generator(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
     return new TcpSession(sockfd, addr, addrlen);

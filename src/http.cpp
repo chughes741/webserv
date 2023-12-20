@@ -45,7 +45,7 @@ HttpRequest::HttpRequest(const std::string &request) {
     //std::ofstream outputFile("outputRequest.txt");
     //std::streambuf *original_cout_streambuf = std::cout.rdbuf();
     //std::cout.rdbuf(outputFile.rdbuf());
-    std::cout << "REQUEST IS " << buffer << "---REQUEST ENDS---" << std::endl;
+    //std::cout << "REQUEST IS " << buffer << "---REQUEST ENDS---" << std::endl;
     //std::cout.rdbuf(original_cout_streambuf);
     size_t prevLength = 0;
     size_t index = 0;
@@ -55,11 +55,11 @@ HttpRequest::HttpRequest(const std::string &request) {
         //prevLength = body_.length();
         body_.append(buffer, index, std::min(BUFFER_SIZE, (buffer.length() - index)));
         index += (body_.length() - prevLength);
-        std::cout << "LENGTH OF CHUNK = " << body_.length() - prevLength << std::endl;
+        //std::cout << "LENGTH OF CHUNK = " << body_.length() - prevLength << std::endl;
         //++loops;
     }
     //std::cout << "LOOPED " << loops << " times" << std::endl;
-    std::cout << "BODY IS: " << body_ << "---BODY ENDS---" << std::endl;
+    //std::cout << "BODY IS: " << body_ << "---BODY ENDS---" << std::endl;
 }
 
 std::map<HttpStatus, std::string> initStatusMap() {
