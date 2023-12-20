@@ -560,7 +560,47 @@ void HttpServer::generateDirectoryListing(HttpRequest &request, HttpResponse &re
     std::string responseBody;
     response.status_ = OK;
     response.headers_["content-type"] = "text/html";
-    response.body_ = "<!doctype html>\n";
-    response.body_.append("<html lang=\"en\">\n");
-    response.body_.append("")
+
+    response.body_ = "<!doctype html> \
+<html lang=\"en\"> \
+ \
+<head> \
+  <title>webserv | Home</title> \
+  <meta charset=\"utf-8\"> \
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> \
+</head> \
+ \
+<body> \
+  <div class=\"header\"> \
+    <h1>webserv</h1> \
+  </div> \
+ \
+  <div class=\"navbar\"> \
+    <a href=\"/\">Home</a> \
+    <a href=\"pages/about/index.html\">About</a> \
+    <a href=\"pages/error/index.html\" class=\"right\">Error Pages</a> \
+  </div> \
+ \
+  <div class=\"row\"> \
+    <div class=\"column-side\"> \
+    </div> \
+ \
+    <div class=\"column-main\"> \
+      <h2>Main Content</h2> \
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p> \
+    </div> \
+ \
+    <div class=\"column-side\"> \
+    </div> \
+  </div> \
+ \
+  <div class=\"footer\"> \
+    <h2>Footer</h2> \
+  </div> \
+</body> \
+ \
+</html>"
+    // response.body_ = "<!doctype html>\n";
+    // response.body_.append("<html lang=\"en\">\n");
+    // response.body_.append("");
 }
