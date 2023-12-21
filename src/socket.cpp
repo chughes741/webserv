@@ -47,13 +47,14 @@ std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
     char buffer[READ_BUFFER_SIZE];
     ssize_t bytes_received;
     ssize_t total_bytes_received = 0;
-    std::ostringstream buffer_str_stream;
+    std::vector<char> buffer_data;
 
     try {
         do {
             bytes_received = ::recv(client, buffer, READ_BUFFER_SIZE, 0);
             if (bytes_received > 0) {
-                buffer_str_stream.write(buffer, bytes_received);
+                // Append the received data to the vector
+                buffer_data.insert(buffer_data.end(), buffer, buffer + bytes_received);
                 total_bytes_received += bytes_received;
             }
         } while (bytes_received == READ_BUFFER_SIZE);
@@ -65,7 +66,8 @@ std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
         Logger::instance().log("Error: Failed to receive from socket");
     }
 
-    std::string buffer_str = buffer_str_stream.str();
+    // Convert vector<char> to std::string
+    std::string buffer_str(buffer_data.begin(), buffer_data.end());
 
     return std::make_pair(buffer_str, total_bytes_received);
 }
