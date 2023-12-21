@@ -301,22 +301,17 @@ bool Cgi::performCgiPost() {
 		close(fdIn[1]);
 		char buffer[1024];
 		bzero(buffer, 1024);
-		std::cerr << "Write successful" << std::endl;
 		close(fdOut[1]);
 		while (read(fdOut[0], buffer, 1023) > 0) {
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
 		close(fdOut[0]);
-		std::cerr << "read successful" << std::endl;
 		extractHeaders(scriptOutput);
 		extractBody(scriptOutput);
-		std::cerr << "headers: " << std::endl;
 		for (std::map<std::string, std::string>::iterator it = response_->headers_.begin(); it != response_->headers_.end(); ++it) {
 			std::cerr << it->first << " " << it->second << std::endl;
 		}
-
-		std::cerr << "Body: " << response_->body_ << std::endl;
 		waitpid(pid, &status, 0);
 		if (WEXITSTATUS(status) != 0) {
 			Logger::instance().log("Script execution failed");
@@ -332,19 +327,15 @@ bool Cgi::performCgiPost() {
 }
 
 void Cgi::extractHeaders(std::string scriptOutput) {
-	Logger::instance().log("Entered extractHeaders");
 	std::string headerFields;
 	std::size_t boundary = scriptOutput.find("\n\n");
 	std::vector<std::pair<std::string, std::string> > headers;
 	std::string field;
 	std::size_t fieldBoundary;
-	Logger::instance().log("Vars initialized");
 	if (boundary == std::string::npos) {
-		Logger::instance().log("Hit return statement");
 		return;
 	}
 	else {
-		Logger::instance().log("Hit else statement");
 		headerFields = scriptOutput.substr(0, boundary + 1);
 		while (boundary != std::string::npos) {
 			boundary = headerFields.find('\n');
@@ -362,7 +353,6 @@ void Cgi::extractHeaders(std::string scriptOutput) {
 			}
 		}
 		for (std::size_t i = 0; i < headers.size(); ++i) {
-			Logger::instance().log("lol I'm stuck");
 			response_->headers_[headers[i].first] = headers[i].second;
 		}
 	}

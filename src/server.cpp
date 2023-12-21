@@ -435,7 +435,7 @@ bool HttpServer::checkUriForExtension(std::string& uri, LocationConfig *location
 
 void HttpServer::handleDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) { //if the request is for a directory then it should be handled by this function
     if (checkForIndexFile(request, location, server)) {
-        handleIndexFile(request, response); //serve index file
+        handleIndexFile(request, response, location, server); //serve index file
     }
     else {
         generateDirectoryListing(request, response, location, server); //generate html document
@@ -494,9 +494,27 @@ void HttpServer::handleForbidden(HttpResponse &response, LocationConfig *locatio
 
 
 
-void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response) {
-    (void) request;
-    (void) response;
+void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) {
+    std::string tempUri;
+    if (location) {
+        if (location->root.size()) { //check if root is set at the location level
+            tempUri.append(location->root);
+        }
+        else { //fallback to server root directive
+            tempUri.append(server.root);
+        }
+        tempUri.append(request.uri_);
+        tempUri.append("index.html");
+        if (readFileToBody(response, tempUri) == true) {
+            std::cout << "read file worked" << std::endl;
+            response.headers_["content-type"] = "text/html";
+            response.headers_["content-length"] = std::to_string(response.body_.size());
+            response.status_ = OK;
+        }
+        else { //something went wrong with reading index.html file
+            return ;
+        }
+    }
 }
 
 bool HttpServer::checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server) { //used to check if request is simply for a directory
@@ -522,6 +540,79 @@ bool HttpServer::checkIfDirectoryRequest(HttpRequest &request, LocationConfig *l
 }
 
 bool HttpServer::checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server) {
+    std::vector<std::pair<unsigned char, std::string> > files = returnFiles(request, location, server);
+    for (std::size_t i = 0; i < files.size(); ++i) {
+        if (files[i].second == "index.html") { //checks the name of the file/folder
+            if (files[i].first == DT_REG) { //checks if it is actually a file
+                return true; //yay a file called index.html exists!
+            }
+        }
+    }
+    return false; //got to generate an html document with the files contained within the requested directory
+}
+
+// <!doctype html>
+// <html>
+//     <head>
+//         <title>Index of *somefile*</title>
+//     </head>
+//     <body>
+//         <h1>Index of *somefile*</h1>
+//         <hr>
+//         <pre>
+//             <a href="somedirectory/">somedirectory/</a>
+//             <a href="somefile">somefile</a>
+//         </pre>
+//         <hr>
+//     </body>
+// </html>
+
+
+// NEED TO PROTECT LOCATION
+
+void HttpServer::generateDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) {
+    std::string responseBody;
+    std::vector<std::pair<unsigned char, std::string> > currentDir = returnFiles(request, location, server);
+    std::vector<std::string> directories;
+    std::vector<std::string> files;
+
+    for (std::size_t i = 0; i < currentDir.size(); ++i) {
+        if (currentDir[i].first == DT_DIR) {
+            if (currentDir[i].second != ".")
+                directories.push_back(currentDir[i].second);
+        }
+        if (currentDir[i].first == DT_REG) {
+            files.push_back(currentDir[i].second);
+        }
+    }
+
+    response.status_ = OK;
+    response.headers_["content-type"] = "text/html";
+
+    responseBody.append("<!doctype html><html><head><title>Index of ");
+    responseBody.append(request.uri_);
+    responseBody.append("</title></head><body><h1>Index of ");
+    responseBody.append(request.uri_);
+    responseBody.append("</h1><hr><pre>");
+    for (std::size_t i = 0; i < directories.size(); ++i) {
+        responseBody.append("<a href=\"");
+        responseBody.append(directories[i]);
+        responseBody.append("/\">");
+        responseBody.append(directories[i]);
+        responseBody.append("/</a>\n");
+    }
+    for (std::size_t i = 0; i < files.size(); ++i) {
+        responseBody.append("<a href=\"");
+        responseBody.append(files[i]);
+        responseBody.append("\">");
+        responseBody.append(files[i]);
+        responseBody.append("</a>\n");
+    }
+    responseBody.append("</pre><hr></body></html>");
+    response.body_ = responseBody;
+}
+
+std::vector<std::pair<unsigned char, std::string> > HttpServer::returnFiles(HttpRequest &request, LocationConfig *location, ServerConfig &server) {
     std::string tempUri;
     std::vector<std::pair<unsigned char, std::string> > files;
     struct dirent *file;
@@ -546,61 +637,5 @@ bool HttpServer::checkForIndexFile(HttpRequest &request, LocationConfig *locatio
         error.append(strerror(errno));
         Logger::instance().log(error);
     }
-    for (std::size_t i = 0; i < files.size(); ++i) {
-        if (files[i].second == "index.html") { //checks the name of the file/folder
-            if (files[i].first == DT_REG) { //checks if it is actually a file
-                return true; //yay a file called index.html exists!
-            }
-        }
-    }
-    return false; //got to generate an html document with the files contained within the requested directory
-}
-
-void HttpServer::generateDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) {
-    std::string responseBody;
-    response.status_ = OK;
-    response.headers_["content-type"] = "text/html";
-
-    response.body_ = "<!doctype html> \
-<html lang=\"en\"> \
- \
-<head> \
-  <title>webserv | Home</title> \
-  <meta charset=\"utf-8\"> \
-  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> \
-</head> \
- \
-<body> \
-  <div class=\"header\"> \
-    <h1>webserv</h1> \
-  </div> \
- \
-  <div class=\"navbar\"> \
-    <a href=\"/\">Home</a> \
-    <a href=\"pages/about/index.html\">About</a> \
-    <a href=\"pages/error/index.html\" class=\"right\">Error Pages</a> \
-  </div> \
- \
-  <div class=\"row\"> \
-    <div class=\"column-side\"> \
-    </div> \
- \
-    <div class=\"column-main\"> \
-      <h2>Main Content</h2> \
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p> \
-    </div> \
- \
-    <div class=\"column-side\"> \
-    </div> \
-  </div> \
- \
-  <div class=\"footer\"> \
-    <h2>Footer</h2> \
-  </div> \
-</body> \
- \
-</html>"
-    // response.body_ = "<!doctype html>\n";
-    // response.body_.append("<html lang=\"en\">\n");
-    // response.body_.append("");
+    return files;
 }

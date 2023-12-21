@@ -54,10 +54,11 @@ class HttpServer {
     bool checkUriForExtension(std::string &uri, LocationConfig *location) const;
     void handleDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *config, ServerConfig &server);
     void handleForbidden(HttpResponse &response, LocationConfig *location, ServerConfig &server);
-    void handleIndexFile(HttpRequest &request, HttpResponse &response);
+    void handleIndexFile(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server);
     bool checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server);
     bool checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server);
     void generateDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server);
+    std::vector<std::pair<unsigned char, std::string> > returnFiles(HttpRequest &request, LocationConfig *location, ServerConfig &server);
 
     std::string trimHost(const std::string &uri, ServerConfig &server);
 
