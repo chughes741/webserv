@@ -489,7 +489,6 @@ void HttpServer::handleForbidden(HttpResponse &response, LocationConfig *locatio
     response.body_ = errorPage;
     response.status_ = FORBIDDEN;
     response.headers_["content-type"] = "text/html";
-    response.headers_["content-length"] = std::to_string(response.body_.size());
 }
 
 
@@ -508,7 +507,6 @@ void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, L
         if (readFileToBody(response, tempUri) == true) {
             std::cout << "read file worked" << std::endl;
             response.headers_["content-type"] = "text/html";
-            response.headers_["content-length"] = std::to_string(response.body_.size());
             response.status_ = OK;
         }
         else { //something went wrong with reading index.html file
