@@ -52,7 +52,6 @@ class HttpServer {
     bool validateRequestBody(HttpRequest &, ServerConfig &, LocationConfig *);
     bool readRoot(HttpRequest &, HttpResponse &, ServerConfig *, LocationConfig *);
     bool checkUriForExtension(std::string &uri, LocationConfig *location) const;
-    void handleDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *config, ServerConfig &server);
     void handleForbidden(HttpResponse &response, LocationConfig *location, ServerConfig &server);
     void handleIndexFile(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server);
     bool checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server);

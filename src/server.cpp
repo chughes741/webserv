@@ -350,8 +350,11 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         return buildBadRequestBody(response);
     }
     if (checkIfDirectoryRequest(request, location, server)) {
-        if (location->autoindex) {
-            handleDirectoryListing(request, response, location, server);
+        if (checkForIndexFile(request, location, server)) {
+            handleIndexFile(request, response, location, server);
+        }
+        else if (location->autoindex) {
+            generateDirectoryListing(request, response, location, server);
         }
         else { //if autoindex is disabled and the request is for a directory by default server will return an error 403
             handleForbidden(response, location, server);
@@ -431,15 +434,6 @@ bool HttpServer::checkUriForExtension(std::string& uri, LocationConfig *location
 		return false;
     else
         return true;
-}
-
-void HttpServer::handleDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) { //if the request is for a directory then it should be handled by this function
-    if (checkForIndexFile(request, location, server)) {
-        handleIndexFile(request, response, location, server); //serve index file
-    }
-    else {
-        generateDirectoryListing(request, response, location, server); //generate html document
-    }
 }
 
 void HttpServer::handleForbidden(HttpResponse &response, LocationConfig *location, ServerConfig &server) { //in case requested directory does not have autoindex enabled
