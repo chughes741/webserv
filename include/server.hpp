@@ -58,6 +58,8 @@ class HttpServer {
     bool checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server);
     void generateDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server);
     std::vector<std::pair<unsigned char, std::string> > returnFiles(HttpRequest &request, LocationConfig *location, ServerConfig &server);
+    bool hasTrailingSlash(HttpRequest &request) const;
+    void addTrailingSlash(HttpRequest &request, HttpResponse &response);
 
     std::string trimHost(const std::string &uri, ServerConfig &server);
 

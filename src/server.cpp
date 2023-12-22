@@ -578,7 +578,21 @@ void HttpServer::generateDirectoryListing(HttpRequest &request, HttpResponse &re
         }
     }
 
-    response.status_ = OK;
+    if (!hasTrailingSlash(request)) {
+        std::string newLocation("http://");
+        std::string host;
+        std::map<std::string, std::string>::iterator it = request.headers_.find("Host");
+        if (it != request.headers_.end()) {
+            newLocation.append(it->second);
+        }
+        newLocation.append(request.uri_);
+        newLocation.append("/");
+        response.status_ = MOVED_PERMANENTLY;
+        response.headers_["Location"] = newLocation;
+    }
+    else {
+        response.status_ = OK;
+    }
     response.headers_["content-type"] = "text/html";
 
     responseBody.append("<!doctype html><html><head><title>Index of ");
@@ -630,4 +644,18 @@ std::vector<std::pair<unsigned char, std::string> > HttpServer::returnFiles(Http
         Logger::instance().log(error);
     }
     return files;
+}
+
+bool HttpServer::hasTrailingSlash(HttpRequest &request) const {
+    if (request.uri_[request.uri_.size() - 1] == '/') {
+        return true;
+    }
+    return false;
+}
+
+void HttpServer::addTrailingSlash(HttpRequest &request, HttpResponse &response) {
+    std::string newUri = request.uri_;
+    newUri.append("/");
+    response.headers_["Location"] = newUri;
+    response.status_ = MOVED_PERMANENTLY;
 }
