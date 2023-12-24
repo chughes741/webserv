@@ -410,7 +410,6 @@ void Cgi::handleError(exceptionType type) {
 			else { //default error page
 				response_->body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>500 Internal Server Error</h1></div></body></html>";
 			}
-
 			break;
 		case (Access):
 			response_->status_= NOT_FOUND;
