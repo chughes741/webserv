@@ -543,25 +543,6 @@ bool HttpServer::checkForIndexFile(HttpRequest &request, LocationConfig *locatio
     return false; //got to generate an html document with the files contained within the requested directory
 }
 
-// <!doctype html>
-// <html>
-//     <head>
-//         <title>Index of *somefile*</title>
-//     </head>
-//     <body>
-//         <h1>Index of *somefile*</h1>
-//         <hr>
-//         <pre>
-//             <a href="somedirectory/">somedirectory/</a>
-//             <a href="somefile">somefile</a>
-//         </pre>
-//         <hr>
-//     </body>
-// </html>
-
-
-// NEED TO PROTECT LOCATION
-
 void HttpServer::generateDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) {
     std::string responseBody;
     std::vector<std::pair<unsigned char, std::string> > currentDir = returnFiles(request, location, server);
