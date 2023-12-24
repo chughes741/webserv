@@ -28,6 +28,7 @@ bool Cgi::exec() {
 	}
 	catch(const Cgi::ForbiddenFile& e) {
 		Logger::instance().log(e.what());
+		this->handleError(Access);
 		return true;
 	}
 	catch(const std::exception& e) {
