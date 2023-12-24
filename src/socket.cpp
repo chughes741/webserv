@@ -47,8 +47,8 @@ bool TcpSession::send() {
     return false;
 }
 
-std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
-    std::string buffer_str;
+std::pair<char *, ssize_t> TcpSession::recv(int client) const {
+    char        *buffer_str;
     char        buffer[READ_BUFFER_SIZE + 1];
     ssize_t     bytes_received;
     ssize_t     total_bytes_received = 0;

@@ -25,7 +25,7 @@ class Session {
     virtual ~Session() = 0;
 
     virtual bool                            send()                 = 0;
-    virtual std::pair<std::string, ssize_t> recv(int client) const = 0;
+    virtual std::pair<char *, ssize_t>      recv(int client) const = 0;
     int                                     getSockFd() const;
     const struct sockaddr*                  getSockaddr() const;
     void                                    addSendQueue(const std::string& buffer);
@@ -43,7 +43,7 @@ class TcpSession : public Session {
     TcpSession(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
 
     bool                            send();
-    std::pair<std::string, ssize_t> recv(int client) const;
+    std::pair<char *, ssize_t> recv(int client) const;
 };
 
 // TcpSession generator function

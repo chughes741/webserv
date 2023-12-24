@@ -175,7 +175,8 @@ void HttpServer::disconnectHandler(int session_id) {
 }
 
 std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
-    std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
+    std::pair<char *, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
+    // std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
 
     HttpRequest request(buffer_pair.first, sessions_[session_id]);
 
@@ -279,8 +280,6 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
 
         // TODO: Call the CGI script
 
-
-
         if (true) {  // TODO: Check the return code of the CGI script
             response.status_ = OK;
 
@@ -354,7 +353,6 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         return buildBadRequestBody(response);
     }
     if (location->cgi_enabled && checkUriForExtension(request.uri_, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
-        Logger::instance().log("Enter cgi");
         Logger::instance().log(request.printRequest());
         Cgi newCgi(request, *location, server, response);
         bool result = newCgi.exec();
