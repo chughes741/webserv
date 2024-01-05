@@ -22,14 +22,13 @@ std::string HttpRequest::consumeNextToken(std::string &buffer, const std::string
     return token;
 }
 
-//!REQUEST IS NOT ALWAYS OK WHEN CONSTRUCTED HERE.
 HttpRequest::HttpRequest(const std::string &request) {
     const size_t BUFFER_SIZE = 2048;
     std::string buffer = request;
     //std::cout << "BUFFER IN HTTPREQUEST IS: " << buffer << " ---BUFFER ENDS--- " << std::endl;
     std::string method = consumeNextToken(buffer, " ");
 
-    std::cout << "METHOD IN HTTPREQUEST IS: " << method << std::endl;
+    std::cout << "METHOD IN HTTPREQUEST IS: " << method << "METHOD HAS ENDED" << std::endl;
     method_ = methodMap_.find(method) != methodMap_.end() ? methodMap_[method] : UNKNOWN;
 
     uri_     = consumeNextToken(buffer, " ");

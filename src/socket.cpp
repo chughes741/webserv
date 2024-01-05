@@ -47,17 +47,17 @@ std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
     char buffer[READ_BUFFER_SIZE];
     ssize_t bytes_received;
     ssize_t total_bytes_received = 0;
-    //std::ifstream ifs;
-    std::vector<char> buffer_data; // = std::vector<char>(std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>());
+    std::ifstream ifs;
+    std::vector<char> buffer_data = std::vector<char>(std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>());
 
     try {
         do {
             bytes_received = ::recv(client, buffer, READ_BUFFER_SIZE, 0);
             if (bytes_received > 0) {
-                buffer_data.insert(buffer_data.end(), buffer, buffer + bytes_received);
-                //for (ssize_t i = 0; i < bytes_received; ++i) {
-                //    buffer_data.push_back(buffer[i]);
-                //}
+                //buffer_data.insert(buffer_data.end(), buffer, buffer + bytes_received);
+                for (ssize_t i = 0; i < bytes_received; ++i) {
+                    buffer_data.push_back(buffer[i]);
+                }
                 //buffer_data.insert(buffer_data.end(), buffer, buffer + bytes_received);
                 total_bytes_received += bytes_received;
             }
@@ -70,18 +70,25 @@ std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
         Logger::instance().log("Error: Failed to receive from socket");
     }
 
+    std::cout << "---TEST OF VECTOR OF CHAR---" << std::endl;
+    for (std::vector<char>::iterator it = buffer_data.begin(); it != buffer_data.end(); ++it) { 
+        std::cout << *it;
+    }
+    std::cout << "---END OF TEST VECTOR OF CHAR---" << std::endl;
     //ifs.clear();
     //ifs.seekg(0,std::ios::beg);
     //std::string buffer_str(buffer_data.begin(), buffer_data.end());
     //std::string buffer_str = std::string(std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>());
     //std::istringstream iss(std::string(buffer_data.begin(), buffer_data.end()));
-    std::string buffer_str;
-    buffer_str.reserve(buffer_data.size());
-    std::copy(buffer_data.begin(), buffer_data.end(), std::back_inserter(buffer_str));
+    //std::string buffer_str;
+    //std::string buffer_str = std::string(std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>());
+    //buffer_str.reserve(buffer_data.size());
+    //std::copy(buffer_data.begin(), buffer_data.end(), std::back_inserter(buffer_str));
     //buffer_str.assign(std::istreambuf_iterator<char>(iss), std::istreambuf_iterator<char>());
     //std::cout << "LENGTH = " << buffer_str.length() << std::endl;
-
-    return std::make_pair(buffer_str, total_bytes_received);
+    std::string test(buffer_data.begin(), buffer_data.end());
+    std::cout << "---BEGINNING OF TEST---" << test << "---END OF TEST---" << std::endl;
+    return std::make_pair(test, total_bytes_received);
 }
 
 //std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
