@@ -80,7 +80,7 @@ void HttpServer::run() {
         if (server_sockets_.find(event.first) != server_sockets_.end()) {
             connectHandler(event.first);
 
-        } else {
+            } else {
             switch (event.second) {
                 case NONE:
                     break;
@@ -488,8 +488,40 @@ void HttpServer::handleForbidden(HttpResponse &response, LocationConfig *locatio
 
 
 void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) {
-    std::string tempUri;
-    if (location) {
+    try
+    {
+        std::string tempUri;
+        if (location) {
+            if (location->root.size()) { //check if root is set at the location level
+                tempUri.append(location->root);
+            }
+            else { //fallback to server root directive
+                tempUri.append(server.root);
+            }
+            tempUri.append(request.uri_);
+            tempUri.append("index.html");
+            if (readFileToBody(response, tempUri) == true) {
+            std::cout << "read file worked" << std::endl;
+            response.headers_["content-type"] = "text/html";
+            response.status_ = OK;
+            }
+            else { //something went wrong with reading index.html file
+                return ;
+            }
+        }   
+    }
+    catch(const std::exception& e)
+    {
+        Logger::instance().log("Error happened in handleIndexFile");
+        std::cerr << e.what() << '\n';
+        return ;
+    }
+}
+
+bool HttpServer::checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server) { //used to check if request is simply for a directory
+    try
+    {
+        std::string tempUri;
         if (location->root.size()) { //check if root is set at the location level
             tempUri.append(location->root);
         }
@@ -497,50 +529,45 @@ void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, L
             tempUri.append(server.root);
         }
         tempUri.append(request.uri_);
-        tempUri.append("index.html");
-        if (readFileToBody(response, tempUri) == true) {
-            std::cout << "read file worked" << std::endl;
-            response.headers_["content-type"] = "text/html";
-            response.status_ = OK;
-        }
-        else { //something went wrong with reading index.html file
-            return ;
-        }
-    }
-}
 
-bool HttpServer::checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server) { //used to check if request is simply for a directory
-    std::string tempUri;
-    if (location->root.size()) { //check if root is set at the location level
-        tempUri.append(location->root);
+        DIR *currentDirectory = opendir(tempUri.c_str()); //attempt to open the directory specified. If successful then it means the request was indeed for a directory.
+        if (!currentDirectory) {
+            return (false);
+        }
+        if (closedir(currentDirectory)) { //to prevent leaks. Cause leaks suck
+            std::string error("Call to closedir failed: ");
+            error.append(strerror(errno));
+            Logger::instance().log(error);
+        }
+        return true;   
     }
-    else { //fallback to server root directive
-        tempUri.append(server.root);
+    catch(const std::exception& e)
+    {
+        Logger::instance().log("Error occured in checkIfDirectory Listing");
+        std::cerr << e.what() << '\n';
+        return false;
     }
-    tempUri.append(request.uri_);
-
-    DIR *currentDirectory = opendir(tempUri.c_str()); //attempt to open the directory specified. If successful then it means the request was indeed for a directory.
-    if (!currentDirectory) {
-        return (false);
-    }
-    if (closedir(currentDirectory)) { //to prevent leaks. Cause leaks suck
-        std::string error("Call to closedir failed: ");
-        error.append(strerror(errno));
-        Logger::instance().log(error);
-    }
-    return true;
 }
 
 bool HttpServer::checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server) {
-    std::vector<std::pair<unsigned char, std::string> > files = returnFiles(request, location, server);
-    for (std::size_t i = 0; i < files.size(); ++i) {
-        if (files[i].second == "index.html") { //checks the name of the file/folder
-            if (files[i].first == DT_REG) { //checks if it is actually a file
-                return true; //yay a file called index.html exists!
+    try
+    {
+        std::vector<std::pair<unsigned char, std::string> > files = returnFiles(request, location, server);
+        for (std::size_t i = 0; i < files.size(); ++i) {
+            if (files[i].second == "index.html") { //checks the name of the file/folder
+                if (files[i].first == DT_REG) { //checks if it is actually a file
+                    return true; //yay a file called index.html exists!
+                }
             }
         }
+        return false; //got to generate an html document with the files contained within the requested directory
     }
-    return false; //got to generate an html document with the files contained within the requested directory
+    catch(const std::exception& e)
+    {
+        Logger::instance().log("Error happened in checkForIndexFile");
+        std::cerr << e.what() << '\n';
+        return false;
+    }
 }
 
 void HttpServer::generateDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) {
