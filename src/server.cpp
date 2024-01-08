@@ -173,7 +173,7 @@ void HttpServer::disconnectHandler(int session_id) {
 
 std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
     std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
-    std::cout << "---TEST SESSION---" << buffer_pair.first << "---FIN TEST SESSION---" << std::endl;
+    //std::cout << "---TEST SESSION---" << buffer_pair.first << "---FIN TEST SESSION---" << std::endl;
 
     HttpRequest request(buffer_pair.first);
 
@@ -672,7 +672,7 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
-    Logger::instance().log(request.printRequest());
+    //Logger::instance().log(request.printRequest());
 
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";

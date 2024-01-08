@@ -70,11 +70,11 @@ std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
         Logger::instance().log("Error: Failed to receive from socket");
     }
 
-    std::cout << "---TEST OF VECTOR OF CHAR---" << std::endl;
-    for (std::vector<char>::iterator it = buffer_data.begin(); it != buffer_data.end(); ++it) { 
-        std::cout << *it;
-    }
-    std::cout << "---END OF TEST VECTOR OF CHAR---" << std::endl;
+    //std::cout << "---TEST OF VECTOR OF CHAR---" << std::endl;
+    //for (std::vector<char>::iterator it = buffer_data.begin(); it != buffer_data.end(); ++it) { 
+    //    std::cout << *it;
+    //}
+    //std::cout << "---END OF TEST VECTOR OF CHAR---" << std::endl;
     //ifs.clear();
     //ifs.seekg(0,std::ios::beg);
     //std::string buffer_str(buffer_data.begin(), buffer_data.end());
@@ -86,9 +86,9 @@ std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
     //std::copy(buffer_data.begin(), buffer_data.end(), std::back_inserter(buffer_str));
     //buffer_str.assign(std::istreambuf_iterator<char>(iss), std::istreambuf_iterator<char>());
     //std::cout << "LENGTH = " << buffer_str.length() << std::endl;
-    std::string test(buffer_data.begin(), buffer_data.end());
-    std::cout << "---BEGINNING OF TEST---" << test << "---END OF TEST---" << std::endl;
-    return std::make_pair(test, total_bytes_received);
+    std::string vector_str(buffer_data.begin(), buffer_data.end());
+    //std::cout << "---BEGINNING OF TEST---" << test << "---END OF TEST---" << std::endl;
+    return std::make_pair(vector_str, total_bytes_received);
 }
 
 //std::pair<std::string, ssize_t> TcpSession::recv(int client) const {

@@ -28,7 +28,7 @@ HttpRequest::HttpRequest(const std::string &request) {
     //std::cout << "BUFFER IN HTTPREQUEST IS: " << buffer << " ---BUFFER ENDS--- " << std::endl;
     std::string method = consumeNextToken(buffer, " ");
 
-    std::cout << "METHOD IN HTTPREQUEST IS: " << method << "METHOD HAS ENDED" << std::endl;
+    
     method_ = methodMap_.find(method) != methodMap_.end() ? methodMap_[method] : UNKNOWN;
 
     uri_     = consumeNextToken(buffer, " ");
@@ -41,23 +41,15 @@ HttpRequest::HttpRequest(const std::string &request) {
         std::string value = consumeNextToken(headers, CRLF);
         headers_[key]     = value;
     }
-    //std::ofstream outputFile("outputRequest.txt");
-    //std::streambuf *original_cout_streambuf = std::cout.rdbuf();
-    //std::cout.rdbuf(outputFile.rdbuf());
-    //std::cout << "REQUEST IS " << buffer << "---REQUEST ENDS---" << std::endl;
-    //std::cout.rdbuf(original_cout_streambuf);
     size_t prevLength = 0;
     size_t index = 0;
-    //std::cout << "BUFFER LENGTH = " << buffer.length() << std::endl;
-    //size_t loops = 0;
+    std::cout << "BUFFER LENGTH IS : " << buffer.length() << std::endl;
     while (index < buffer.length()) {
-        //prevLength = body_.length();
+        prevLength = body_.length();
         body_.append(buffer, index, std::min(BUFFER_SIZE, (buffer.length() - index)));
         index += (body_.length() - prevLength);
-        //std::cout << "LENGTH OF CHUNK = " << body_.length() - prevLength << std::endl;
-        //++loops;
+        //std::cout << "index = " << index << std::endl;
     }
-    //std::cout << "LOOPED " << loops << " times" << std::endl;
     //std::cout << "BODY IS: " << body_ << "---BODY ENDS---" << std::endl;
 }
 
