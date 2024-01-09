@@ -27,7 +27,12 @@
       <h2>Main Content</h2>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
       <form action="/cgi-bin/post.pl" method="POST">
-        <label for="text_input">Enter Text:</label>
+        <label for="text_input">CGI: Enter Text:</label>
+        <input type="text" id="text_input" name="text_input">
+        <button type="submit">Submit</button>
+      </form>
+      <form action="/" method="POST">
+        <label for="text_input">POST: Enter Text:</label>
         <input type="text" id="text_input" name="text_input">
         <button type="submit">Submit</button>
       </form>

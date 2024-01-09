@@ -40,7 +40,7 @@ enum HttpStatus {
 /** Represents an HTTP request */
 class HttpRequest {
    public:
-    HttpRequest(const std::string &request, Session *currentSession);
+    HttpRequest(const std::string &request);
     std::string printRequest() const;
 
    private:

@@ -177,7 +177,7 @@ void HttpServer::disconnectHandler(int session_id) {
 std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
     std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
 
-    HttpRequest request(buffer_pair.first, sessions_[session_id]);
+    HttpRequest request(buffer_pair.first);
 
     return std::make_pair(request, buffer_pair.second);
 }
@@ -533,7 +533,6 @@ bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
 
 bool HttpServer::validateRequestBody(HttpRequest &request, ServerConfig &server, LocationConfig *location) {
     size_t max = location->client_max_body_size;
-    std::cout << "MAX = " << max << std::endl;
     if (location->max_body_size) {
         max = location->client_max_body_size;
     } else if (server.max_body_size) {
