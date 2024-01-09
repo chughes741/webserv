@@ -173,7 +173,6 @@ void HttpServer::disconnectHandler(int session_id) {
 
 std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
     std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
-    //std::cout << "---TEST SESSION---" << buffer_pair.first << "---FIN TEST SESSION---" << std::endl;
 
     HttpRequest request(buffer_pair.first);
 
@@ -281,10 +280,6 @@ std::stringstream uploadsFileList() {
                          << "<input type=\"button\" value=\"Delete\" onclick=\"handleDeleteButtonClick('" << filename << "');\">"
                          << "</form>"
                          << "</li>";
-                //std::string link = "<a href=\"/display?filename=" + filename + + "\">" + filename + "</a>";
-                //std::string deleteButton = "<form method=\"DELETE\" action=\"/delete\" style=\"float: right;\"><input type=\"hidden\" name=\"filename\" value=\"" + filename + "\"><input type=\"submit\" value=\"Delete\"></form>";
-                //std::string deleteButton = "<form method=\"DELETE\" action=\"/delete\" style=\"float: right;\" id=\"deleteButton" + filename + "\"><input type=\"hidden\" name=\"filename\" value=\"" + filename + "\"><input type=\"submit\" value=\"Delete\"></form>";
-                //fileList << "<li style=\"clear: both;\">" << link << deleteButton << "</li>";
             }
         }
         closedir(dir);
@@ -292,7 +287,6 @@ std::stringstream uploadsFileList() {
     return (fileList);
 }
 
-//THIS is to avoid the non-deletion of some files with spaces and other special characters in their name
 std::string urlDecode(const std::string& str) {
     std::stringstream decoded;
     for (size_t i = 0; i < str.length(); ++i) {
@@ -320,15 +314,11 @@ bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
     deleteFile(filename);
     std::stringstream fileList = uploadsFileList();
     response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
-    //std::cout << "APRES REAFFECTATION: " << response.body_ << std::endl;
-    //std::cout << "FILENAME TO DELETE= " << filename << std::endl;
     Logger::instance().log("Delete method activated");
     response.status_ = OK;
     return true;
 }
 
-
-//!LOCAL FOR NOW - TESTING IN PROGRESS
 std::string extractValue(const std::string& data, const std::string& start, const std::string& end) {
     size_t startPos = data.find(start) + start.length();
     size_t endPos = data.find(end, startPos);
@@ -363,11 +353,8 @@ std::string generateUniqueFileName(std::string &originalFileName) {
         else
             newFileName = nameWithoutExtension + "_" + std::to_string(counter) + newFileName.substr(dot_position);
     }
-    //std::cout << "REAL FILE NAME = " << newFileName << std::endl;
     return (newFileName);
 }
-
-
 
 std::string readFileContent(const std::string& filename) {
     std::ifstream file(filename.c_str(), std::ios::binary);
@@ -384,7 +371,6 @@ std::string readFileContent(const std::string& filename) {
 
 bool displayFile(HttpRequest& request, HttpResponse& response) {
     std::string filename;
-    //std::cout << "REQUEST URI CONTIENT: " << request.uri_ << std::endl;
     size_t pos = request.uri_.find('?');
     if (pos != std::string::npos) {
         filename = request.uri_.substr(pos + 1);
@@ -417,12 +403,6 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                             LocationConfig *location) {
     (void)server;
     (void)location;
-    //std::cout << "DANS POSTMETHOD, REQUESTURI CONTIENT: " << request.uri_ << std::endl;
-    //std::cout << "BODY IS: " << request.body_ << std::endl;
-
-    //if (request.uri_.find("/display") != std::string::npos) {
-    //    return displayFile(request, response);
-    //}
 
     if (request.body_.empty()) {
             response.status_ = BAD_REQUEST;
@@ -463,12 +443,6 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         }
 
     } else if (request.headers_["Content-Type"].find("multipart/form-data") != std::string::npos) {
-        //std::map<std::string, std::string>::iterator it;
-        //for (it = request.headers_.begin(); it != request.headers_.end(); ++it) {
-        //    std::cout << "KEY: " << it->first << " VALUE: " << it->second << std::endl;
-        //}
-
-        //std::cout << "BODY IS: " << request.body_ << std::endl;
 
         std::string boundary = extractValue(request.headers_["Content-Type"], "boundary=", "");
         if (request.body_.empty()) {
@@ -476,34 +450,14 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
             response.body_ = "<html><body>There was an error uploading the file<br><br><a href='/'>Return Home</a></body></html>";
             return true;
         }
-        //std::cout << "BOUNDARY = " << boundary << std::endl;
-        //std::cout << "MAX VALUE OF SIZE_T = " << std::numeric_limits<std::size_t>::max() << std::endl;
-        //const size_t MAX_VALUE = std::numeric_limits<std::size_t>::max();
-        //const size_t BUFFER_SIZE = 2048;
 
         std::string delimiter = "--" + boundary;
         size_t pos = 0;
         pos = request.body_.find(delimiter);
-        //std::cout << "BODY IS: " << request.body_ << std::endl;
-        //std::cout << "POS = " << pos << std::endl;
-        //if (pos >= MAX_VALUE) {
-        //    std::cerr << "There was an error uploading the file" << std::endl;
-        //    response.body_ = "<html><body>There was an error uploading the file<br><br><a href='/'>Return Home</a></body></html>";
-        //    return true;
-        //}
         while (pos != std::string::npos) {
-            //THIS sometimes fuck up...may be just on M1 though.
             size_t endPos = request.body_.find(delimiter, pos + delimiter.length());
-            //if (endPos >= MAX_VALUE) {
-            //    std::cerr << "There is an error with endPos" << std::endl;
-            //    response.body_ = "<html><body>There was an error uploading the file<br><br><a href='/'>Return Home</a></body></html>";
-            //    return true;
-            //}
             
-            //std::cout << "endPos = " << endPos << std::endl;
             std::string part = request.body_.substr(pos, endPos - pos);
-
-            //std::cout << "PART IS: " << part << std::endl;
 
             size_t filenamePos = part.find("filename=\"");
             if (filenamePos != std::string::npos) {
@@ -512,29 +466,12 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                     break;
                 }
                 std::string realFileName = generateUniqueFileName(filename);
+                std::cout << "FILENAME= " << realFileName << std::endl;
                 size_t contentPos = part.find("\r\n\r\n") + 4;
-                //std::cout << "contentPos vaut: " << contentPos << std::endl;
-                //std::cout << "PART LENGTH = " << part.length() << std::endl;
-                //std::cout << "DELIMITER LENGTH = " << delimiter.length() << std::endl;
-                //std::cout << "LONGUEUR DU CONTENT = " << part.length() - contentPos - 2 << std::endl;
-                //size_t contentLength = part.length() - contentPos - 2; 
-                //TODO Francis check here and check the cout !
                 std::ofstream file(realFileName.c_str(), std::ios::binary | std::ios::app);
-                //size_t needleContent = contentPos;
-                //size_t loops = 0;
-                //while (needleContent < (contentLength + contentPos)) {
-                //    std::string content = part.substr(contentPos, std::min(BUFFER_SIZE, contentLength - (needleContent - contentPos)));
-                //    //std::cout << "CONTENT = " << content << std::endl;
-                //    needleContent += content.length();
-                //    file << content; 
-                //    //std::cout << "LENGTH OF CHUNK = " << content.length() << std::endl;
-                //    //++loops;
-                //}
                 std::string content = part.substr(contentPos, part.length() - contentPos - 2);
-                //std::cout << "CONTENT = " << content << std::endl;
                 file << content;
                 file.close();
-                //std::cout << "LOOPED " << loops << " TIMES" << std::endl; 
                 std::cout << "File '" << realFileName << "' uploaded successfully to /uploads" << std::endl; 
                 
             }
@@ -575,18 +512,6 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
 
 bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server, LocationConfig *location) {
-    //if (request.uri_.find("delete") != std::string::npos) {
-    //    std::string filename;
-    //    size_t equalPosition = request.uri_.find('=');
-    //    if (equalPosition != std::string::npos) {
-    //        filename = request.uri_.substr(equalPosition + 1);
-    //        deleteFile(filename);
-    //        std::stringstream fileList = uploadsFileList(request);
-    //        response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
-    //        response.status_ = OK;
-    //        return true;
-    //    }
-    //}
     response.headers_["Content-Type"] = "text/html; charset=utf-8";
     if (location) {     
         if (!isResourceRequest(response, request.uri_) && location->autoindex)
@@ -603,6 +528,7 @@ bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
 
 bool HttpServer::validateRequestBody(HttpRequest &request, ServerConfig &server, LocationConfig *location) {
     size_t max = location->client_max_body_size;
+    std::cout << "MAX = " << max << std::endl;
     if (location->max_body_size) {
         max = location->client_max_body_size;
     } else if (server.max_body_size) {
@@ -624,8 +550,6 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server) {
     LocationConfig *location = NULL;
     std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
-    //std::cout << "LE REFERER: " << request.headers_["Referer"] << std::endl;
-    //std::cout << "LE URI: " << request.uri_ << std::endl;
     Logger::instance().log("uri: " + uri);
     for (std::map<std::string, LocationConfig>::iterator it = server.locations.begin();
      it != server.locations.end(); ++it) {    
@@ -642,7 +566,6 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         return buildBadRequestBody(response);
     }
     // @todo verify if method is allowed on location
-    //std::cout << "WHAT IS METHOD: " << request.method_ << std::endl;
     switch (request.method_) {
         case 1: // Enums for comparisons is C++11...
             return getMethod(request, response, server, location);
