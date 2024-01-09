@@ -26,12 +26,12 @@ int main(int argc, char *argv[]) {
         std::cerr << e.what() << std::endl;
         return (EXIT_FAILURE);
     }
+        // Initialize server
+        HttpServer httpServer(httpConfig);
 
-    // Initialize server
-    HttpServer httpServer(httpConfig);
-
-    // Start the server
-    httpServer.start();
+        // Start the server
+        httpServer.start();
+    
 
     return (EXIT_SUCCESS);
 }
