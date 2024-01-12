@@ -90,7 +90,7 @@ std::string HttpResponse::getMessage() const {
 
     // body
     buffer.append(CRLF + body_);
-
+    std::cout << "BUFFER IN GETMESSAGE IS: " << buffer << std::endl;
     return buffer;
 }
 
