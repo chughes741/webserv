@@ -12,6 +12,7 @@
 #include <iostream>
 #include <deque>
 #include <string>
+#include <vector>
 
 #include "logging.hpp"
 
