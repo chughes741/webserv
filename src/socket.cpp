@@ -65,7 +65,7 @@ std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
                 //buffer_data.insert(buffer_data.end(), buffer, buffer + bytes_received);
                 total_bytes_received += bytes_received;
             }
-        } while (bytes_received == READ_BUFFER_SIZE);
+        } while (bytes_received != -1);
     } catch (std::exception &e) {
         std::cerr << "DAT STRING ERROR: " << e.what() << std::endl;
     }
