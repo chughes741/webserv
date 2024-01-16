@@ -47,3 +47,6 @@ webserv
 
 # Mac files
 .DS_Store
+
+# Miscelleanous uploaded files format
+/uploads

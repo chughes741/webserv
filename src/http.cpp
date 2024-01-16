@@ -1,4 +1,6 @@
 #include "http.hpp"
+#include <iostream>
+#include <fstream>
 
 std::map<std::string, HttpMethod> initMethodMap() {
     std::map<std::string, HttpMethod> methodMap;
@@ -21,10 +23,11 @@ std::string HttpRequest::consumeNextToken(std::string &buffer, const std::string
 }
 
 HttpRequest::HttpRequest(const std::string &request, Session *currentSession): currentSession(currentSession) {
+    const size_t BUFFER_SIZE = 2048;
     std::string buffer = request;
-
     std::string method = consumeNextToken(buffer, " ");
 
+    
     method_ = methodMap_.find(method) != methodMap_.end() ? methodMap_[method] : UNKNOWN;
 
     uri_     = consumeNextToken(buffer, " ");
@@ -37,8 +40,14 @@ HttpRequest::HttpRequest(const std::string &request, Session *currentSession): c
         std::string value = consumeNextToken(headers, CRLF);
         headers_[key]     = value;
     }
-
-    body_ = buffer;
+    size_t prevLength = 0;
+    size_t index = 0;
+    std::cout << "BUFFER LENGTH IS : " << buffer.length() << std::endl;
+    while (index < buffer.length()) {
+        prevLength = body_.length();
+        body_.append(buffer, index, std::min(BUFFER_SIZE, (buffer.length() - index)));
+        index += (body_.length() - prevLength);
+    }
 }
 
 std::map<HttpStatus, std::string> initStatusMap() {
