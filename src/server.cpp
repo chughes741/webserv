@@ -191,6 +191,10 @@ bool isResourceRequest(HttpResponse &response, const std::string &uri) {
         response.headers_["Content-Type"] = "text/javascript";
         return true;
     }
+    if (uri.size() >= 4 && uri.substr(uri.size() - 4) == ".pdf") {
+        response.headers_["Content-Type"] = "application/pdf";
+        return true;
+    }
     return false;
 }
 
