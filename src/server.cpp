@@ -177,7 +177,7 @@ void HttpServer::disconnectHandler(int session_id) {
 std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
     std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
 
-    HttpRequest request(buffer_pair.first, sessions_[session_id]);
+    HttpRequest request(buffer_pair.first);
 
     return std::make_pair(request, buffer_pair.second);
 }
@@ -247,9 +247,7 @@ bool deleteFile(const std::string &filename) {
     return std::remove(filePath.c_str()) == 0;
 }
 
-std::stringstream uploadsFileList() {
-    std::stringstream fileList;
-
+void uploadsFileList(std::stringstream &fileList) {
     fileList << "<script>"
          << "function handleDeleteButtonClick(filename) {"
          << "    var currentUrl = window.location.href + 'delete?filename=' + encodeURIComponent(filename);"
@@ -287,7 +285,6 @@ std::stringstream uploadsFileList() {
         }
         closedir(dir);
     }
-    return (fileList);
 }
 
 std::string urlDecode(const std::string& str) {
@@ -315,7 +312,8 @@ bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
     std::string encodedFilename = request.uri_.substr(position + 1);
     std::string filename = urlDecode(encodedFilename);
     deleteFile(filename);
-    std::stringstream fileList = uploadsFileList();
+    std::stringstream fileList;
+    uploadsFileList(fileList);
     response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
     Logger::instance().log("Delete method activated");
     response.status_ = OK;
@@ -505,7 +503,8 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         response.body_                    = "Content-Type not supported";
     }
 
-    std::stringstream fileList = uploadsFileList();
+    std::stringstream fileList;
+    uploadsFileList(fileList);
     
     response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
     response.status_ = OK;
@@ -533,7 +532,6 @@ bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
 
 bool HttpServer::validateRequestBody(HttpRequest &request, ServerConfig &server, LocationConfig *location) {
     size_t max = location->client_max_body_size;
-    std::cout << "MAX = " << max << std::endl;
     if (location->max_body_size) {
         max = location->client_max_body_size;
     } else if (server.max_body_size) {
