@@ -51,6 +51,7 @@ class HttpServer {
     bool readFileToBody(HttpResponse &, std::string &);
     bool buildNotFound(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
     bool buildBadRequestBody(HttpResponse &);
+    bool isRedirectServer(HttpRequest &, HttpResponse &, ServerConfig &);
     bool validateHost(HttpRequest &, HttpResponse &);
     bool validateRequestBody(HttpRequest &, ServerConfig &, LocationConfig *);
     bool readRoot(HttpRequest &, HttpResponse &, ServerConfig *, LocationConfig *);

@@ -548,10 +548,27 @@ bool HttpServer::buildBadRequestBody(HttpResponse &response) {
     return true;
 }
 
+bool HttpServer::isRedirectServer(HttpRequest &request, HttpResponse &response, ServerConfig &server) {
+    if (server.redirect.first == 0)
+        return false;
+    response.status_ = HttpStatus(server.redirect.first);
+    size_t pos = server.redirect.second.find("$request_uri");
+    if (pos != std::string::npos) {
+        response.headers_["Location"] = server.redirect.second.substr(0, pos) + request.uri_;
+    } else {
+        response.headers_["Location"] = server.redirect.second;
+    }
+    response.headers_["Content-Length"] = std::to_string(response.body_.size());
+    return true;
+}
+
 // Find the appropriate location and fill the response body
 bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server) {
     LocationConfig *location = NULL;
+    if (isRedirectServer(request, response, server)) {
+        return true;
+    }
     std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
     // Logger::instance().log("uri: " + uri);
     for (std::map<std::string, LocationConfig>::iterator it = server.locations.begin();
