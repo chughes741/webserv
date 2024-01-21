@@ -48,7 +48,7 @@ class HttpServer {
     bool getMethod(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
     bool postMethod(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
     bool deleteMethod(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
-    bool readFileToBody(HttpResponse &, std::string &);
+    bool readFileToBody(HttpResponse &, std::string &, LocationConfig *);
     bool buildNotFound(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
     bool buildBadRequestBody(HttpResponse &);
     bool isRedirectServer(HttpRequest &, HttpResponse &, ServerConfig &);
