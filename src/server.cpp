@@ -202,7 +202,7 @@ bool HttpServer::buildNotFound(HttpRequest &request, HttpResponse &response, Ser
     if (isResourceRequest(response, request.uri_)) {
         std::string resource = root + request.uri_;
         response.status_ = OK;
-        return readFileToBody(response, resource);
+        return readFileToBody(response, resource, location);
     }
     std::string *errorPath = NULL;
     if (location) {
@@ -218,14 +218,18 @@ bool HttpServer::buildNotFound(HttpRequest &request, HttpResponse &response, Ser
     if (!errorPath)
         return false;
     std::string filepath = root + '/' + *errorPath;
-    return readFileToBody(response, filepath);
+    return readFileToBody(response, filepath, location);
 }
 
 // Read a file into the response body
-bool HttpServer::readFileToBody(HttpResponse &response, std::string &filepath) {
-    std::ifstream in(filepath);
-    if (!in)
-        return false;
+bool HttpServer::readFileToBody(HttpResponse &response, std::string &filepath, LocationConfig *location) {
+    std::ifstream in(filepath + location->index_file);
+    if (!in) {
+        in.open(filepath);
+        if (!in) {
+            return false;
+        }
+    }
     std::stringstream buffer;
     buffer << in.rdbuf();
     response.body_ = buffer.str();
@@ -519,10 +523,10 @@ bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
     response.headers_["Content-Type"] = "text/html; charset=utf-8";
     if (location) {     
         if (!isResourceRequest(response, request.uri_) && location->autoindex)
-            request.uri_ = request.uri_ + location->index_file;
+            request.uri_ = request.uri_;
         std::string root = location->root.length() > 0 ? location->root : server.root;
         std::string filepath = isResourceRequest(response, request.uri_) ? request.uri_ : root + request.uri_;
-        if (readFileToBody(response, filepath)) {
+        if (readFileToBody(response, filepath, location)) {
             response.status_ = OK;
             return true;
         }
@@ -548,10 +552,27 @@ bool HttpServer::buildBadRequestBody(HttpResponse &response) {
     return true;
 }
 
+bool HttpServer::isRedirectServer(HttpRequest &request, HttpResponse &response, ServerConfig &server) {
+    if (server.redirect.first == 0)
+        return false;
+    response.status_ = HttpStatus(server.redirect.first);
+    size_t pos = server.redirect.second.find("$request_uri");
+    if (pos != std::string::npos) {
+        response.headers_["Location"] = server.redirect.second.substr(0, pos) + request.uri_;
+    } else {
+        response.headers_["Location"] = server.redirect.second;
+    }
+    response.headers_["Content-Length"] = std::to_string(response.body_.size());
+    return true;
+}
+
 // Find the appropriate location and fill the response body
 bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server) {
     LocationConfig *location = NULL;
+    if (isRedirectServer(request, response, server)) {
+        return true;
+    }
     std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
     // Logger::instance().log("uri: " + uri);
     for (std::map<std::string, LocationConfig>::iterator it = server.locations.begin();
