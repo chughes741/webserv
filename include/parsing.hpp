@@ -82,7 +82,7 @@ class Parser {
     bool setServerContext();
     bool setServerSetting();
     bool setListen();
-    bool setRedirect();
+    bool setServerRedirect();
     int retrievePort(std::string);
     bool isValidIPAddress(const std::string &ip);
     bool setServerName();
@@ -96,6 +96,7 @@ class Parser {
     bool setFastCGI(std::string &);
     bool setAutoIndex(std::string &);
     bool setLocationErrorPage(std::string &);
+    bool setLocationRedirect(std::string &);
     bool setLimitExcept(std::string &);
     bool setLocationClientBodySize(std::string &);
 
