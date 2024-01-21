@@ -82,6 +82,7 @@ class Parser {
     bool setServerContext();
     bool setServerSetting();
     bool setListen();
+    bool setRedirect();
     int retrievePort(std::string);
     bool isValidIPAddress(const std::string &ip);
     bool setServerName();

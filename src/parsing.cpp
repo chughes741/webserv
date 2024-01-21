@@ -342,7 +342,7 @@ bool Parser::setServerContext() {
 
 bool Parser::setServerSetting() {
     std::string List[] = {"listen", "server_name", "error_page", "root", "location",
-         "client_max_body_size"};
+         "client_max_body_size", "return"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
             return setListen();
@@ -356,13 +356,38 @@ bool Parser::setServerSetting() {
             return setLocationUri();
         case 5:
             return setServerClientBodySize();
+        case 6:
+            return setRedirect();
         default:
             throw std::invalid_argument("Invalid setting in server context: " + *it);
     }
 }
 
+bool Parser::setRedirect() {
+    validateFirstToken("return");
+    std::string error_code = *it;
+    try {
+        int num = std::stoi(error_code);
+        if (num == 300 || num == 301) {
+            httpConfig.servers.back().redirect.first = num;
+        } else {
+            throw std::invalid_argument("Wrong error code");
+        }
+    } catch (...) {
+        std::cout << "Invalid Error Code" << std::endl;
+    }
+    std::string redirect_url = *++it;
+    if (redirect_url != ";") {
+        httpConfig.servers.back().redirect.second = redirect_url;
+    } else {
+        throw std::invalid_argument("No redirect url");
+    }
+    validateLastToken("return");
+    return true;
+}
+
 bool Parser::setListen() {
-    validateFirstToken("server_name");
+    validateFirstToken("listen");
     std::string num = *it;
     if (num.find(":") == num.npos) {
         throw std::logic_error("Error: No address provided for listen");
