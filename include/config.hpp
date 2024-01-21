@@ -45,7 +45,8 @@ struct ServerConfig {
           error_page(),
           client_max_body_size(1024 * 1024),
           max_body_size(false),
-          locations() {}
+          locations(),
+          redirect(0, "") {}
 
     std::vector<std::string>    server_names;         /**< Server name */
     std::pair<std::string, int> listen;               /**< Address and port to listen on */
@@ -54,6 +55,7 @@ struct ServerConfig {
     size_t                      client_max_body_size; /**< Maximum size of a request body */
     bool                        max_body_size;        /**< If set by config */
     std::map<std::string, LocationConfig> locations;  /**< List of locations (path, location)*/
+    std::pair<int, std::string> redirect;             /**< Redirect url of the server*/
 };
 
 /** Configuration for an HTTP server */
