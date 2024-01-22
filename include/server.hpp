@@ -56,6 +56,11 @@ class HttpServer {
     bool validateRequestBody(HttpRequest &, ServerConfig &, LocationConfig *);
     bool readRoot(HttpRequest &, HttpResponse &, ServerConfig *, LocationConfig *);
     bool checkUriForExtension(std::string &uri, LocationConfig *location) const;
+    std::string getUploadDirectory(ServerConfig &server, LocationConfig *location);
+    bool deleteFile(ServerConfig &server, LocationConfig *location, const std::string &filename);
+    void uploadsFileList(ServerConfig &server, LocationConfig *location, std::stringstream &fileList);
+    std::string generateUniqueFileName(ServerConfig &server, LocationConfig *location, std::string &originalFileName);
+    bool displayFile(HttpRequest& request, HttpResponse& response, ServerConfig &server, LocationConfig *location);
 
     std::string trimHost(const std::string &uri, ServerConfig &server);
 

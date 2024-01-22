@@ -22,7 +22,8 @@ struct LocationConfig {
           autoindex(false),
           cgi_enabled(false),
           cgi_ext(),
-          redirect(0, "") {}
+          redirect(0, ""),
+          upload_dir("") {}
 
     size_t                     client_max_body_size; /**< Maximum size of a request body */
     bool                       max_body_size;        /**< If set by config */
@@ -34,6 +35,7 @@ struct LocationConfig {
     bool                       cgi_enabled;          /**< Enable CGI */
     std::vector<std::string>   cgi_ext;              /**< Supported extensions for the location */
     std::pair<int, std::string> redirect;             /**< Redirect url of the server*/
+    std::string                upload_dir;           /**< Set directory for uploads*/
 };
 
 /**
@@ -48,7 +50,8 @@ struct ServerConfig {
           client_max_body_size(1024 * 1024),
           max_body_size(false),
           locations(),
-          redirect(0, "") {}
+          redirect(0, ""),
+          upload_dir("") {}
 
     std::vector<std::string>    server_names;         /**< Server name */
     std::pair<std::string, int> listen;               /**< Address and port to listen on */
@@ -58,6 +61,7 @@ struct ServerConfig {
     bool                        max_body_size;        /**< If set by config */
     std::map<std::string, LocationConfig> locations;  /**< List of locations (path, location)*/
     std::pair<int, std::string> redirect;             /**< Redirect url of the server*/
+    std::string                upload_dir;           /**< Set directory for uploads*/
 };
 
 /** Configuration for an HTTP server */
@@ -67,7 +71,8 @@ struct HttpConfig {
           error_page(),
           error_log("error.log"),
           root("html"),
-          client_max_body_size(1024*1024) {}
+          client_max_body_size(1024*1024),
+          upload_dir("uploads") {}
 
     std::vector<ServerConfig>  servers;              /**< List of server blocks */
     std::map<int, std::string> error_page;           /**< Default error page */
@@ -75,6 +80,7 @@ struct HttpConfig {
     std::string                root;                 /**< Root directory for serving files */
     size_t                     client_max_body_size; /**< Maximum size of a request body */
     bool                       max_body_size;        /**< If set by config */
+    std::string                upload_dir;           /**< Set directory for uploads*/
 };
 
 extern HttpConfig httpConfig;
