@@ -42,7 +42,6 @@ HttpRequest::HttpRequest(const std::string &request, Session *currentSession): c
     }
     size_t prevLength = 0;
     size_t index = 0;
-    std::cout << "BUFFER LENGTH IS : " << buffer.length() << std::endl;
     while (index < buffer.length()) {
         prevLength = body_.length();
         body_.append(buffer, index, std::min(BUFFER_SIZE, (buffer.length() - index)));

@@ -40,7 +40,7 @@ bool TcpSession::send() {
     }
 
     if (send_queue_.empty()) {
-        Logger::instance().log("Finished sending");
+        // Logger::instance().log("Finished sending");
         return true;
     }
 
@@ -65,12 +65,13 @@ std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
                 //buffer_data.insert(buffer_data.end(), buffer, buffer + bytes_received);
                 total_bytes_received += bytes_received;
             }
-        } while (bytes_received != -1);
+        } while (bytes_received > 0);
     } catch (std::exception &e) {
         std::cerr << "DAT STRING ERROR: " << e.what() << std::endl;
     }
 
     if (bytes_received == -1) {
+        Logger::instance().log("Client: " + std::to_string(client) + " with error: " + strerror(errno));
         Logger::instance().log("Error: Failed to receive from socket");
     }
 
@@ -188,6 +189,7 @@ Session* TcpSocket::accept() {
     socklen_t        client_addr_len = sizeof(sockaddr);
 
     int client_sockfd = ::accept(sockfd_, client_addr, &client_addr_len);
+    std::cout << "Client_sockfd: " << client_sockfd << std::endl;
     if (client_sockfd == -1) {
         delete client_addr;
         Logger::instance().log("Error: Failed to accept connection -> " + std::string(strerror(errno)));

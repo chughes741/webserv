@@ -1,5 +1,11 @@
 #include "events.hpp"
 
+/*IMPORTANT EVENTS*/
+//EVFILT_READ
+//EVFILT_WRITE
+//EVFILT_EXCEPT
+//EVFILT_SIGNAL
+
 KqueueEventListener::KqueueEventListener() {
     // Initialize timeout
     timeout_.tv_sec  = 0;
@@ -127,7 +133,12 @@ void KqueueEventListener::unregisterEvent(int fd, InternalEvent events) {
     EV_SET(&event, fd, filter, flags, fflags, data, NULL);
 
     // Delete event from the kqueue.
-    if (kevent(queue_fd_, &event, 1, NULL, 0, NULL) == -1) {
+    int res = kevent(queue_fd_, &event, 1, NULL, 0, NULL);
+    if (res == -1) {
         Logger::instance().log("Error: Failed to remove event from kqueue");
     }
+}
+
+void KqueueEventListener::removeEvent(int fd) {
+    events_.erase(fd);
 }

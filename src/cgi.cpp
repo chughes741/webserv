@@ -158,11 +158,9 @@ bool Cgi::performCgi() {
 	Logger::instance().log(request_.printRequest());
 	switch(request_.method_) {
 		case GET:
-			Logger::instance().log("Enter performcgiGet");
 			return performCgiGet();
 			break;
 		case POST:
-			Logger::instance().log("EnterperformcgiPost");
 			return performCgiPost();
 			break;
 		default:
@@ -221,14 +219,10 @@ bool Cgi::performCgiGet() {
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
-		Logger::instance().log("Finished reading data from child");
 		close(fd[0]);
 		extractHeaders(scriptOutput);
-		Logger::instance().log("Finished extracting headers");
 		extractBody(scriptOutput);
-		Logger::instance().log("Finished extracting body");
 		waitpid(pid, &status, 0);
-		Logger::instance().log("Child has finished executing");
 		if (WEXITSTATUS(status) != 0) {
 			Logger::instance().log("Script execution failed");
 			throw InternalServerError();
@@ -259,6 +253,8 @@ bool Cgi::performCgiPost() {
 		throw InternalServerError();
 	}
 	if (pipe(fdIn) == -1) {
+		close(fdOut[0]);
+		close(fdOut[1]);
 		Logger::instance().log("Pipe out failed");
 		throw InternalServerError();
 	}

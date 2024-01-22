@@ -151,6 +151,8 @@ void HttpServer::connectHandler(int socket_id) {
     // Accept the connection
     Session *session = server_sockets_[socket_id]->accept();
 
+    Logger::instance().log("Connected client: " + std::to_string(session->getSockFd()));
+
     // Create a new session
     sessions_[session->getSockFd()] = session;
 
@@ -162,7 +164,9 @@ void HttpServer::disconnectHandler(int session_id) {
     // Logger::instance().log("Disconnecting fd: " + std::to_string(session_id));
 
     // Remove the session from the listener
-    listener_.unregisterEvent(session_id, READABLE | WRITABLE);
+    listener_.unregisterEvent(session_id, READABLE);
+
+    listener_.removeEvent(session_id);
 
     // Delete the session
     delete sessions_[session_id];
@@ -582,8 +586,6 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         return true;
     }
     else if (location->cgi_enabled && checkUriForExtension(request.uri_, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
-        Logger::instance().log("Enter cgi");
-        Logger::instance().log(request.printRequest());
         Cgi newCgi(request, *location, server, response);
         return newCgi.exec();
     }
@@ -721,7 +723,6 @@ void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, L
             tempUri.append(request.uri_);
             tempUri.append("index.html");
             if (readFileToBody(response, tempUri) == true) {
-            std::cout << "read file worked" << std::endl;
             response.headers_["content-type"] = "text/html";
             response.status_ = OK;
             }
