@@ -38,12 +38,8 @@ bool TcpSession::send() {
     if (static_cast<size_t>(bytes_sent) != buffer.length()) {
         send_queue_.push_front(buffer.substr(bytes_sent));
     }
-
-    if (send_queue_.empty()) {
-        Logger::instance().log("Finished sending");
+    if (send_queue_.empty())
         return true;
-    }
-
     return false;
 }
 
@@ -65,7 +61,7 @@ std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
                 //buffer_data.insert(buffer_data.end(), buffer, buffer + bytes_received);
                 total_bytes_received += bytes_received;
             }
-        } while (bytes_received != -1);
+        } while (bytes_received > 0);
     } catch (std::exception &e) {
         std::cerr << "DAT STRING ERROR: " << e.what() << std::endl;
     }
