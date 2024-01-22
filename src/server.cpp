@@ -248,12 +248,23 @@ std::string HttpServer::trimHost(const std::string &uri, ServerConfig &server) {
     return uri;
 }
 
-bool deleteFile(const std::string &filename) {
-    std::string filePath = "uploads/" + filename;
+std::string HttpServer::getUploadDirectory(ServerConfig &server, LocationConfig *location) {
+    if (!location->upload_dir.empty()) {
+        return location->upload_dir;
+    } else if (!server.upload_dir.empty()) {
+        return server.upload_dir;
+    } else {
+        return config_.upload_dir;
+    }
+} 
+
+bool HttpServer::deleteFile(ServerConfig &server, LocationConfig *location, const std::string &filename) {
+    std::string base_path = getUploadDirectory(server, location);
+    std::string filePath = base_path + "/" + filename;
     return std::remove(filePath.c_str()) == 0;
 }
 
-void uploadsFileList(std::stringstream &fileList) {
+void HttpServer::uploadsFileList(ServerConfig &server, LocationConfig *location, std::stringstream &fileList) {
     fileList << "<script>"
          << "function handleDeleteButtonClick(filename) {"
          << "    var currentUrl = window.location.href + 'delete?filename=' + encodeURIComponent(filename);"
@@ -276,7 +287,8 @@ void uploadsFileList(std::stringstream &fileList) {
     
     DIR *dir;
     struct dirent *ent;
-    if ((dir = opendir("uploads")) != NULL) {
+    std::string dir_path = getUploadDirectory(server, location);
+    if ((dir = opendir(dir_path.c_str())) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
             if (ent->d_name[0] != '.') {
                 std::string filename = std::string(ent->d_name);
@@ -317,9 +329,9 @@ bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
     size_t position = request.uri_.find("=");
     std::string encodedFilename = request.uri_.substr(position + 1);
     std::string filename = urlDecode(encodedFilename);
-    deleteFile(filename);
+    deleteFile(server, location, filename);
     std::stringstream fileList;
-    uploadsFileList(fileList);
+    uploadsFileList(server, location, fileList);
     response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
     response.status_ = OK;
     return true;
@@ -339,8 +351,10 @@ bool fileExists(const std::string &filePath) {
     return file.good();
 }
 
-std::string generateUniqueFileName(std::string &originalFileName) {
-    std::string newFileName = "uploads/" + originalFileName;
+std::string HttpServer::generateUniqueFileName(ServerConfig &server, LocationConfig *location, std::string &originalFileName) {
+    std::string base_path = getUploadDirectory(server, location) + "/";
+    std::string newFileName = base_path + originalFileName;
+    std::cout << newFileName << std::endl;
     std::string nameWithoutExtension;
     size_t dot_position;
     bool moreThanOneChange = false;
@@ -354,7 +368,7 @@ std::string generateUniqueFileName(std::string &originalFileName) {
         nameWithoutExtension = newFileName.substr(0, dot_position);
         if (moreThanOneChange == true) {
             dot_position = originalFileName.find('.'); 
-            newFileName = "uploads/" + originalFileName.substr(0, dot_position) + "_" + std::to_string(counter) + originalFileName.substr(dot_position);
+            newFileName = base_path + originalFileName.substr(0, dot_position) + "_" + std::to_string(counter) + originalFileName.substr(dot_position);
         }
         else
             newFileName = nameWithoutExtension + "_" + std::to_string(counter) + newFileName.substr(dot_position);
@@ -375,14 +389,15 @@ std::string readFileContent(const std::string& filename) {
     }
 }
 
-bool displayFile(HttpRequest& request, HttpResponse& response) {
+bool HttpServer::displayFile(HttpRequest& request, HttpResponse& response, ServerConfig &server, LocationConfig *location) {
     std::string filename;
+    std::string base_path = getUploadDirectory(server, location) + "/";
     size_t pos = request.uri_.find('?');
     if (pos != std::string::npos) {
         filename = request.uri_.substr(pos + 1);
     }
 
-    std::string filePath = "uploads/" + filename;
+    std::string filePath = base_path + filename;
 
     std::ifstream file(filePath.c_str());
     if (!file.is_open()) {
@@ -470,7 +485,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                 if (filename.empty()) {
                     break;
                 }
-                std::string realFileName = generateUniqueFileName(filename);
+                std::string realFileName = generateUniqueFileName(server, location, filename);
                 std::cout << "FILENAME= " << realFileName << std::endl;
                 size_t contentPos = part.find("\r\n\r\n") + 4;
                 std::ofstream file(realFileName.c_str(), std::ios::binary | std::ios::app);
@@ -507,7 +522,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
     }
 
     std::stringstream fileList;
-    uploadsFileList(fileList);
+    uploadsFileList(server, location, fileList);
     
     response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
     response.status_ = OK;
