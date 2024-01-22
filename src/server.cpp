@@ -552,15 +552,15 @@ bool HttpServer::buildBadRequestBody(HttpResponse &response) {
     return true;
 }
 
-bool HttpServer::isRedirectServer(HttpRequest &request, HttpResponse &response, ServerConfig &server) {
-    if (server.redirect.first == 0)
+bool HttpServer::isRedirect(HttpRequest &request, HttpResponse &response, std::pair<int, std::string> &redirect) {
+    if (redirect.first == 0)
         return false;
-    response.status_ = HttpStatus(server.redirect.first);
-    size_t pos = server.redirect.second.find("$request_uri");
+    response.status_ = HttpStatus(redirect.first);
+    size_t pos = redirect.second.find("$request_uri");
     if (pos != std::string::npos) {
-        response.headers_["Location"] = server.redirect.second.substr(0, pos) + request.uri_;
+        response.headers_["Location"] = redirect.second.substr(0, pos) + request.uri_;
     } else {
-        response.headers_["Location"] = server.redirect.second;
+        response.headers_["Location"] = redirect.second;
     }
     response.headers_["Content-Length"] = std::to_string(response.body_.size());
     return true;
@@ -570,7 +570,7 @@ bool HttpServer::isRedirectServer(HttpRequest &request, HttpResponse &response, 
 bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
                            ServerConfig &server) {
     LocationConfig *location = NULL;
-    if (isRedirectServer(request, response, server)) {
+    if (isRedirect(request, response, server.redirect)) {
         return true;
     }
     std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
@@ -584,6 +584,8 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
     // Logger::instance().log(request.printRequest());
     if (!location) {
         return buildNotFound(request, response, server, location);
+    } else if (isRedirect(request, response, location->redirect)) {
+        return true;
     } else if (!(location->limit_except & request.method_)) {
         response.status_ = BAD_REQUEST;
         return true;
