@@ -164,6 +164,8 @@ void HttpServer::disconnectHandler(int session_id) {
     // Remove the session from the listener
     listener_.unregisterEvent(session_id, READABLE | WRITABLE);
 
+    listener_.removeEvent(session_id);
+
     // Delete the session
     delete sessions_[session_id];
 

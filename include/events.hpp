@@ -33,6 +33,7 @@ class KqueueEventListener {
     std::pair<int, InternalEvent> listen();
     bool                          registerEvent(int fd, InternalEvent events);
     void                          unregisterEvent(int fd, InternalEvent events);
+    void                          removeEvent(int fd);
 
    private:
     int                                  queue_fd_;       // kqueue file descriptor
