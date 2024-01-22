@@ -24,7 +24,7 @@ CFLAGS	=	-Wall -Werror -Wextra -g -std=c++98 -I$I -DCONFIG_FILE="\"./config/serv
 SFLAGS	=	-fsanitize=address
 LFLAGS	=	--leak-check=full --show-leak-kinds=all
 RM		=	rm -rf
-
+# CFLAGS += $(SFLAGS)
 S = src/
 O = obj/
 I = include/
@@ -46,6 +46,7 @@ all: $(NAME) | $(LOG_DIR)
 # Generates output file
 $(NAME): $(OBJS)
 	$(HIDE)$(CC) $(CFLAGS) $(VFLAGS) $(OBJS) -o $@
+	@mkdir -p uploads 
 	@echo "\033[0;32mCompiled! Execute as: $(EXECUTION)\033[0m"
 
 #Create objects directory
