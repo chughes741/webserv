@@ -22,7 +22,7 @@ std::string HttpRequest::consumeNextToken(std::string &buffer, const std::string
     return token;
 }
 
-HttpRequest::HttpRequest(const std::string &request) {
+HttpRequest::HttpRequest(const std::string &request, Session *currentSession): currentSession(currentSession) {
     const size_t BUFFER_SIZE = 2048;
     std::string buffer = request;
     std::string method = consumeNextToken(buffer, " ");
@@ -42,7 +42,6 @@ HttpRequest::HttpRequest(const std::string &request) {
     }
     size_t prevLength = 0;
     size_t index = 0;
-    std::cout << "BUFFER LENGTH IS : " << buffer.length() << std::endl;
     while (index < buffer.length()) {
         prevLength = body_.length();
         body_.append(buffer, index, std::min(BUFFER_SIZE, (buffer.length() - index)));

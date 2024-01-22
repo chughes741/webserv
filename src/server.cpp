@@ -80,7 +80,7 @@ void HttpServer::run() {
         if (server_sockets_.find(event.first) != server_sockets_.end()) {
             connectHandler(event.first);
 
-        } else {
+            } else {
             switch (event.second) {
                 case NONE:
                     break;
@@ -162,7 +162,9 @@ void HttpServer::disconnectHandler(int session_id) {
     // Logger::instance().log("Disconnecting fd: " + std::to_string(session_id));
 
     // Remove the session from the listener
-    listener_.unregisterEvent(session_id, READABLE | WRITABLE);
+    listener_.unregisterEvent(session_id, READABLE);
+
+    listener_.removeEvent(session_id);
 
     // Delete the session
     delete sessions_[session_id];
@@ -177,7 +179,7 @@ void HttpServer::disconnectHandler(int session_id) {
 std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
     std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
 
-    HttpRequest request(buffer_pair.first);
+    HttpRequest request(buffer_pair.first, sessions_[session_id]);
 
     return std::make_pair(request, buffer_pair.second);
 }
@@ -189,6 +191,10 @@ bool isResourceRequest(HttpResponse &response, const std::string &uri) {
     }
     if (uri.size() >= 3 && uri.substr(uri.size() - 3) == ".js") {
         response.headers_["Content-Type"] = "text/javascript";
+        return true;
+    }
+    if (uri.size() >= 4 && uri.substr(uri.size() - 4) == ".pdf") {
+        response.headers_["Content-Type"] = "application/pdf";
         return true;
     }
     return false;
@@ -503,11 +509,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
     else if (request.headers_["Content-Type"] == "application/x-www-form-urlencoded") {
         response.headers_["Content-Type"] = "text/html; charset=utf-8";
 
-        // TODO: Call the CGI script
-
-
-
-        if (true) {  // TODO: Check the return code of the CGI script
+        if (true) {
             response.status_ = OK;
 
         } else {
@@ -537,7 +539,7 @@ bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
     response.headers_["Content-Type"] = "text/html; charset=utf-8";
     if (location) {     
         if (!isResourceRequest(response, request.uri_) && location->autoindex)
-            request.uri_ = request.uri_;
+            request.uri_ = request.uri_ + location->index_file;
         std::string root = location->root.length() > 0 ? location->root : server.root;
         std::string filepath = isResourceRequest(response, request.uri_) ? request.uri_ : root + request.uri_;
         if (readFileToBody(response, filepath, location)) {
@@ -606,10 +608,21 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
     } else if (!validateRequestBody(request, server, location)) {
         return buildBadRequestBody(response);
     }
-    if (location->cgi_enabled && checkUriForExtension(request.uri_, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
+    if (checkIfDirectoryRequest(request, location, server) && request.method_ == GET) {
+        if (checkForIndexFile(request, location, server)) {
+            handleIndexFile(request, response, location, server);
+        }
+        else if (location->autoindex) {
+            generateDirectoryListing(request, response, location, server);
+        }
+        else { //if autoindex is disabled and the request is for a directory by default server will return an error 403
+            handleForbidden(response, location, server);
+        }
+        return true;
+    }
+    else if (location->cgi_enabled && checkUriForExtension(request.uri_, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
         Cgi newCgi(request, *location, server, response);
-        bool result = newCgi.exec();
-        return result;
+        return newCgi.exec();
     }
     else {
         switch (request.method_) {
@@ -678,4 +691,235 @@ bool HttpServer::checkUriForExtension(std::string& uri, LocationConfig *location
 		return false;
     else
         return true;
+}
+
+void HttpServer::handleForbidden(HttpResponse &response, LocationConfig *location, ServerConfig &server) { //in case requested directory does not have autoindex enabled
+    std::string errorPage;
+    std::string path;
+    std::map<int, std::string>::iterator it;
+
+    if ((it = location->error_page.find(FORBIDDEN)) != location->error_page.end()) { //checks if an error page corresponding to a 403 status code exists at the location level
+        path = it->second;
+        std::string root;
+	    if (location->root.size() != 0) {
+		    root = location->root;
+		    root.append("/");
+	    }
+	    else {
+		    root = config_.root;
+		    root.append("/");
+	    }
+	    root.append(path);
+	    std::ifstream in(root);
+        std::stringstream buffer;
+        buffer << in.rdbuf();
+        errorPage = buffer.str();
+        in.close();
+    }
+    else if ((it = server.error_page.find(FORBIDDEN)) != server.error_page.end()) { //checks if an error page corresponding to a 403 status code exists at the server level
+        path = it->second;
+        std::string root;
+	    if (location->root.size() != 0) {
+		    root = location->root;
+		    root.append("/");
+	    }
+	    else {
+		    root = config_.root;
+		    root.append("/");
+	    }
+	    root.append(path);
+	    std::ifstream in(root);
+        std::stringstream buffer;
+        buffer << in.rdbuf();
+        errorPage = buffer.str();
+        in.close();
+    }
+    else { //default 403 error page
+        errorPage = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>403 Forbidden</h1></div></body></html>";
+    }
+    response.body_ = errorPage;
+    response.status_ = FORBIDDEN;
+    response.headers_["content-type"] = "text/html";
+}
+
+
+
+void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) {
+    try
+    {
+        std::string tempUri;
+        if (location) {
+            if (location->root.size()) { //check if root is set at the location level
+                tempUri.append(location->root);
+            }
+            else { //fallback to server root directive
+                tempUri.append(server.root);
+            }
+            tempUri.append(request.uri_);
+            tempUri.append("index.html");
+            if (readFileToBody(response, tempUri, location) == true) {
+                response.headers_["content-type"] = "text/html";
+                response.status_ = OK;
+            }
+            else { //something went wrong with reading index.html file
+                return ;
+            }
+        }   
+    }
+    catch(const std::exception& e)
+    {
+        Logger::instance().log("Error happened in handleIndexFile");
+        std::cerr << e.what() << '\n';
+        return ;
+    }
+}
+
+bool HttpServer::checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server) { //used to check if request is simply for a directory
+    try
+    {
+        std::string tempUri;
+        if (location->root.size()) { //check if root is set at the location level
+            tempUri.append(location->root);
+        }
+        else { //fallback to server root directive
+            tempUri.append(server.root);
+        }
+        tempUri.append(request.uri_);
+
+        DIR *currentDirectory = opendir(tempUri.c_str()); //attempt to open the directory specified. If successful then it means the request was indeed for a directory.
+        if (!currentDirectory) {
+            return (false);
+        }
+        if (closedir(currentDirectory)) { //to prevent leaks. Cause leaks suck
+            std::string error("Call to closedir failed: ");
+            error.append(strerror(errno));
+            Logger::instance().log(error);
+        }
+        return true;   
+    }
+    catch(const std::exception& e)
+    {
+        Logger::instance().log("Error occured in checkIfDirectory Listing");
+        std::cerr << e.what() << '\n';
+        return false;
+    }
+}
+
+bool HttpServer::checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server) {
+    try
+    {
+        std::vector<std::pair<unsigned char, std::string> > files = returnFiles(request, location, server);
+        for (std::size_t i = 0; i < files.size(); ++i) {
+            if (files[i].second == "index.html") { //checks the name of the file/folder
+                if (files[i].first == DT_REG) { //checks if it is actually a file
+                    return true; //yay a file called index.html exists!
+                }
+            }
+        }
+        return false; //got to generate an html document with the files contained within the requested directory
+    }
+    catch(const std::exception& e)
+    {
+        Logger::instance().log("Error happened in checkForIndexFile");
+        std::cerr << e.what() << '\n';
+        return false;
+    }
+}
+
+void HttpServer::generateDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) {
+    std::string responseBody;
+    std::vector<std::pair<unsigned char, std::string> > currentDir = returnFiles(request, location, server);
+    std::vector<std::string> directories;
+    std::vector<std::string> files;
+
+    for (std::size_t i = 0; i < currentDir.size(); ++i) {
+        if (currentDir[i].first == DT_DIR) {
+            if (currentDir[i].second != ".")
+                directories.push_back(currentDir[i].second);
+        }
+        if (currentDir[i].first == DT_REG) {
+            files.push_back(currentDir[i].second);
+        }
+    }
+
+    if (!hasTrailingSlash(request)) {
+        std::string newLocation("http://");
+        std::string host;
+        std::map<std::string, std::string>::iterator it = request.headers_.find("Host");
+        if (it != request.headers_.end()) {
+            newLocation.append(it->second);
+        }
+        newLocation.append(request.uri_);
+        newLocation.append("/");
+        response.status_ = MOVED_PERMANENTLY;
+        response.headers_["Location"] = newLocation;
+    }
+    else {
+        response.status_ = OK;
+    }
+    response.headers_["content-type"] = "text/html";
+
+    responseBody.append("<!doctype html><html><head><title>Index of ");
+    responseBody.append(request.uri_);
+    responseBody.append("</title></head><body><h1>Index of ");
+    responseBody.append(request.uri_);
+    responseBody.append("</h1><hr><pre>");
+    for (std::size_t i = 0; i < directories.size(); ++i) {
+        responseBody.append("<a href=\"");
+        responseBody.append(directories[i]);
+        responseBody.append("/\">");
+        responseBody.append(directories[i]);
+        responseBody.append("/</a>\n");
+    }
+    for (std::size_t i = 0; i < files.size(); ++i) {
+        responseBody.append("<a href=\"");
+        responseBody.append(files[i]);
+        responseBody.append("\">");
+        responseBody.append(files[i]);
+        responseBody.append("</a>\n");
+    }
+    responseBody.append("</pre><hr></body></html>");
+    response.body_ = responseBody;
+}
+
+std::vector<std::pair<unsigned char, std::string> > HttpServer::returnFiles(HttpRequest &request, LocationConfig *location, ServerConfig &server) {
+    std::string tempUri;
+    std::vector<std::pair<unsigned char, std::string> > files;
+    struct dirent *file;
+    if (location->root.size()) { //check if root is set at the location level
+        tempUri.append(location->root);
+    }
+    else { //fallback to server root directive
+        tempUri.append(server.root);
+    }
+    tempUri.append(request.uri_);
+
+    DIR *currentDirectory = opendir(tempUri.c_str());
+    do {
+        file = readdir(currentDirectory);
+        if (file != nullptr) {
+            files.push_back(std::make_pair(file->d_type, file->d_name));
+        }
+    }
+    while (file != nullptr);
+    if (closedir(currentDirectory)) {
+        std::string error("Something went wrong with closedir: ");
+        error.append(strerror(errno));
+        Logger::instance().log(error);
+    }
+    return files;
+}
+
+bool HttpServer::hasTrailingSlash(HttpRequest &request) const {
+    if (request.uri_[request.uri_.size() - 1] == '/') {
+        return true;
+    }
+    return false;
+}
+
+void HttpServer::addTrailingSlash(HttpRequest &request, HttpResponse &response) {
+    std::string newUri = request.uri_;
+    newUri.append("/");
+    response.headers_["Location"] = newUri;
+    response.status_ = MOVED_PERMANENTLY;
 }

@@ -56,6 +56,14 @@ class HttpServer {
     bool validateRequestBody(HttpRequest &, ServerConfig &, LocationConfig *);
     bool readRoot(HttpRequest &, HttpResponse &, ServerConfig *, LocationConfig *);
     bool checkUriForExtension(std::string &uri, LocationConfig *location) const;
+    void handleForbidden(HttpResponse &response, LocationConfig *location, ServerConfig &server);
+    void handleIndexFile(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server);
+    bool checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server);
+    bool checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server);
+    void generateDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server);
+    std::vector<std::pair<unsigned char, std::string> > returnFiles(HttpRequest &request, LocationConfig *location, ServerConfig &server);
+    bool hasTrailingSlash(HttpRequest &request) const;
+    void addTrailingSlash(HttpRequest &request, HttpResponse &response);
     std::string getUploadDirectory(ServerConfig &server, LocationConfig *location);
     bool deleteFile(ServerConfig &server, LocationConfig *location, const std::string &filename);
     void uploadsFileList(ServerConfig &server, LocationConfig *location, std::stringstream &fileList);

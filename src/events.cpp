@@ -130,3 +130,7 @@ void KqueueEventListener::unregisterEvent(int fd, InternalEvent events) {
         Logger::instance().log("Error: Failed to remove event from kqueue");
     }
 }
+
+void KqueueEventListener::removeEvent(int fd) {
+    events_.erase(fd);
+}

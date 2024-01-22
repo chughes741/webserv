@@ -29,6 +29,7 @@ enum HttpStatus {
     FOUND                 = 302,
     NOT_MODIFIED          = 304,
     BAD_REQUEST           = 400,
+    FORBIDDEN             = 403,
     NOT_FOUND             = 404,
     METHOD_NOT_ALLOWED    = 405,
     CONTENT_TOO_LARGE     = 413,
@@ -40,7 +41,7 @@ enum HttpStatus {
 /** Represents an HTTP request */
 class HttpRequest {
    public:
-    HttpRequest(const std::string &request);
+    HttpRequest(const std::string &request, Session *currentSession);
     std::string printRequest() const;
 
    private:
