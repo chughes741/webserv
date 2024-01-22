@@ -162,7 +162,7 @@ void HttpServer::disconnectHandler(int session_id) {
     // Logger::instance().log("Disconnecting fd: " + std::to_string(session_id));
 
     // Remove the session from the listener
-    listener_.unregisterEvent(session_id, READABLE | WRITABLE);
+    listener_.unregisterEvent(session_id, READABLE);
 
     listener_.removeEvent(session_id);
 
@@ -524,7 +524,7 @@ bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
     response.headers_["Content-Type"] = "text/html; charset=utf-8";
     if (location) {     
         if (!isResourceRequest(response, request.uri_) && location->autoindex)
-            request.uri_ = request.uri_;
+            request.uri_ = request.uri_ + location->index_file;
         std::string root = location->root.length() > 0 ? location->root : server.root;
         std::string filepath = isResourceRequest(response, request.uri_) ? request.uri_ : root + request.uri_;
         if (readFileToBody(response, filepath, location)) {

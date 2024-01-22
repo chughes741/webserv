@@ -59,12 +59,9 @@ std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
                     buffer_data.push_back(buffer[i]);
                 }
                 //buffer_data.insert(buffer_data.end(), buffer, buffer + bytes_received);
-                total_bytes_received += bytes_received;
-                Logger::instance().log("Stuck in loop if");    
+                total_bytes_received += bytes_received;    
             }
-            Logger::instance().log("Stuck in loop");
         } while (bytes_received > 0);
-        Logger::instance().log("Exited loop");
     } catch (std::exception &e) {
         std::cerr << "DAT STRING ERROR: " << e.what() << std::endl;
     }
