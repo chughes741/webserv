@@ -99,7 +99,6 @@ void Parser::tokenizeConfig(std::string line) {
         pos == 0 ? pos = 1 : pos;
         std::string tmp = line.substr(0, pos);
         tokens.push_back(tmp);
-        ;
         line = line.substr(tmp.size());
     }
 }
@@ -278,8 +277,34 @@ bool Parser::setIndex() {
     return true;
 }
 
+bool Parser::createOrValidateDirectory() {
+    std::string dir_path;
+    int fd = 0;
+    if ((*it).front() == '/') {
+        fd = open((*it).c_str(), O_DIRECTORY, O_CREAT);
+    } else {
+        char buf[2048];
+        getwd(buf);
+        *it = std::string(buf) + "/" + *it;
+        fd = open((*it).c_str(), O_DIRECTORY, O_CREAT);
+    }
+    if (fd < 0)
+        throw std::invalid_argument("Invalid upload directory: " + *it);
+    else
+        close(fd);
+    return true;
+}
+
+bool Parser::setHttpUploadDirectory() {
+    validateFirstToken("upload_dir");
+    createOrValidateDirectory();
+    httpConfig.upload_dir = *it;
+    validateLastToken("upload_dir");
+    return true;
+}
+
 bool Parser::setHttpSetting() {
-    std::string List[] = {"index", "error_page", "client_max_body_size"};
+    std::string List[] = {"index", "error_page", "client_max_body_size", "upload_dir"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
             return setIndex();
@@ -287,6 +312,8 @@ bool Parser::setHttpSetting() {
             return setHttpErrorPage();
         case 2:
             return setHttpClientBodySize();
+        case 3:
+            return setHttpUploadDirectory();
         default:
             throw std::invalid_argument("Invalid setting in Http context: " + *it);
     }
@@ -340,9 +367,17 @@ bool Parser::setServerContext() {
     return true;
 }
 
+bool Parser::setServerUploadDirectory() {
+    validateFirstToken("upload_dir");
+    createOrValidateDirectory();
+    httpConfig.servers.back().upload_dir = *it;
+    validateLastToken("upload_dir");
+    return true;
+}
+
 bool Parser::setServerSetting() {
     std::string List[] = {"listen", "server_name", "error_page", "root", "location",
-         "client_max_body_size", "return"};
+         "client_max_body_size", "return", "upload_dir"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
             return setListen();
@@ -358,6 +393,8 @@ bool Parser::setServerSetting() {
             return setServerClientBodySize();
         case 6:
             return setServerRedirect();
+        case 7:
+            return setServerUploadDirectory();
         default:
             throw std::invalid_argument("Invalid setting in server context: " + *it);
     }
@@ -476,9 +513,17 @@ bool    Parser::setServerClientBodySize() {
     return true;
 }
 
+bool Parser::setLocationUploadDirectory(std::string &uri) {
+    validateFirstToken("upload_dir");
+    createOrValidateDirectory();
+    httpConfig.servers.back().locations[uri].upload_dir = *it;
+    validateLastToken("upload_dir");
+    return true;
+}
+
 bool Parser::setLocationSetting(std::string uri) {
     std::string List[] = {"root", "cgi:", "autoindex", "error_page", "limit_except",
-        "client_max_body_size","return"};
+        "client_max_body_size","return", "upload_dir"};
     switch (getSetting(List, sizeof(List) / sizeof(List[0]))) {
         case 0:
             return setLocationRoot(uri);
@@ -494,6 +539,8 @@ bool Parser::setLocationSetting(std::string uri) {
             return setLocationClientBodySize(uri);
         case 6:
             return setLocationRedirect(uri);
+        case 7:
+            return setLocationUploadDirectory(uri);
         default:
             throw std::logic_error("Invalid setting for location: " + *it);
     }
