@@ -38,12 +38,8 @@ bool TcpSession::send() {
     if (static_cast<size_t>(bytes_sent) != buffer.length()) {
         send_queue_.push_front(buffer.substr(bytes_sent));
     }
-
-    if (send_queue_.empty()) {
-        Logger::instance().log("Finished sending");
+    if (send_queue_.empty())
         return true;
-    }
-
     return false;
 }
 
@@ -64,14 +60,13 @@ std::pair<std::string, ssize_t> TcpSession::recv(int client) const {
                 }
                 //buffer_data.insert(buffer_data.end(), buffer, buffer + bytes_received);
                 total_bytes_received += bytes_received;
+                Logger::instance().log("Stuck in loop if");    
             }
-        } while (bytes_received != -1);
+            Logger::instance().log("Stuck in loop");
+        } while (bytes_received > 0);
+        Logger::instance().log("Exited loop");
     } catch (std::exception &e) {
         std::cerr << "DAT STRING ERROR: " << e.what() << std::endl;
-    }
-
-    if (bytes_received == -1) {
-        Logger::instance().log("Error: Failed to receive from socket");
     }
 
     //std::cout << "---TEST OF VECTOR OF CHAR---" << std::endl;

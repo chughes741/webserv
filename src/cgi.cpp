@@ -155,14 +155,11 @@ void Cgi::setEnv() { // A lot of stuff happens here. The beginning of great thin
 }
 
 bool Cgi::performCgi() {
-	Logger::instance().log(request_.printRequest());
 	switch(request_.method_) {
 		case GET:
-			Logger::instance().log("Enter performcgiGet");
 			return performCgiGet();
 			break;
 		case POST:
-			Logger::instance().log("EnterperformcgiPost");
 			return performCgiPost();
 			break;
 		default:
