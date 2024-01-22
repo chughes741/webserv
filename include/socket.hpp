@@ -16,7 +16,7 @@
 
 #include "logging.hpp"
 
-#define SO_MAX_QUEUE     10
+#define SO_MAX_QUEUE     25
 #define READ_BUFFER_SIZE 1024
 
 // Session abstract base class
