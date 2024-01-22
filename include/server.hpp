@@ -64,6 +64,11 @@ class HttpServer {
     std::vector<std::pair<unsigned char, std::string> > returnFiles(HttpRequest &request, LocationConfig *location, ServerConfig &server);
     bool hasTrailingSlash(HttpRequest &request) const;
     void addTrailingSlash(HttpRequest &request, HttpResponse &response);
+    std::string getUploadDirectory(ServerConfig &server, LocationConfig *location);
+    bool deleteFile(ServerConfig &server, LocationConfig *location, const std::string &filename);
+    void uploadsFileList(ServerConfig &server, LocationConfig *location, std::stringstream &fileList);
+    std::string generateUniqueFileName(ServerConfig &server, LocationConfig *location, std::string &originalFileName);
+    bool displayFile(HttpRequest& request, HttpResponse& response, ServerConfig &server, LocationConfig *location);
 
     std::string trimHost(const std::string &uri, ServerConfig &server);
 

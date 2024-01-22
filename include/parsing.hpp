@@ -64,6 +64,7 @@ class Parser {
     bool setPid();
     bool setEventsContext();
     bool setEventsSetting();
+    bool createOrValidateDirectory();
 
     /** @todo determine where we put the worker connections setting
      * @brief Set the Worker Connections object
@@ -73,6 +74,7 @@ class Parser {
     bool setHttpSetting();
     bool setHttpErrorPage();
     bool setHttpClientBodySize();
+    bool setHttpUploadDirectory();
 
     /** @todo determine where we put the index setting
      * @brief Set the index pages of the server
@@ -89,6 +91,7 @@ class Parser {
     bool setServerErrorPage();
     bool setServerRoot();
     bool setServerClientBodySize();
+    bool setServerUploadDirectory();
 
     bool setLocationSetting(std::string uri);
     bool setLocationUri();
@@ -99,6 +102,7 @@ class Parser {
     bool setLocationRedirect(std::string &);
     bool setLimitExcept(std::string &);
     bool setLocationClientBodySize(std::string &);
+    bool setLocationUploadDirectory(std::string &);
 
    private:
     std::vector<std::string>           tokens;
