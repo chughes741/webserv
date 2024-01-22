@@ -15,7 +15,6 @@ KqueueEventListener::KqueueEventListener() {
 
     // Check if kqueue was created successfully
     if (queue_fd_ == -1) {
-        Logger::instance().log("Error: Failed to create kqueue");
         throw std::runtime_error("Failed to create kqueue");
     }
 }
