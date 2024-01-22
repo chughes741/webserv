@@ -223,6 +223,8 @@ bool HttpServer::buildNotFound(HttpRequest &request, HttpResponse &response, Ser
 
 // Read a file into the response body
 bool HttpServer::readFileToBody(HttpResponse &response, std::string &filepath, LocationConfig *location) {
+    if (!location)
+        return false;
     std::ifstream in(filepath + location->index_file);
     if (!in) {
         in.open(filepath);
@@ -319,7 +321,6 @@ bool HttpServer::deleteMethod(HttpRequest &request, HttpResponse &response,
     std::stringstream fileList;
     uploadsFileList(fileList);
     response.body_ = "<html><body><h2>Uploads:</h2><ul>" + fileList.str() + "</ul>" + "<a href='/'>Return Home</a></body></html>";
-    Logger::instance().log("Delete method activated");
     response.status_ = OK;
     return true;
 }
@@ -433,7 +434,6 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
     }
 
     if (request.headers_["Content-Type"] == "text/plain") {
-        Logger::instance().log("POST: Creating file with text data");
         response.headers_["Content-Type"] = "text/plain; charset=utf-8";
 
         // TODO: Create a file with the body data
@@ -486,7 +486,6 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
 
     
     else if (request.headers_["Content-Type"] == "application/x-www-form-urlencoded") {
-        Logger::instance().log("POST: Returning response from form-data");
         response.headers_["Content-Type"] = "text/html; charset=utf-8";
 
         // TODO: Call the CGI script
@@ -591,8 +590,6 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         return buildBadRequestBody(response);
     }
     if (location->cgi_enabled && checkUriForExtension(request.uri_, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
-        Logger::instance().log("Enter cgi");
-        Logger::instance().log(request.printRequest());
         Cgi newCgi(request, *location, server, response);
         bool result = newCgi.exec();
         return result;
