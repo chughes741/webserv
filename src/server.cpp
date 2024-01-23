@@ -128,7 +128,8 @@ void HttpServer::writableHandler(int session_id) {
     // Logger::instance().log("Sending response on fd: " + std::to_string(session_id));
 
     if (sessions_[session_id]->send()) {
-        listener_.unregisterEvent(session_id, WRITABLE);
+        // listener_.unregisterEvent(session_id, WRITABLE);
+        disconnectHandler(session_id);
     }
 }
 
@@ -162,7 +163,7 @@ void HttpServer::disconnectHandler(int session_id) {
     // Logger::instance().log("Disconnecting fd: " + std::to_string(session_id));
 
     // Remove the session from the listener
-    listener_.unregisterEvent(session_id, READABLE);
+    listener_.unregisterEvent(session_id, READABLE | WRITABLE);
 
     listener_.removeEvent(session_id);
 
@@ -179,6 +180,8 @@ void HttpServer::disconnectHandler(int session_id) {
 std::pair<HttpRequest, ssize_t> HttpServer::receiveRequest(int session_id) {
     std::pair<std::string, ssize_t> buffer_pair = sessions_[session_id]->recv(session_id);
 
+    if (buffer_pair.second < 0)
+        disconnectHandler(session_id);
     HttpRequest request(buffer_pair.first, sessions_[session_id]);
 
     return std::make_pair(request, buffer_pair.second);
