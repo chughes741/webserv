@@ -3,7 +3,9 @@
 Session::Session(int sockfd, const struct sockaddr* addr, socklen_t addrlen)
     : sockfd_(sockfd), addr_(addr), addrlen_(addrlen) {}
 
-Session::~Session() {}
+Session::~Session() {
+    delete addr_;
+}
 
 int Session::getSockFd() const {
     return sockfd_;
