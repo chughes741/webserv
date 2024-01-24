@@ -65,11 +65,22 @@ void HttpServer::stop() {
     }
 
     // Clear the map of sockets
+    std::map<int, Session*>::iterator it = sessions_.begin();
+    if (it != sessions_.end()) {
+        for (std::map<int, Session*>::iterator it = sessions_.begin(); it != sessions_.end(); ++it) {
+            delete it->second;
+        }
+    }
+    sessions_.clear();
     server_sockets_.clear();
+    exit(0);
 }
 
 void HttpServer::run() {
     Logger::instance().log("Running server");
+
+    signal(SIGINT, SIG_IGN);
+    signal(SIGTERM, SIG_IGN);
 
     // Loop forever
     while (true) {

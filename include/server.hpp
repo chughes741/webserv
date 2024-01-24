@@ -6,6 +6,7 @@
 #include <dirent.h>
 #include <limits>
 #include <cstdio>
+#include <signal.h>
 
 #include "config.hpp"
 #include "http.hpp"
