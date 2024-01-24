@@ -23,6 +23,7 @@ std::pair<int, InternalEvent> KqueueEventListener::listen() {
     // Wait for events on the kqueue.
     struct kevent eventlist;
     KqueueEvent   filter = 0;
+    memset(&eventlist,0, sizeof(eventlist));
     int           ret    = kevent(queue_fd_, NULL, 0, &eventlist, 1, &timeout_);
 
     // Check if event was received successfully
@@ -30,13 +31,12 @@ std::pair<int, InternalEvent> KqueueEventListener::listen() {
         Logger::instance().log("Error: Failed to receive event from kqueue");
         return std::make_pair(-1, NONE);
     }
-
     filter = static_cast<KqueueEvent>(eventlist.filter);
 
     // Handle conversion from kqueue events to internal events
     InternalEvent event = NONE;
     for (std::map<KqueueEvent, InternalEvent>::const_iterator it = KqueueEventMap.begin();
-         it != KqueueEventMap.end(); ++it) {
+        it != KqueueEventMap.end(); ++it) {
         if (!(filter ^ it->first)) {
             event = it->second;
             break;
