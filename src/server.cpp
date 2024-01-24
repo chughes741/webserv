@@ -136,8 +136,6 @@ void HttpServer::readableHandler(int session_id) {
 }
 
 void HttpServer::writableHandler(int session_id) {
-    // Logger::instance().log("Sending response on fd: " + std::to_string(session_id));
-
     if (sessions_[session_id]->send()) {
         // listener_.unregisterEvent(session_id, WRITABLE);
         disconnectHandler(session_id);
@@ -314,7 +312,7 @@ void HttpServer::uploadsFileList(ServerConfig &server, LocationConfig *location,
             if (ent->d_name[0] != '.') {
                 std::string filename = std::string(ent->d_name);
                 fileList << "<li style=\"clear: both;\">"
-                         << "<a href=\"/display?filename=" << filename << "\">" << filename << "</a>"
+                         << "<p>" << filename << "</p>"
                          << "<form id=\"deleteForm" << filename << "\" style=\"float: right;\">"
                          << "<input type=\"hidden\" name=\"filename\" value=\"" << filename << "\">"
                          << "<input type=\"button\" value=\"Delete\" onclick=\"handleDeleteButtonClick('" << filename << "');\">"
@@ -375,7 +373,6 @@ bool fileExists(const std::string &filePath) {
 std::string HttpServer::generateUniqueFileName(ServerConfig &server, LocationConfig *location, std::string &originalFileName) {
     std::string base_path = getUploadDirectory(server, location) + "/";
     std::string newFileName = base_path + originalFileName;
-    std::cout << newFileName << std::endl;
     std::string nameWithoutExtension;
     size_t dot_position;
     bool moreThanOneChange = false;
@@ -505,14 +502,11 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
                     break;
                 }
                 std::string realFileName = generateUniqueFileName(server, location, filename);
-                std::cout << "FILENAME= " << realFileName << std::endl;
                 size_t contentPos = part.find("\r\n\r\n") + 4;
                 std::ofstream file(realFileName.c_str(), std::ios::binary | std::ios::app);
                 std::string content = part.substr(contentPos, part.length() - contentPos - 2);
                 file << content;
-                file.close();
-                std::cout << "File '" << realFileName << "' uploaded successfully to /uploads" << std::endl; 
-                
+                file.close();                
             }
             pos = response.body_.find(delimiter, endPos);
         }
@@ -614,7 +608,7 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         return buildNotFound(request, response, server, location);
     } else if (isRedirect(request, response, location->redirect)) {
         return true;
-    } else if (!(location->limit_except & request.method_)) {
+    } else if (!(std::find(location->limit_except.begin(), location->limit_except.end(), static_cast<int>(request.method_)) != location->limit_except.end())) {
         response.status_ = BAD_REQUEST;
         return true;
     } else if (!validateRequestBody(request, server, location)) {
@@ -661,13 +655,19 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
         if (requestHost == serverHost || requestHost == localHost) {
             return buildResponse(request, response, *it);
         }
+        for (std::vector<std::string>::iterator server_name = (*it).server_names.begin();
+                server_name != (*it).server_names.end(); ++server_name) {
+                    if (requestHost == *server_name + ":" + std::to_string(it->listen.second))
+                        return buildResponse(request, response, *it);
+                }
     }
     return false;
 }
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
-
+    
+    // Logger::instance().log(request.printRequest());
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";
     response.headers_["Connection"] = "Keep-Alive";
@@ -766,7 +766,7 @@ void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, L
                 tempUri.append(server.root);
             }
             tempUri.append(request.uri_);
-            tempUri.append("index.html");
+            tempUri.append(location->index_file);
             if (readFileToBody(response, tempUri, location) == true) {
                 response.headers_["content-type"] = "text/html";
                 response.status_ = OK;
@@ -820,7 +820,7 @@ bool HttpServer::checkForIndexFile(HttpRequest &request, LocationConfig *locatio
     {
         std::vector<std::pair<unsigned char, std::string> > files = returnFiles(request, location, server);
         for (std::size_t i = 0; i < files.size(); ++i) {
-            if (files[i].second == "index.html") { //checks the name of the file/folder
+            if (files[i].second == location->index_file) { //checks the name of the file/folder
                 if (files[i].first == DT_REG) { //checks if it is actually a file
                     return true; //yay a file called index.html exists!
                 }
