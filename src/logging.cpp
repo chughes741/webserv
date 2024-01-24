@@ -37,9 +37,11 @@ std::string getTime() {
     std::tm         *now = std::localtime(&t);
     std::stringstream ss;
 
+    if (!now) {
+        return "";
+    }
     ss << std::setfill('0') << std::setw(2) << now->tm_hour << ":" << std::setw(2) << now->tm_min
        << ":" << std::setw(2) << now->tm_sec;
-
     return ss.str();
 }
 
@@ -48,9 +50,11 @@ std::string getCurrentTimestamp() {
     std::tm          *now = std::localtime(&t);
     std::stringstream ss;
 
+    if (!now) {
+        return "";
+    }
     ss << std::setfill('0') << (now->tm_year + 1900) << std::setw(2) << (now->tm_mon + 1)
        << std::setw(2) << now->tm_mday << "-" << std::setw(2) << now->tm_hour << "-" << std::setw(2)
        << now->tm_min << "-" << std::setw(2) << now->tm_sec;
-
     return ss.str();
 }
