@@ -22,7 +22,7 @@ EXECUTION = ./$(NAME) or ./$(NAME) + configFile
 CC		=	c++
 CFLAGS	=	-Wall -Werror -Wextra -g -std=c++98 -I$I -DCONFIG_FILE="\"./config/server.conf\""
 SFLAGS	=	-fsanitize=address
-LFLAGS	=	--leak-check=full --show-leak-kinds=all
+LFLAGS	=	--leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=leak_suppression.supp --log-file=valgrind_output.txt
 RM		=	rm -rf
 # CFLAGS += $(SFLAGS)
 S = src/
