@@ -61,6 +61,7 @@ std::map<HttpStatus, std::string> initStatusMap() {
     statusMap[BAD_REQUEST]           = "400 Bad Request";
     statusMap[NOT_FOUND]             = "404 Not Found";
     statusMap[METHOD_NOT_ALLOWED]    = "405 Method Not Allowed";
+    statusMap[CONTENT_TOO_LARGE]     = "413 Content Too Large";
     statusMap[IM_A_TEAPOT]           = "418 I'm a teapot";
     statusMap[INTERNAL_SERVER_ERROR] = "500 Internal Server Error";
     statusMap[BAD_GATEWAY]           = "502 Bad Gateway";
