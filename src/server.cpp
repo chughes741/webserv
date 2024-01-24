@@ -8,12 +8,14 @@ HttpServer::HttpServer(HttpConfig httpConfig, SocketGenerator socket_generator)
 
 HttpServer::~HttpServer() {}
 
+bool running = true;
+
 void HttpServer::start(bool run_server) {
     Logger::instance().log("Starting server");
 
     // Set up signal handlers
-    listener_.registerEvent(SIGINT, SIGNAL_EVENT);
-    listener_.registerEvent(SIGTERM, SIGNAL_EVENT);
+    //listener_.registerEvent(SIGINT, SIGNAL_EVENT);
+    //listener_.registerEvent(SIGTERM, SIGNAL_EVENT);
 
     // Create a socket for each server in the config
     Socket *new_socket;

@@ -48,12 +48,13 @@ std::pair<int, InternalEvent> KqueueEventListener::listen() {
 }
 
 bool KqueueEventListener::registerEvent(int fd, InternalEvent events) {
-    // if (events == SIGNAL_EVENT) {
-        // Logger::instance().log("Registering signal event");
-    // } else {
-        // Logger::instance().log("Registering event: " + std::to_string(events) +
-                            //    " on fd: " + std::to_string(fd));
-    // }
+     std::cout << "INTERNAL EVENT HERE IS: " << events << std::endl;
+     if (events == SIGNAL_EVENT) {
+        Logger::instance().log("Registering signal event");  
+     } else {
+        Logger::instance().log("Registering event: " + std::to_string(events) +
+                          " on fd: " + std::to_string(fd));
+     }
 
     // Handle conversion from internal events to kqueue filter
     KqueueEvent filter = NONE;
