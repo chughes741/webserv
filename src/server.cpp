@@ -50,7 +50,7 @@ void HttpServer::start(bool run_server) {
     if (run_server == true) run();
 }
 
-void HttpServer::stop() {
+bool HttpServer::stop() {
     Logger::instance().log("Stopping server");
 
     // Close all sockets and delete them
@@ -73,7 +73,7 @@ void HttpServer::stop() {
     }
     sessions_.clear();
     server_sockets_.clear();
-    exit(0);
+    return true;
 }
 
 void HttpServer::run() {
@@ -105,8 +105,8 @@ void HttpServer::run() {
                     errorHandler(event.first);
                     break;
                 case SIGNAL_EVENT:
-                    signalHandler(event.first);
-                    break;
+                    if (signalHandler(event.first))
+                        return;
             }
         }
     }
@@ -149,12 +149,13 @@ void HttpServer::errorHandler(int session_id) {
     return;
 }
 
-void HttpServer::signalHandler(int signal) {
+bool HttpServer::signalHandler(int signal) {
     // Logger::instance().log("Received signal: " + std::to_string(signal));
 
     if (signal == SIGINT || signal == SIGTERM) {
-        stop();
+        return stop();
     }
+    return false;
 }
 
 void HttpServer::connectHandler(int socket_id) {
