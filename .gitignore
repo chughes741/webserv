@@ -50,3 +50,4 @@ webserv
 
 # Miscelleanous uploaded files format
 /uploads
+./valgrind_output.txt

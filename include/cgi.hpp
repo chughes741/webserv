@@ -7,7 +7,6 @@
 #include "logging.hpp"
 #include "http.hpp"
 #include "config.hpp"
-// #include "../include/config.hpp"
 
 enum exceptionType {
     Internal,

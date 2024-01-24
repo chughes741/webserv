@@ -472,9 +472,7 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
     if (request.headers_["Content-Type"] == "text/plain") {
         response.headers_["Content-Type"] = "text/plain; charset=utf-8";
 
-        // TODO: Create a file with the body data
-
-        if (true) {  // TODO: Check the return code of the file creation
+        if (true) {
             response.status_ = CREATED;
             response.body_   = "File created successfully";
 
@@ -580,6 +578,7 @@ bool HttpServer::validateRequestBody(HttpRequest &request, ServerConfig &server,
 bool HttpServer::buildBadRequestBody(HttpResponse &response) {
     response.status_ = CONTENT_TOO_LARGE;
     response.headers_["Connection"] = "close";
+    response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>413 Content Too Large</h1></div></body></html>";
     return true;
 }
 
@@ -605,14 +604,12 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         return true;
     }
     std::string uri = isResourceRequest(response, request.uri_) ? trimHost(request.headers_["Referer"], server) : request.uri_;
-    // Logger::instance().log("uri: " + uri);
     for (std::map<std::string, LocationConfig>::iterator it = server.locations.begin();
      it != server.locations.end(); ++it) {    
         if (uri.substr(0, it->first.size()) == it->first) {
             location = &(it->second);
         }
     }
-    // Logger::instance().log(request.printRequest());
     if (!location) {
         return buildNotFound(request, response, server, location);
     } else if (isRedirect(request, response, location->redirect)) {
@@ -641,7 +638,6 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
     }
     else {
         switch (request.method_) {
-        // @todo verify if method is allowed on location
         case 1: // Enums for comparisons is C++11...
             return getMethod(request, response, server, location);
         case 2: // Enums for comparisons is C++11...
@@ -671,7 +667,6 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
 
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
-    //Logger::instance().log(request.printRequest());
 
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";
