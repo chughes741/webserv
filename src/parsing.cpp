@@ -49,7 +49,6 @@ void printHttpConfig(const HttpConfig& config) {
             }
             std::cout << "  Root: " << location.root << std::endl;
             std::cout << "  Index File: " << location.index_file << std::endl;
-            std::cout << "  Limit Except: " << location.limit_except << std::endl;
             std::cout << "  CGI Enabled: " << (location.cgi_enabled ? "true" : "false") << std::endl;
             for (size_t i = 0; i < location.cgi_ext.size(); ++i) {
                 std::cout << "  Cgi_ext " << i << ": " << location.cgi_ext[i] << std::endl; 
@@ -577,6 +576,9 @@ bool Parser::setLocationUri() {
         throw std::logic_error("Invalid syntax for location: " + *it);
     }
     (httpConfig.servers.back()).locations[uri] = LocationConfig();
+    (httpConfig.servers.back()).locations[uri].limit_except.push_back(1);
+    (httpConfig.servers.back()).locations[uri].limit_except.push_back(2);
+    (httpConfig.servers.back()).locations[uri].limit_except.push_back(3);
     while (*++it != "}") {
         setLocationSetting(uri);
     }
@@ -622,21 +624,17 @@ bool Parser::setLocationErrorPage(std::string &uri) {
 }
 
 bool Parser::setLimitExcept(std::string &uri) {
-validateFirstToken("limit_except");
-    std::vector<std::string> methods;
-    methods.push_back("GET");
-    methods.push_back("POST");
-    methods.push_back("DELETE");
-    std::vector<std::string>::iterator tmp;
-    short binary = 0;
-    while (*it != ";") {
-        tmp = std::find(methods.begin(), methods.end(), *it);
-        if (tmp == methods.end()) {
+    validateFirstToken("limit_except");
+    (httpConfig.servers.back()).locations[uri].limit_except.clear();
+    while (it != tokens.end() &&  *it != ";") {
+        if (*it == "GET")
+            (httpConfig.servers.back()).locations[uri].limit_except.push_back(1);
+        else if (*it == "POST")
+            (httpConfig.servers.back()).locations[uri].limit_except.push_back(2);
+        else if (*it == "DELETE")
+            (httpConfig.servers.back()).locations[uri].limit_except.push_back(3);
+        else
             throw std::logic_error("Error: wrong method (" +*it + ") for location " + uri);
-        }
-        binary = binary | tmp - methods.end();
-        (httpConfig.servers.back()).locations[uri].limit_except = binary;
-        *tmp = "";
         *it++;
     }
     return true;

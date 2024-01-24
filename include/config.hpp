@@ -18,7 +18,7 @@ struct LocationConfig {
           error_page(),
           root("html"),
           index_file("index.html"),
-          limit_except(GET | POST | DELETE),
+          limit_except(),
           autoindex(false),
           cgi_enabled(false),
           cgi_ext(),
@@ -30,7 +30,7 @@ struct LocationConfig {
     std::map<int, std::string> error_page;           /**< Default error page */
     std::string                root;                 /**< Root directory for serving files */
     std::string                index_file;           /**< Name of the index file */
-    unsigned short             limit_except;         /**< Allowed methods */
+    std::vector<int>           limit_except;         /**< Allowed methods */
     bool                       autoindex;            /**< Enable autoindex */
     bool                       cgi_enabled;          /**< Enable CGI */
     std::vector<std::string>   cgi_ext;              /**< Supported extensions for the location */
