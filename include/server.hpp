@@ -31,7 +31,7 @@ class HttpServer {
 
    public:
     void start(bool run_server = true);
-    void stop();
+    bool stop();
 
    private:
     void run();
@@ -39,7 +39,7 @@ class HttpServer {
     void readableHandler(int server_id);
     void writableHandler(int server_id);
     void errorHandler(int server_id);
-    void signalHandler(int signal);
+    bool signalHandler(int signal);
     void connectHandler(int socket_id);
     void disconnectHandler(int session_id);
 

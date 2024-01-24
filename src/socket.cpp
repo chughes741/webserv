@@ -161,12 +161,11 @@ int TcpSocket::bind(std::string addr, int port) {
     // Copy the address information to addr_in_
     memcpy(&addr_in_, res->ai_addr, sizeof(addr_in_));
 
+    freeaddrinfo(res);
     // Binds socket to an address and port
     if (::bind(sockfd_, (struct sockaddr*)&addr_in_, sizeof(addr_in_)) == -1) {
         Logger::instance().log("Error: Failed to bind socket -> " + std::string(strerror(errno)));
     }
-
-    freeaddrinfo(res);
     return sockfd_;
 }
 

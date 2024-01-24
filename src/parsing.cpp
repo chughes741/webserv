@@ -82,7 +82,7 @@ void parseConfig(std::string config_file, HttpConfig &httpConfig) {
     // printHttpConfig(httpConfig);
 }
 
-Parser::Parser(HttpConfig &httpConfig) : context(1), httpConfig(httpConfig) {}
+Parser::Parser(HttpConfig &httpConfig) : tokens(0), context(1), httpConfig(httpConfig) {}
 
 Parser::~Parser(void) {
     tokens.clear();
@@ -118,7 +118,7 @@ void Parser::validateLastToken(std::string setting) {
 void Parser::initSettings() {
     it = tokens.begin();
     for (; it != tokens.end(); ++it) {
-        while (*it == "}" && !context.empty()) {
+        while (it != tokens.end() && *it == "}" && !context.empty()) {
             context.pop_back();
             ++it;
         }
