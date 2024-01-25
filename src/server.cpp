@@ -214,9 +214,9 @@ bool isResourceRequest(HttpResponse &response, const std::string &uri) {
 }
 
 // Build the error page : ToDo -> Make it take the error code
-bool HttpServer::buildNotFound(HttpRequest &request, HttpResponse &response, ServerConfig &server,
-                               LocationConfig *location) {
-    response.status_ = NOT_FOUND;
+bool HttpServer::buildErrorPage(HttpRequest &request, HttpResponse &response, ServerConfig &server,
+                               LocationConfig *location, HttpStatus status) {
+    response.status_ = status;
     std::string root = location && location->root.size() > 0 ? location->root : server.root;
     if (isResourceRequest(response, request.uri_)) {
         std::string resource = root + request.uri_;
@@ -225,14 +225,19 @@ bool HttpServer::buildNotFound(HttpRequest &request, HttpResponse &response, Ser
     }
     std::string *errorPath = NULL;
     if (location) {
-        std::map<int, std::string>::iterator it = location->error_page.find(404);
+        std::map<int, std::string>::iterator it = location->error_page.find(status);
         if (it != location->error_page.end())
             errorPath = &it->second;
     }
     if (!errorPath) {
-        std::map<int, std::string>::iterator it = server.error_page.find(404);
+        std::map<int, std::string>::iterator it = server.error_page.find(status);
         if (it != server.error_page.end())
             errorPath = &it->second;
+    }
+    if (!errorPath) {
+        std::map<int, std::string>::iterator it = config_.error_page.find(status);
+        if (it != config_.error_page.end())
+            errorPath = &it->second; 
     }
     if (!errorPath)
         return false;
@@ -312,7 +317,7 @@ void HttpServer::uploadsFileList(ServerConfig &server, LocationConfig *location,
             if (ent->d_name[0] != '.') {
                 std::string filename = std::string(ent->d_name);
                 fileList << "<li style=\"clear: both;\">"
-                         << "<p>" << filename << "</p>"
+                         << "<div style=\"display: inline;\">" << filename << "</div>"
                          << "<form id=\"deleteForm" << filename << "\" style=\"float: right;\">"
                          << "<input type=\"hidden\" name=\"filename\" value=\"" << filename << "\">"
                          << "<input type=\"button\" value=\"Delete\" onclick=\"handleDeleteButtonClick('" << filename << "');\">"
@@ -419,9 +424,7 @@ bool HttpServer::displayFile(HttpRequest& request, HttpResponse& response, Serve
 
     std::ifstream file(filePath.c_str());
     if (!file.is_open()) {
-        response.status_ = NOT_FOUND;
-        response.body_ = "File not found";
-        return false;
+        return buildErrorPage(request, response, server, location, NOT_FOUND);
     }
     file.close();
 
@@ -444,10 +447,8 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
     (void)location;
 
     if (request.body_.empty()) {
-            response.status_ = BAD_REQUEST;
-    } 
-
-    else {
+        return buildErrorPage(request, response, server, location, BAD_REQUEST);
+    } else {
         std::string userInput;
         size_t pos = request.body_.find("text_input=");
         if (pos != std::string::npos) {
@@ -472,10 +473,8 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
         if (true) {
             response.status_ = CREATED;
             response.body_   = "File created successfully";
-
         } else {
-            response.status_ = INTERNAL_SERVER_ERROR;
-            response.body_   = "Error creating file";
+            return buildErrorPage(request, response, server, location, INTERNAL_SERVER_ERROR);
         }
 
     } else if (request.headers_["Content-Type"].find("multipart/form-data") != std::string::npos) {
@@ -511,8 +510,6 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
             pos = response.body_.find(delimiter, endPos);
         }
     }
-
-    
     else if (request.headers_["Content-Type"] == "application/x-www-form-urlencoded") {
         response.headers_["Content-Type"] = "text/html; charset=utf-8";
 
@@ -520,14 +517,10 @@ bool HttpServer::postMethod(HttpRequest &request, HttpResponse &response, Server
             response.status_ = OK;
 
         } else {
-            response.status_ = INTERNAL_SERVER_ERROR;
+            return buildErrorPage(request, response, server, location, INTERNAL_SERVER_ERROR);
         }
-
     } else {
-        Logger::instance().log("POST: Content-Type not supported");
-        response.status_                  = BAD_REQUEST;
-        response.headers_["Content-Type"] = "text/plain; charset=utf-8";
-        response.body_                    = "Content-Type not supported";
+        return buildErrorPage(request, response, server, location, BAD_REQUEST);
     }
 
     std::stringstream fileList;
@@ -554,7 +547,7 @@ bool HttpServer::getMethod(HttpRequest &request, HttpResponse &response,
             return true;
         }
     }
-    return buildNotFound(request, response, server, location);
+    return buildErrorPage(request, response, server, location, NOT_FOUND);
 }
 
 bool HttpServer::validateRequestBody(HttpRequest &request, ServerConfig &server, LocationConfig *location) {
@@ -567,13 +560,6 @@ bool HttpServer::validateRequestBody(HttpRequest &request, ServerConfig &server,
         max = this->config_.client_max_body_size;
     }
     return request.body_.size() <= max;
-}
-
-bool HttpServer::buildBadRequestBody(HttpResponse &response) {
-    response.status_ = CONTENT_TOO_LARGE;
-    response.headers_["Connection"] = "close";
-    response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>413 Content Too Large</h1></div></body></html>";
-    return true;
 }
 
 bool HttpServer::isRedirect(HttpRequest &request, HttpResponse &response, std::pair<int, std::string> &redirect) {
@@ -605,14 +591,13 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         }
     }
     if (!location) {
-        return buildNotFound(request, response, server, location);
+        return buildErrorPage(request, response, server, location, NOT_FOUND);
     } else if (isRedirect(request, response, location->redirect)) {
         return true;
     } else if (!(std::find(location->limit_except.begin(), location->limit_except.end(), static_cast<int>(request.method_)) != location->limit_except.end())) {
-        response.status_ = BAD_REQUEST;
-        return true;
+        return buildErrorPage(request, response, server, location, METHOD_NOT_ALLOWED);
     } else if (!validateRequestBody(request, server, location)) {
-        return buildBadRequestBody(response);
+        return buildErrorPage(request, response, server, location, CONTENT_TOO_LARGE);
     }
     if (checkIfDirectoryRequest(request, location, server) && request.method_ == GET) {
         if (checkForIndexFile(request, location, server)) {
@@ -622,7 +607,7 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
             generateDirectoryListing(request, response, location, server);
         }
         else { //if autoindex is disabled and the request is for a directory by default server will return an error 403
-            handleForbidden(response, location, server);
+            return buildErrorPage(request, response, server, location, FORBIDDEN);
         }
         return true;
     }
@@ -667,18 +652,13 @@ bool HttpServer::validateHost(HttpRequest &request, HttpResponse &response) {
 HttpResponse HttpServer::handleRequest(HttpRequest request) {
     HttpResponse response;
     
-    // Logger::instance().log(request.printRequest());
     response.version_ = HTTP_VERSION;
     response.server_  = "webserv/0.1";
     response.headers_["Connection"] = "Keep-Alive";
 
     if (request.version_ != "HTTP/1.1") {
         response.status_ = IM_A_TEAPOT; // If this happen we ignore the request and return an empty answer
-    } 
-    else if (request.method_ == 0){ // Enums for comparisons is C++11...
-        response.status_                  = BAD_REQUEST;
-    }
-    else if (!validateHost(request, response)) {
+    } else if (!validateHost(request, response)) {
         response.status_                  = NOT_FOUND;
         response.headers_["Content-Type"] = "text/html";
         response.body_ = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>404 Not Found</h1></div></body></html>";
@@ -699,60 +679,8 @@ bool HttpServer::checkUriForExtension(std::string& uri, LocationConfig *location
 	}
 	if (!ext.size())
 		return false;
-    else
-        return true;
+    return true;
 }
-
-void HttpServer::handleForbidden(HttpResponse &response, LocationConfig *location, ServerConfig &server) { //in case requested directory does not have autoindex enabled
-    std::string errorPage;
-    std::string path;
-    std::map<int, std::string>::iterator it;
-
-    if ((it = location->error_page.find(FORBIDDEN)) != location->error_page.end()) { //checks if an error page corresponding to a 403 status code exists at the location level
-        path = it->second;
-        std::string root;
-	    if (location->root.size() != 0) {
-		    root = location->root;
-		    root.append("/");
-	    }
-	    else {
-		    root = config_.root;
-		    root.append("/");
-	    }
-	    root.append(path);
-	    std::ifstream in(root);
-        std::stringstream buffer;
-        buffer << in.rdbuf();
-        errorPage = buffer.str();
-        in.close();
-    }
-    else if ((it = server.error_page.find(FORBIDDEN)) != server.error_page.end()) { //checks if an error page corresponding to a 403 status code exists at the server level
-        path = it->second;
-        std::string root;
-	    if (location->root.size() != 0) {
-		    root = location->root;
-		    root.append("/");
-	    }
-	    else {
-		    root = config_.root;
-		    root.append("/");
-	    }
-	    root.append(path);
-	    std::ifstream in(root);
-        std::stringstream buffer;
-        buffer << in.rdbuf();
-        errorPage = buffer.str();
-        in.close();
-    }
-    else { //default 403 error page
-        errorPage = "<html><head><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}.error-message{text-align:center;}</style></head><body><div class=\"error-message\"><h1>Homemade Webserv</h1><h1>403 Forbidden</h1></div></body></html>";
-    }
-    response.body_ = errorPage;
-    response.status_ = FORBIDDEN;
-    response.headers_["content-type"] = "text/html";
-}
-
-
 
 void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) {
     try
@@ -761,8 +689,7 @@ void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, L
         if (location) {
             if (location->root.size()) { //check if root is set at the location level
                 tempUri.append(location->root);
-            }
-            else { //fallback to server root directive
+            } else { //fallback to server root directive
                 tempUri.append(server.root);
             }
             tempUri.append(request.uri_);
@@ -770,8 +697,7 @@ void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, L
             if (readFileToBody(response, tempUri, location) == true) {
                 response.headers_["content-type"] = "text/html";
                 response.status_ = OK;
-            }
-            else { //something went wrong with reading index.html file
+            } else { //something went wrong with reading index.html file
                 return ;
             }
         }   

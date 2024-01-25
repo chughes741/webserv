@@ -50,7 +50,7 @@ class HttpServer {
     bool postMethod(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
     bool deleteMethod(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
     bool readFileToBody(HttpResponse &, std::string &, LocationConfig *);
-    bool buildNotFound(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *);
+    bool buildErrorPage(HttpRequest &, HttpResponse &, ServerConfig &, LocationConfig *, HttpStatus);
     bool buildBadRequestBody(HttpResponse &);
     bool isRedirect(HttpRequest &, HttpResponse &, std::pair<int, std::string> &);
     bool validateHost(HttpRequest &, HttpResponse &);

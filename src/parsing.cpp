@@ -19,51 +19,6 @@
 
 #define INDEX 0
 
-void printHttpConfig(const HttpConfig& config) {
-    std::cout << "HttpConfig values:" << std::endl;
-    std::cout << "Http Context -> error_log: " << config.error_log << std::endl;
-    std::cout << "Servers:" << std::endl;
-    for (std::vector<ServerConfig>::const_iterator serverIt = config.servers.begin(); serverIt != config.servers.end(); ++serverIt) {
-        const ServerConfig& server = *serverIt;
-
-        std::cout << "Server Names: ";
-        for (std::vector<std::string>::const_iterator nameIt = server.server_names.begin(); nameIt != server.server_names.end(); ++nameIt) {
-            std::cout << *nameIt << " ";
-        }
-        std::cout << std::endl;
-        std::cout << "Listen: " << server.listen.first << ":" << server.listen.second << std::endl;
-        std::cout << "Root: " << server.root << std::endl;
-        std::cout << "Error Pages:" << std::endl;
-        for (std::map<int, std::string>::const_iterator errorIt = server.error_page.begin(); errorIt != server.error_page.end(); ++errorIt) {
-            std::cout << "HTTP " << errorIt->first << ": " << errorIt->second << std::endl;
-        }
-        std::cout << "Client Max Body Size: " << server.client_max_body_size << std::endl;
-        std::cout << "Locations:" << std::endl;
-        for (std::map<std::string, LocationConfig>::const_iterator locationIt = server.locations.begin(); locationIt != server.locations.end(); ++locationIt) {
-            const LocationConfig& location = locationIt->second;
-            std::cout << "Path: " << locationIt->first << std::endl;
-            std::cout << "  Client Max Body Size: " << location.client_max_body_size << std::endl;
-            std::cout << "  Error Pages:" << std::endl;
-            for (std::map<int, std::string>::const_iterator errorIt = location.error_page.begin(); errorIt != location.error_page.end(); ++errorIt) {
-                std::cout << "  HTTP " << errorIt->first << ": " << errorIt->second << std::endl;
-            }
-            std::cout << "  Root: " << location.root << std::endl;
-            std::cout << "  Index File: " << location.index_file << std::endl;
-            std::cout << "  CGI Enabled: " << (location.cgi_enabled ? "true" : "false") << std::endl;
-            for (size_t i = 0; i < location.cgi_ext.size(); ++i) {
-                std::cout << "  Cgi_ext " << i << ": " << location.cgi_ext[i] << std::endl; 
-            }
-        }
-    }
-    std::cout << "Error Pages:" << std::endl;
-    for (std::map<int, std::string>::const_iterator errorIt = config.error_page.begin(); errorIt != config.error_page.end(); ++errorIt) {
-        std::cout << "HTTP " << errorIt->first << ": " << errorIt->second << std::endl;
-    }
-    std::cout << "Error Log: " << config.error_log << std::endl;
-    std::cout << "Root: " << config.root << std::endl;
-    std::cout << "Client Max Body Size: " << config.client_max_body_size << std::endl;
-}
-
 
 void parseConfig(std::string config_file, HttpConfig &httpConfig) {
     Parser        parser(httpConfig);
@@ -78,7 +33,6 @@ void parseConfig(std::string config_file, HttpConfig &httpConfig) {
     }
     file.close();
     parser.initSettings();
-    // printHttpConfig(httpConfig);
 }
 
 Parser::Parser(HttpConfig &httpConfig) : tokens(0), context(1), httpConfig(httpConfig) {}
@@ -308,7 +262,7 @@ bool Parser::setHttpSetting() {
         case 0:
             return setIndex();
         case 1:
-            return setHttpErrorPage();
+            return setErrorPages(httpConfig.error_page);
         case 2:
             return setHttpClientBodySize();
         case 3:
@@ -318,14 +272,49 @@ bool Parser::setHttpSetting() {
     }
 }
 
-bool Parser::setHttpErrorPage() {
+bool Parser::setErrorPages(std::map<int, std::string> &context_map) {
     validateFirstToken("error_page");
-    int error = std::stoi(*it);
-    std::string error_file = *++it;
-    if (error_file == ";") {
-        throw std::logic_error("Error: missing file path for error " + std::to_string(error));
-    } else {
-        httpConfig.error_page[error] = error_file;
+    std::vector<int> errors;
+    try {
+        while (it != tokens.end() && *it != ";" && (*it).size() == 3) {
+            for (size_t i = 0; i < (*it).size(); ++i) {
+                if (!isdigit((*it).at(i)))
+                    throw std::invalid_argument("Error code invalid: " + *it);
+            }
+            int error = std::stoi(*it);
+            errors.push_back(error);
+            ++it;
+        }
+    } catch (std::invalid_argument e) {}
+    if (errors.empty())
+        throw std::invalid_argument("Error code invalid: " + *it);
+    std::string filepath = *it;
+    size_t pos = filepath.find_last_of(".");
+    if (pos == filepath.npos)
+        throw std::invalid_argument("Invalid file path: " + *it);
+    int replace = 0;
+    while (--pos != std::string::npos && replace < 3) {
+        if (filepath.at(pos) != 'x')
+            break;
+        ++replace;
+    }
+    if (pos == std::string::npos)
+        pos = 0;
+    else
+        ++pos;
+    for (std::vector<int>::iterator err = errors.begin(); err != errors.end(); ++err) {
+        std::string fullpath;
+        if (*err < 100 || *err > 599)
+            throw std::invalid_argument("Error code invalid: " + std::to_string(*err));
+        if (replace == 0)
+            fullpath = filepath;
+        else {
+            std::string firstpart = filepath.substr(0,pos);
+            std::string error_value = std::to_string(*err).substr(3 - replace, replace);
+            std::string lastpart = filepath.substr(filepath.find_last_of("."));
+            fullpath = firstpart + error_value + lastpart;
+        }
+        context_map[*err] = fullpath;
     }
     validateLastToken("error_page");
     return true;
@@ -383,7 +372,7 @@ bool Parser::setServerSetting() {
         case 1:
             return setServerName();
         case 2:
-            return setServerErrorPage();
+            return setErrorPages(httpConfig.servers.back().error_page);
         case 3:
             return setServerRoot();
         case 4:
@@ -466,19 +455,6 @@ bool Parser::setServerName() {
     return (true);
 }
 
-bool Parser::setServerErrorPage() {
-    validateFirstToken("error_page");
-    int error = std::stoi(*it);
-    std::string error_file = *++it;
-    if (error_file == ";") {
-        throw std::logic_error("Error: missing file path for error " + std::to_string(error));
-    } else {
-        (httpConfig.servers.back()).error_page[error] = error_file;
-    }
-    validateLastToken("error_page");
-    return true;
-}
-
 bool Parser::setServerRoot() {
     validateFirstToken("root");
     std::string root = *it;
@@ -531,7 +507,7 @@ bool Parser::setLocationSetting(std::string uri) {
         case 2:
             return setAutoIndex(uri);
         case 3:
-            return setLocationErrorPage(uri);
+            return setErrorPages(httpConfig.servers.back().locations[uri].error_page);
         case 4:
             return setLimitExcept(uri);
         case 5:
@@ -607,19 +583,6 @@ bool Parser::setAutoIndex(std::string &uri) {
         throw std::logic_error("Error: wrong value for autoindex: " + *it);
     (httpConfig.servers.back()).locations[uri].autoindex = true;
     validateLastToken("autoindex");
-    return true;
-}
-
-bool Parser::setLocationErrorPage(std::string &uri) {
-    validateFirstToken("error_page");
-    int error = std::stoi(*it);
-    std::string error_file = *++it;
-    if (error_file == ";") {
-        throw std::logic_error("Error: missing file path for error " + std::to_string(error));
-    } else {
-        (httpConfig.servers.back()).locations[uri].error_page[error] = error_file;
-    }
-    validateLastToken("error_page");
     return true;
 }
 
