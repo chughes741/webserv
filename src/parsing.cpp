@@ -19,51 +19,6 @@
 
 #define INDEX 0
 
-void printHttpConfig(const HttpConfig& config) {
-    std::cout << "HttpConfig values:" << std::endl;
-    std::cout << "Http Context -> error_log: " << config.error_log << std::endl;
-    std::cout << "Servers:" << std::endl;
-    for (std::vector<ServerConfig>::const_iterator serverIt = config.servers.begin(); serverIt != config.servers.end(); ++serverIt) {
-        const ServerConfig& server = *serverIt;
-
-        std::cout << "Server Names: ";
-        for (std::vector<std::string>::const_iterator nameIt = server.server_names.begin(); nameIt != server.server_names.end(); ++nameIt) {
-            std::cout << *nameIt << " ";
-        }
-        std::cout << std::endl;
-        std::cout << "Listen: " << server.listen.first << ":" << server.listen.second << std::endl;
-        std::cout << "Root: " << server.root << std::endl;
-        std::cout << "Error Pages:" << std::endl;
-        for (std::map<int, std::string>::const_iterator errorIt = server.error_page.begin(); errorIt != server.error_page.end(); ++errorIt) {
-            std::cout << "HTTP " << errorIt->first << ": " << errorIt->second << std::endl;
-        }
-        std::cout << "Client Max Body Size: " << server.client_max_body_size << std::endl;
-        std::cout << "Locations:" << std::endl;
-        for (std::map<std::string, LocationConfig>::const_iterator locationIt = server.locations.begin(); locationIt != server.locations.end(); ++locationIt) {
-            const LocationConfig& location = locationIt->second;
-            std::cout << "Path: " << locationIt->first << std::endl;
-            std::cout << "  Client Max Body Size: " << location.client_max_body_size << std::endl;
-            std::cout << "  Error Pages:" << std::endl;
-            for (std::map<int, std::string>::const_iterator errorIt = location.error_page.begin(); errorIt != location.error_page.end(); ++errorIt) {
-                std::cout << "  HTTP " << errorIt->first << ": " << errorIt->second << std::endl;
-            }
-            std::cout << "  Root: " << location.root << std::endl;
-            std::cout << "  Index File: " << location.index_file << std::endl;
-            std::cout << "  CGI Enabled: " << (location.cgi_enabled ? "true" : "false") << std::endl;
-            for (size_t i = 0; i < location.cgi_ext.size(); ++i) {
-                std::cout << "  Cgi_ext " << i << ": " << location.cgi_ext[i] << std::endl; 
-            }
-        }
-    }
-    std::cout << "Error Pages:" << std::endl;
-    for (std::map<int, std::string>::const_iterator errorIt = config.error_page.begin(); errorIt != config.error_page.end(); ++errorIt) {
-        std::cout << "HTTP " << errorIt->first << ": " << errorIt->second << std::endl;
-    }
-    std::cout << "Error Log: " << config.error_log << std::endl;
-    std::cout << "Root: " << config.root << std::endl;
-    std::cout << "Client Max Body Size: " << config.client_max_body_size << std::endl;
-}
-
 
 void parseConfig(std::string config_file, HttpConfig &httpConfig) {
     Parser        parser(httpConfig);
@@ -78,7 +33,6 @@ void parseConfig(std::string config_file, HttpConfig &httpConfig) {
     }
     file.close();
     parser.initSettings();
-    // printHttpConfig(httpConfig);
 }
 
 Parser::Parser(HttpConfig &httpConfig) : tokens(0), context(1), httpConfig(httpConfig) {}
@@ -328,7 +282,6 @@ bool Parser::setErrorPages(std::map<int, std::string> &context_map) {
                     throw std::invalid_argument("Error code invalid: " + *it);
             }
             int error = std::stoi(*it);
-            std::cout << error << std::endl;
             errors.push_back(error);
             ++it;
         }
@@ -351,7 +304,6 @@ bool Parser::setErrorPages(std::map<int, std::string> &context_map) {
         ++pos;
     for (std::vector<int>::iterator err = errors.begin(); err != errors.end(); ++err) {
         std::string fullpath;
-        std::cout << *err << std::endl;
         if (*err < 100 || *err > 599)
             throw std::invalid_argument("Error code invalid: " + std::to_string(*err));
         if (replace == 0)

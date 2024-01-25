@@ -317,7 +317,7 @@ void HttpServer::uploadsFileList(ServerConfig &server, LocationConfig *location,
             if (ent->d_name[0] != '.') {
                 std::string filename = std::string(ent->d_name);
                 fileList << "<li style=\"clear: both;\">"
-                         << "<p>" << filename << "</p>"
+                         << "<div style=\"display: inline;\">" << filename << "</div>"
                          << "<form id=\"deleteForm" << filename << "\" style=\"float: right;\">"
                          << "<input type=\"hidden\" name=\"filename\" value=\"" << filename << "\">"
                          << "<input type=\"button\" value=\"Delete\" onclick=\"handleDeleteButtonClick('" << filename << "');\">"
