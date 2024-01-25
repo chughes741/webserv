@@ -4,6 +4,7 @@
 #include <exception>
 #include <iostream>
 #include <stdexcept>
+#include <signal.h>
 #include "logging.hpp"
 #include "http.hpp"
 #include "config.hpp"
