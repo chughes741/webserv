@@ -168,10 +168,9 @@ bool Cgi::performCgi() {
 }
 
 bool Cgi::performCgiGet() {
-	timespec startTime;
-    timespec currentTime;
-    timespec_get(&startTime, TIME_UTC);
-    time_t secStart = startTime.tv_sec;
+	time_t startTime;
+    time_t currentTime;
+    time(&startTime);
 
 	std::string workingDirectory;
 	char *argv[2];
@@ -220,8 +219,8 @@ bool Cgi::performCgiGet() {
 		char buffer[1024];
 		bzero(buffer, 1024);
 		while (read(fd[0], buffer, 1023) > 0) {
-			timespec_get(&currentTime, TIME_UTC);
-			if ((currentTime.tv_sec - secStart) > 2) {
+			time(&currentTime);
+			if (difftime(currentTime, startTime) > 2) {
 				kill(pid, SIGKILL);
 				close(fd[0]);
 				throw InternalServerError();
@@ -247,10 +246,9 @@ bool Cgi::performCgiGet() {
 }
 
 bool Cgi::performCgiPost() {
-	timespec startTime;
-    timespec currentTime;
-    timespec_get(&startTime, TIME_UTC);
-    time_t secStart = startTime.tv_sec;
+	time_t startTime;
+    time_t currentTime;
+    time(&startTime);
 
 	std::string workingDirectory;
 	char *argv[2];
@@ -313,8 +311,8 @@ bool Cgi::performCgiPost() {
 		bzero(buffer, 1024);
 		close(fdOut[1]);
 		while (read(fdOut[0], buffer, 1023) > 0) {
-			timespec_get(&currentTime, TIME_UTC);
-			if ((currentTime.tv_sec - secStart) > 2) {
+			time(&currentTime);
+			if (difftime(currentTime, startTime) > 2) {
 				kill(pid, SIGKILL);
 				close(fdOut[0]);
 				throw InternalServerError();
@@ -340,10 +338,9 @@ bool Cgi::performCgiPost() {
 }
 
 void Cgi::extractHeaders(std::string scriptOutput) {
-	timespec startTime;
-    timespec currentTime;
-    timespec_get(&startTime, TIME_UTC);
-    time_t secStart = startTime.tv_sec;
+	time_t startTime;
+    time_t currentTime;
+    time(&startTime);
 	std::string headerFields;
 	std::size_t boundary = scriptOutput.find("\n\n");
 	std::vector<std::pair<std::string, std::string> > headers;
@@ -368,8 +365,8 @@ void Cgi::extractHeaders(std::string scriptOutput) {
 				headers.push_back(std::make_pair(headerFields.substr(0, fieldBoundary), headerFields.substr(fieldBoundary, (boundary - fieldBoundary))));
 				headerFields = headerFields.substr(boundary + 1);
 			}
-			timespec_get(&currentTime, TIME_UTC);
-			if ((currentTime.tv_sec - secStart) > 2) {
+			time(&currentTime);
+			if (difftime(currentTime, startTime) > 2) {
 				throw InternalServerError();
 			}
 		}
