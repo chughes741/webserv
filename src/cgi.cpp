@@ -1,10 +1,11 @@
 #include "../include/cgi.hpp"
 
-Cgi::Cgi(HttpRequest &request, LocationConfig &location, ServerConfig &config, HttpResponse& response)
+Cgi::Cgi(HttpRequest &request, LocationConfig &location, ServerConfig &config, HttpResponse& response, HttpConfig &httpConf)
 	: request_(request),
 	  location_(location),
 	  config_(config),
-	  response_(&response) { }
+	  response_(&response),
+	  httpConf_(httpConf) { }
 
 Cgi::~Cgi() { }
 
@@ -171,7 +172,17 @@ bool Cgi::performCgiGet() {
 	time_t startTime;
     time_t currentTime;
     time(&startTime);
-	std::string newPath(config_.root);
+	std::string newPath;
+
+	if (location_.root.size()) {
+        newPath = location_.root;
+    } else if (config_.root.size()) {
+        newPath = config_.root;
+    } else if (httpConf_.root.size()) {
+        newPath = httpConf_.root;
+    } else {
+        newPath = "";
+    }
 
 	std::string workingDirectory;
 	char *argv[2];
@@ -250,7 +261,17 @@ bool Cgi::performCgiPost() {
 	time_t startTime;
     time_t currentTime;
     time(&startTime);
-	std::string newPath(config_.root);
+	std::string newPath;
+
+	if (location_.root.size()) {
+        newPath = location_.root;
+    } else if (config_.root.size()) {
+        newPath = config_.root;
+    } else if (httpConf_.root.size()) {
+        newPath = httpConf_.root;
+    } else {
+        newPath = "";
+    }
 
 	std::string workingDirectory;
 	char *argv[2];
@@ -394,20 +415,24 @@ void Cgi::extractBody(std::string scriptOutput) {
 }
 
 void Cgi::handleError(exceptionType type) {
+	response_->headers_["Content-Type"] = "text/html";
+	std::string root;
+
+	if (location_.root.size()) {
+	    root = location_.root;
+	} else if (config_.root.size()) {
+	    root = config_.root;
+	} else if (httpConf_.root.size()) {
+	    root = httpConf_.root;
+	} else {
+	    root = "";
+	}
+	root.append("/");
+
 	switch(type) {
 		case (Internal):
 			response_->status_ = INTERNAL_SERVER_ERROR;
-			response_->headers_["Content-Type"] = "text/html";
 			if (location_.error_page.find(INTERNAL_SERVER_ERROR) != location_.error_page.end()) { //location level error page check
-				std::string root;
-				if (location_.root.size() != 0) {
-					root = location_.root;
-					root.append("/");
-				}
-				else {
-					root = config_.root;
-					root.append("/");
-				}
 				root.append(location_.error_page[INTERNAL_SERVER_ERROR]);
 				std::ifstream in(root);
     			std::stringstream buffer;
@@ -416,12 +441,15 @@ void Cgi::handleError(exceptionType type) {
     			in.close();
 			}
 			else if (config_.error_page.find(INTERNAL_SERVER_ERROR) != config_.error_page.end()) { //server level error page check
-				std::string root;
-				if (config_.root.size() != 0) {
-					root = config_.root;
-					root.append("/");
-				}
 				root.append(config_.error_page[INTERNAL_SERVER_ERROR]);
+				std::ifstream in(root);
+    			std::stringstream buffer;
+    			buffer << in.rdbuf();
+    			response_->body_ = buffer.str();
+    			in.close();
+			}
+			else if (httpConf_.error_page.find(INTERNAL_SERVER_ERROR) != httpConf_.error_page.end()) {
+				root.append(httpConf_.error_page[INTERNAL_SERVER_ERROR]);
 				std::ifstream in(root);
     			std::stringstream buffer;
     			buffer << in.rdbuf();
@@ -434,18 +462,7 @@ void Cgi::handleError(exceptionType type) {
 			break;
 		case (Access):
 			response_->status_= NOT_FOUND;
-			// response_->headers_["Content-Type"] = "text/html";
-
 			if (location_.error_page.find(NOT_FOUND) != location_.error_page.end()) { //location level error page check
-				std::string root;
-				if (location_.root.size() != 0) {
-					root = location_.root;
-					root.append("/");
-				}
-				else {
-					root = config_.root;
-					root.append("/");
-				}
 				root.append(location_.error_page[NOT_FOUND]);
 				std::ifstream in(root);
     			std::stringstream buffer;
@@ -454,12 +471,15 @@ void Cgi::handleError(exceptionType type) {
     			in.close();
 			}
 			else if (config_.error_page.find(NOT_FOUND) != config_.error_page.end()) { //server level error page check
-				std::string root;
-				if (config_.root.size() != 0) {
-					root = config_.root;
-					root.append("/");
-				}
 				root.append(config_.error_page[NOT_FOUND]);
+				std::ifstream in(root);
+    			std::stringstream buffer;
+    			buffer << in.rdbuf();
+    			response_->body_ = buffer.str();
+    			in.close();
+			}
+			else if (httpConf_.error_page.find(NOT_FOUND) != httpConf_.error_page.end()) {
+				root.append(httpConf_.error_page[NOT_FOUND]);
 				std::ifstream in(root);
     			std::stringstream buffer;
     			buffer << in.rdbuf();
