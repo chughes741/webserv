@@ -16,7 +16,7 @@ enum exceptionType {
 
 class Cgi {
 public:
-    Cgi(HttpRequest &request, LocationConfig &location, ServerConfig &config, HttpResponse& response);
+    Cgi(HttpRequest &request, LocationConfig &location, ServerConfig &config, HttpResponse& response, HttpConfig &httpConf);
     ~Cgi();
     bool exec();
 
@@ -37,6 +37,7 @@ private: //member variables
     LocationConfig location_;
     ServerConfig config_;
     HttpResponse* response_;
+    HttpConfig httpConf_;
     char *envp_[256];
     std::string script_;
     std::string scriptWithPath_;

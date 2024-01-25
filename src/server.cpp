@@ -614,7 +614,7 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
         return true;
     }
     else if (location->cgi_enabled && checkUriForExtension(request.uri_, location)) { //cgi handling before. Unsure if it should stay here or be handle within getMethod or postMethod
-        Cgi newCgi(request, *location, server, response);
+        Cgi newCgi(request, *location, server, response, config_);
         return newCgi.exec();
     }
     else {
