@@ -340,6 +340,10 @@ bool Cgi::performCgiPost() {
 }
 
 void Cgi::extractHeaders(std::string scriptOutput) {
+	timespec startTime;
+    timespec currentTime;
+    timespec_get(&startTime, TIME_UTC);
+    time_t secStart = startTime.tv_sec;
 	std::string headerFields;
 	std::size_t boundary = scriptOutput.find("\n\n");
 	std::vector<std::pair<std::string, std::string> > headers;
@@ -363,6 +367,10 @@ void Cgi::extractHeaders(std::string scriptOutput) {
 			else {
 				headers.push_back(std::make_pair(headerFields.substr(0, fieldBoundary), headerFields.substr(fieldBoundary, (boundary - fieldBoundary))));
 				headerFields = headerFields.substr(boundary + 1);
+			}
+			timespec_get(&currentTime, TIME_UTC);
+			if ((currentTime.tv_sec - secStart) > 2) {
+				throw InternalServerError();
 			}
 		}
 		for (std::size_t i = 0; i < headers.size(); ++i) {
