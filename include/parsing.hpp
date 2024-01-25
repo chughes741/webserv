@@ -60,25 +60,18 @@ class Parser {
     bool setWorkerProcesses();
     bool setErrorLog();
 
-    /** @todo determine if we accept/need a pid value in global context */
     bool setPid();
     bool setEventsContext();
     bool setEventsSetting();
     bool createOrValidateDirectory();
+    bool setErrorPages(std::map<int, std::string> &);
 
-    /** @todo determine where we put the worker connections setting
-     * @brief Set the Worker Connections object
-     */
     bool setWorkerConnections();
     bool setHttpContext();
     bool setHttpSetting();
-    bool setHttpErrorPage();
     bool setHttpClientBodySize();
     bool setHttpUploadDirectory();
 
-    /** @todo determine where we put the index setting
-     * @brief Set the index pages of the server
-     */
     bool setIndex();
 
     bool setServerContext();
@@ -88,7 +81,6 @@ class Parser {
     int retrievePort(std::string);
     bool isValidIPAddress(const std::string &ip);
     bool setServerName();
-    bool setServerErrorPage();
     bool setServerRoot();
     bool setServerClientBodySize();
     bool setServerUploadDirectory();
@@ -98,7 +90,6 @@ class Parser {
     bool setLocationRoot(std::string &);
     bool setFastCGI(std::string &);
     bool setAutoIndex(std::string &);
-    bool setLocationErrorPage(std::string &);
     bool setLocationRedirect(std::string &);
     bool setLimitExcept(std::string &);
     bool setLocationClientBodySize(std::string &);
