@@ -592,6 +592,8 @@ bool HttpServer::buildResponse(HttpRequest &request, HttpResponse &response,
     }
     if (!location) {
         return buildErrorPage(request, response, server, location, NOT_FOUND);
+    } else if (isResourceRequest(response, request.uri_)) {
+        return getMethod(request, response, server, location);
     } else if (isRedirect(request, response, location->redirect)) {
         return true;
     } else if (!(std::find(location->limit_except.begin(), location->limit_except.end(), static_cast<int>(request.method_)) != location->limit_except.end())) {
@@ -682,27 +684,32 @@ bool HttpServer::checkUriForExtension(std::string& uri, LocationConfig *location
     return true;
 }
 
+std::string HttpServer::findRoot(LocationConfig *location, ServerConfig &server) {
+    if (location && location->root.size()) {
+        return location->root;
+    } else if (server.root.size()) {
+        return server.root;
+    } else if (config_.root.size()) {
+        return config_.root;
+    } else {
+        return "";
+    }
+}
+
 void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server) {
     try
     {
-        std::string tempUri;
-        if (location) {
-            if (location->root.size()) { //check if root is set at the location level
-                tempUri.append(location->root);
-            } else { //fallback to server root directive
-                tempUri.append(server.root);
-            }
-            tempUri.append(request.uri_);
-            if (tempUri.back() != '/')
-                tempUri.append("/");
-            tempUri.append(location->index_file);
-            if (readFileToBody(response, tempUri, location) == true) {
-                response.headers_["content-type"] = "text/html";
-                response.status_ = OK;
-            } else { //something went wrong with reading index.html file
-                return ;
-            }
-        }   
+        std::string tempUri = findRoot(location, server);
+        tempUri.append(request.uri_);
+        if (tempUri.back() != '/')
+            tempUri.append("/");
+        tempUri.append(location->index_file);
+        if (readFileToBody(response, tempUri, location) == true) {
+            response.headers_["content-type"] = "text/html";
+            response.status_ = OK;
+        } else { //something went wrong with reading index.html file
+            return ;
+        }
     }
     catch(const std::exception& e)
     {
@@ -715,15 +722,17 @@ void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, L
 bool HttpServer::checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server) { //used to check if request is simply for a directory
     try
     {
-        std::string tempUri;
+        std::string tempUri = "";
         if (location->root.size()) { //check if root is set at the location level
             tempUri.append(location->root);
-        }
-        else { //fallback to server root directive
+        } else if (server.root.size()) { //fallback to server root directive
             tempUri.append(server.root);
+        } else if (config_.root.size()) {
+            tempUri.append(config_.root);
         }
+        if (request.uri_.find_last_of("/") != request.uri_.size() - 1)
+            tempUri.append("/");
         tempUri.append(request.uri_);
-
         DIR *currentDirectory = opendir(tempUri.c_str()); //attempt to open the directory specified. If successful then it means the request was indeed for a directory.
         if (!currentDirectory) {
             return (false);
@@ -744,8 +753,7 @@ bool HttpServer::checkIfDirectoryRequest(HttpRequest &request, LocationConfig *l
 }
 
 bool HttpServer::checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server) {
-    try
-    {
+    try {
         std::vector<std::pair<unsigned char, std::string> > files = returnFiles(request, location, server);
         for (std::size_t i = 0; i < files.size(); ++i) {
             if (files[i].second == location->index_file) { //checks the name of the file/folder
@@ -821,17 +829,13 @@ void HttpServer::generateDirectoryListing(HttpRequest &request, HttpResponse &re
 }
 
 std::vector<std::pair<unsigned char, std::string> > HttpServer::returnFiles(HttpRequest &request, LocationConfig *location, ServerConfig &server) {
-    std::string tempUri;
+    std::string tempUri = findRoot(location, server);
     std::vector<std::pair<unsigned char, std::string> > files;
     struct dirent *file;
-    if (location->root.size()) { //check if root is set at the location level
-        tempUri.append(location->root);
-    }
-    else { //fallback to server root directive
-        tempUri.append(server.root);
-    }
-    tempUri.append(request.uri_);
 
+    if (request.uri_.find_last_of("/") != request.uri_.size() - 1)
+            tempUri.append("/");
+    tempUri.append(request.uri_);
     DIR *currentDirectory = opendir(tempUri.c_str());
     do {
         file = readdir(currentDirectory);

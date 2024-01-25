@@ -55,10 +55,10 @@ class HttpServer {
     bool isRedirect(HttpRequest &, HttpResponse &, std::pair<int, std::string> &);
     bool validateHost(HttpRequest &, HttpResponse &);
     bool validateRequestBody(HttpRequest &, ServerConfig &, LocationConfig *);
-    bool readRoot(HttpRequest &, HttpResponse &, ServerConfig *, LocationConfig *);
     bool checkUriForExtension(std::string &uri, LocationConfig *location) const;
     void handleForbidden(HttpResponse &response, LocationConfig *location, ServerConfig &server);
     void handleIndexFile(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server);
+    std::string findRoot(LocationConfig *location, ServerConfig &server);
     bool checkIfDirectoryRequest(HttpRequest &request, LocationConfig *location, ServerConfig &server);
     bool checkForIndexFile(HttpRequest &request, LocationConfig *location, ServerConfig &server);
     void generateDirectoryListing(HttpRequest &request, HttpResponse &response, LocationConfig *location, ServerConfig &server);
