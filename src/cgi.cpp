@@ -168,6 +168,12 @@ bool Cgi::performCgi() {
 }
 
 bool Cgi::performCgiGet() {
+	timespec startTime;
+	timespec currentTime;
+	timespec_get(&startTime, TIME_UTC);
+	time_t secStart = startTime.tv_sec;
+
+
 	std::string workingDirectory;
 	char *argv[2];
 
@@ -215,17 +221,19 @@ bool Cgi::performCgiGet() {
 		char buffer[1024];
 		bzero(buffer, 1024);
 		while (read(fd[0], buffer, 1023) > 0) {
+			timespec_get(&currentTime, TIME_UTC);
+			if ((currentTime.tv_sec - secStart) > 2) {
+				kill(pid, SIGKILL);
+				close(fd[0]);
+				throw InternalServerError();
+			}
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
-		Logger::instance().log("Finished reading data from child");
 		close(fd[0]);
 		extractHeaders(scriptOutput);
-		Logger::instance().log("Finished extracting headers");
 		extractBody(scriptOutput);
-		Logger::instance().log("Finished extracting body");
 		waitpid(pid, &status, 0);
-		Logger::instance().log("Child has finished executing");
 		if (WEXITSTATUS(status) != 0) {
 			Logger::instance().log("Script execution failed");
 			throw InternalServerError();
@@ -240,6 +248,11 @@ bool Cgi::performCgiGet() {
 }
 
 bool Cgi::performCgiPost() {
+	timespec startTime;
+	timespec currentTime;
+	timespec_get(&startTime, TIME_UTC);
+	time_t secStart = startTime.tv_sec;
+
 	std::string workingDirectory;
 	char *argv[2];
 
@@ -301,15 +314,18 @@ bool Cgi::performCgiPost() {
 		bzero(buffer, 1024);
 		close(fdOut[1]);
 		while (read(fdOut[0], buffer, 1023) > 0) {
+			timespec_get(&currentTime, TIME_UTC);
+			if ((currentTime.tv_sec - secStart) > 2) {
+				kill(pid, SIGKILL);
+				close(fdOut[0]);
+				throw InternalServerError();
+			}
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
 		close(fdOut[0]);
 		extractHeaders(scriptOutput);
 		extractBody(scriptOutput);
-		for (std::map<std::string, std::string>::iterator it = response_->headers_.begin(); it != response_->headers_.end(); ++it) {
-			std::cerr << it->first << " " << it->second << std::endl;
-		}
 		waitpid(pid, &status, 0);
 		if (WEXITSTATUS(status) != 0) {
 			Logger::instance().log("Script execution failed");
