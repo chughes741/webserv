@@ -308,7 +308,7 @@ bool Parser::setHttpSetting() {
         case 0:
             return setIndex();
         case 1:
-            return setHttpErrorPage();
+            return setErrorPages(httpConfig.error_page);
         case 2:
             return setHttpClientBodySize();
         case 3:
@@ -318,14 +318,47 @@ bool Parser::setHttpSetting() {
     }
 }
 
-bool Parser::setHttpErrorPage() {
+bool Parser::setErrorPages(std::map<int, std::string> &context_map) {
     validateFirstToken("error_page");
-    int error = std::stoi(*it);
-    std::string error_file = *++it;
-    if (error_file == ";") {
-        throw std::logic_error("Error: missing file path for error " + std::to_string(error));
-    } else {
-        httpConfig.error_page[error] = error_file;
+    std::vector<int> errors;
+    try {
+        while (it != tokens.end() && *it != ";") {
+            int error = std::stoi(*it);
+            errors.push_back(error);
+            ++it;
+        }
+    } catch (std::invalid_argument e) {
+        if (errors.empty())
+            throw std::invalid_argument("Error code invalid: " + *it);
+        std::string filepath = *it;
+        size_t pos = filepath.find_last_of(".");
+        if (pos == filepath.npos)
+            throw std::invalid_argument("Invalid file path: " + *it);
+        int replace = 0;
+        while (--pos != std::string::npos && replace < 3) {
+            if (filepath.at(pos) != 'x')
+                break;
+            ++replace;
+        }
+        if (pos == std::string::npos)
+            pos = 0;
+        else
+            ++pos;
+        for (std::vector<int>::iterator err = errors.begin(); err != errors.end(); ++err) {
+            std::string fullpath;
+            if (*err < 100 || *err > 599)
+                throw std::invalid_argument("Error code invalid: " + *it);
+            if (replace == 0)
+                fullpath = filepath;
+            else {
+                std::string firstpart = filepath.substr(0,pos);
+                std::string error_value = std::to_string(*err).substr(3 - replace, replace);
+                std::string lastpart = filepath.substr(filepath.find_last_of("."));
+                fullpath = firstpart + error_value + lastpart;
+            }
+            context_map[*err] = fullpath;
+        }
+        
     }
     validateLastToken("error_page");
     return true;
@@ -383,7 +416,7 @@ bool Parser::setServerSetting() {
         case 1:
             return setServerName();
         case 2:
-            return setServerErrorPage();
+            return setErrorPages(httpConfig.servers.back().error_page);
         case 3:
             return setServerRoot();
         case 4:
@@ -466,19 +499,6 @@ bool Parser::setServerName() {
     return (true);
 }
 
-bool Parser::setServerErrorPage() {
-    validateFirstToken("error_page");
-    int error = std::stoi(*it);
-    std::string error_file = *++it;
-    if (error_file == ";") {
-        throw std::logic_error("Error: missing file path for error " + std::to_string(error));
-    } else {
-        (httpConfig.servers.back()).error_page[error] = error_file;
-    }
-    validateLastToken("error_page");
-    return true;
-}
-
 bool Parser::setServerRoot() {
     validateFirstToken("root");
     std::string root = *it;
@@ -531,7 +551,7 @@ bool Parser::setLocationSetting(std::string uri) {
         case 2:
             return setAutoIndex(uri);
         case 3:
-            return setLocationErrorPage(uri);
+            return setErrorPages(httpConfig.servers.back().locations[uri].error_page);
         case 4:
             return setLimitExcept(uri);
         case 5:
@@ -607,19 +627,6 @@ bool Parser::setAutoIndex(std::string &uri) {
         throw std::logic_error("Error: wrong value for autoindex: " + *it);
     (httpConfig.servers.back()).locations[uri].autoindex = true;
     validateLastToken("autoindex");
-    return true;
-}
-
-bool Parser::setLocationErrorPage(std::string &uri) {
-    validateFirstToken("error_page");
-    int error = std::stoi(*it);
-    std::string error_file = *++it;
-    if (error_file == ";") {
-        throw std::logic_error("Error: missing file path for error " + std::to_string(error));
-    } else {
-        (httpConfig.servers.back()).locations[uri].error_page[error] = error_file;
-    }
-    validateLastToken("error_page");
     return true;
 }
 
