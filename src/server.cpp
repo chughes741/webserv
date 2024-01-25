@@ -693,6 +693,8 @@ void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, L
                 tempUri.append(server.root);
             }
             tempUri.append(request.uri_);
+            if (tempUri.back() != '/')
+                tempUri.append("/");
             tempUri.append(location->index_file);
             if (readFileToBody(response, tempUri, location) == true) {
                 response.headers_["content-type"] = "text/html";
