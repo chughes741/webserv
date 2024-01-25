@@ -378,6 +378,8 @@ void Cgi::extractHeaders(std::string scriptOutput) {
 
 void Cgi::extractBody(std::string scriptOutput) {
 	std::string body;
+	if (scriptOutput.size() == 0)
+		throw InternalServerError();
 	std::size_t boundary = scriptOutput.find("\n\n");
 	if (boundary == std::string::npos) {
 		response_->body_ = scriptOutput;
