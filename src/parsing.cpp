@@ -322,43 +322,47 @@ bool Parser::setErrorPages(std::map<int, std::string> &context_map) {
     validateFirstToken("error_page");
     std::vector<int> errors;
     try {
-        while (it != tokens.end() && *it != ";") {
+        while (it != tokens.end() && *it != ";" && (*it).size() == 3) {
+            for (size_t i = 0; i < (*it).size(); ++i) {
+                if (!isdigit((*it).at(i)))
+                    throw std::invalid_argument("Error code invalid: " + *it);
+            }
             int error = std::stoi(*it);
+            std::cout << error << std::endl;
             errors.push_back(error);
             ++it;
         }
-    } catch (std::invalid_argument e) {
-        if (errors.empty())
-            throw std::invalid_argument("Error code invalid: " + *it);
-        std::string filepath = *it;
-        size_t pos = filepath.find_last_of(".");
-        if (pos == filepath.npos)
-            throw std::invalid_argument("Invalid file path: " + *it);
-        int replace = 0;
-        while (--pos != std::string::npos && replace < 3) {
-            if (filepath.at(pos) != 'x')
-                break;
-            ++replace;
+    } catch (std::invalid_argument e) {}
+    if (errors.empty())
+        throw std::invalid_argument("Error code invalid: " + *it);
+    std::string filepath = *it;
+    size_t pos = filepath.find_last_of(".");
+    if (pos == filepath.npos)
+        throw std::invalid_argument("Invalid file path: " + *it);
+    int replace = 0;
+    while (--pos != std::string::npos && replace < 3) {
+        if (filepath.at(pos) != 'x')
+            break;
+        ++replace;
+    }
+    if (pos == std::string::npos)
+        pos = 0;
+    else
+        ++pos;
+    for (std::vector<int>::iterator err = errors.begin(); err != errors.end(); ++err) {
+        std::string fullpath;
+        std::cout << *err << std::endl;
+        if (*err < 100 || *err > 599)
+            throw std::invalid_argument("Error code invalid: " + std::to_string(*err));
+        if (replace == 0)
+            fullpath = filepath;
+        else {
+            std::string firstpart = filepath.substr(0,pos);
+            std::string error_value = std::to_string(*err).substr(3 - replace, replace);
+            std::string lastpart = filepath.substr(filepath.find_last_of("."));
+            fullpath = firstpart + error_value + lastpart;
         }
-        if (pos == std::string::npos)
-            pos = 0;
-        else
-            ++pos;
-        for (std::vector<int>::iterator err = errors.begin(); err != errors.end(); ++err) {
-            std::string fullpath;
-            if (*err < 100 || *err > 599)
-                throw std::invalid_argument("Error code invalid: " + *it);
-            if (replace == 0)
-                fullpath = filepath;
-            else {
-                std::string firstpart = filepath.substr(0,pos);
-                std::string error_value = std::to_string(*err).substr(3 - replace, replace);
-                std::string lastpart = filepath.substr(filepath.find_last_of("."));
-                fullpath = firstpart + error_value + lastpart;
-            }
-            context_map[*err] = fullpath;
-        }
-        
+        context_map[*err] = fullpath;
     }
     validateLastToken("error_page");
     return true;
