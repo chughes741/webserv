@@ -229,14 +229,10 @@ bool Cgi::performCgiGet() {
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
-		Logger::instance().log("Finished reading data from child");
 		close(fd[0]);
 		extractHeaders(scriptOutput);
-		Logger::instance().log("Finished extracting headers");
 		extractBody(scriptOutput);
-		Logger::instance().log("Finished extracting body");
 		waitpid(pid, &status, 0);
-		Logger::instance().log("Child has finished executing");
 		if (WEXITSTATUS(status) != 0) {
 			Logger::instance().log("Script execution failed");
 			throw InternalServerError();
@@ -329,9 +325,6 @@ bool Cgi::performCgiPost() {
 		close(fdOut[0]);
 		extractHeaders(scriptOutput);
 		extractBody(scriptOutput);
-		for (std::map<std::string, std::string>::iterator it = response_->headers_.begin(); it != response_->headers_.end(); ++it) {
-			std::cerr << it->first << " " << it->second << std::endl;
-		}
 		waitpid(pid, &status, 0);
 		if (WEXITSTATUS(status) != 0) {
 			Logger::instance().log("Script execution failed");
