@@ -171,6 +171,7 @@ bool Cgi::performCgiGet() {
 	time_t startTime;
     time_t currentTime;
     time(&startTime);
+	std::string newPath(config_.root);
 
 	std::string workingDirectory;
 	char *argv[2];
@@ -178,7 +179,7 @@ bool Cgi::performCgiGet() {
 	argv[0] = &script_[0];
 	argv[1] = nullptr;
 
-	workingDirectory = this->config_.root.append(scriptWithPath_.substr(0, scriptWithPath_.find_last_of('/')));
+	workingDirectory = newPath.append(scriptWithPath_.substr(0, scriptWithPath_.find_last_of('/')));
 
 	int fd[2];
 	int pid;
@@ -249,6 +250,7 @@ bool Cgi::performCgiPost() {
 	time_t startTime;
     time_t currentTime;
     time(&startTime);
+	std::string newPath(config_.root);
 
 	std::string workingDirectory;
 	char *argv[2];
@@ -256,7 +258,7 @@ bool Cgi::performCgiPost() {
 	argv[0] = &script_[0];
 	argv[1] = nullptr;
 
-	workingDirectory = this->config_.root.append(scriptWithPath_.substr(0, scriptWithPath_.find_last_of('/')));
+	workingDirectory = newPath.append(scriptWithPath_.substr(0, scriptWithPath_.find_last_of('/')));
 
 	int fdOut[2];
 	int fdIn[2];
