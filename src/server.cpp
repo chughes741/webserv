@@ -701,7 +701,7 @@ void HttpServer::handleIndexFile(HttpRequest &request, HttpResponse &response, L
     {
         std::string tempUri = findRoot(location, server);
         tempUri.append(request.uri_);
-        if (request.uri_.find_last_of("/") != request.uri_.size() - 1)
+        if (tempUri.back() != '/')
             tempUri.append("/");
         tempUri.append(location->index_file);
         if (readFileToBody(response, tempUri, location) == true) {

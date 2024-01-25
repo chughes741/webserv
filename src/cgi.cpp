@@ -168,6 +168,10 @@ bool Cgi::performCgi() {
 }
 
 bool Cgi::performCgiGet() {
+	time_t startTime;
+    time_t currentTime;
+    time(&startTime);
+
 	std::string workingDirectory;
 	char *argv[2];
 
@@ -215,17 +219,19 @@ bool Cgi::performCgiGet() {
 		char buffer[1024];
 		bzero(buffer, 1024);
 		while (read(fd[0], buffer, 1023) > 0) {
+			time(&currentTime);
+			if (difftime(currentTime, startTime) > 2) {
+				kill(pid, SIGKILL);
+				close(fd[0]);
+				throw InternalServerError();
+			}
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
-		Logger::instance().log("Finished reading data from child");
 		close(fd[0]);
 		extractHeaders(scriptOutput);
-		Logger::instance().log("Finished extracting headers");
 		extractBody(scriptOutput);
-		Logger::instance().log("Finished extracting body");
 		waitpid(pid, &status, 0);
-		Logger::instance().log("Child has finished executing");
 		if (WEXITSTATUS(status) != 0) {
 			Logger::instance().log("Script execution failed");
 			throw InternalServerError();
@@ -240,6 +246,10 @@ bool Cgi::performCgiGet() {
 }
 
 bool Cgi::performCgiPost() {
+	time_t startTime;
+    time_t currentTime;
+    time(&startTime);
+
 	std::string workingDirectory;
 	char *argv[2];
 
@@ -301,15 +311,18 @@ bool Cgi::performCgiPost() {
 		bzero(buffer, 1024);
 		close(fdOut[1]);
 		while (read(fdOut[0], buffer, 1023) > 0) {
+			time(&currentTime);
+			if (difftime(currentTime, startTime) > 2) {
+				kill(pid, SIGKILL);
+				close(fdOut[0]);
+				throw InternalServerError();
+			}
 			scriptOutput.append(buffer);
 			bzero(buffer, 1024);
 		}
 		close(fdOut[0]);
 		extractHeaders(scriptOutput);
 		extractBody(scriptOutput);
-		for (std::map<std::string, std::string>::iterator it = response_->headers_.begin(); it != response_->headers_.end(); ++it) {
-			std::cerr << it->first << " " << it->second << std::endl;
-		}
 		waitpid(pid, &status, 0);
 		if (WEXITSTATUS(status) != 0) {
 			Logger::instance().log("Script execution failed");
@@ -325,6 +338,9 @@ bool Cgi::performCgiPost() {
 }
 
 void Cgi::extractHeaders(std::string scriptOutput) {
+	time_t startTime;
+    time_t currentTime;
+    time(&startTime);
 	std::string headerFields;
 	std::size_t boundary = scriptOutput.find("\n\n");
 	std::vector<std::pair<std::string, std::string> > headers;
@@ -349,6 +365,10 @@ void Cgi::extractHeaders(std::string scriptOutput) {
 				headers.push_back(std::make_pair(headerFields.substr(0, fieldBoundary), headerFields.substr(fieldBoundary, (boundary - fieldBoundary))));
 				headerFields = headerFields.substr(boundary + 1);
 			}
+			time(&currentTime);
+			if (difftime(currentTime, startTime) > 2) {
+				throw InternalServerError();
+			}
 		}
 		for (std::size_t i = 0; i < headers.size(); ++i) {
 			response_->headers_[headers[i].first] = headers[i].second;
@@ -358,6 +378,8 @@ void Cgi::extractHeaders(std::string scriptOutput) {
 
 void Cgi::extractBody(std::string scriptOutput) {
 	std::string body;
+	if (scriptOutput.size() == 0)
+		throw InternalServerError();
 	std::size_t boundary = scriptOutput.find("\n\n");
 	if (boundary == std::string::npos) {
 		response_->body_ = scriptOutput;
